@@ -1,4 +1,8 @@
-part of hetima;
+library hetimatorrent.torrent.trackerurl;
+import 'dart:math' as math;
+import 'dart:core';
+import 'package:hetimacore/hetimacore.dart';
+import 'package:hetimanet/hetimanet.dart';
 
 class TrackerUrl {
   static const String KEY_INFO_HASH = "info_hash";

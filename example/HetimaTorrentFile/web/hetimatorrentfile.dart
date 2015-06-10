@@ -2,18 +2,11 @@ library app;
 
 import 'dart:html' as html;
 import 'dart:async' as async;
-import 'dart:convert' as convert;
 import 'package:chrome/chrome_app.dart' as chrome;
 import 'package:dart_web_toolkit/event.dart' as event;
 import 'package:dart_web_toolkit/ui.dart' as ui;
-import 'package:dart_web_toolkit/util.dart' as util;
 import 'package:dart_web_toolkit/i18n.dart' as i18n;
-import 'package:dart_web_toolkit/text.dart' as text;
-import 'package:dart_web_toolkit/scheduler.dart' as scheduler;
-import 'package:dart_web_toolkit/validation.dart' as validation;
 
-//import 'package:hetima/hetima_cl.dart' as hetimacl;
-//import 'package:hetima/hetima.dart' as hetima;
 import 'package:hetimacore/hetimacore.dart' as hetima;
 import 'package:hetimacore/hetimacore_cl.dart' as hetima;
 import 'package:hetimatorrent/hetimatorrent.dart' as hetima;
@@ -23,6 +16,7 @@ part './loadpanel.dart';
 part './createpanel.dart';
 
 MainView mView = new MainView();
+
 void main() {
   mView.intialize();
   mView.onSelectTorrentFile.listen((FileSelectResult r) {
