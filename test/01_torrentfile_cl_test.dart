@@ -10,7 +10,7 @@ import 'dart:async' as async;
 void main() {
   unit.group("torrent file", () {
     unit.test("001 testdata/1k.txt.torrent", () {
-      hetima_cl.HetimaFileGet file = new hetima_cl.HetimaFileGet("testdata/1k.txt.torrent");
+      hetima_cl.HetimaDataGet file = new hetima_cl.HetimaDataGet("testdata/1k.txt.torrent");
       return file.getLength().then((int length) {
         return file.read(0, length);
       }).then((hetima.ReadResult result) {
@@ -24,7 +24,7 @@ void main() {
     });
 
     unit.test("002 testdata/1kb.torrent", () {
-      hetima_cl.HetimaFileGet file = new hetima_cl.HetimaFileGet("testdata/1kb.torrent");
+      hetima_cl.HetimaDataGet file = new hetima_cl.HetimaDataGet("testdata/1kb.torrent");
       return file.getLength().then((int length) {
         return file.read(0, length);
       }).then((hetima.ReadResult result) {
@@ -40,7 +40,7 @@ void main() {
     });
 
     unit.test("004 hetimafile get ss testdata/1kb/1k.txt", () {
-      hetima_cl.HetimaFileGet file = new hetima_cl.HetimaFileGet("testdata/1kb/1k.txt");
+      hetima_cl.HetimaDataGet file = new hetima_cl.HetimaDataGet("testdata/1kb/1k.txt");
       hetima.TorrentPieceHashCreator h = new hetima.TorrentPieceHashCreator();
       return h.createPieceHash(file, 16 * 1024).then((hetima.CreatePieceHashResult r) {
         List<int> expect = [196, 42, 125, 9, 64, 47, 78, 143, 209, 15, 188, 87, 124, 199, 203, 157, 198, 52, 62, 142];
@@ -53,11 +53,11 @@ void main() {
 
     unit.test("005 hetimafile get double", () {
       hetima.TorrentPieceHashCreator h = new hetima.TorrentPieceHashCreator();
-      hetima_cl.HetimaFileGet file001 = new hetima_cl.HetimaFileGet("testdata/1kb/1k_b.txt");
-      hetima_cl.HetimaFileGet file002 = new hetima_cl.HetimaFileGet("testdata/1kb/1k.txt");
+      hetima_cl.HetimaDataGet file001 = new hetima_cl.HetimaDataGet("testdata/1kb/1k_b.txt");
+      hetima_cl.HetimaDataGet file002 = new hetima_cl.HetimaDataGet("testdata/1kb/1k.txt");
       return file001.getBlob().then((html.Blob b1) {
         return file002.getBlob().then((html.Blob b2) {
-          hetima_cl.HetimaFileBlob file = new hetima_cl.HetimaFileBlob(new html.Blob([b1, b2]));
+          hetima_cl.HetimaDataBlob file = new hetima_cl.HetimaDataBlob(new html.Blob([b1, b2]));
           return h.createPieceHash(file, 16 * 1024);
         });
       }).then((hetima.CreatePieceHashResult r) {
@@ -69,7 +69,7 @@ void main() {
       });
     });
     unit.test("006 create torrent", () {
-      hetima_cl.HetimaFileGet file = new hetima_cl.HetimaFileGet("testdata/1kb/1k.txt");
+      hetima_cl.HetimaDataGet file = new hetima_cl.HetimaDataGet("testdata/1kb/1k.txt");
       hetima.TorrentFileCreator c = new hetima.TorrentFileCreator();
       c.name = "1k.txt";
       c.announce = "http://www.example.com/tracker:6969";
@@ -92,7 +92,7 @@ void main() {
   unit.test("006 create torrent", () {
     bool testable = false;
     new async.Future.sync(() {
-      hetima_cl.HetimaFileGet file = new hetima_cl.HetimaFileGet("testdata/1k.txt.torrent");
+      hetima_cl.HetimaDataGet file = new hetima_cl.HetimaDataGet("testdata/1k.txt.torrent");
       return file.getLength().then((int length) {
         return file.read(0, length).then((hetima.ReadResult r) {
           return hetima.TorrentFile.createTorrentFileFromTorrentFile(new hetima.ArrayBuilder.fromList(r.buffer));

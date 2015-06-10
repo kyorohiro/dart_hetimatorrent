@@ -1,0 +1,9 @@
+name: HetimaTorrentFile
+description: A sample Chrome packaged application
+dependencies:
+  chrome: any
+  dart_web_toolkit: any
+  hetima:
+    git: https://github.com/kyorohiro/dart_hetimalib.git
+transformers:
+- chrome

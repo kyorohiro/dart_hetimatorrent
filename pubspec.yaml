@@ -6,7 +6,9 @@ environment:
 dependencies:
   crypto: any
   hetimacore:
-    git: https://github.com/kyorohiro/dart_hetimacore
+    git: https://github.com/kyorohiro/dart_hetimacore.git
+  hetimafile:
+    git: https://github.com/kyorohiro/dart_hetimafile.git
   hetimanet:
-    git: https://github.com/kyorohiro/dart_hetimanet
+    path: https://github.com/kyorohiro/dart_hetimanet.git
   unittest: 0.11.6

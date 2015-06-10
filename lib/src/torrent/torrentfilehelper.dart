@@ -14,7 +14,7 @@ class TorrentFileCreator {
   String name = "name";
   int piececLength = 16 * 1024;
 
-  async.Future<TorrentFileCreatorResult> createFromSingleFile(hetima.HetimaFile target) {
+  async.Future<TorrentFileCreatorResult> createFromSingleFile(hetima.HetimaData target) {
     async.Completer<TorrentFileCreatorResult> ret = new async.Completer();
     TorrentPieceHashCreator helper = new TorrentPieceHashCreator();
     target.getLength().then((int targetLength) {
@@ -35,7 +35,7 @@ class TorrentFileCreator {
     return ret.future;
   }
 
-  async.Future<hetima.WriteResult> saveTorrentFile(TorrentFile target, hetima.HetimaFile output) {
+  async.Future<hetima.WriteResult> saveTorrentFile(TorrentFile target, hetima.HetimaData output) {
     async.Completer<hetima.WriteResult> c = new async.Completer();
     data.Uint8List buffer = Bencode.encode(target.mMetadata);
     output.write(buffer, 0).then((hetima.WriteResult ret) {
@@ -73,7 +73,7 @@ class TorrentInfoHashCreator {
 }
 
 class TorrentPieceHashCreator {
-  async.Future<CreatePieceHashResult> createPieceHash(hetima.HetimaFile file, int pieceLength) {
+  async.Future<CreatePieceHashResult> createPieceHash(hetima.HetimaData file, int pieceLength) {
     async.Completer<CreatePieceHashResult> compleater = new async.Completer();
     CreatePieceHashResult result = new CreatePieceHashResult();
     result.pieceLength = pieceLength;
@@ -109,7 +109,7 @@ class CreatePieceHashResult {
   int _tmpStart = 0;
   int pieceLength = 0;
   hetima.ArrayBuilder pieceBuffer = new hetima.ArrayBuilder();
-  hetima.HetimaFile targetFile = null;
+  hetima.HetimaData targetFile = null;
 
   void add(List<int> data) {
     pieceBuffer.appendIntList(data, 0, data.length);
