@@ -1,4 +1,11 @@
-part of hetima;
+library hetimatorrent.torrent.trackermanager;
+import 'dart:core';
+import 'dart:async' as async;
+import 'trackerresponse.dart';
+import 'trackerurl.dart';
+import 'package:hetimacore/hetimacore.dart';
+import 'package:hetimanet/hetimanet.dart';
+import '../torrent/torrentfile.dart';
 
 class TrackerClient {
   TrackerUrl trackerUrl = new TrackerUrl();
@@ -68,7 +75,7 @@ class TrackerClient {
     HetiHttpClient currentClient = new HetiHttpClient(_socketBuilder);
     HetiHttpClientResponse httpResponse = null;
     print("--[A0]-" + trackerHost + "," + trackerPort.toString() + "," + path + header);
-    currentClient.connect(trackerHost, trackerPort).then((int state) {
+    currentClient.connect(trackerHost, trackerPort).then((HetiHttpClientConnectResult state) {
       return currentClient.get(path+header, {"Connection" : "close"});
     }).then((HetiHttpClientResponse response){
       httpResponse = response;
