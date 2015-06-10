@@ -70,7 +70,7 @@ class MainView {
 class FileSelectResult {
   String apath;
   String fname;
-  hetima.HetimaFile file;
+  hetima.HetimaData file;
 }
 
 /**

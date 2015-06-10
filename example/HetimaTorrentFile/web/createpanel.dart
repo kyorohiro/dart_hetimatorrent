@@ -60,7 +60,7 @@ class CreatePanel {
       print("##${_fileUpload.title}");
       String path = _fileUpload.getFilename();
       for (html.File f in (_fileUpload.getElement() as html.InputElement).files) {
-        hetimacl.HetimaFileBlob file = new hetimacl.HetimaFileBlob(f);
+        hetima.HetimaDataBlob file = new hetima.HetimaDataBlob(f);
         file.getLength().then((int length) {
           print("###${length}");
           FileSelectResult ff = new FileSelectResult();
@@ -86,7 +86,7 @@ class CreatePanel {
       chrome.fileSystem.chooseEntry(new chrome.ChooseEntryOptions(type: chrome.ChooseEntryType.SAVE_FILE, suggestedName: "a.torrent")).then((chrome.ChooseEntryResult chooseEntryResult) {
         choseFile = chooseEntryResult.entry.toUrl();
         chrome.fileSystem.getWritableEntry(chooseEntryResult.entry).then((chrome.ChromeFileEntry copyTo) {
-          hetimacl.HetimaFileBlob copyFrom = new hetimacl.HetimaFileBlob(_rawFile);
+          hetima.HetimaDataBlob copyFrom = new hetima.HetimaDataBlob(_rawFile);
           copyFrom.getLength().then((int length) {
             copyFrom.read(0, length).then((hetima.ReadResult readResult) {
               chrome.ArrayBuffer buffer = new chrome.ArrayBuffer.fromBytes(readResult.buffer.toList());

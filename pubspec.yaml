@@ -10,5 +10,5 @@ dependencies:
   hetimafile:
     git: https://github.com/kyorohiro/dart_hetimafile.git
   hetimanet:
-    path: https://github.com/kyorohiro/dart_hetimanet.git
+    git: https://github.com/kyorohiro/dart_hetimanet.git
   unittest: 0.11.6

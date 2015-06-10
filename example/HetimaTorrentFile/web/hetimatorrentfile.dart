@@ -12,8 +12,11 @@ import 'package:dart_web_toolkit/text.dart' as text;
 import 'package:dart_web_toolkit/scheduler.dart' as scheduler;
 import 'package:dart_web_toolkit/validation.dart' as validation;
 
-import 'package:hetima/hetima_cl.dart' as hetimacl;
-import 'package:hetima/hetima.dart' as hetima;
+//import 'package:hetima/hetima_cl.dart' as hetimacl;
+//import 'package:hetima/hetima.dart' as hetima;
+import 'package:hetimacore/hetimacore.dart' as hetima;
+import 'package:hetimacore/hetimacore_cl.dart' as hetima;
+import 'package:hetimatorrent/hetimatorrent.dart' as hetima;
 import 'dart:js' as js;
 part './mainview.dart';
 part './loadpanel.dart';
@@ -36,7 +39,7 @@ void createTorrentFile(FileSelectResult r) {
   creator.announce = mView.announce;
   creator.piececLength = mView.pieceLength;
   creator.createFromSingleFile(r.file).then((hetima.TorrentFileCreatorResult r) {
-    hetimacl.HetimaFileFS fsfile = new hetimacl.HetimaFileFS(creator.name + ".torrent");
+    hetima.HetimaDataFS fsfile = new hetima.HetimaDataFS(creator.name + ".torrent");
     fsfile.getLength().then((int length) {
       List<int> buffer = hetima.Bencode.encode(r.torrentFile.mMetadata);
       return fsfile.write(buffer, 0).then((hetima.WriteResult r) {
@@ -55,7 +58,7 @@ void createTorrentFile(FileSelectResult r) {
 }
 
 void loadTorrentFile(FileSelectResult r) {
-  hetima.HetimaBuilder builder = new hetima.HetimaFileToBuilder(r.file);
+  hetima.HetimaReader builder = new hetima.HetimaFileToBuilder(r.file);
   hetima.TorrentFile.createTorrentFileFromTorrentFile(builder).then((hetima.TorrentFile f) {
     f.createInfoSha1().then((List<int> sha1hash) {
       StringBuffer buffer = new StringBuffer();
