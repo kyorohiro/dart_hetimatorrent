@@ -1,4 +1,7 @@
-part of hetima;
+library hetimatorrent.torrent.trackerrequest;
+import 'dart:core';
+import 'package:hetimacore/hetimacore.dart';
+import 'trackerurl.dart';
 
 class TrackerRequest {
 

@@ -1,5 +1,11 @@
-part of hetima;
-
+library hetimatorrent.torrent.trackerresponse;
+import 'dart:core';
+import 'dart:typed_data' as data;
+import 'dart:async' as async;
+import 'package:hetimacore/hetimacore.dart';
+import 'trackerurl.dart';
+import '../torrent/bencode.dart';
+import '../torrent/hetibencode.dart';
 
 class TrackerResponse {
   static final String KEY_INTERVAL = "interval";
@@ -19,7 +25,7 @@ class TrackerResponse {
     initFromMap(c);
   }
 
-  static async.Future<TrackerResponse> createFromContent(HetimaBuilder builder) {
+  static async.Future<TrackerResponse> createFromContent(HetimaReader builder) {
     async.Completer<TrackerResponse> completer = new async.Completer();
     EasyParser parser = new EasyParser(builder);
     HetiBencode.decode(parser).then((Object o) {
