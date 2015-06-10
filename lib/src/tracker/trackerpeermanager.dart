@@ -1,4 +1,9 @@
-part of hetima;
+library hetimatorrent.torrent.trackermanager;
+import 'dart:core';
+import 'trackerrequest.dart';
+import 'trackerresponse.dart';
+import 'trackerurl.dart';
+import '../util/shufflelinkedlist.dart';
 
 class TrackerPeerManager {
   List<int> _managdInfoHash = new List();
