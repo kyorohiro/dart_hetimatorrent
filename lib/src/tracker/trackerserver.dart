@@ -89,8 +89,9 @@ class TrackerServer {
           if (outputLog) {
             print("TrackerServer#onListen ${info.peerAddress} ${info.peerPort}");
           }
-          List<int> ip = HetiIP.toRawIP(info.peerAddress);          
-          updateResponse(item.option, ip);
+          List<int> ip = HetiIP.toRawIP(info.peerAddress);       
+          String qurey =item.option.replaceFirst(new RegExp(r"^\?"), "");
+          updateResponse(qurey, ip);   
           List<int> cont = createResponse(item.option);
           _server.response(item.req, new HetimaDataMemory(cont));
         } catch (e) {
@@ -109,7 +110,8 @@ class TrackerServer {
     if (outputLog) {
       print("TrackerServer#onListen" + query);
     }
-    Map<String, String> parameter = HttpUrlDecoder.queryMap(query);
+
+    Map<String, String> parameter = HttpUrlDecoder.queryMap(query.replaceFirst(new RegExp(r"^\?"), ""));
     String infoHashAsString = parameter[TrackerUrl.KEY_INFO_HASH];
     String compactAsString = parameter[TrackerUrl.KEY_COMPACT];
 
