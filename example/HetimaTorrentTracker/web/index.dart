@@ -9,11 +9,44 @@ import 'package:hetimatorrent/hetimatorrent.dart';
 
 Tab tab = new Tab();
 Dialog dialog = new Dialog();
+Map<String,TorrentFile> managedTorrentFile = {};
+
+html.InputElement fileInput = html.querySelector("#fileinput");
+html.InputElement managedfile = html.querySelector("#managedfile");
 
 void main() {
   print("hello world");
   tab.init();
   dialog.init();
+
+  fileInput.onChange.listen((html.Event e) {
+    print("==");
+    List<html.File> s = [];
+    s.addAll(fileInput.files);
+    while(s.length > 0) {
+      html.File n = s.removeAt(0);
+      print("#${n.name} ${e}");
+      TorrentFile.createTorrentFileFromTorrentFile(new HetimaFileToBuilder(new HetimaDataBlob(n)))
+      .then((TorrentFile f) {
+        return f.createInfoSha1().then((List<int> v) {
+          String key = PercentEncode.encode(v);
+          managedTorrentFile[key] = f;
+        });
+      }).catchError((e){
+        dialog.show("failed parse torrent");
+      });
+    }
+  });
+  tab.onShow.listen((String t) {
+    print("=t= ${t}");
+    if(0 == t.compareTo("#con-file")) {
+      managedfile.nodes.clear();
+      for(String key in managedTorrentFile.keys) {
+        managedfile.nodes.add(new html.Element.html("<div>${key}</div>"));
+      }
+    }
+  });
+  print("=s=");
 }
 
 class Dialog {
