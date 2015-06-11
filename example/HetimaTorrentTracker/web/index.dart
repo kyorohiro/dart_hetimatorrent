@@ -5,6 +5,9 @@ import 'dart:async';
 import 'package:chrome/chrome_app.dart' as chrome;
 import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimacore/hetimacore_cl.dart';
+import 'package:hetimanet/hetimanet.dart';
+import 'package:hetimanet/hetimanet_chrome.dart';
+
 import 'package:hetimatorrent/hetimatorrent.dart';
 
 Tab tab = new Tab();
@@ -16,8 +19,9 @@ html.InputElement managedfile = html.querySelector("#managedfile");
 
 html.InputElement startServerBtn = html.querySelector("#startserver");
 html.InputElement stopServerBtn = html.querySelector("#stopserver");
+html.InputElement loadServerBtn = html.querySelector("#loaderserver");
 
-
+TrackerServer trackerServer = new TrackerServer(new HetiSocketBuilderChrome());
 
 void main() {
   print("hello world");
@@ -44,13 +48,35 @@ void main() {
   });
 
   startServerBtn.onClick.listen((html.MouseEvent e) {
-    stopServerBtn.style.display = "block";
+    loadServerBtn.style.display = "block";
+    stopServerBtn.style.display = "none";
     startServerBtn.style.display = "none";
+    trackerServer.start().then((StartResult r) {
+      stopServerBtn.style.display = "block";
+      startServerBtn.style.display = "none";
+      loadServerBtn.style.display = "none";
+    }).catchError((e){
+      stopServerBtn.style.display = "none";
+      startServerBtn.style.display = "block";
+      loadServerBtn.style.display = "none";
+    });
   });
+
   stopServerBtn.onClick.listen((html.MouseEvent e) {
-    startServerBtn.style.display = "block";
-    stopServerBtn.style.display = "none";    
+    loadServerBtn.style.display = "block";
+    stopServerBtn.style.display = "none";
+    startServerBtn.style.display = "none";
+    trackerServer.stop().then((StopResult r) {
+      startServerBtn.style.display = "block";
+      stopServerBtn.style.display = "none";
+      loadServerBtn.style.display = "none";
+    }).catchError((e){
+      startServerBtn.style.display = "none";
+      stopServerBtn.style.display = "block";
+      loadServerBtn.style.display = "none";
+    });
   });
+
   tab.onShow.listen((String t) {
     print("=t= ${t}");
     if(0 == t.compareTo("#con-file")) {
