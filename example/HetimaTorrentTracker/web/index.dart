@@ -14,6 +14,11 @@ Map<String,TorrentFile> managedTorrentFile = {};
 html.InputElement fileInput = html.querySelector("#fileinput");
 html.InputElement managedfile = html.querySelector("#managedfile");
 
+html.InputElement startServerBtn = html.querySelector("#startserver");
+html.InputElement stopServerBtn = html.querySelector("#stopserver");
+
+
+
 void main() {
   print("hello world");
   tab.init();
@@ -38,6 +43,14 @@ void main() {
     }
   });
 
+  startServerBtn.onClick.listen((html.MouseEvent e) {
+    stopServerBtn.style.display = "block";
+    startServerBtn.style.display = "none";
+  });
+  stopServerBtn.onClick.listen((html.MouseEvent e) {
+    startServerBtn.style.display = "block";
+    stopServerBtn.style.display = "none";    
+  });
   tab.onShow.listen((String t) {
     print("=t= ${t}");
     if(0 == t.compareTo("#con-file")) {
