@@ -1,0 +1,96 @@
+library app;
+
+import 'dart:html' as html;
+import 'dart:async';
+import 'package:chrome/chrome_app.dart' as chrome;
+import 'package:hetimacore/hetimacore.dart';
+import 'package:hetimacore/hetimacore_cl.dart';
+import 'package:hetimatorrent/hetimatorrent.dart';
+
+Tab tab = new Tab();
+Dialog dialog = new Dialog();
+
+void main() {
+  print("hello world");
+  tab.init();
+  dialog.init();
+}
+
+class Dialog {
+  html.Element dialog = html.querySelector('#dialog');
+  html.ButtonElement dialogBtn = html.querySelector('#dialog-btn');
+  html.ButtonElement dialogMessage = html.querySelector('#dialog-message');
+
+  Dialog() {
+    init();
+  }
+
+  void init() {
+    dialogBtn.onClick.listen((html.MouseEvent e) {
+      dialog.style.display = "none";
+    });
+  }
+
+  void show(String message) {
+    dialog.style.left = "${html.window.innerWidth/2-100}px";
+    dialog.style.top = "${html.window.innerHeight/2-100}px";
+    dialog.style.position = "absolute";
+    dialog.style.display = "block";
+    dialog.style.width = "200px";
+    dialog.style.zIndex = "50";
+    dialogMessage.value = message;
+  }
+}
+
+class Tab {
+  Map<String, String> tabs = {
+    "#m00_file": "#con-file", //"#editor-file",
+    "#m01_now": "#con-now", //"#editor-now",
+    "#m00_clone": "#com-clone"
+  };
+
+  html.Element current = null;
+
+  void selectTab(String id) {
+    html.Element i = html.querySelector(id);
+    print("##click ${i}");
+
+    display([id]);
+    i.classes.add("selected");
+    if (current != null && current != i) {
+      current.classes.remove("selected");
+    }
+    current = i;
+
+    update([id]);
+  }
+
+  void init() {
+    for (String t in tabs.keys) {
+      html.Element i = html.querySelector(t);
+      i.onClick.listen((html.MouseEvent e) {
+        selectTab(t);
+      });
+    }
+  }
+
+  void display(List<String> displayList) {
+    for (String t in tabs.keys) {
+      if (displayList.contains(t)) {
+        html.querySelector(tabs[t]).style.display = "block";
+      } else {
+        html.querySelector(tabs[t]).style.display = "none";
+      }
+    }
+  }
+
+  StreamController<String> _controller = new StreamController<String>();
+  Stream<String> get onShow => _controller.stream;
+  void update(List<String> ids) {
+    for (String id in ids) {
+      if (tabs.containsKey(id)) {
+        _controller.add(tabs[id]);
+      }
+    }
+  }
+}
