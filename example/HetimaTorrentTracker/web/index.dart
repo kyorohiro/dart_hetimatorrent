@@ -37,15 +37,22 @@ void main() {
       });
     }
   });
+
   tab.onShow.listen((String t) {
     print("=t= ${t}");
     if(0 == t.compareTo("#con-file")) {
       managedfile.nodes.clear();
       for(String key in managedTorrentFile.keys) {
-        managedfile.nodes.add(new html.Element.html("<div>${key}</div>"));
+        String id = key.replaceAll("%","");
+        managedfile.nodes.add(new html.Element.html("""<div><button id="btn_${id}">X</button><span>${key}</span></div>"""));
+        html.ButtonElement btn = html.querySelector("#btn_${id}");
+        btn.onClick.listen((html.MouseEvent e) {
+          managedfile.nodes.remove(btn.parent);
+        });
       }
     }
   });
+
   print("=s=");
 }
 
