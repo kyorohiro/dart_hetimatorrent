@@ -21,6 +21,10 @@ html.InputElement startServerBtn = html.querySelector("#startserver");
 html.InputElement stopServerBtn = html.querySelector("#stopserver");
 html.InputElement loadServerBtn = html.querySelector("#loaderserver");
 
+html.SpanElement localAddressSpn = html.querySelector("#localaddress");
+html.SpanElement localPortSpn = html.querySelector("#localport");
+
+
 TrackerServer trackerServer = new TrackerServer(new HetiSocketBuilderChrome());
 
 void main() {
@@ -52,6 +56,8 @@ void main() {
     stopServerBtn.style.display = "none";
     startServerBtn.style.display = "none";
     trackerServer.start().then((StartResult r) {
+      localPortSpn.innerHtml = "${trackerServer.port}";
+      localAddressSpn.innerHtml = trackerServer.address;
       stopServerBtn.style.display = "block";
       startServerBtn.style.display = "none";
       loadServerBtn.style.display = "none";

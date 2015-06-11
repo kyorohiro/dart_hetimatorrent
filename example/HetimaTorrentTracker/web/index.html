@@ -28,10 +28,27 @@
      <div>
      <input type="file" id="fileinput">
      </div>
+
      <div>
-     <button id="startserver" style="display:block">Start</button>
-     <button id="stopserver" style="display:none">Stop</button>     
-     <object id="loaderserver" type="image/svg+xml" data="loader_b.svg" width="32" height="32" style="display: none"></object>
+       <button id="startserver" style="display:block">Start</button>
+       <button id="stopserver" style="display:none">Stop</button>     
+       <object id="loaderserver" type="image/svg+xml" data="loader_b.svg" width="32" height="32" style="display: none"></object>
+       <div>
+         <label>local address:</label>   
+         <span id="localaddress">...</span>
+       </div>
+       <div>
+        <label>local port:</label>   
+        <span id="localport">...</span>
+       </div>
+       <div> 
+        <label>global address:</label>   
+        <span id="globaladdress">...</span>
+       </div>    
+       <div>    
+        <label>global port:</label>   
+        <span id="globalport">...</span>
+       </div>    
      </div>
     </div> 
 

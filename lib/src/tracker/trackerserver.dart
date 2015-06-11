@@ -22,6 +22,8 @@ class TrackerServer {
 
   TrackerServer(HetiSocketBuilder socketBuilder) {
     _server = new HetiHttpServerHelper(socketBuilder);
+    address = "0.0.0.0";
+    port = 6969;
   }
 
   void add(String hash) {
@@ -58,6 +60,8 @@ class TrackerServer {
       print("TrackerServer#start");
     }
     async.Completer<StartResult> c = new async.Completer();
+    _server.basePort = port;
+    _server.numOfRetry = 0;
 
     _server.startServer().then((HetiHttpStartServerResult re) {
       c.complete(new StartResult());
