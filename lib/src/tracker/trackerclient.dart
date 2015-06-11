@@ -8,6 +8,7 @@ import 'package:hetimanet/hetimanet.dart';
 import '../torrent/torrentfile.dart';
 
 class TrackerClient {
+
   TrackerUrl trackerUrl = new TrackerUrl();
   String get trackerHost => trackerUrl.trackerHost;
   void set trackerHost(String host) {

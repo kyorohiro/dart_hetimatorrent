@@ -1,13 +1,27 @@
-part of hetima_sv;
+library hetimatorrent.torrent.trackerrserver;
+
+import 'dart:core';
+import 'dart:typed_data' as type;
+import 'dart:async' as async;
+import 'package:hetimacore/hetimacore.dart';
+import 'package:hetimanet/hetimanet.dart';
+import 'trackerurl.dart';
+import 'trackerpeermanager.dart';
+import '../torrent/bencode.dart';
+import '../torrent/hetibencode.dart';
+import 'trackerresponse.dart';
+import 'trackerrequest.dart';
 
 class TrackerServer {
   String address;
   int port;
-  io.HttpServer _server = null;
+  HetiHttpServerHelper _server = null;
   bool outputLog = true;
   List<TrackerPeerManager> _peerManagerList = new List();
 
-  TrackerServer() {
+
+  TrackerServer(HetiSocketBuilder socketBuilder) {
+    _server = new HetiHttpServerHelper(socketBuilder);
   }
 
   void add(String hash) {
@@ -44,19 +58,13 @@ class TrackerServer {
       print("TrackerServer#start");
     }
     async.Completer<StartResult> c = new async.Completer();
-    io.HttpServer.bind(address, port).then((io.HttpServer server) {
-      _server = server;
-      server.listen(onListen);
+
+    _server.startServer().then((HetiHttpStartServerResult re) {
       c.complete(new StartResult());
-      if (outputLog) {
-        print("TrackerServer#start:##ok");
-      }
     }).catchError((e) {
-      c.complete(new StartResult());
-      if (outputLog) {
-        print("TrackerServer#start:##ng");
-      }
+      c.completeError(e);
     });
+    _server.onResponse.listen(onListen);
     return c.future;
   }
 
@@ -65,31 +73,30 @@ class TrackerServer {
       print("TrackerServer#stop");
     }
     async.Completer<StopResult> c = new async.Completer();
-    _server.close(force: true).then((e) {
-      if (outputLog) {
-        print("TrackerServer#end");
-      }
-    });
+    _server.stopServer();
+    c.complete(new StopResult());
     return c.future;
   }
 
-  void onListen(io.HttpRequest request) {
+  void onListen(HetiHttpServerPlusResponseItem item) {
     try {
-      if (outputLog) {
-        print("TrackerServer#onListen" + request.uri.toString());
-      }
-      io.InternetAddress addressAsInet = request.connectionInfo.remoteAddress;
-      List<int> ip = addressAsInet.rawAddress;
-      updateResponse(request.uri.query, ip);
-      List<int> cont = createResponse(request.uri.query);
-      request.response.statusCode = io.HttpStatus.OK;
-      request.response.add(cont);
+      item.socket.getSocketInfo().then((HetiSocketInfo info) {
+        try {
+          if (outputLog) {
+            print("TrackerServer#onListen ${info.peerAddress} ${info.peerPort}");
+          }
+          List<int> ip = HetiIP.toRawIP(info.peerAddress);          
+          updateResponse(item.option, ip);
+          List<int> cont = createResponse(item.option);
+          _server.response(item.req, new HetimaDataMemory(cont));
+        } catch (e) {
+          print("error:" + e.toString());
+        } finally {
+        }
+      });
     } catch (e) {
-      request.response.statusCode = io.HttpStatus.BAD_REQUEST;
-      print("error:" + e.toString());
-    } finally {
       try {
-        request.response.close();
+       item.socket.close();
       } catch (f) {}
     }
   }
@@ -111,7 +118,9 @@ class TrackerServer {
     TrackerPeerManager manager = find(infoHash);
 
     if (null == manager) {
-      if (outputLog) { print("TrackerServer#onListen:###unmanaged");}
+      if (outputLog) {
+        print("TrackerServer#onListen:###unmanaged");
+      }
       // unmanaged torrent data
       Map<String, Object> errorResponse = new Map();
       errorResponse[TrackerResponse.KEY_FAILURE_REASON] = "unmanaged torrent data";
@@ -127,7 +136,9 @@ class TrackerServer {
   }
 
   void updateResponse(String query, List<int> ip) {
-    if (outputLog) {print("TrackerServer#updateResponse" + query);}
+    if (outputLog) {
+      print("TrackerServer#updateResponse" + query);
+    }
     Map<String, String> parameter = HttpUrlDecoder.queryMap(query);
     String infoHashAsString = parameter[TrackerUrl.KEY_INFO_HASH];
 
@@ -150,8 +161,5 @@ class TrackerServer {
   }
 }
 
-
-class StopResult {
-}
-class StartResult {
-}
+class StopResult {}
+class StartResult {}

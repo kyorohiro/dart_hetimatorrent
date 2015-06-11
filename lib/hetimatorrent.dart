@@ -9,3 +9,4 @@ export 'src/tracker/trackerrequest.dart';
 export 'src/tracker/trackerresponse.dart';
 export 'src/util/shufflelinkedlist.dart';
 export 'src/tracker/trackerpeermanager.dart';
+export 'src/tracker/trackerserver.dart';
