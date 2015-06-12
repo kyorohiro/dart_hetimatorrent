@@ -13,7 +13,9 @@
   },
   "sockets": {
         "udp": {
-            "send": "*"
+            "send": ["*:*"],
+            "bind": ["*:*"],
+            "multicastMembership": ""
         },
         "tcp": {
             "connect": "*"
@@ -21,7 +23,7 @@
         "tcpServer": {
             "listen": "*"
         }
-    },
+    }, 
   "permissions": [
     "http://*/*",
     "https://*/*",
@@ -33,3 +35,4 @@
     {"fileSystem": ["write", "retainEntries", "directory", "retainEntries"]} 
   ]
 }
+

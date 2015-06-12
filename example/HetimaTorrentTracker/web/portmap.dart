@@ -4,16 +4,15 @@ import 'dart:async' as async;
 import 'package:hetimanet/hetimanet.dart';
 import 'package:hetimanet/hetimanet_chrome.dart';
 
-
 /**
  * app parts
  */
 class PortMapHelper {
   String appid = "";
   String localAddress = "0.0.0.0";
-  String _externalAddress = "0.0.0.0";
   int basePort = 18085;
-  int localPort = 18085;
+  int _localPort = 18085;
+  int numOfRetry = 0;
   int _externalPort = 18085;
   int get externalPort => _externalPort;
 
@@ -41,10 +40,10 @@ class PortMapHelper {
         pppDevice.requestGetExternalIPAddress().then((UpnpGetExternalIPAddressResponse res) {
           _controllerUpdateGlobalIp.add(res.externalIp);
         });
-        int baseExternalPort = _externalPort + 50;
+        int maxRetryExternalPort = _externalPort + numOfRetry;
         tryAddPortMap() {
           pppDevice
-              .requestAddPortMapping(_externalPort, UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_TCP, localPort, localAddress, UpnpPPPDevice.VALUE_ENABLE, "hetim(${appid})", 0)
+              .requestAddPortMapping(_externalPort, UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_TCP, _localPort, localAddress, UpnpPPPDevice.VALUE_ENABLE, "hetim(${appid})", 0)
               .then((UpnpAddPortMappingResponse res) {
             if (200 == res.resultCode) {
               _controllerUpdateGlobalPort.add("${_externalPort}");
@@ -53,7 +52,7 @@ class PortMapHelper {
             }
             if (500 == res.resultCode) {
               _externalPort++;
-              if (_externalPort < baseExternalPort) {
+              if (_externalPort < maxRetryExternalPort) {
                 tryAddPortMap();
               }
             }
@@ -120,8 +119,7 @@ class PortMapHelper {
       for (HetiNetworkInterface i in l) {
         if (i.prefixLength == 24 && !i.address.startsWith("127")) {
           _controllerUpdateLocalIp.add(i.address);
-          localAddress = i.address;
-          completer.complete(0);
+          completer.complete(i.address);
           return;
         }
       }
@@ -129,8 +127,7 @@ class PortMapHelper {
       for (HetiNetworkInterface i in l) {
         if (i.prefixLength == 64) {
           _controllerUpdateLocalIp.add(i.address);
-          localAddress = i.address;
-          completer.complete(0);
+          completer.complete(i.address);
           return;
         }
       }

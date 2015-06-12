@@ -22,11 +22,12 @@ html.InputElement startServerBtn = html.querySelector("#startserver");
 html.InputElement stopServerBtn = html.querySelector("#stopserver");
 html.InputElement loadServerBtn = html.querySelector("#loaderserver");
 
-html.SpanElement localAddressSpn = html.querySelector("#localaddress");
-html.SpanElement localPortSpn = html.querySelector("#localport");
+html.SpanElement outputLocalAddressSpn = html.querySelector("#localaddress");
+html.SpanElement outputLocalPortSpn = html.querySelector("#localport");
 
-html.InputElement localAddress = html.querySelector("#input-localaddress");
-html.InputElement localPort = html.querySelector("#input-localport");
+html.InputElement inputLocalAddress = html.querySelector("#input-localaddress");
+html.InputElement inputLocalPort = html.querySelector("#input-localport");
+html.InputElement inputGlobalPort = html.querySelector("#input-globalport");
 
 TrackerServer trackerServer = new TrackerServer(new HetiSocketBuilderChrome());
 PortMapHelper portMapHelder = new PortMapHelper("HetimaTorrentTracker");
@@ -35,8 +36,9 @@ PortMapHelper portMapHelder = new PortMapHelper("HetimaTorrentTracker");
 //
 html.SpanElement torrentHashSpan = html.querySelector("#torrent-hash");
 html.SpanElement torrentRemoveBtn = html.querySelector("#torrent-remove-btn");
-
+bool upnpIsUse = false;
 String selectKey = null;
+
 void main() {
   print("hello world");
   tab.init();
@@ -77,14 +79,19 @@ void main() {
     stopServerBtn.style.display = "none";
     startServerBtn.style.display = "none";
     
-    trackerServer.address = localAddress.value;
-    trackerServer.port = int.parse(localPort.value);
+    trackerServer.address = inputLocalAddress.value;
+    trackerServer.port = int.parse(inputLocalPort.value);
     trackerServer.start().then((StartResult r) {
-      localPortSpn.innerHtml = "${trackerServer.port}";
-      localAddressSpn.innerHtml = trackerServer.address;
+      outputLocalPortSpn.innerHtml = "${trackerServer.port}";
+      outputLocalAddressSpn.innerHtml = trackerServer.address;
       stopServerBtn.style.display = "block";
       startServerBtn.style.display = "none";
       loadServerBtn.style.display = "none";
+      if(upnpIsUse == true) {
+        portMapHelder.basePort = int.parse(inputGlobalPort.value);
+        portMapHelder.numOfRetry = 0;
+        portMapHelder.startPortMap();
+      }
     }).catchError((e) {
       stopServerBtn.style.display = "none";
       startServerBtn.style.display = "block";
@@ -96,6 +103,7 @@ void main() {
     loadServerBtn.style.display = "block";
     stopServerBtn.style.display = "none";
     startServerBtn.style.display = "none";
+    portMapHelder.deleteAllPortMap();
     trackerServer.stop().then((StopResult r) {
       startServerBtn.style.display = "block";
       stopServerBtn.style.display = "none";
@@ -118,6 +126,25 @@ void main() {
       }
   });
 
+  // Adds a click event for each radio button in the group with name "gender"
+  html.querySelectorAll('[name="upnpon"]').forEach((html.InputElement radioButton) {
+    radioButton.onClick.listen((html.MouseEvent e) {
+      html.InputElement clicked = e.target;
+      print("The user is ${clicked.value}");
+      if(clicked.value == "Use") {
+        upnpIsUse = true;
+      } else {
+        upnpIsUse = false;
+      }
+    });
+  });
+  
+  portMapHelder.onUpdateGlobalIp.listen((String globalIP) {
+    outputLocalAddressSpn.setInnerHtml(globalIP);
+  });
+  portMapHelder.onUpdateGlobalPort.listen((String globalPort) {
+    outputLocalPortSpn.setInnerHtml(globalPort);    
+  });
   print("=s=");
 }
 
