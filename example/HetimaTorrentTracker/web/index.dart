@@ -67,7 +67,6 @@ void main() {
           managedTorrentFile[key] = f;
           tab.add("${key}", "con-now");
           trackerServer.addInfoHash(infoHash);
-//          trackerServer.add(hash);
         });
       }).catchError((e) {
         dialog.show("failed parse torrent");
