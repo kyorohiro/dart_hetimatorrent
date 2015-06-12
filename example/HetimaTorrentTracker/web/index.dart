@@ -12,7 +12,7 @@ import 'package:hetimatorrent/hetimatorrent.dart';
 
 Tab tab = new Tab();
 Dialog dialog = new Dialog();
-Map<String,TorrentFile> managedTorrentFile = {};
+Map<String, TorrentFile> managedTorrentFile = {};
 
 html.InputElement fileInput = html.querySelector("#fileinput");
 html.InputElement managedfile = html.querySelector("#managedfile");
@@ -24,28 +24,37 @@ html.InputElement loadServerBtn = html.querySelector("#loaderserver");
 html.SpanElement localAddressSpn = html.querySelector("#localaddress");
 html.SpanElement localPortSpn = html.querySelector("#localport");
 
-
 TrackerServer trackerServer = new TrackerServer(new HetiSocketBuilderChrome());
+//
+//
+html.SpanElement torrentHashSpan = html.querySelector("#torrent-hash");
+html.SpanElement torrentRemoveBtn = html.querySelector("#torrent-remove-btn");
 
+String selectKey = null;
 void main() {
   print("hello world");
   tab.init();
   dialog.init();
-
+  torrentRemoveBtn.onClick.listen((html.MouseEvent e) {
+    if(selectKey != null) {
+      tab.remove(selectKey);
+    }
+  });
   fileInput.onChange.listen((html.Event e) {
     print("==");
     List<html.File> s = [];
     s.addAll(fileInput.files);
-    while(s.length > 0) {
+    while (s.length > 0) {
       html.File n = s.removeAt(0);
       print("#${n.name} ${e}");
-      TorrentFile.createTorrentFileFromTorrentFile(new HetimaFileToBuilder(new HetimaDataBlob(n)))
-      .then((TorrentFile f) {
+      TorrentFile.createTorrentFileFromTorrentFile(new HetimaFileToBuilder(new HetimaDataBlob(n))).then((TorrentFile f) {
         return f.createInfoSha1().then((List<int> v) {
           String key = PercentEncode.encode(v);
+          key = key.replaceAll("%", "");
           managedTorrentFile[key] = f;
+          tab.add("${key}", "con-now");
         });
-      }).catchError((e){
+      }).catchError((e) {
         dialog.show("failed parse torrent");
       });
     }
@@ -61,7 +70,7 @@ void main() {
       stopServerBtn.style.display = "block";
       startServerBtn.style.display = "none";
       loadServerBtn.style.display = "none";
-    }).catchError((e){
+    }).catchError((e) {
       stopServerBtn.style.display = "none";
       startServerBtn.style.display = "block";
       loadServerBtn.style.display = "none";
@@ -76,26 +85,22 @@ void main() {
       startServerBtn.style.display = "block";
       stopServerBtn.style.display = "none";
       loadServerBtn.style.display = "none";
-    }).catchError((e){
+    }).catchError((e) {
       startServerBtn.style.display = "none";
       stopServerBtn.style.display = "block";
       loadServerBtn.style.display = "none";
     });
   });
 
-  tab.onShow.listen((String t) {
+  tab.onShow.listen((TabInfo info) {
+    String t = info.cont;
     print("=t= ${t}");
-    if(0 == t.compareTo("#con-file")) {
-      managedfile.nodes.clear();
-      for(String key in managedTorrentFile.keys) {
-        String id = key.replaceAll("%","");
-        managedfile.nodes.add(new html.Element.html("""<div><button id="btn_${id}">X</button><span>${key}</span></div>"""));
-        html.ButtonElement btn = html.querySelector("#btn_${id}");
-        btn.onClick.listen((html.MouseEvent e) {
-          managedfile.nodes.remove(btn.parent);
-        });
+
+      String key = info.key;
+      if (managedTorrentFile.containsKey(key)) {
+        torrentHashSpan.setInnerHtml("${info.key}");
+        selectKey = key;
       }
-    }
   });
 
   print("=s=");
@@ -128,13 +133,31 @@ class Dialog {
 }
 
 class Tab {
+  html.InputElement tabContainer = html.querySelector("#tabcont");
   Map<String, String> tabs = {
-    "#m00_file": "#con-file", //"#editor-file",
-    "#m01_now": "#con-now", //"#editor-now",
     "#m00_clone": "#com-clone"
   };
 
   html.Element current = null;
+
+  int v = 100;
+  Map<String, String> keyManager = {};
+  void add(String key, String cont) {
+    keyManager[key] = "#d00_${v++}";
+    tabs[keyManager[key]] = "#${cont}";
+    html.Element e = new html.Element.html("""<li id="${(keyManager[key]).substring(1)}">${key.substring(0,4)}</li>""");
+    tabContainer.append(e);
+    updateTab();
+  }
+
+  void remove(String key) {
+    tabs.remove(keyManager[key]);
+    html.Element t = html.querySelector(keyManager[key]);
+    if (t != null) {
+      tabContainer.nodes.remove(t);
+    }
+    updateTab();
+  }
 
   void selectTab(String id) {
     html.Element i = html.querySelector(id);
@@ -151,6 +174,10 @@ class Tab {
   }
 
   void init() {
+    updateTab();
+  }
+
+  void updateTab() {
     for (String t in tabs.keys) {
       html.Element i = html.querySelector(t);
       i.onClick.listen((html.MouseEvent e) {
@@ -160,22 +187,48 @@ class Tab {
   }
 
   void display(List<String> displayList) {
+    List<html.Element> blockList = [];
     for (String t in tabs.keys) {
       if (displayList.contains(t)) {
-        html.querySelector(tabs[t]).style.display = "block";
+        html.Element tt = html.querySelector(tabs[t]);
+        if (tt != null) {
+          blockList.add(tt);
+        }
       } else {
-        html.querySelector(tabs[t]).style.display = "none";
+        html.Element tt = html.querySelector(tabs[t]);
+        if (tt != null) {
+          tt.style.display = "none";
+        }
       }
+    }
+    for(html.Element tt in blockList) {
+      tt.style.display = "block";
     }
   }
 
-  StreamController<String> _controller = new StreamController<String>();
-  Stream<String> get onShow => _controller.stream;
+  StreamController<TabInfo> _controller = new StreamController<TabInfo>();
+  Stream<TabInfo> get onShow => _controller.stream;
   void update(List<String> ids) {
     for (String id in ids) {
       if (tabs.containsKey(id)) {
-        _controller.add(tabs[id]);
+        TabInfo ret = new TabInfo()
+                  ..cont = tabs[id]
+                  ..key = id;
+        if(keyManager.containsValue(id)){
+          for(String key in keyManager.keys) {
+            if(keyManager[key] == id) {
+              ret.key = key;
+              break;
+            }
+          }
+        }
+        _controller.add(ret);
       }
     }
   }
+}
+
+class TabInfo {
+  String key;
+  String cont;
 }
