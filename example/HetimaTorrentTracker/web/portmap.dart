@@ -1,19 +1,15 @@
 library helper.portmap;
 
-import 'dart:html' as html;
 import 'dart:async' as async;
-import 'package:chrome/chrome_app.dart' as chrome;
-import 'package:hetimacore/hetimacore.dart';
-import 'package:hetimacore/hetimacore_cl.dart';
 import 'package:hetimanet/hetimanet.dart';
 import 'package:hetimanet/hetimanet_chrome.dart';
 
-import 'package:hetimatorrent/hetimatorrent.dart';
 
 /**
  * app parts
  */
-class PortMap {
+class PortMapHelper {
+  String appid = "";
   String localAddress = "0.0.0.0";
   String _externalAddress = "0.0.0.0";
   int basePort = 18085;
@@ -21,6 +17,9 @@ class PortMap {
   int _externalPort = 18085;
   int get externalPort => _externalPort;
 
+  PortMapHelper(String appid) {
+    this.appid = appid;
+  }
   async.StreamController<String> _controllerUpdateGlobalPort = new async.StreamController.broadcast();
   async.Stream<String> get onUpdateGlobalPort => _controllerUpdateGlobalPort.stream;
 
@@ -45,7 +44,7 @@ class PortMap {
         int baseExternalPort = _externalPort + 50;
         tryAddPortMap() {
           pppDevice
-              .requestAddPortMapping(_externalPort, UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_TCP, localPort, localAddress, UpnpPPPDevice.VALUE_ENABLE, "HetimaDelphinium", 0)
+              .requestAddPortMapping(_externalPort, UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_TCP, localPort, localAddress, UpnpPPPDevice.VALUE_ENABLE, "hetim(${appid})", 0)
               .then((UpnpAddPortMappingResponse res) {
             if (200 == res.resultCode) {
               _controllerUpdateGlobalPort.add("${_externalPort}");
@@ -96,7 +95,7 @@ class PortMap {
             String description = res.getValue(UpnpGetGenericPortMappingResponse.KEY_NewPortMappingDescription, "");
             String port = res.getValue(UpnpGetGenericPortMappingResponse.KEY_NewExternalPort, "");
             String ip = res.getValue(UpnpGetGenericPortMappingResponse.KEY_NewInternalClient, "");
-            if (description == "HetimaDelphinium") {
+            if (description == "hetim(${appid})") {
               int portAsNum = int.parse(port);
               deletePortList.add(portAsNum);
             }

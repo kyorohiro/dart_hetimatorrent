@@ -71,7 +71,11 @@ class TrackerServer {
     }).catchError((e) {
       c.completeError(e);
     });
-    _server.onResponse.listen(onListen);
+    try {
+      _server.onResponse.listen(onListen);
+    } catch(e){
+      
+    }
     return c.future;
   }
 

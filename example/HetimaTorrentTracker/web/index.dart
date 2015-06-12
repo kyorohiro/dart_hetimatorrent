@@ -9,6 +9,7 @@ import 'package:hetimanet/hetimanet.dart';
 import 'package:hetimanet/hetimanet_chrome.dart';
 
 import 'package:hetimatorrent/hetimatorrent.dart';
+import 'portmap.dart';
 
 Tab tab = new Tab();
 Dialog dialog = new Dialog();
@@ -24,7 +25,12 @@ html.InputElement loadServerBtn = html.querySelector("#loaderserver");
 html.SpanElement localAddressSpn = html.querySelector("#localaddress");
 html.SpanElement localPortSpn = html.querySelector("#localport");
 
+html.InputElement localAddress = html.querySelector("#input-localaddress");
+html.InputElement localPort = html.querySelector("#input-localport");
+
 TrackerServer trackerServer = new TrackerServer(new HetiSocketBuilderChrome());
+PortMapHelper portMapHelder = new PortMapHelper("HetimaTorrentTracker");
+
 //
 //
 html.SpanElement torrentHashSpan = html.querySelector("#torrent-hash");
@@ -70,6 +76,9 @@ void main() {
     loadServerBtn.style.display = "block";
     stopServerBtn.style.display = "none";
     startServerBtn.style.display = "none";
+    
+    trackerServer.address = localAddress.value;
+    trackerServer.port = int.parse(localPort.value);
     trackerServer.start().then((StartResult r) {
       localPortSpn.innerHtml = "${trackerServer.port}";
       localAddressSpn.innerHtml = trackerServer.address;
