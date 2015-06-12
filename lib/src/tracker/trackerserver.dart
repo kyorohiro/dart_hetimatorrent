@@ -25,13 +25,17 @@ class TrackerServer {
     port = 6969;
   }
 
-  void add(String hash) {
+  void addPercentEncoding(String hash) {
     if (outputLog) {
       print("TrackerServer#add:" + hash);
     }
 
     type.Uint8List infoHashAs = PercentEncode.decode(hash);
     List<int> infoHash = infoHashAs.toList();
+    addInfoHash(infoHash);
+  }
+
+  void addInfoHash(List<int> infoHash) {
     bool isManaged = false;
 
     for (TrackerPeerManager m in _peerManagerList) {
@@ -42,7 +46,7 @@ class TrackerServer {
 
     if (isManaged == true) {
       if (outputLog) {
-        print("TrackerServer#add:###non:" + hash);
+        print("TrackerServer#add:###non: ${infoHash}");
       }
       return;
     }
@@ -50,7 +54,7 @@ class TrackerServer {
     TrackerPeerManager peerManager = new TrackerPeerManager(infoHash);
     _peerManagerList.add(peerManager);
     if (outputLog) {
-      print("TrackerServer#add:###add:" + hash);
+      print("TrackerServer#add:###add: ${infoHash}");
     }
   }
 
@@ -92,7 +96,7 @@ class TrackerServer {
           String qurey = item.option.replaceFirst(new RegExp(r"^\?"), "");
           updateResponse(qurey, ip);
           List<int> cont = createResponse(item.option);
-          _server.response(item.req, new HetimaDataMemory(cont));
+          _server.response(item.req, new HetimaDataMemory(cont),contentType:"text/plain");
         } catch (e) {
           print("error:" + e.toString());
         } finally {}

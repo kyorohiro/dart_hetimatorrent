@@ -35,11 +35,16 @@ void main() {
   print("hello world");
   tab.init();
   dialog.init();
+
   torrentRemoveBtn.onClick.listen((html.MouseEvent e) {
     if(selectKey != null) {
       tab.remove(selectKey);
+      managedTorrentFile.remove(selectKey);
+      print("##===> ${managedTorrentFile.length}");
+      selectKey = null;
     }
   });
+
   fileInput.onChange.listen((html.Event e) {
     print("==");
     List<html.File> s = [];
@@ -48,11 +53,12 @@ void main() {
       html.File n = s.removeAt(0);
       print("#${n.name} ${e}");
       TorrentFile.createTorrentFileFromTorrentFile(new HetimaFileToBuilder(new HetimaDataBlob(n))).then((TorrentFile f) {
-        return f.createInfoSha1().then((List<int> v) {
-          String key = PercentEncode.encode(v);
-         //key = key.replaceAll("%", "");
+        return f.createInfoSha1().then((List<int> infoHash) {
+          String key = PercentEncode.encode(infoHash);
           managedTorrentFile[key] = f;
           tab.add("${key}", "con-now");
+          trackerServer.addInfoHash(infoHash);
+//          trackerServer.add(hash);
         });
       }).catchError((e) {
         dialog.show("failed parse torrent");
