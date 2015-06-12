@@ -8,7 +8,6 @@ import 'package:hetimanet/hetimanet.dart';
 import 'trackerurl.dart';
 import 'trackerpeermanager.dart';
 import '../torrent/bencode.dart';
-import '../torrent/hetibencode.dart';
 import 'trackerresponse.dart';
 import 'trackerrequest.dart';
 

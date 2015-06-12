@@ -30,12 +30,12 @@ class TrackerPeerManager {
     return true;
   }
 
-  ShuffleLinkedList<PeerAddress> managedPeerAddress = new ShuffleLinkedList();
+  ShuffleLinkedList<PeerInfo> managedPeerAddress = new ShuffleLinkedList();
   void update(TrackerRequest request) {
     if (!isManagedInfoHash(request.infoHash)) {
       return;
     }
-    managedPeerAddress.addLast(new PeerAddress(request.peerId, request.address, request.ip, request.port));
+    managedPeerAddress.addLast(new PeerInfo(request.peerId, request.address, request.ip, request.port));
     if (managedPeerAddress.length > max) {
       managedPeerAddress.removeHead();
     }

@@ -49,21 +49,28 @@ class TrackerUrl {
 
 }
 
-class PeerAddress {
+class PeerInfo {
   List<int> peerId;
   String address;
   List<int> ip;
   int port;
+  int _time = 0;
 
-  PeerAddress(List<int> _peerId, String _address, List<int> _ip, int _port) {
+  int get time => _time;
+  PeerInfo(List<int> _peerId, String _address, List<int> _ip, int _port) {
     peerId = new List.from(_peerId);
     address = _address;
     ip = new List.from(_ip);
     port = _port;
+    update();
   }
 
-  bool operator ==(other) {
-    if (other is PeerAddress) {
+  void update() {
+    _time = (new DateTime.now()).millisecondsSinceEpoch;
+  }
+
+  bool operator == (other) {
+    if (other is PeerInfo) {
       if (other.peerId.length != peerId.length) {
         return false;
       }
