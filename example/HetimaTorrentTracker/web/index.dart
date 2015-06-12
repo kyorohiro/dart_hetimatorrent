@@ -50,7 +50,7 @@ void main() {
       TorrentFile.createTorrentFileFromTorrentFile(new HetimaFileToBuilder(new HetimaDataBlob(n))).then((TorrentFile f) {
         return f.createInfoSha1().then((List<int> v) {
           String key = PercentEncode.encode(v);
-          key = key.replaceAll("%", "");
+         //key = key.replaceAll("%", "");
           managedTorrentFile[key] = f;
           tab.add("${key}", "con-now");
         });
