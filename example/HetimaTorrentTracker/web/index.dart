@@ -24,6 +24,8 @@ html.InputElement loadServerBtn = html.querySelector("#loaderserver");
 
 html.SpanElement outputLocalAddressSpn = html.querySelector("#localaddress");
 html.SpanElement outputLocalPortSpn = html.querySelector("#localport");
+html.SpanElement outputGlobalAddressSpn = html.querySelector("#globaladdress");
+html.SpanElement outputGlobalPortSpn = html.querySelector("#globalport");
 
 html.InputElement inputLocalAddress = html.querySelector("#input-localaddress");
 html.InputElement inputLocalPort = html.querySelector("#input-localport");
@@ -140,10 +142,10 @@ void main() {
   });
   
   portMapHelder.onUpdateGlobalIp.listen((String globalIP) {
-    outputLocalAddressSpn.setInnerHtml(globalIP);
+    outputGlobalAddressSpn.setInnerHtml(globalIP);
   });
   portMapHelder.onUpdateGlobalPort.listen((String globalPort) {
-    outputLocalPortSpn.setInnerHtml(globalPort);    
+    outputGlobalPortSpn.setInnerHtml(globalPort);    
   });
   print("=s=");
 }
