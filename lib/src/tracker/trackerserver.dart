@@ -19,7 +19,6 @@ class TrackerServer {
   bool outputLog = true;
   List<TrackerPeerManager> _peerManagerList = new List();
 
-
   TrackerServer(HetiSocketBuilder socketBuilder) {
     _server = new HetiHttpServerHelper(socketBuilder);
     address = "0.0.0.0";
@@ -89,19 +88,18 @@ class TrackerServer {
           if (outputLog) {
             print("TrackerServer#onListen ${info.peerAddress} ${info.peerPort}");
           }
-          List<int> ip = HetiIP.toRawIP(info.peerAddress);       
-          String qurey =item.option.replaceFirst(new RegExp(r"^\?"), "");
-          updateResponse(qurey, ip);   
+          List<int> ip = HetiIP.toRawIP(info.peerAddress);
+          String qurey = item.option.replaceFirst(new RegExp(r"^\?"), "");
+          updateResponse(qurey, ip);
           List<int> cont = createResponse(item.option);
           _server.response(item.req, new HetimaDataMemory(cont));
         } catch (e) {
           print("error:" + e.toString());
-        } finally {
-        }
+        } finally {}
       });
     } catch (e) {
       try {
-       item.socket.close();
+        item.socket.close();
       } catch (f) {}
     }
   }
@@ -145,16 +143,18 @@ class TrackerServer {
     if (outputLog) {
       print("TrackerServer#updateResponse" + query);
     }
-    Map<String, String> parameter = HttpUrlDecoder.queryMap(query);
-    String infoHashAsString = parameter[TrackerUrl.KEY_INFO_HASH];
+    try {
+      Map<String, String> parameter = HttpUrlDecoder.queryMap(query);
+      String infoHashAsString = parameter[TrackerUrl.KEY_INFO_HASH];
 
-    List<int> infoHash = PercentEncode.decode(infoHashAsString);
-    TrackerPeerManager manager = find(infoHash);
+      List<int> infoHash = PercentEncode.decode(infoHashAsString);
+      TrackerPeerManager manager = find(infoHash);
 
-    if (null != manager) {
-      // managed torrent data
-      manager.update(new TrackerRequest.fromMap(parameter, address, ip));
-    }
+      if (null != manager) {
+        // managed torrent data
+        manager.update(new TrackerRequest.fromMap(parameter, address, ip));
+      }
+    } catch (e) {}
   }
 
   TrackerPeerManager find(List<int> infoHash) {
