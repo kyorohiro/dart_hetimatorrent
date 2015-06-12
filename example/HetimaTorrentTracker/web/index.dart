@@ -9,7 +9,6 @@ import 'package:hetimanet/hetimanet.dart';
 import 'package:hetimanet/hetimanet_chrome.dart';
 
 import 'package:hetimatorrent/hetimatorrent.dart';
-import 'portmap.dart';
 
 Tab tab = new Tab();
 Dialog dialog = new Dialog();
@@ -32,7 +31,7 @@ html.InputElement inputLocalPort = html.querySelector("#input-localport");
 html.InputElement inputGlobalPort = html.querySelector("#input-globalport");
 
 TrackerServer trackerServer = new TrackerServer(new HetiSocketBuilderChrome());
-PortMapHelper portMapHelder = new PortMapHelper("HetimaTorrentTracker");
+UpnpPortMapHelper portMapHelder = new UpnpPortMapHelper(new HetiSocketBuilderChrome(), "HetimaTorrentTracker");
 
 //
 //
@@ -144,9 +143,11 @@ void main() {
   portMapHelder.onUpdateGlobalIp.listen((String globalIP) {
     outputGlobalAddressSpn.setInnerHtml(globalIP);
   });
+
   portMapHelder.onUpdateGlobalPort.listen((String globalPort) {
     outputGlobalPortSpn.setInnerHtml(globalPort);    
   });
+
   print("=s=");
 }
 
