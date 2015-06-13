@@ -2,7 +2,7 @@ library hetimatorrent.torrent.trackermanager;
 import 'dart:core';
 import 'trackerrequest.dart';
 import 'trackerresponse.dart';
-import 'trackerurl.dart';
+import 'trackerpeerinfo.dart';
 import '../util/shufflelinkedlist.dart';
 
 class TrackerPeerManager {
@@ -30,12 +30,12 @@ class TrackerPeerManager {
     return true;
   }
 
-  ShuffleLinkedList<PeerInfo> managedPeerAddress = new ShuffleLinkedList();
+  ShuffleLinkedList<TrackerPeerInfo> managedPeerAddress = new ShuffleLinkedList();
   void update(TrackerRequest request) {
     if (!isManagedInfoHash(request.infoHash)) {
       return;
     }
-    managedPeerAddress.addLast(new PeerInfo(request.peerId, request.address, request.ip, request.port));
+    managedPeerAddress.addLast(new TrackerPeerInfo(request.peerId, request.address, request.ip, request.port));
     if (managedPeerAddress.length > max) {
       managedPeerAddress.removeHead();
     }
