@@ -51,6 +51,7 @@ void main() {
     if(selectKey != null) {
       tab.remove(selectKey);
       managedTorrentFile.remove(selectKey);
+      trackerServer.removeInfoHash(PercentEncode.decode(selectKey));
       print("##===> ${managedTorrentFile.length}");
       selectKey = null;
     }

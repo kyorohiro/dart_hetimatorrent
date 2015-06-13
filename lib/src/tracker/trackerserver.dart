@@ -55,6 +55,18 @@ class TrackerServer {
     addInfoHash(infoHash);
   }
 
+  void removeInfoHash(List<int> infoHash) {
+    List<TrackerPeerManager> tmp = [];
+    for (TrackerPeerManager m in _peerManagerList) {
+      if (m.isManagedInfoHash(infoHash)) {
+        tmp.add(m);
+      }
+    }
+    for(TrackerPeerManager m in tmp) {
+      _peerManagerList.remove(m);
+    }
+  }
+
   void addInfoHash(List<int> infoHash) {
     bool isManaged = false;
 

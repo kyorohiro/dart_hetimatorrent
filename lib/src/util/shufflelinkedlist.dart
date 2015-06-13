@@ -1,7 +1,7 @@
 library hetimatorrent.util.shufflelinkedlist;
 import 'dart:math' as math;
 import 'dart:core';
-import 'dart:async' as async;
+
 class ShuffleLinkedList<X>
 {
   List<X> _sequential = new List();

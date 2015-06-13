@@ -1,4 +1,5 @@
 library hetimatorrent.torrent.trackermanager;
+
 import 'dart:core';
 import 'trackerrequest.dart';
 import 'trackerresponse.dart';
@@ -17,7 +18,6 @@ class TrackerPeerManager {
   }
 
   int get numOfPeer {
-    
     return 0;
   }
 
@@ -36,11 +36,19 @@ class TrackerPeerManager {
     return true;
   }
 
-
   void update(TrackerRequest request) {
     if (!isManagedInfoHash(request.infoHash)) {
       return;
     }
+    int current = (new DateTime.now()).millisecondsSinceEpoch;
+    managedPeerAddress.removeWithFilter((TrackerPeerInfo info) {
+      if (info.time + (1000 * this.interval * 2) > current) {
+        // remove from list
+        return true;
+      } else {
+        return false;
+      }
+    });
     managedPeerAddress.addLast(new TrackerPeerInfo(request.peerId, request.address, request.ip, request.port));
     if (managedPeerAddress.length > max) {
       managedPeerAddress.removeHead();
