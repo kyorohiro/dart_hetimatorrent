@@ -9,8 +9,14 @@ void main() {
   unit.group("", () {
     unit.test("compact=0 001", () {
       ShuffleLinkedList<PeerInfo> l = new ShuffleLinkedList();
-      l.addLast(new PeerInfo([1,2,3], "a",[1,2,3,4], 80));
+      l.addLast(new PeerInfo([1, 2, 3], "a", [1, 2, 3, 4], 80));
       unit.expect(l.length, 1);
+      l.addLast(new PeerInfo([1, 2, 3], "a", [1, 2, 3, 4], 80));
+      unit.expect(l.length, 1);
+      l.addLast(new PeerInfo([1, 2, 3, 4], "a", [1, 2, 3, 4], 80));
+      unit.expect(l.length, 2);
+      l.removeHead();
+      unit.expect(l.getShuffled(0).peerId, [1,2,3,4]);
     });
   });
 }
