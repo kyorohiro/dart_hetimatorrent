@@ -24,6 +24,27 @@ class TrackerServer {
     port = 6969;
   }
 
+  List<List<int>> getManagedHash() {
+    List<List<int>> ret = [];
+    for(TrackerPeerManager m in _peerManagerList) {
+      ret.add(new List.from(m.managedInfoHash, growable:false));
+    }
+    return ret;
+  }
+
+  int numOfPeer(List<int> infoHash) {
+    for(TrackerPeerManager m in _peerManagerList) {
+      if(m.isManagedInfoHash(infoHash)) {
+        return m.managedPeerAddress.length;
+      }
+    }
+    return 0;
+  }
+
+  int a(Function a) {
+    return 0;
+  }
+
   void addPercentEncoding(String hash) {
     if (outputLog) {
       print("TrackerServer#add:" + hash);
