@@ -10,9 +10,15 @@ class TrackerPeerManager {
   List<int> get managedInfoHash => _managdInfoHash;
   int interval = 60;
   int max = 200;
+  ShuffleLinkedList<TrackerPeerInfo> managedPeerAddress = new ShuffleLinkedList();
 
   TrackerPeerManager(List<int> infoHash) {
     _managdInfoHash = infoHash.toList();
+  }
+
+  int get numOfPeer {
+    
+    return 0;
   }
 
   bool isManagedInfoHash(List<int> infoHash) {
@@ -30,7 +36,7 @@ class TrackerPeerManager {
     return true;
   }
 
-  ShuffleLinkedList<TrackerPeerInfo> managedPeerAddress = new ShuffleLinkedList();
+
   void update(TrackerRequest request) {
     if (!isManagedInfoHash(request.infoHash)) {
       return;
