@@ -37,6 +37,8 @@ UpnpPortMapHelper portMapHelder = new UpnpPortMapHelper(new HetiSocketBuilderChr
 //
 html.SpanElement torrentHashSpan = html.querySelector("#torrent-hash");
 html.SpanElement torrentRemoveBtn = html.querySelector("#torrent-remove-btn");
+html.SpanElement torrentNumOfPeerSpan = html.querySelector("#torrent-num-of-peer");
+
 bool upnpIsUse = false;
 String selectKey = null;
 
@@ -123,6 +125,8 @@ void main() {
       if (managedTorrentFile.containsKey(key)) {
         torrentHashSpan.setInnerHtml("${info.key}");
         selectKey = key;
+        List<int> infoHash = PercentEncode.decode(info.key);
+        torrentNumOfPeerSpan.setInnerHtml("${trackerServer.numOfPeer(infoHash)}");
       }
   });
 
