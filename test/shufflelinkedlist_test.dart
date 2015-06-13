@@ -17,6 +17,14 @@ void main() {
       unit.expect(l.length, 2);
       l.removeHead();
       unit.expect(l.getShuffled(0).peerId, [1,2,3,4]);
+      l.removeHead();
+      unit.expect(l.length, 0);
+      try {
+        l.getShuffled(0);
+        unit.expect(false,true);
+      } catch(e) {
+        unit.expect(true,true);
+      }
     });
   });
 }
