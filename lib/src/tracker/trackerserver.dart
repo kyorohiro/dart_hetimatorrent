@@ -41,10 +41,6 @@ class TrackerServer {
     return 0;
   }
 
-  int a(Function a) {
-    return 0;
-  }
-
   void addPercentEncoding(String hash) {
     if (outputLog) {
       print("TrackerServer#add:" + hash);
