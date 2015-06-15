@@ -7,7 +7,7 @@ import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimanet/hetimanet.dart';
 import 'trackerurl.dart';
 import 'trackerpeermanager.dart';
-import '../torrent/bencode.dart';
+import '../util/bencode.dart';
 import 'trackerresponse.dart';
 import 'trackerrequest.dart';
 

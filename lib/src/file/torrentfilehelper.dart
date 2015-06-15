@@ -6,7 +6,7 @@ import 'dart:core';
 import 'package:hetimacore/hetimacore.dart' as hetima;
 import 'package:hetimanet/hetimanet.dart' as hetima;
 import 'torrentfile.dart';
-import 'bencode.dart';
+import '../util/bencode.dart';
 import 'package:crypto/crypto.dart' as crypto;
 
 class TorrentFileCreator {

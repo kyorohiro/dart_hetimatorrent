@@ -5,7 +5,7 @@ import 'trackerresponse.dart';
 import 'trackerurl.dart';
 import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimanet/hetimanet.dart';
-import '../torrent/torrentfile.dart';
+import '../file/torrentfile.dart';
 
 class TrackerClient {
 

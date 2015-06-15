@@ -4,8 +4,8 @@ import 'dart:typed_data' as data;
 import 'dart:async' as async;
 import 'package:hetimacore/hetimacore.dart';
 import 'trackerpeerinfo.dart';
-import '../torrent/bencode.dart';
-import '../torrent/hetibencode.dart';
+import '../util/bencode.dart';
+import '../util/hetibencode.dart';
 
 class TrackerResponse {
   static final String KEY_INTERVAL = "interval";

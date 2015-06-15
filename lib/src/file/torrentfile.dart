@@ -5,8 +5,8 @@ import 'dart:async' as async;
 import 'dart:core';
 import 'package:hetimacore/hetimacore.dart' as hetima;
 import 'package:hetimanet/hetimanet.dart' as hetima;
-import 'bencode.dart';
-import 'hetibencode.dart';
+import '../util/bencode.dart';
+import '../util/hetibencode.dart';
 import 'torrentfilehelper.dart';
 
 class TorrentFile {
