@@ -23,6 +23,7 @@ class MessageHandshake {
   static Future<MessageHandshake> decode(EasyParser parser) {
     Completer c = new Completer();
     MessageHandshake mesHandshake = new MessageHandshake();
+    parser.push();
     parser.readByte().then((int size) {
       if (!(0 <= size && size <= 256)) {
         throw {};
@@ -43,10 +44,15 @@ class MessageHandshake {
     }).then((List<int> peerId) {
       mesHandshake.mPeerID.clear();
       mesHandshake.mPeerID.addAll(peerId);
+      parser.pop();
       c.complete(mesHandshake);
     }).catchError((e) {
+      parser.back();
+      parser.pop();
       c.completeError(e);
     });
     return c.future;
   }
+
+  
 }
