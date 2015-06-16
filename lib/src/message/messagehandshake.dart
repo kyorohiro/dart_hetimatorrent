@@ -22,9 +22,26 @@ class MessageHandshake {
   List<int> get infoHash => new List.from(_mInfoHash, growable: false);
   List<int> get peerId => new List.from(_mPeerID, growable: false);
 
+  MessageHandshake._empty() {
+  }
+
+  MessageHandshake(List<int> protocolId, List<int> reseved, List<int> infoHash, List<int> peerId) {
+    _mProtocolId.clear();
+    _mProtocolId.addAll(protocolId);
+    
+    _mReserved.clear();
+    _mReserved.addAll(reseved);
+    
+    _mInfoHash.clear();
+    _mInfoHash.addAll(infoHash);
+    
+    _mPeerID.clear();
+    _mPeerID.addAll(peerId);
+  }
+
   static Future<MessageHandshake> decode(EasyParser parser) {
     Completer c = new Completer();
-    MessageHandshake mesHandshake = new MessageHandshake();
+    MessageHandshake mesHandshake = new MessageHandshake._empty();
     parser.push();
     parser.readByte().then((int size) {
       if (!(0 <= size && size <= 256)) {

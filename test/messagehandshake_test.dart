@@ -8,7 +8,7 @@ import 'dart:convert' as convert;
 
 void main() {
   unit.group('A group of tests', () {
-    unit.test("bencode: string", () {
+    unit.test("decode/encode", () {
       ArrayBuilder builder = new ArrayBuilder();
       builder.appendByte(19);
       builder.appendIntList(MessageHandshake.ProtocolId, 0, MessageHandshake.ProtocolId.length);
@@ -21,7 +21,11 @@ void main() {
         unit.expect(message.reserved, [0,0,0,0,0,0,0,0]);//message.
         unit.expect(message.infoHash, convert.UTF8.encode("123456789A123456789B"));//message.
         unit.expect(message.peerId, convert.UTF8.encode("123456789C123456789D"));//message.
+        return message.encode();
+      }).then((List<int> data) {
+        unit.expect(builder.toList(), data);
       });
     });
+
   });
 }
