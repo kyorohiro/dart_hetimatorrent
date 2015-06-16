@@ -42,14 +42,15 @@ class TrackerPeerManager {
     }
     int current = (new DateTime.now()).millisecondsSinceEpoch;
     managedPeerAddress.removeWithFilter((TrackerPeerInfo info) {
-      if (info.time + (1000 * this.interval * 2) > current) {
+      if ((info.time + (1000 * this.interval * 2)) < current) {
         // remove from list
         return true;
       } else {
         return false;
       }
     });
-    managedPeerAddress.addLast(new TrackerPeerInfo(request.peerId, request.address, request.ip, request.port));
+    TrackerPeerInfo added = managedPeerAddress.addLast(new TrackerPeerInfo(request.peerId, request.address, request.ip, request.port));
+    added.update();
     if (managedPeerAddress.length > max) {
       managedPeerAddress.removeHead();
     }

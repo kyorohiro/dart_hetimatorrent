@@ -1,36 +1,48 @@
 library hetimatorrent.util.shufflelinkedlist;
+
 import 'dart:math' as math;
 import 'dart:core';
 
-class ShuffleLinkedList<X>
-{
+class ShuffleLinkedList<X> {
   List<X> _sequential = new List();
   List<X> _shuffled = new List();
 
-  void addLast(X value) {
-    if(_sequential.contains(value)){
-      return;
+  X addLast(X value) {
+    // contain
+    {
+      X xx = null;
+      for (X x in _sequential) {
+        if (x == value) {
+          xx = x;
+          break;
+        }
+      }
+      if (xx != null) {
+        _sequential.remove(xx);
+        _sequential.add(xx);
+        return xx;
+      }
     }
     _sequential.add(value);
     _shuffled.add(value);
+    return value;
   }
 
-  
   void removeWithFilter(bool filter(X xx)) {
     List<X> t = [];
-    for(X x in  _sequential) {
-      if(filter(x)) {
+    for (X x in _sequential) {
+      if (filter(x)) {
         t.add(x);
       }
     }
-    for(X x in t) {
+    for (X x in t) {
       _sequential.remove(x);
       _shuffled.remove(x);
     }
   }
 
   void removeHead() {
-    if(_sequential.length <=0) {
+    if (_sequential.length <= 0) {
       return;
     }
     X value = _sequential.removeAt(0);

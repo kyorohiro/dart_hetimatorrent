@@ -6,12 +6,20 @@ import 'dart:typed_data' as type;
 import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimanet/hetimanet.dart';
 import '../util/bencode.dart';
-
+import '../util/peeridcreator.dart';
 
 class TorrentClientManager {
-  List<int> peerId = [];
+  List<int> _peerId = [];
 
-  Future init() {
+  TorrentClientManager([List<int> peerId=null]) {
+    if(peerId == null) {
+      _peerId.addAll(PeerIdCreator.createPeerid("heti69"));
+    } else {
+      _peerId.addAll(peerId);      
+    }
+  }
+
+  onReceive() {
     
   }
 }
