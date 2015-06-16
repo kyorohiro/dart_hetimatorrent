@@ -15,6 +15,10 @@ void main() {
       builder.appendIntList(MessageHandshake.RESERVED, 0, MessageHandshake.RESERVED.length);
       builder.appendIntList(convert.UTF8.encode("123456789A123456789B"), 0, 20);
       builder.appendIntList(convert.UTF8.encode("123456789C123456789D"), 0, 20);
+      EasyParser parser = new EasyParser(builder);
+      return MessageHandshake.decode(parser).then((MessageHandshake message) {
+//        message.
+      });
     });
   });
 }
