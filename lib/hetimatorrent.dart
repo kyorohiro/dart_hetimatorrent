@@ -11,6 +11,7 @@ export 'src/tracker/trackerpeerinfo.dart';
 export 'src/message/messagehandshake.dart';
 
 export 'src/util/shufflelinkedlist.dart';
+export 'src/util/peeridcreator.dart';
 export 'src/tracker/trackerpeermanager.dart';
 export 'src/tracker/trackerserver.dart';
 

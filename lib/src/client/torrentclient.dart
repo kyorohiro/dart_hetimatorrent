@@ -5,11 +5,16 @@ import 'dart:async';
 import 'dart:typed_data' as type;
 import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimanet/hetimanet.dart';
-import 'trackerurl.dart';
-import 'trackerpeermanager.dart';
 import '../util/bencode.dart';
-import 'trackerresponse.dart';
-import 'trackerrequest.dart';
+
+
+class TorrentClientManager {
+  List<int> peerId = [];
+
+  Future init() {
+    
+  }
+}
 
 class TorrentClient {
   
