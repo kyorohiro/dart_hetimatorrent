@@ -26,13 +26,12 @@ class TorrentClient {
   }
 
   Future start() {
-    _builder.startServer(localAddress, port).then((HetiServerSocket serverSocket) {
+    return _builder.startServer(localAddress, port).then((HetiServerSocket serverSocket) {
       _server = serverSocket;
       _server.onAccept().listen((HetiSocket socket) {
-        ;
+        return null;
       });
     });
-    return null;
   }
 
   Future stop() {
