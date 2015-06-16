@@ -53,6 +53,18 @@ class MessageHandshake {
     });
     return c.future;
   }
+  
+  Future<List<int>> encode() {
+    return new Future((){
+      ArrayBuilder builder = new ArrayBuilder();
+      builder.appendByte(mProtocolId.length);
+      builder.appendIntList(mProtocolId, 0, mProtocolId.length);
+      builder.appendIntList(mReserved, 0, mReserved.length);
+      builder.appendIntList(mInfoHash, 0, mInfoHash.length);
+      builder.appendIntList(mPeerID, 0, mPeerID.length);
+      return builder.toList();
+    });
+  }
 
   
 }
