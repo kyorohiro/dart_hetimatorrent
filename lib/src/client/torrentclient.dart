@@ -11,14 +11,18 @@ import '../util/peeridcreator.dart';
 class TorrentClientManager {
   List<int> _peerId = [];
 
-  TorrentClientManager([List<int> peerId=null]) {
+  ArrayBuilder _reader = null;
+
+  TorrentClientManager(HetimaReader reader, [List<int> peerId=null]) {
     if(peerId == null) {
       _peerId.addAll(PeerIdCreator.createPeerid("heti69"));
     } else {
       _peerId.addAll(peerId);      
     }
+    _reader = reader;
   }
 
+  
   onReceive() {
     
   }
