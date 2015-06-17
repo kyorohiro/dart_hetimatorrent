@@ -13,6 +13,7 @@ export 'src/message/messagebitfield.dart';
 export 'src/message/messagecancel.dart';
 export 'src/message/messagechoke.dart';
 export 'src/message/messagehave.dart';
+export 'src/message/messageinterested.dart';
 
 export 'src/util/shufflelinkedlist.dart';
 export 'src/util/peeridcreator.dart';
