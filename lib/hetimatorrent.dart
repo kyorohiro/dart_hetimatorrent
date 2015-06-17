@@ -10,6 +10,7 @@ export 'src/tracker/trackerresponse.dart';
 export 'src/tracker/trackerpeerinfo.dart';
 export 'src/message/messagehandshake.dart';
 export 'src/message/messagebitfield.dart';
+export 'src/message/messagecancel.dart';
 
 export 'src/util/shufflelinkedlist.dart';
 export 'src/util/peeridcreator.dart';

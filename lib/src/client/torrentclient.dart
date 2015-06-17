@@ -9,6 +9,7 @@ import '../util/bencode.dart';
 import '../util/peeridcreator.dart';
 import '../message/torrentmessage.dart';
 import '../message/messagehandshake.dart';
+import '../message/messagebitfield.dart';
 
 class TorrentClientManager {
   List<int> _peerId = [];
@@ -32,6 +33,10 @@ class TorrentClientManager {
   parser() {
     MessageHandshake.decode(_parser).then((MessageHandshake shakeEvent) {
       stream.add(shakeEvent);
+    }).catchError((e){
+      return  MessageBitfield.decode(_parser).then((MessageBitfield bitfield) {
+        ;
+      });
     }).catchError((e){
       
     });
