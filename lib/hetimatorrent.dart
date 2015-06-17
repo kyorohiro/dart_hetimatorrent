@@ -15,7 +15,7 @@ export 'src/message/messagechoke.dart';
 export 'src/message/messagehave.dart';
 export 'src/message/messageinterested.dart';
 export 'src/message/messagekeepalive.dart';
-
+export 'src/message/messagenotinterested.dart';
 export 'src/util/shufflelinkedlist.dart';
 export 'src/util/peeridcreator.dart';
 export 'src/tracker/trackerpeermanager.dart';
