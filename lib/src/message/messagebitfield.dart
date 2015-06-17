@@ -1,4 +1,4 @@
-library hetimatorrent.message.handshake;
+library hetimatorrent.message.bitfield;
 
 import 'dart:core';
 import 'dart:async';
@@ -11,6 +11,8 @@ class MessageBitfield extends TorrentMessage {
   static final List<int> RESERVED = new List.from([0, 0, 0, 0, 0, 0, 0, 0], growable: false);
 
   List<int> _mBitfield = []; // *
+
+  List<int> get bitfield => new List.from(_mBitfield,growable:false);
 
   MessageBitfield._empty() : super(TorrentMessage.SIGN_BITFIELD) {
     _mBitfield.clear();
@@ -27,7 +29,7 @@ class MessageBitfield extends TorrentMessage {
     int messageSize = 0;
 
     parser.push();
-    parser.readByte().then((int size) {
+    parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN).then((int size) {
       messageSize = size;
       return parser.readByte();
     }).then((int id) {
