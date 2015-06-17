@@ -23,17 +23,14 @@ void main() {
         unit.expect(builder.toList(), data);
       });
     });
-    /*
+
     unit.test("encode", () {
       EasyParser parser = new EasyParser(builder);
-      MessageHandshake message = new MessageHandshake(MessageHandshake.ProtocolId, [0,0,0,0,0,0,0,0],
-          convert.UTF8.encode("123456789A123456789B"), convert.UTF8.encode("123456789C123456789D"));
-
+      MessageBitfield message = new MessageBitfield([0xf0,0xff,0x0f]);
       message.encode().then((List<int> data) {
         unit.expect(builder.toList(), data);
       });
     });
-    
     unit.test("error", () {
       ArrayBuilder b = new ArrayBuilder.fromList(builder.toList().sublist(0,builder.size()-1));
       b.fin();
@@ -45,6 +42,5 @@ void main() {
         unit.expect(true,true);
       });
     });
-     */
   });
 }
