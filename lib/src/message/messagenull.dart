@@ -9,8 +9,10 @@ import 'torrentmessage.dart';
 
 class MessageNull extends TorrentMessage {
   List<int> _mMessageContent = [];
-  MessageNull._empty(int id) : super(id) {}
 
+  List<int> get messageContent => new List.from(_mMessageContent);
+
+  MessageNull._empty(int id) : super(id) {}
   MessageNull(int id, List<int> cont) : super(id) {
     _mMessageContent.addAll(cont);
   }
@@ -30,7 +32,7 @@ class MessageNull extends TorrentMessage {
     }).then((int v) {
       message = new MessageNull._empty(v);
       if (messageLength > 0) {
-        messageLength = -1;
+        messageLength -= 1;
       }
       return parser.nextBuffer(messageLength);
     }).then((List<int> v) {
