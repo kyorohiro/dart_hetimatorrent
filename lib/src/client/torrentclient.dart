@@ -7,6 +7,7 @@ import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimanet/hetimanet.dart';
 import '../util/bencode.dart';
 import '../util/peeridcreator.dart';
+import '../message/torrentmessage.dart';
 import '../message/messagehandshake.dart';
 
 class TorrentClientManager {
@@ -26,7 +27,7 @@ class TorrentClientManager {
 
   StreamController<TorrentMessage> stream = new StreamController();
 
-  Stream<TorrentClient> get onReceiveEvent => stream.stream;
+  Stream<TorrentMessage> get onReceiveEvent => stream.stream;
 
   parser() {
     MessageHandshake.decode(_parser).then((MessageHandshake shakeEvent) {
