@@ -22,14 +22,14 @@ class MessageNull extends TorrentMessage {
     parser.push();
     parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN).then((int size) {
       messageLength = size;
-      if(size == 0) {
+      if (size == 0) {
         return TorrentMessage.DUMMY_SIGN_KEEPALIVE;
       } else {
         return parser.readByte();
       }
     }).then((int v) {
       message = new MessageNull._empty(v);
-      if(messageLength > 0) {
+      if (messageLength > 0) {
         messageLength = -1;
       }
       return parser.nextBuffer(messageLength);
@@ -48,9 +48,13 @@ class MessageNull extends TorrentMessage {
   Future<List<int>> encode() {
     return new Future(() {
       ArrayBuilder builder = new ArrayBuilder();
-      builder.appendIntList(ByteOrder.parseIntByte(1 + _mMessageContent.length, ByteOrder.BYTEORDER_BIG_ENDIAN));
-      builder.appendByte(id);
-      builder.appendIntList(_mMessageContent);
+      if (id == TorrentMessage.DUMMY_SIGN_KEEPALIVE) {
+        builder.appendIntList(ByteOrder.parseIntByte(0, ByteOrder.BYTEORDER_BIG_ENDIAN));
+      } else {
+        builder.appendIntList(ByteOrder.parseIntByte(1 + _mMessageContent.length, ByteOrder.BYTEORDER_BIG_ENDIAN));
+        builder.appendByte(id);
+        builder.appendIntList(_mMessageContent);
+      }
       return builder.toList();
     });
   }

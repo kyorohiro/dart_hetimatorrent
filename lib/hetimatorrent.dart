@@ -17,6 +17,8 @@ export 'src/message/messageinterested.dart';
 export 'src/message/messagekeepalive.dart';
 export 'src/message/messagenotinterested.dart';
 export 'src/message/messagenull.dart';
+export 'src/message/torrentmessage.dart';
+
 export 'src/util/shufflelinkedlist.dart';
 export 'src/util/peeridcreator.dart';
 export 'src/tracker/trackerpeermanager.dart';
