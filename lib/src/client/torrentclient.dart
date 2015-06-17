@@ -7,11 +7,12 @@ import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimanet/hetimanet.dart';
 import '../util/bencode.dart';
 import '../util/peeridcreator.dart';
+import '../message/messagehandshake.dart';
 
 class TorrentClientManager {
   List<int> _peerId = [];
 
-  ArrayBuilder _reader = null;
+  EasyParser _parser = null;
 
   TorrentClientManager(HetimaReader reader, [List<int> peerId=null]) {
     if(peerId == null) {
@@ -19,14 +20,23 @@ class TorrentClientManager {
     } else {
       _peerId.addAll(peerId);      
     }
-    _reader = reader;
+    _parser = new EasyParser(reader);
   }
 
-  
-  onReceive() {
-    
+
+  StreamController<TorrentMessage> stream = new StreamController();
+
+  Stream<TorrentClient> get onReceiveEvent => stream.stream;
+
+  parser() {
+    MessageHandshake.decode(_parser).then((MessageHandshake shakeEvent) {
+      stream.add(shakeEvent);
+    }).catchError((e){
+      
+    });
   }
 }
+
 
 class TorrentClient {
   

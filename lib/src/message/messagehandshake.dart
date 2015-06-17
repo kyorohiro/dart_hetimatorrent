@@ -6,8 +6,10 @@ import 'dart:convert';
 import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimanet/hetimanet.dart';
 
-
-class MessageHandshake {
+class TorrentMessage {
+  
+}
+class MessageHandshake extends TorrentMessage {
   static final List<int> RESERVED = new List.from([0, 0, 0, 0, 0, 0, 0, 0], growable: false);
   static final List<int> ProtocolId = new List.from(UTF8.encode("BitTorrent protocol"), growable: false); //19byte
 
