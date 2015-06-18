@@ -20,6 +20,7 @@ export 'src/message/messagenotinterested.dart';
 export 'src/message/messagenull.dart';
 export 'src/message/torrentmessage.dart';
 export 'src/message/messagerequest.dart';
+export 'src/message/messagepiece.dart';
 
 
 export 'src/util/shufflelinkedlist.dart';
