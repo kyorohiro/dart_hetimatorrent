@@ -3,9 +3,9 @@ description: A sample Chrome packaged application
 dependencies:
   chrome: any
   hetimacore:
-    git: https://github.com/kyorohiro/dart_hetimacore.git
+    path: ../../../dart_hetimacore
   hetimanet:
-    git: https://github.com/kyorohiro/dart_hetimanet.git
+    path: ../../../dart_hetimanet
   hetimatorrent:
     path: ../../
 transformers:
