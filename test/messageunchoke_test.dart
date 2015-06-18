@@ -9,12 +9,12 @@ void main() {
 
   ArrayBuilder builder = new ArrayBuilder();
   builder.appendIntList(ByteOrder.parseIntByte(1, ByteOrder.BYTEORDER_BIG_ENDIAN));
-  builder.appendByte(0);
+  builder.appendByte(1);
 
   unit.group('A group of tests', () {
     unit.test("decode/encode", () {
       EasyParser parser = new EasyParser(builder);
-      return MessageChoke.decode(parser).then((MessageChoke message) {
+      return MessageUnchoke.decode(parser).then((MessageUnchoke message) {
         return message.encode();
       }).then((List<int> data) {
         unit.expect(builder.toList(), data);
@@ -23,7 +23,7 @@ void main() {
 
 
     unit.test("encode", () {
-      MessageChoke message = new MessageChoke();
+      MessageUnchoke message = new MessageUnchoke();
       message.encode().then((List<int> data) {
         unit.expect(builder.toList(), data);
       });
@@ -34,7 +34,7 @@ void main() {
       b.fin();
       EasyParser parser = new EasyParser(b);
 
-      MessageChoke.decode(parser).then((_) {
+      MessageUnchoke.decode(parser).then((_) {
         unit.expect(true,false);
       }).catchError((e){
         unit.expect(true,true);

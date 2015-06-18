@@ -12,6 +12,7 @@ export 'src/message/messagehandshake.dart';
 export 'src/message/messagebitfield.dart';
 export 'src/message/messagecancel.dart';
 export 'src/message/messagechoke.dart';
+export 'src/message/messageunchoke.dart';
 export 'src/message/messagehave.dart';
 export 'src/message/messageinterested.dart';
 export 'src/message/messagekeepalive.dart';
