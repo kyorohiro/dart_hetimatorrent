@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>HetimaTorrentFile</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+   <div style="width:100%; height:50px; background-color:#ccf;">
+     <nav>
+        <ul id="tabcont" class="menu">
+          <li id="m00_clone" style="background-color: #ff6666; font-weight: bold;" >( Setting )</li>
+          <li id="m00_termi" style="background-color: #66ff66; font-weight: bold;" >( Terminal )</li>
+        </ul>
+      </nav>
+    </div>
+  
+  
+    <!--
+     [Content1] add
+     -->
+    <div id="con-clone" style="width:100%; height:calc(100% - 70px);">
+     <div style="width:100%; height:32;">
+       <object type="image/svg+xml" data="loader_a.svg" width="32" height="32"></object>
+     </div>
+     <h3>[Target File]</h3>
+     <div>
+       <input type="file" id="fileinput">
+     </div>
+     <h3>[UPnP Support]</h3>    
+     <div>
+       <input type="radio" name="upnpon" value="Use"> Use
+       <input type="radio" name="upnpon" value="Unuse" checked> Unuse
+     </div>
+     <h3>[Server]</h3>
+     <div>
+       <table>
+       <tr>
+       <td>local address</td>
+       <td><input type="text" id="input-localaddress" value="0.0.0.0"></td>
+       </tr>
+       <tr>       
+       <td>local port</td>
+       <td><input type="text" id="input-localport" value="6969"></td>
+       </tr>
+       <tr>
+       <td>global port</td>
+       <td><input type="text" id="input-globalport" value="6969"></td>
+       </tr>
+       </table>
+       <button id="startserver" style="display:block">Start</button>
+       <button id="stopserver" style="display:none">Stop</button>     
+       <object id="loaderserver" type="image/svg+xml" data="loader_b.svg" width="32" height="32" style="display: none"></object>
+     </div>
+
+     <h3>[Information]</h3>
+     <div>
+       <div>
+         <label>local address:</label>   
+         <span id="localaddress">...</span>
+       </div>
+       <div>
+         <label>local port:</label>   
+         <span id="localport">...</span>
+       </div>
+       <div> 
+         <label>global address:</label>   
+         <span id="globaladdress">...</span>
+       </div>    
+       <div>    
+         <label>global port:</label>   
+         <span id="globalport">...</span>
+       </div>    
+     </div>
+     //
+     //
+   </div>
+
+    <!--
+     [Content3] now
+     -->
+    <div id="con-termi" style="width:100%; height:calc(100% - 70px); display:none;">
+        <div>
+         <label>[hash]:</label> <br>  
+         <span id="torrent-hash">...</span>
+        </div> 
+        <div>
+         <label>[peer num]:</label> <br>  
+         <span id="torrent-num-of-peer">...</span>
+        </div> 
+        <div>
+         <button id="torrent-remove-btn">REMOVE</button>
+        </div>         
+    </div> 
+    
+    <!--
+     [Dialog] message 
+     -->
+    <div id="dialog" style="width:20%; height:20%; background-color: #ccccff; display:none;">
+    <textarea id="dialog-message" value="none"></textarea>
+    <button id="dialog-btn">Close</button>
+    </div>
+    
+    <script src="packages/chrome/bootstrap.js" defer></script>
+    <script src="index.dart" type="application/dart"></script>    
+  </body>
+</html>
