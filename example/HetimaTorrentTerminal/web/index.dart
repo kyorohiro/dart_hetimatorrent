@@ -9,6 +9,7 @@ import 'package:hetimanet/hetimanet.dart';
 import 'package:hetimanet/hetimanet_chrome.dart';
 
 import 'package:hetimatorrent/hetimatorrent.dart';
+import 'terminal.dart';
 
 Tab tab = new Tab();
 Dialog dialog = new Dialog();
@@ -42,7 +43,9 @@ html.SpanElement torrentNumOfPeerSpan = html.querySelector("#torrent-num-of-peer
 bool upnpIsUse = false;
 String selectKey = null;
 
+
 void main() {
+  Terminal terminal = new Terminal('#input-line', '#output', '#cmdline');
   print("hello world");
   tab.init();
   dialog.init();
@@ -117,6 +120,7 @@ void main() {
   });
 
   print("=s=");
+  
 }
 
 class Dialog {

@@ -91,17 +91,26 @@
         </div> 
         <div>
          <button id="torrent-remove-btn">REMOVE</button>
-        </div>         
+        </div>
+        
+      <div id="c" style="width:100%; height:500px;display:blocked;overflow-y: scroll;">
+        <div id="output" style="width:100%;">
+        console
+        </div>
+        <div id="input-line" style="width:100%">
+          <span style="color:green;width:10px">$&gt;</span>
+          <input id="cmdline" style="width:calc(100% - 50px);" />
+        </div>
+      </div> 
     </div> 
-    
     <!--
      [Dialog] message 
      -->
     <div id="dialog" style="width:20%; height:20%; background-color: #ccccff; display:none;">
-    <textarea id="dialog-message" value="none"></textarea>
-    <button id="dialog-btn">Close</button>
+      <textarea id="dialog-message" value="none"></textarea>
+      <button id="dialog-btn">Close</button>
     </div>
-    
+
     <script src="packages/chrome/bootstrap.js" defer></script>
     <script src="index.dart" type="application/dart"></script>    
   </body>
