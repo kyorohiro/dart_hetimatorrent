@@ -5,8 +5,10 @@ dependencies:
   dart_web_toolkit: any
   hetimacore:
     git: https://github.com/kyorohiro/dart_hetimacore.git
-  hetimanet:
-    git: https://github.com/kyorohiro/dart_hetimanet.git
+  hetimafile:
+    git: https://github.com/kyorohiro/dart_hetimafile.git
+  hetimagit:
+    git: https://github.com/kyorohiro/dart_hetimagit.git
   hetimatorrent:
     path: ../../
 transformers:

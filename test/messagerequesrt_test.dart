@@ -1,4 +1,4 @@
-library test.messagechoke;
+library test.messagerequest;
 
 import 'package:unittest/unittest.dart' as unit;
 import 'package:hetimatorrent/hetimatorrent.dart';
@@ -8,13 +8,19 @@ import 'dart:convert' as convert;
 void main() {
 
   ArrayBuilder builder = new ArrayBuilder();
-  builder.appendIntList(ByteOrder.parseIntByte(1, ByteOrder.BYTEORDER_BIG_ENDIAN));
-  builder.appendByte(0);
+  builder.appendIntList(ByteOrder.parseIntByte(13, ByteOrder.BYTEORDER_BIG_ENDIAN));
+  builder.appendByte(6);
+  builder.appendIntList(ByteOrder.parseIntByte(10, ByteOrder.BYTEORDER_BIG_ENDIAN));
+  builder.appendIntList(ByteOrder.parseIntByte(100, ByteOrder.BYTEORDER_BIG_ENDIAN));
+  builder.appendIntList(ByteOrder.parseIntByte(10300, ByteOrder.BYTEORDER_BIG_ENDIAN));
 
   unit.group('A group of tests', () {
     unit.test("decode/encode", () {
       EasyParser parser = new EasyParser(builder);
-      return MessageChoke.decode(parser).then((MessageChoke message) {
+      return MessageRequest.decode(parser).then((MessageRequest message) {
+        unit.expect(message.index, 10);
+        unit.expect(message.begin, 100);
+        unit.expect(message.length, 10300);
         return message.encode();
       }).then((List<int> data) {
         unit.expect(builder.toList(), data);
@@ -23,7 +29,8 @@ void main() {
 
 
     unit.test("encode", () {
-      MessageChoke message = new MessageChoke();
+      EasyParser parser = new EasyParser(builder);
+      MessageRequest message = new MessageRequest(10,100,10300);
       message.encode().then((List<int> data) {
         unit.expect(builder.toList(), data);
       });
@@ -34,7 +41,7 @@ void main() {
       b.fin();
       EasyParser parser = new EasyParser(b);
 
-      MessageChoke.decode(parser).then((_) {
+      MessageRequest.decode(parser).then((_) {
         unit.expect(true,false);
       }).catchError((e){
         unit.expect(true,true);
