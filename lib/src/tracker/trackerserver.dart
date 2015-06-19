@@ -20,6 +20,8 @@ class TrackerServer {
   bool outputLog = true;
   List<TrackerPeerManager> _peerManagerList = new List();
 
+  String trackerAnnounceAddressForTorrentFile = "";
+
   TrackerServer(HetiSocketBuilder socketBuilder) {
     _server = new HetiHttpServerHelper(socketBuilder);
     address = "0.0.0.0";
@@ -125,6 +127,11 @@ class TrackerServer {
       } else if (item.path == "/your.torrent") {
         for (TrackerPeerManager manager in _peerManagerList) {
           if (PercentEncode.encode(manager.managedInfoHash) == parameter["infohash"]) {
+            String addr = trackerAnnounceAddressForTorrentFile;
+            if(addr == null || addr.length == 0) {
+              addr = "http://${address}:${port}/announce";
+            }
+            manager.torrentFile.announce = addr;
             _server.response(item.req, new HetimaDataMemory(Bencode.encode(manager.torrentFile.mMetadata)));
             return null;
           }

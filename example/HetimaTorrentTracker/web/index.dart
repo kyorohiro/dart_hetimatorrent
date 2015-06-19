@@ -93,7 +93,11 @@ void main() {
       if(upnpIsUse == true) {
         portMapHelder.basePort = int.parse(inputGlobalPort.value);
         portMapHelder.numOfRetry = 0;
-        portMapHelder.startPortMap();
+        portMapHelder.startPortMap().then((_){
+          trackerServer.trackerAnnounceAddressForTorrentFile = "http://${portMapHelder.externalIp}:${portMapHelder.externalPort}/announce";
+        }).catchError((e){
+          ;
+        });
       }
     }).catchError((e) {
       stopServerBtn.style.display = "none";
@@ -106,6 +110,9 @@ void main() {
     loadServerBtn.style.display = "block";
     stopServerBtn.style.display = "none";
     startServerBtn.style.display = "none";
+    // clear
+    trackerServer.trackerAnnounceAddressForTorrentFile = "";
+
     portMapHelder.deleteAllPortMap();
     trackerServer.stop().then((StopResult r) {
       startServerBtn.style.display = "block";
