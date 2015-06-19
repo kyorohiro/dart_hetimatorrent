@@ -1,4 +1,5 @@
 library hetimatorrent.torrent.trackerclient;
+
 import 'dart:core';
 import 'dart:async' as async;
 import 'trackerresponse.dart';
@@ -8,67 +9,44 @@ import 'package:hetimanet/hetimanet.dart';
 import '../file/torrentfile.dart';
 
 class TrackerClient {
+  TrackerUrl trackerUrl;
+  TrackerClient._a(HetiSocketBuilder builder, TrackerUrl trackerUrl) {
+    this.trackerUrl = trackerUrl;
+  }
 
-  TrackerUrl trackerUrl = new TrackerUrl();
+  async.Future<TrackerClient> createTrackerClient(HetiSocketBuilder builder, TorrentFile torrentfile, {List<int> peerId: null,int peerPort:16969}) {
+    return TrackerUrl.createTrackerUrlFromTorrentFile(torrentfile, peerId).then((TrackerUrl url) {
+      TrackerClient ret = new TrackerClient._a(builder, url);
+      url.port = peerPort;
+      return ret;
+    });
+  }
+
   String get trackerHost => trackerUrl.trackerHost;
-  void set trackerHost(String host) {
-    trackerUrl.trackerHost = host;
-  }
-
   int get trackerPort => trackerUrl.trackerPort;
-  void set trackerPort(int port) {
-    trackerUrl.trackerPort = port;
-  }
-
   int get peerport => trackerUrl.port;
   void set peerport(int port) {
-    trackerUrl.trackerPort = port;
+    trackerUrl.port = port;
   }
 
   String get path => trackerUrl.path;
-  void set path(String path) {
-    trackerUrl.path = path;
-  }
-
   String get event => trackerUrl.event;
   void set event(String event) {
     trackerUrl.event = event;
   }
 
-  String get peerID => trackerUrl.peerID;
-  void set peerID(String peerID) {
-    trackerUrl.peerID = peerID;
-  }
 
   String get infoHash => trackerUrl.infoHashValue;
-
-  void set infoHash(String infoHash) {
-    trackerUrl.infoHashValue = infoHash;
-  }
   String get header => trackerUrl.toHeader();
   HetiSocketBuilder _socketBuilder = null;
-
-  TrackerClient(HetiSocketBuilder builder) {
-    _socketBuilder = builder;
-  }
 
   void updateAnnounce(String announce) {
     this.trackerUrl.announce = announce;
   }
 
-  async.Future updateFromMetaData(TorrentFile f) {
-    async.Completer<Object> c = new async.Completer();
-    updateAnnounce(f.announce);
-    f.createInfoSha1().then((List<int> v){
-      infoHash = PercentEncode.encode(v);
-      c.complete({});
-    });
-    return c.future;
-  }
- 
-  // todo support redirect 
-  async.Future<TrackerRequestResult> requestWithSupportRedirect(int redirectMax) {
-  }
+
+  // todo support redirect
+  async.Future<TrackerRequestResult> requestWithSupportRedirect(int redirectMax) {}
 
   async.Future<TrackerRequestResult> request() {
     async.Completer<TrackerRequestResult> completer = new async.Completer();
@@ -77,8 +55,8 @@ class TrackerClient {
     HetiHttpClientResponse httpResponse = null;
     print("--[A0]-" + trackerHost + "," + trackerPort.toString() + "," + path + header);
     currentClient.connect(trackerHost, trackerPort).then((HetiHttpClientConnectResult state) {
-      return currentClient.get(path+header, {"Connection" : "close"});
-    }).then((HetiHttpClientResponse response){
+      return currentClient.get(path + header, {"Connection": "close"});
+    }).then((HetiHttpClientResponse response) {
       httpResponse = response;
       return TrackerResponse.createFromContent(response.body);
     }).then((TrackerResponse trackerResponse) {

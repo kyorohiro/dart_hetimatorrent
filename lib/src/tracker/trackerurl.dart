@@ -78,7 +78,7 @@ class TrackerUrl {
         left.toString();
   }
 
-  TrackerUrl(String announce, List<int> infoHash, List<int> peerId, {String event:TrackerUrl.VALUE_EVENT_STARTED, int downloaded:0,int uploaded:0,int left:0}) {
+  TrackerUrl(String announce, List<int> infoHash, List<int> peerId, {String event:TrackerUrl.VALUE_EVENT_STARTED, int downloaded:0,int uploaded:0,int left:0,port:6969}) {
     this.announce = announce;
     this.peerID = PercentEncode.encode(peerId);
     this.infoHashValue = PercentEncode.encode(infoHash);
@@ -86,6 +86,7 @@ class TrackerUrl {
     this.downloaded = downloaded;
     this.uploaded = uploaded;
     this.left = left;
+    this.port = port;
   }
 
   static Future<TrackerUrl> createTrackerUrlFromTorrentFile(TorrentFile torrentfile, List<int> peerId) {
