@@ -45,7 +45,9 @@ String selectKey = null;
 
 
 void main() {
-  Terminal terminal = new Terminal('#input-line', '#output', '#cmdline');
+  Terminal terminal = new Terminal('#command-input-line', '#command-output', '#command-cmdline');
+  Terminal terminalE = new Terminal('#event-input-line', '#event-output', '#event-cmdline');
+  
   print("hello world");
   tab.init();
   dialog.init();

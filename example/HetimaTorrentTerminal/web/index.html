@@ -93,15 +93,28 @@
          <button id="torrent-remove-btn">REMOVE</button>
         </div>
         
-      <div id="c" style="width:100%; height:500px;display:blocked;overflow-y: scroll;">
-        <div id="output" style="width:100%;">
+      <div id="c" style="width:100%; height:25%;display:blocked;overflow-y: scroll;">
+      [Command]<br>
+        <div id="command-output" style="width:100%;">
         console
         </div>
-        <div id="input-line" style="width:100%">
+        <div id="command-input-line" style="width:100%">
           <span style="color:green;width:10px">$&gt;</span>
-          <input id="cmdline" style="width:calc(100% - 50px);" />
+          <input id="command-cmdline" style="width:calc(100% - 50px);" />
         </div>
-      </div> 
+      </div>
+      
+      <div id="c" style="width:100%; height:25%;display:blocked;overflow-y: scroll;">
+      [Event]<br>
+        <div id="event-output" style="width:100%;">
+        console
+        </div>
+        <div id="event-input-line" style="width:100%">
+          <span style="color:green;width:10px">$&gt;</span>
+          <input id="event-cmdline" style="width:calc(100% - 50px);" />
+        </div>
+      </div>
+
     </div> 
     <!--
      [Dialog] message 
