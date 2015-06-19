@@ -1,4 +1,4 @@
-library hetimatorrent.torrent.trackermanager;
+library hetimatorrent.torrent.trackerclient;
 import 'dart:core';
 import 'dart:async' as async;
 import 'trackerresponse.dart';

@@ -8,6 +8,7 @@ export 'src/tracker/trackerurl.dart';
 export 'src/tracker/trackerrequest.dart';
 export 'src/tracker/trackerresponse.dart';
 export 'src/tracker/trackerpeerinfo.dart';
+export 'src/tracker/trackerclient.dart';
 export 'src/message/messagehandshake.dart';
 export 'src/message/messagebitfield.dart';
 export 'src/message/messagecancel.dart';
