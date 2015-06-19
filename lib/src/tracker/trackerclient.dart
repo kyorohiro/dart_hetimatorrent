@@ -40,20 +40,20 @@ class TrackerClient {
   String get header => trackerUrl.toHeader();
   HetiSocketBuilder _socketBuilder = null;
 
-  void updateAnnounce(String announce) {
-    this.trackerUrl.announce = announce;
-  }
-
 
   // todo support redirect
-  async.Future<TrackerRequestResult> requestWithSupportRedirect(int redirectMax) {}
+  async.Future<TrackerRequestResult> requestWithSupportRedirect(int redirectMax) {
+    
+  }
 
   async.Future<TrackerRequestResult> request() {
     async.Completer<TrackerRequestResult> completer = new async.Completer();
 
     HetiHttpClient currentClient = new HetiHttpClient(_socketBuilder);
     HetiHttpClientResponse httpResponse = null;
+
     print("--[A0]-" + trackerHost + "," + trackerPort.toString() + "," + path + header);
+
     currentClient.connect(trackerHost, trackerPort).then((HetiHttpClientConnectResult state) {
       return currentClient.get(path + header, {"Connection": "close"});
     }).then((HetiHttpClientResponse response) {
@@ -71,6 +71,7 @@ class TrackerClient {
     return completer.future;
   }
 }
+
 
 class TrackerRequestResult {
   int code = 0;

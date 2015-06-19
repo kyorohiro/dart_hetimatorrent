@@ -3,6 +3,7 @@ library hetimatorrent.torrent.trackerrserver;
 import 'dart:core';
 import 'dart:typed_data' as type;
 import 'dart:async' as async;
+import 'dart:convert';
 import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimanet/hetimanet.dart';
 import 'trackerurl.dart';
@@ -26,15 +27,15 @@ class TrackerServer {
 
   List<List<int>> getManagedHash() {
     List<List<int>> ret = [];
-    for(TrackerPeerManager m in _peerManagerList) {
-      ret.add(new List.from(m.managedInfoHash, growable:false));
+    for (TrackerPeerManager m in _peerManagerList) {
+      ret.add(new List.from(m.managedInfoHash, growable: false));
     }
     return ret;
   }
 
   int numOfPeer(List<int> infoHash) {
-    for(TrackerPeerManager m in _peerManagerList) {
-      if(m.isManagedInfoHash(infoHash)) {
+    for (TrackerPeerManager m in _peerManagerList) {
+      if (m.isManagedInfoHash(infoHash)) {
         return m.managedPeerAddress.length;
       }
     }
@@ -58,7 +59,7 @@ class TrackerServer {
         tmp.add(m);
       }
     }
-    for(TrackerPeerManager m in tmp) {
+    for (TrackerPeerManager m in tmp) {
       _peerManagerList.remove(m);
     }
   }
@@ -101,9 +102,7 @@ class TrackerServer {
     });
     try {
       _server.onResponse.listen(onListen);
-    } catch(e){
-      
-    }
+    } catch (e) {}
     return c.future;
   }
 
@@ -118,26 +117,30 @@ class TrackerServer {
   }
 
   void onListen(HetiHttpServerPlusResponseItem item) {
-    try {
-      item.socket.getSocketInfo().then((HetiSocketInfo info) {
-        try {
-          if (outputLog) {
-            print("TrackerServer#onListen ${info.peerAddress} ${info.peerPort}");
-          }
+    new async.Future(() {
+      String qurey = item.option.replaceFirst(new RegExp(r"^\?"), "");
+      Map<String, String> parameter = HttpUrlDecoder.queryMap(qurey);
+      String infoHashAsString = parameter[TrackerUrl.KEY_INFO_HASH];
+
+      if(infoHashAsString == null && (item.path == "/" || item.path == "/index.html")) {
+        _server.response(item.req, 
+            new HetimaBuilderToFile(
+            new ArrayBuilder.fromList(UTF8.encode("<html><head></head><body><div>Hello</div></body></html>"))),contentType: "text/html");
+      } else if (infoHashAsString != null) {
+        return item.socket.getSocketInfo().then((HetiSocketInfo info) {
+          if (outputLog) {print("TrackerServer#onListen ${info.peerAddress} ${info.peerPort}");}
           List<int> ip = HetiIP.toRawIP(info.peerAddress);
-          String qurey = item.option.replaceFirst(new RegExp(r"^\?"), "");
-          updateResponse(qurey, ip);
+
+          updateResponse(parameter, ip);
           List<int> cont = createResponse(item.option);
-          _server.response(item.req, new HetimaDataMemory(cont),contentType:"text/plain");
-        } catch (e) {
-          print("error:" + e.toString());
-        } finally {}
-      });
-    } catch (e) {
+          _server.response(item.req, new HetimaDataMemory(cont), contentType: "text/plain");
+        });
+      }
+    }).catchError((e) {
       try {
         item.socket.close();
-      } catch (f) {}
-    }
+      } catch (e) {}
+    });
   }
 
   List<int> createResponse(String query) {
@@ -175,12 +178,11 @@ class TrackerServer {
     }
   }
 
-  void updateResponse(String query, List<int> ip) {
+  void updateResponse(Map<String, String> parameter, List<int> ip) {
     if (outputLog) {
-      print("TrackerServer#updateResponse" + query);
+      print("TrackerServer#updateResponse ${parameter}");
     }
     try {
-      Map<String, String> parameter = HttpUrlDecoder.queryMap(query);
       String infoHashAsString = parameter[TrackerUrl.KEY_INFO_HASH];
 
       List<int> infoHash = PercentEncode.decode(infoHashAsString);
