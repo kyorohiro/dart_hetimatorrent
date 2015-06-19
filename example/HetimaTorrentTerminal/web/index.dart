@@ -86,12 +86,34 @@ void main() {
     if(torrentClient == null) {
       torrentClient = new TorrentClient(new HetiSocketBuilderChrome());
     }
+    torrentClient.localAddress = inputLocalAddress.value;
+    torrentClient.port = int.parse(inputLocalPort.value);
     torrentClient.start().then((_){
+      startServerBtn.style.display = "none";
+      loadServerBtn.style.display = "none";
+      stopServerBtn.style.display = "block";
+
       print("torrent client started");
+      if(upnpIsUse) {
+        portMapHelder.basePort = torrentClient.port;
+        portMapHelder.numOfRetry = 0;
+        portMapHelder.startPortMap();
+      }
+      outputLocalAddressSpn.setInnerHtml(torrentClient.localAddress);
+      outputLocalPortSpn.setInnerHtml("${torrentClient.port}");
+    }).catchError((e){
+      startServerBtn.style.display = "block";
+      loadServerBtn.style.display = "none";      
     });
+    startServerBtn.style.display = "none";
+    loadServerBtn.style.display = "block";
   });
 
   stopServerBtn.onClick.listen((html.MouseEvent e) {
+    startServerBtn.style.display = "block";
+    loadServerBtn.style.display = "none";
+    stopServerBtn.style.display = "none";
+
     portMapHelder.deleteAllPortMap();
     torrentClient.stop().then((_){
       print("torrent client stoped");
