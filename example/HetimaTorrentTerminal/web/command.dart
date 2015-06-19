@@ -22,7 +22,7 @@ class TrackerCommand extends Command {
   Future<CommandResult> execute() {
     Completer<CommandResult> comp = new Completer();
     
-    
+    TrackerClient client = new TrackerClient(new HetiSocketBuilderChrome());
     
     return comp.future;
   }

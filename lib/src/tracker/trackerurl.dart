@@ -1,6 +1,12 @@
 library hetimatorrent.torrent.trackerurl;
+
 import 'dart:core';
+import 'dart:async';
+import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimanet/hetimanet.dart';
+import 'dart:typed_data';
+import '../util/bencode.dart';
+import '../file/torrentfile.dart';
 
 class TrackerUrl {
   static const String KEY_INFO_HASH = "info_hash";
@@ -42,8 +48,63 @@ class TrackerUrl {
   }
 
   String toHeader() {
-    return "?" + KEY_INFO_HASH + "=" + infoHashValue + "&" + KEY_PORT + "=" + port.toString() + "&" + KEY_PEER_ID + "=" + peerID + "&" + KEY_EVENT + "=" + event + "&" + KEY_UPLOADED + "=" + uploaded.toString() + "&" + KEY_DOWNLOADED + "=" + downloaded.toString() + "&" + KEY_LEFT + "=" + left.toString();
+    return "?" +
+        KEY_INFO_HASH +
+        "=" +
+        infoHashValue +
+        "&" +
+        KEY_PORT +
+        "=" +
+        port.toString() +
+        "&" +
+        KEY_PEER_ID +
+        "=" +
+        peerID +
+        "&" +
+        KEY_EVENT +
+        "=" +
+        event +
+        "&" +
+        KEY_UPLOADED +
+        "=" +
+        uploaded.toString() +
+        "&" +
+        KEY_DOWNLOADED +
+        "=" +
+        downloaded.toString() +
+        "&" +
+        KEY_LEFT +
+        "=" +
+        left.toString();
   }
 
-}
+  TrackerUrl._empty() {}
 
+  static Future<TrackerUrl> createTrackerUrl(String announce, List<int> infoHash, List<int> peerId, [String event = TrackerUrl.VALUE_EVENT_STARTED]) {
+    return new Future(() {
+      TrackerUrl url = new TrackerUrl._empty();
+      url.announce = announce;
+      url.peerID = PercentEncode.encode(peerId);
+      url.infoHashValue = PercentEncode.encode(infoHash);
+      url.event = TrackerUrl.VALUE_EVENT_STARTED;
+      url.downloaded = 0;
+      url.uploaded = 0;
+      url.left = 0;
+      return url;
+    });
+  }
+
+  static Future<TrackerUrl> createTrackerUrlFromTorrentFile(TorrentFile torrentfile, List<int> peerId) {
+    return torrentfile.createInfoSha1().then((List<int> infoHash) {
+      TrackerUrl url = new TrackerUrl._empty();
+      url.announce = torrentfile.announce;
+      url.peerID = PercentEncode.encode(peerId);
+      url.infoHashValue = PercentEncode.encode(infoHash);
+      url.event = TrackerUrl.VALUE_EVENT_STARTED;
+      url.downloaded = 0;
+      url.uploaded = 0;
+      url.left = torrentfile.info.files.dataSize;
+      return url;
+    });
+  }
+}

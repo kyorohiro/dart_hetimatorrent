@@ -1,5 +1,6 @@
 import 'dart:html' as html;
 import 'dart:typed_data' as type;
+import 'dart:async' as async;
 import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimatorrent/hetimatorrent.dart';
 
@@ -38,22 +39,14 @@ void read(html.File f, html.TextAreaElement result) {
 }
 
 void createTrackerUrl(type.Uint8List torrentfileData, html.TextAreaElement result) {
-  try {
+  new async.Future(() {
     Object o = Bencode.decode(torrentfileData);
     TorrentFile torrentfile = new TorrentFile.loadTorrentFileBuffer(torrentfileData);
-    TrackerUrl url = new TrackerUrl();
-    torrentfile.createInfoSha1().then((List<int> id) {
-      url.announce = torrentfile.announce;
-      url.peerID = PercentEncode.encode(PeerIdCreator.createPeerid("-test-"));
-      url.infoHashValue = PercentEncode.encode(id);
-      url.event = TrackerUrl.VALUE_EVENT_STARTED;
-      url.downloaded = 0;
-      url.uploaded = 0;
-      url.left = torrentfile.info.files.dataSize;
-
+    return TrackerUrl.createTrackerUrlFromTorrentFile(torrentfile, PeerIdCreator.createPeerid("-test-")).then((TrackerUrl url) {
       result.value = "" + url.toString();
     });
-  } catch (E) {
-    result.value = "error:" + E.toString();
-  }
+  }).catchError((e){
+    result.value = "error:" + e.toString();
+  });
+
 }
