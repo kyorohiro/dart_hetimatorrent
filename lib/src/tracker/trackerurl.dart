@@ -96,15 +96,7 @@ class TrackerUrl {
 
   static Future<TrackerUrl> createTrackerUrlFromTorrentFile(TorrentFile torrentfile, List<int> peerId) {
     return torrentfile.createInfoSha1().then((List<int> infoHash) {
-      TrackerUrl url = new TrackerUrl._empty();
-      url.announce = torrentfile.announce;
-      url.peerID = PercentEncode.encode(peerId);
-      url.infoHashValue = PercentEncode.encode(infoHash);
-      url.event = TrackerUrl.VALUE_EVENT_STARTED;
-      url.downloaded = 0;
-      url.uploaded = 0;
-      url.left = torrentfile.info.files.dataSize;
-      return url;
+      return createTrackerUrl(torrentfile.announce, infoHash, peerId);
     });
   }
 }
