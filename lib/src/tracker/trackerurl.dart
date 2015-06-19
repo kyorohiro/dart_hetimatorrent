@@ -80,23 +80,19 @@ class TrackerUrl {
 
   TrackerUrl._empty() {}
 
-  static Future<TrackerUrl> createTrackerUrl(String announce, List<int> infoHash, List<int> peerId, [String event = TrackerUrl.VALUE_EVENT_STARTED]) {
-    return new Future(() {
-      TrackerUrl url = new TrackerUrl._empty();
-      url.announce = announce;
-      url.peerID = PercentEncode.encode(peerId);
-      url.infoHashValue = PercentEncode.encode(infoHash);
-      url.event = TrackerUrl.VALUE_EVENT_STARTED;
-      url.downloaded = 0;
-      url.uploaded = 0;
-      url.left = 0;
-      return url;
-    });
+  TrackerUrl(String announce, List<int> infoHash, List<int> peerId, [String event = TrackerUrl.VALUE_EVENT_STARTED]) {
+    this.announce = announce;
+    this.peerID = PercentEncode.encode(peerId);
+    this.infoHashValue = PercentEncode.encode(infoHash);
+    this.event = TrackerUrl.VALUE_EVENT_STARTED;
+    this.downloaded = 0;
+    this.uploaded = 0;
+    this.left = 0;
   }
 
   static Future<TrackerUrl> createTrackerUrlFromTorrentFile(TorrentFile torrentfile, List<int> peerId) {
     return torrentfile.createInfoSha1().then((List<int> infoHash) {
-      return createTrackerUrl(torrentfile.announce, infoHash, peerId);
+      return new TrackerUrl(torrentfile.announce, infoHash, peerId);
     });
   }
 }
