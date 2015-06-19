@@ -69,7 +69,7 @@ void main() {
           String key = PercentEncode.encode(infoHash);
           managedTorrentFile[key] = f;
           tab.add("${key}", "con-now");
-          trackerServer.addInfoHash(infoHash);
+          trackerServer.addInfoHash(f);
         });
       }).catchError((e) {
         dialog.show("failed parse torrent");

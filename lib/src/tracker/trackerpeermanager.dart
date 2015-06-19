@@ -5,6 +5,7 @@ import 'trackerrequest.dart';
 import 'trackerresponse.dart';
 import 'trackerpeerinfo.dart';
 import '../util/shufflelinkedlist.dart';
+import '../file/torrentfile.dart';
 
 class TrackerPeerManager {
   List<int> _managdInfoHash = new List();
@@ -13,8 +14,12 @@ class TrackerPeerManager {
   int max = 200;
   ShuffleLinkedList<TrackerPeerInfo> managedPeerAddress = new ShuffleLinkedList();
 
-  TrackerPeerManager(List<int> infoHash) {
+  TorrentFile _file = null;
+  
+  TorrentFile get torrentFile => _file;
+  TrackerPeerManager(List<int> infoHash, [TorrentFile file=null]) {
     _managdInfoHash = infoHash.toList();
+    _file =file;
   }
 
   int get numOfPeer {

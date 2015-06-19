@@ -11,6 +11,7 @@ import 'trackerpeermanager.dart';
 import '../util/bencode.dart';
 import 'trackerresponse.dart';
 import 'trackerrequest.dart';
+import '../file/torrentfile.dart';
 
 class TrackerServer {
   String address;
@@ -42,16 +43,6 @@ class TrackerServer {
     return 0;
   }
 
-  void addPercentEncoding(String hash) {
-    if (outputLog) {
-      print("TrackerServer#add:" + hash);
-    }
-
-    type.Uint8List infoHashAs = PercentEncode.decode(hash);
-    List<int> infoHash = infoHashAs.toList();
-    addInfoHash(infoHash);
-  }
-
   void removeInfoHash(List<int> infoHash) {
     List<TrackerPeerManager> tmp = [];
     for (TrackerPeerManager m in _peerManagerList) {
@@ -64,27 +55,29 @@ class TrackerServer {
     }
   }
 
-  void addInfoHash(List<int> infoHash) {
-    bool isManaged = false;
+  async.Future addInfoHash(TorrentFile f) {
+    return f.createInfoSha1().then((List<int> infoHash) {
+      bool isManaged = false;
 
-    for (TrackerPeerManager m in _peerManagerList) {
-      if (m.isManagedInfoHash(infoHash)) {
-        isManaged = true;
+      for (TrackerPeerManager m in _peerManagerList) {
+        if (m.isManagedInfoHash(infoHash)) {
+          isManaged = true;
+        }
       }
-    }
 
-    if (isManaged == true) {
+      if (isManaged == true) {
+        if (outputLog) {
+          print("TrackerServer#add:###non: ${infoHash}");
+        }
+        return;
+      }
+
+      TrackerPeerManager peerManager = new TrackerPeerManager(infoHash,f);
+      _peerManagerList.add(peerManager);
       if (outputLog) {
-        print("TrackerServer#add:###non: ${infoHash}");
+        print("TrackerServer#add:###add: ${infoHash}");
       }
-      return;
-    }
-
-    TrackerPeerManager peerManager = new TrackerPeerManager(infoHash);
-    _peerManagerList.add(peerManager);
-    if (outputLog) {
-      print("TrackerServer#add:###add: ${infoHash}");
-    }
+    });
   }
 
   async.Future<StartResult> start() {
@@ -122,23 +115,36 @@ class TrackerServer {
       Map<String, String> parameter = HttpUrlDecoder.queryMap(qurey);
       String infoHashAsString = parameter[TrackerUrl.KEY_INFO_HASH];
 
-      if(infoHashAsString == null && (item.path == "/" || item.path == "/index.html")) {
+      if (infoHashAsString == null && (item.path == "/" || item.path == "/index.html")) {
         StringBuffer cont = new StringBuffer();
-        for(TrackerPeerManager manager in _peerManagerList) {
-          cont.writeln("<div><a>${PercentEncode.encode(manager.managedInfoHash)}</a></div>");
+        for (TrackerPeerManager manager in _peerManagerList) {
+          cont.writeln("""<div><a href="/your.torrent?infohash=${PercentEncode.encode(manager.managedInfoHash)}">${PercentEncode.encode(manager.managedInfoHash)}</a></div>""");
         }
-        _server.response(item.req, 
-            new HetimaBuilderToFile(
-            new ArrayBuilder.fromList(UTF8.encode("<html><head></head><body><div>[managed hash]</div>${cont}</body></html>"))),contentType: "text/html");
+        _server.response(item.req, new HetimaBuilderToFile(new ArrayBuilder.fromList(UTF8.encode("<html><head></head><body><div>[managed hash]</div>${cont}</body></html>"))),
+            contentType: "text/html");
+      } else if (item.path == "/your.torrent") {
+        for (TrackerPeerManager manager in _peerManagerList) {
+          if (PercentEncode.encode(manager.managedInfoHash) == parameter["infohash"]) {
+            _server.response(item.req, new HetimaDataMemory(Bencode.encode(manager.torrentFile.mMetadata)));
+            return null;
+          }
+        }
+        item.socket.close();
       } else if (infoHashAsString != null) {
         return item.socket.getSocketInfo().then((HetiSocketInfo info) {
-          if (outputLog) {print("TrackerServer#onListen ${info.peerAddress} ${info.peerPort}");}
+          if (outputLog) {
+            print("TrackerServer#onListen ${info.peerAddress} ${info.peerPort}");
+          }
           List<int> ip = HetiIP.toRawIP(info.peerAddress);
 
           updateResponse(parameter, ip);
           List<int> cont = createResponse(item.option);
           _server.response(item.req, new HetimaDataMemory(cont), contentType: "text/plain");
         });
+      } else {
+        try {
+          item.socket.close();
+        } catch (e) {}
       }
     }).catchError((e) {
       try {
