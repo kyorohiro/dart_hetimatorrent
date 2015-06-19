@@ -29,3 +29,5 @@ export 'src/util/peeridcreator.dart';
 export 'src/tracker/trackerpeermanager.dart';
 export 'src/tracker/trackerserver.dart';
 
+
+export 'src/client/torrentclient.dart';

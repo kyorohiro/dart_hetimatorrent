@@ -1,4 +1,4 @@
-library hetimatorrent.torrent.trackerrserver;
+library hetimatorrent.torrent.client;
 
 import 'dart:core';
 import 'dart:async';
@@ -64,6 +64,7 @@ class TorrentClient {
       _server.onAccept().listen((HetiSocket socket) {
         return null;
       });
+      return {};
     });
   }
 
@@ -72,6 +73,8 @@ class TorrentClient {
     for(HetiSocket s in _managedSocketList) {
       s.close();
     }
-    return null;
+    return new Future((){
+      return {};
+    });
   }
 }

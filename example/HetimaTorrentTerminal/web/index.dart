@@ -43,12 +43,14 @@ html.SpanElement torrentNumOfPeerSpan = html.querySelector("#torrent-num-of-peer
 bool upnpIsUse = false;
 String selectKey = null;
 
+TorrentClient torrentClient = null;
 
 void main() {
   Terminal terminal = new Terminal('#command-input-line', '#command-output', '#command-cmdline');
   Terminal terminalE = new Terminal('#event-input-line', '#event-output', '#event-cmdline');
   
   print("hello world");
+  
   tab.init();
   dialog.init();
 
@@ -81,10 +83,19 @@ void main() {
   });
 
   startServerBtn.onClick.listen((html.MouseEvent e) {
+    if(torrentClient == null) {
+      torrentClient = new TorrentClient(new HetiSocketBuilderChrome());
+    }
+    torrentClient.start().then((_){
+      print("torrent client started");
+    });
   });
 
   stopServerBtn.onClick.listen((html.MouseEvent e) {
     portMapHelder.deleteAllPortMap();
+    torrentClient.stop().then((_){
+      print("torrent client stoped");
+    });
   });
 
   tab.onShow.listen((TabInfo info) {
