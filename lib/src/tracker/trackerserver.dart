@@ -123,9 +123,13 @@ class TrackerServer {
       String infoHashAsString = parameter[TrackerUrl.KEY_INFO_HASH];
 
       if(infoHashAsString == null && (item.path == "/" || item.path == "/index.html")) {
+        StringBuffer cont = new StringBuffer();
+        for(TrackerPeerManager manager in _peerManagerList) {
+          cont.writeln("<div><a>${PercentEncode.encode(manager.managedInfoHash)}</a></div>");
+        }
         _server.response(item.req, 
             new HetimaBuilderToFile(
-            new ArrayBuilder.fromList(UTF8.encode("<html><head></head><body><div>Hello</div></body></html>"))),contentType: "text/html");
+            new ArrayBuilder.fromList(UTF8.encode("<html><head></head><body><div>[managed hash]</div>${cont}</body></html>"))),contentType: "text/html");
       } else if (infoHashAsString != null) {
         return item.socket.getSocketInfo().then((HetiSocketInfo info) {
           if (outputLog) {print("TrackerServer#onListen ${info.peerAddress} ${info.peerPort}");}
