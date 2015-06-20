@@ -94,10 +94,14 @@ void main() {
         portMapHelder.basePort = int.parse(inputGlobalPort.value);
         portMapHelder.numOfRetry = 0;
         portMapHelder.localAddress = inputLocalAddress.value;
-        portMapHelder.startPortMap().then((_){
-          trackerServer.trackerAnnounceAddressForTorrentFile = "http://${portMapHelder.externalIp}:${portMapHelder.externalPort}/announce";
-        }).catchError((e){
-          print("error ${e}");
+        portMapHelder.localPort = int.parse(inputLocalPort.value);
+        
+        portMapHelder.startGetExternalIp().then((_){}).catchError((e){}).whenComplete((){
+          portMapHelder.startPortMap().then((_){
+            trackerServer.trackerAnnounceAddressForTorrentFile = "http://${portMapHelder.externalIp}:${portMapHelder.externalPort}/announce";
+          }).catchError((e){
+            print("error ${e}");
+          });          
         });
       }
     }).catchError((e) {

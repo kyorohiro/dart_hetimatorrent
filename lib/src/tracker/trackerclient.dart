@@ -14,7 +14,7 @@ class TrackerClient {
     this.trackerUrl = trackerUrl;
   }
 
-  async.Future<TrackerClient> createTrackerClient(HetiSocketBuilder builder, TorrentFile torrentfile, {List<int> peerId: null,int peerPort:16969}) {
+  static async.Future<TrackerClient> createTrackerClient(HetiSocketBuilder builder, TorrentFile torrentfile, {List<int> peerId: null,int peerPort:16969}) {
     return TrackerUrl.createTrackerUrlFromTorrentFile(torrentfile, peerId).then((TrackerUrl url) {
       TrackerClient ret = new TrackerClient._a(builder, url);
       url.port = peerPort;
