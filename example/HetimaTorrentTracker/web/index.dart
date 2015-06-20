@@ -93,10 +93,11 @@ void main() {
       if(upnpIsUse == true) {
         portMapHelder.basePort = int.parse(inputGlobalPort.value);
         portMapHelder.numOfRetry = 0;
+        portMapHelder.localAddress = inputLocalAddress.value;
         portMapHelder.startPortMap().then((_){
           trackerServer.trackerAnnounceAddressForTorrentFile = "http://${portMapHelder.externalIp}:${portMapHelder.externalPort}/announce";
         }).catchError((e){
-          ;
+          print("error ${e}");
         });
       }
     }).catchError((e) {
