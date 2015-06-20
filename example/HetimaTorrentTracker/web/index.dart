@@ -161,6 +161,10 @@ void main() {
   });
 
   print("=s=");
+  
+  portMapHelder.startGetLocalIp().then((StartGetLocalIPResult result) {
+    inputLocalAddress.value = result.localIP;
+  });
 }
 
 class Dialog {
