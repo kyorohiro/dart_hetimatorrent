@@ -12,3 +12,6 @@ dependencies:
     path: ../../
 transformers:
 - chrome
+- $dart2js:
+    csp: true
+
