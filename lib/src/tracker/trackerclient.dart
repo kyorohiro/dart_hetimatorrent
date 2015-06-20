@@ -7,6 +7,7 @@ import 'trackerurl.dart';
 import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimanet/hetimanet.dart';
 import '../file/torrentfile.dart';
+import '../util/peeridcreator.dart';
 
 class TrackerClient {
   TrackerUrl trackerUrl;
@@ -15,6 +16,9 @@ class TrackerClient {
   }
 
   static async.Future<TrackerClient> createTrackerClient(HetiSocketBuilder builder, TorrentFile torrentfile, {List<int> peerId: null,int peerPort:16969}) {
+    if(peerId == null) {
+      peerId = PeerIdCreator.createPeerid("hetitor");
+    }
     return TrackerUrl.createTrackerUrlFromTorrentFile(torrentfile, peerId).then((TrackerUrl url) {
       TrackerClient ret = new TrackerClient._a(builder, url);
       url.port = peerPort;

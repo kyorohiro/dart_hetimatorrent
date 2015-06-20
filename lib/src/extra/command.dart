@@ -24,17 +24,21 @@ class TorrentEngine {
   TorrentClient _torrentClient = null;
   TrackerClient _trackerClient = null;
   UpnpPortMapHelper _upnpPortMapClient = null;
+  HetiSocketBuilder _builder = null;
+
+  HetiSocketBuilder get socketBuilder => _builder;
 
   TorrentEngine._empty() {
     ;
   }
 
-  static Future<TrackerClient> createTorrentEngine(HetiSocketBuilder builder, TorrentFile torrentfile,{appid:"hetima_torrent_engine"}) {
+  static Future<TorrentEngine> createTorrentEngine(HetiSocketBuilder builder, TorrentFile torrentfile,{appid:"hetima_torrent_engine"}) {
     return new Future(() {
       TorrentEngine engine = new TorrentEngine._empty();
       return TrackerClient.createTrackerClient(builder, torrentfile).then((TrackerClient trackerClient) {
         engine._trackerClient = trackerClient;
         engine._torrentClient = new TorrentClient(builder);
+        engine._builder = builder;
         new UpnpPortMapHelper(builder, appid);
         return engine;
       });
@@ -48,9 +52,14 @@ class TorrentEngine {
 class StartTorrentClientCommand extends TorrentEngineCommand {
   String localIp = "";
   int localPort = 0;
-  StartTorrentClient(String localIp, int localPort) {
+
+  StartTorrentClientCommand(String localIp, int localPort) {
     this.localIp = localIp;
     this.localPort = localPort;
+  }
+
+  static TorrentEngineCommand builder(List<String> list) {
+    return new StartTorrentClientCommand(list[0], int.parse(list[1]));
   }
 
   Future<CommandResult> execute(TorrentEngine engine,{List<String> args:null}) {
@@ -75,6 +84,10 @@ class UpnpPortMapCommand extends TorrentEngineCommand {
     this.globalPort = globalPort;
   }
 
+  static TorrentEngineCommand builder(List<String> list) {
+    return new UpnpPortMapCommand(list[0], int.parse(list[1]), int.parse(list[2]));
+  }
+
   Future<CommandResult> execute(TorrentEngine engine,{List<String> args:null}) {
     return new Future((){
       engine._upnpPortMapClient.localAddress = localIp;
@@ -87,6 +100,28 @@ class UpnpPortMapCommand extends TorrentEngineCommand {
     });
   }
 }
+
+class GetLocalIpCommand extends TorrentEngineCommand {
+  GetLocalIpCommand() {
+  }
+
+  static TorrentEngineCommand builder(List<String> list) {
+    return new GetLocalIpCommand();
+  }
+
+  Future<CommandResult> execute(TorrentEngine engine,{List<String> args:null}) {
+    return new Future((){
+      return engine.socketBuilder.getNetworkInterfaces().then((List<HetiNetworkInterface> l) {
+        StringBuffer buffer = new StringBuffer();
+        for(HetiNetworkInterface i in l) {
+          buffer.writeln("address:${i.address}, name:${i.name}");
+        }
+        return new CommandResult(buffer.toString());
+      });
+    });
+  }
+}
+
 
 class TrackerCommand extends TorrentEngineCommand  {
   Future<CommandResult> execute(TorrentEngine engine,{List<String> args:null}) {

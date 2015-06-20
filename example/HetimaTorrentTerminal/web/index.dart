@@ -46,9 +46,9 @@ String selectKey = null;
 TorrentClient torrentClient = null;
 
 void main() {
-  Terminal terminal = new Terminal('#command-input-line', '#command-output', '#command-cmdline');
-  Terminal terminalE = new Terminal('#event-input-line', '#event-output', '#event-cmdline');
-  
+  /*
+
+*/
   print("hello world");
   
   tab.init();
@@ -74,14 +74,24 @@ void main() {
         return f.createInfoSha1().then((List<int> infoHash) {
           String key = PercentEncode.encode(infoHash);
           managedTorrentFile[key] = f;
-          tab.add("${key}", "con-now");
+          tab.add("${key}", "con-termi");
+          TorrentEngine.createTorrentEngine(new HetiSocketBuilderChrome(), f).then((TorrentEngine engine) {
+            Terminal terminal = new Terminal(engine, '#command-input-line', '#command-output', '#command-cmdline');
+            Terminal terminalReceive = new Terminal(engine,'#event-input-line', '#event-output', '#event-cmdline');
+            
+            terminal.addCommand("startTorrent", StartTorrentClientCommand.builder);
+            terminal.addCommand("portMap", UpnpPortMapCommand.builder);
+            terminal.addCommand("getLocalIp", GetLocalIpCommand.builder);
+          }).catchError((e){
+            ;
+          });
         });
       }).catchError((e) {
         dialog.show("failed parse torrent");
       });
     }
   });
-
+/*
   startServerBtn.onClick.listen((html.MouseEvent e) {
     if(torrentClient == null) {
       torrentClient = new TorrentClient(new HetiSocketBuilderChrome());
@@ -119,7 +129,7 @@ void main() {
       print("torrent client stoped");
     });
   });
-
+*/
   tab.onShow.listen((TabInfo info) {
     String t = info.cont;
     print("=t= ${t}");
@@ -132,7 +142,7 @@ void main() {
 //        torrentNumOfPeerSpan.setInnerHtml("${trackerServer.numOfPeer(infoHash)}");
       }
   });
-
+/*
   // Adds a click event for each radio button in the group with name "gender"
   html.querySelectorAll('[name="upnpon"]').forEach((html.InputElement radioButton) {
     radioButton.onClick.listen((html.MouseEvent e) {
@@ -160,6 +170,7 @@ void main() {
   portMapHelder.startGetLocalIp().then((StartGetLocalIPResult result) {
      inputLocalAddress.value = result.localIP;
    });
+  */
 }
 
 class Dialog {
@@ -192,7 +203,7 @@ class Tab {
   html.InputElement tabContainer = html.querySelector("#tabcont");
   Map<String, String> tabs = {
     "#m00_clone": "#con-clone",
-    "#m00_termi": "#con-termi"
+//    "#m00_termi": "#con-termi"
   };
 
   html.Element current = null;

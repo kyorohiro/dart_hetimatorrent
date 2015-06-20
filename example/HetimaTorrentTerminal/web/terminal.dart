@@ -33,8 +33,9 @@ class Terminal {
   Element cmdLine;
   Element output;
   InputElement input;
-
-  Terminal(String cmdLineId, String outputId, String cmdInputId) {
+  Object _subject;
+  Terminal(Object subject, String cmdLineId, String outputId, String cmdInputId) {
+    this._subject = subject;
     this._cmdLineId = cmdInputId;
     this._outputId = outputId;
     this._cmdInputId = cmdInputId;
@@ -85,7 +86,7 @@ class Terminal {
       if(args.length > 0) {
         if(_commandList.containsKey(args[0])){
           TorrentEngineCommand c = _commandList[args[0]](args.sublist(1));
-          c.execute(null,args:args.sublist(1)).then((CommandResult r) {
+          c.execute(_subject,args:args.sublist(1)).then((CommandResult r) {
             output.children.add(new Element.html("<div>${r.message}</div>"));
           });
         }
