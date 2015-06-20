@@ -1,4 +1,4 @@
-library app;
+library hetimatorrent.extra.command;
 
 import 'dart:html' as html;
 import 'dart:async';
@@ -9,7 +9,9 @@ import 'package:hetimanet/hetimanet.dart';
 import 'package:hetimanet/hetimanet_chrome.dart';
 import 'package:hetimatorrent/hetimatorrent.dart';
 
-class Command {}
+abstract class TorrentEngineCommand {
+  Future<CommandResult> execute(TorrentEngine engine,{List<String> args:null});
+}
 
 class CommandResult {
   String message = "";
@@ -43,7 +45,7 @@ class TorrentEngine {
 }
 
 
-class StartTorrentClientCommand extends Command {
+class StartTorrentClientCommand extends TorrentEngineCommand {
   String localIp = "";
   int localPort = 0;
   StartTorrentClient(String localIp, int localPort) {
@@ -62,7 +64,7 @@ class StartTorrentClientCommand extends Command {
   }
 }
 
-class UpnpPortMapCommand extends Command {
+class UpnpPortMapCommand extends TorrentEngineCommand {
   String localIp = "";
   int localPort = 0;
   int globalPort = 0;
@@ -75,7 +77,6 @@ class UpnpPortMapCommand extends Command {
 
   Future<CommandResult> execute(TorrentEngine engine,{List<String> args:null}) {
     return new Future((){
-
       engine._upnpPortMapClient.localAddress = localIp;
       engine._upnpPortMapClient.basePort = globalPort;
       engine._upnpPortMapClient.localPort = localPort;
@@ -87,8 +88,8 @@ class UpnpPortMapCommand extends Command {
   }
 }
 
-class TrackerCommand extends Command {
-  Future<CommandResult> execute(TorrentEngine engine) {
+class TrackerCommand extends TorrentEngineCommand  {
+  Future<CommandResult> execute(TorrentEngine engine,{List<String> args:null}) {
     Completer<CommandResult> comp = new Completer();
     engine.trackerClient.request().then((TrackerRequestResult result) {
       print("");
