@@ -78,3 +78,13 @@ class TorrentClient {
     });
   }
 }
+
+class TorrentClientPeerInfo {
+  String ip = "";
+  int port = 0;
+  int speed = 0;//per sec bytes
+  int downloadedBytesFromMe = 0;// Me is Hetima
+  int uploadedBytesToMe = 0;// Me is Hetima
+  int chokedFromMe = 0;// Me is Hetima
+  int chokedToMe = 0;// Me is Hetima  
+}
