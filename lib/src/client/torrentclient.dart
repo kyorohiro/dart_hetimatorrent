@@ -2,32 +2,40 @@ library hetimatorrent.torrent.client;
 
 import 'dart:core';
 import 'dart:async';
-import 'dart:typed_data' as type;
 import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimanet/hetimanet.dart';
-import '../util/bencode.dart';
 import '../util/peeridcreator.dart';
-import '../message/torrentmessage.dart';
-import '../message/messagehandshake.dart';
-import '../message/messagebitfield.dart';
+import '../message/message.dart';
 import '../util/shufflelinkedlist.dart';
 
-class TorrentClientManager {
+class TorrentClientFront {
   List<int> _peerId = [];
+  List<int> _infoHash = [];
 
   EasyParser _parser = null;
+  HetiSocket _socket = null;
 
-  TorrentClientManager(HetimaReader reader, [List<int> peerId = null]) {
+  static Future<TorrentClientFront> connect(HetiSocketBuilder _builder, TorrentClientPeerInfo info, List<int> infoHash, [List<int> peerId = null]) {
+    return new Future(() {
+      HetiSocket socket = _builder.createClient();
+      return socket.connect(info.ip, info.port).then((HetiSocket socket) {
+        new TorrentClientFront(socket, socket.buffer, infoHash, peerId);
+      });
+    });
+  }
+
+  TorrentClientFront(HetiSocket socket, HetimaReader reader, List<int> infoHash, [List<int> peerId = null]) {
     if (peerId == null) {
       _peerId.addAll(PeerIdCreator.createPeerid("heti69"));
     } else {
       _peerId.addAll(peerId);
     }
+    _infoHash.addAll(infoHash);
+    _socket = socket;
     _parser = new EasyParser(reader);
   }
 
   StreamController<TorrentMessage> stream = new StreamController();
-
   Stream<TorrentMessage> get onReceiveEvent => stream.stream;
 
   parser() {
@@ -39,8 +47,18 @@ class TorrentClientManager {
       });
     }).catchError((e) {});
   }
-}
 
+  // unit.expect(message.infoHash, convert.UTF8.encode("123456789A123456789B"));//message.
+  // unit.expect(message.peerId, convert.UTF8.encode("123456789C123456789D"));//message.
+  Future sendHandshake() {
+    MessageHandshake message = new MessageHandshake(MessageHandshake.ProtocolId, [0, 0, 0, 0, 0, 0, 0, 0], _infoHash, _peerId);
+    return message.encode().then((List<int> v) {
+      return _socket.send(v).then((HetiSendInfo info) {
+        return {};
+      });
+    });
+  }
+}
 
 class TorrentClient {
   HetiServerSocket _server = null;
@@ -52,7 +70,7 @@ class TorrentClient {
   List<HetiSocket> _managedSocketList = [];
 
   TorrentClientPeerInfoList _peerInfos;
-  List<TorrentClientPeerInfo>  get peerInfos => _peerInfos.peerInfos.sequential;
+  List<TorrentClientPeerInfo> get peerInfos => _peerInfos.peerInfos.sequential;
 
   TorrentClient(HetiSocketBuilder builder) {
     this._builder = builder;
@@ -63,7 +81,6 @@ class TorrentClient {
     _peerInfos.putFormTrackerPeerInfo(ip, port, peerId: peerId);
   }
 
-  
   Future start() {
     return _builder.startServer(localAddress, port).then((HetiServerSocket serverSocket) {
       _server = serverSocket;
@@ -85,7 +102,6 @@ class TorrentClient {
   }
 }
 
-
 class TorrentClientPeerInfoList {
   ShuffleLinkedList<TorrentClientPeerInfo> peerInfos;
 
@@ -93,7 +109,6 @@ class TorrentClientPeerInfoList {
     peerInfos = new ShuffleLinkedList();
   }
 
-  
   void putFormTrackerPeerInfo(String ip, int port, {peerId: ""}) {
     for (int i = 0; i < peerInfos.length; i++) {
       TorrentClientPeerInfo info = peerInfos.getSequential(i);
@@ -106,7 +121,6 @@ class TorrentClientPeerInfoList {
   }
 }
 
-
 class TorrentClientPeerInfo {
   static int nid = 0;
   int id = 0;
@@ -118,6 +132,7 @@ class TorrentClientPeerInfo {
   int chokedFromMe = 0; // Me is Hetima
   int chokedToMe = 0; // Me is Hetima
 
+  TorrentClientFront front = null;
   TorrentClientPeerInfo(String ip, int port, {peerId: ""}) {
     this.ip = ip;
     this.port = port;
