@@ -71,7 +71,6 @@ void main() {
             terminal.addCommand(StopUpnpPortMapCommand.name, StopUpnpPortMapCommand.builder());
             terminal.addCommand(GetUpnpPortMapInfoCommand.name, GetUpnpPortMapInfoCommand.builder());
             terminal.addCommand(TrackerCommand.name, TrackerCommand.builder());
-            
           }).catchError((e){
             ;
           });

@@ -33,5 +33,4 @@ export 'src/tracker/trackerserver.dart';
 
 export 'src/client/torrentclient.dart';
 
-
-export 'src/extra/command.dart';
+export 'src/extra/terminal.dart';
