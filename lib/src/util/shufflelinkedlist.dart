@@ -28,6 +28,38 @@ class ShuffleLinkedList<X> {
     return value;
   }
 
+  //
+  // remove from head. if full. 
+  // todo
+  X addHead(X value) {
+    // contain
+    {
+      X xx = null;
+      for (X x in _sequential) {
+        if (x == value) {
+          xx = x;
+          break;
+        }
+      }
+      if (xx != null) {
+        _sequential.remove(xx);
+        if(_sequential.length > 0) {
+          _sequential.insert(0, xx);
+        } else {
+          _sequential.add(xx);
+        }
+        return xx;
+      }
+    }
+    if(_sequential.length > 0) {
+      _sequential.insert(0,value);
+    } else {
+      _sequential.add(value);      
+    }
+    _shuffled.add(value);
+    return value;
+  }
+
   void removeWithFilter(bool filter(X xx)) {
     List<X> t = [];
     for (X x in _sequential) {

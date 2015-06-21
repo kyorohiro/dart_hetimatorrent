@@ -10,21 +10,21 @@ import '../util/peeridcreator.dart';
 import '../message/torrentmessage.dart';
 import '../message/messagehandshake.dart';
 import '../message/messagebitfield.dart';
+import '../util/shufflelinkedlist.dart';
 
 class TorrentClientManager {
   List<int> _peerId = [];
 
   EasyParser _parser = null;
 
-  TorrentClientManager(HetimaReader reader, [List<int> peerId=null]) {
-    if(peerId == null) {
+  TorrentClientManager(HetimaReader reader, [List<int> peerId = null]) {
+    if (peerId == null) {
       _peerId.addAll(PeerIdCreator.createPeerid("heti69"));
     } else {
-      _peerId.addAll(peerId);      
+      _peerId.addAll(peerId);
     }
     _parser = new EasyParser(reader);
   }
-
 
   StreamController<TorrentMessage> stream = new StreamController();
 
@@ -33,29 +33,32 @@ class TorrentClientManager {
   parser() {
     MessageHandshake.decode(_parser).then((MessageHandshake shakeEvent) {
       stream.add(shakeEvent);
-    }).catchError((e){
-      return  MessageBitfield.decode(_parser).then((MessageBitfield bitfield) {
+    }).catchError((e) {
+      return MessageBitfield.decode(_parser).then((MessageBitfield bitfield) {
         ;
       });
-    }).catchError((e){
-      
-    });
+    }).catchError((e) {});
   }
 }
 
-
 class TorrentClient {
-  
   HetiServerSocket _server = null;
   HetiSocketBuilder _builder = null;
-  
+
   String localAddress = "0.0.0.0";
   int port = 8080;
 
   List<HetiSocket> _managedSocketList = [];
 
+  TorrentClientPeerInfoList peerInfos;
+
   TorrentClient(HetiSocketBuilder builder) {
     this._builder = builder;
+    peerInfos = new TorrentClientPeerInfoList();
+  }
+
+  void putTrackerTorrentPeer(String ip, int port, {peerId: ""}) {
+    peerInfos.putFormTrackerPeerInfo(ip, port, peerId: peerId);
   }
 
   Future start() {
@@ -70,21 +73,43 @@ class TorrentClient {
 
   Future stop() {
     _server.close();
-    for(HetiSocket s in _managedSocketList) {
+    for (HetiSocket s in _managedSocketList) {
       s.close();
     }
-    return new Future((){
+    return new Future(() {
       return {};
     });
+  }
+}
+
+class TorrentClientPeerInfoList {
+  ShuffleLinkedList<TorrentClientPeerInfo> peerInfos;
+  TorrentClientPeerInfoList() {
+    peerInfos = new ShuffleLinkedList();
+  }
+  void putFormTrackerPeerInfo(String ip, int port, {peerId: ""}) {
+    for (int i = 0; i < peerInfos.length; i++) {
+      TorrentClientPeerInfo info = peerInfos.getSequential(i);
+      if (info.ip == ip || info.port == port) {
+        // alredy added in peerinfo
+        return;
+      }
+    }
+    peerInfos.addLast(new TorrentClientPeerInfo(ip, port, peerId: peerId));
   }
 }
 
 class TorrentClientPeerInfo {
   String ip = "";
   int port = 0;
-  int speed = 0;//per sec bytes
-  int downloadedBytesFromMe = 0;// Me is Hetima
-  int uploadedBytesToMe = 0;// Me is Hetima
-  int chokedFromMe = 0;// Me is Hetima
-  int chokedToMe = 0;// Me is Hetima  
+  int speed = 0; //per sec bytes
+  int downloadedBytesFromMe = 0; // Me is Hetima
+  int uploadedBytesToMe = 0; // Me is Hetima
+  int chokedFromMe = 0; // Me is Hetima
+  int chokedToMe = 0; // Me is Hetima
+
+  TorrentClientPeerInfo(String ip, int port, {peerId: ""}) {
+    this.ip = ip;
+    this.port = port;
+  }
 }
