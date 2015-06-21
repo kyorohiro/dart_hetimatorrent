@@ -1,5 +1,5 @@
 library hetimatorrent.torrent.trackerpeerinfo;
-import 'dart:math' as math;
+
 import 'dart:core';
 import 'package:hetimacore/hetimacore.dart';
 

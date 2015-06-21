@@ -4,8 +4,6 @@ import 'dart:core';
 import 'dart:async';
 import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimanet/hetimanet.dart';
-import 'dart:typed_data';
-import '../util/bencode.dart';
 import '../file/torrentfile.dart';
 
 class TrackerUrl {

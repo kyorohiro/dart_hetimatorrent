@@ -39,6 +39,22 @@ void main() {
       unit.expect(peers[0][TrackerResponse.KEY_IP], "1.2.3.4");
       unit.expect(peers[0][TrackerResponse.KEY_PORT], 8080);
     }
+    {
+      TrackerRequest request = new TrackerRequest.fromMap(parameter, "1.2.3.4", [1, 2, 3, 4]);
+      manager.update(request);
+      TrackerResponse re = manager.createResponse();
+      Map<String, Object> responseAsMap = re.createResponse(false);
+      
+      //
+      //
+      re = new TrackerResponse();
+      re.initFromMap(responseAsMap);
+      unit.expect(responseAsMap[TrackerResponse.KEY_INTERVAL], 60);
+      List<Map<String, Object>> peers = responseAsMap[TrackerResponse.KEY_PEERS];
+      unit.expect(peers[0][TrackerResponse.KEY_PEER_ID], new type.Uint8List.fromList(peerId));
+      unit.expect(peers[0][TrackerResponse.KEY_IP], "1.2.3.4");
+      unit.expect(peers[0][TrackerResponse.KEY_PORT], 8080);
+    }
   });
 
   unit.test("compact=1 001", () {

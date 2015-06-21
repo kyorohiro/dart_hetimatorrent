@@ -2,7 +2,9 @@ library hetimatorrent.torrent.trackerresponse;
 import 'dart:core';
 import 'dart:typed_data' as data;
 import 'dart:async' as async;
+import 'dart:convert' as convert;
 import 'package:hetimacore/hetimacore.dart';
+import 'package:hetimanet/hetimanet.dart';
 import 'trackerpeerinfo.dart';
 import '../util/bencode.dart';
 import '../util/hetibencode.dart';
@@ -53,10 +55,15 @@ class TrackerResponse {
     } else {
       List<Object> wpeers = c[KEY_PEERS];
       for (Map<String, Object> wpeer in wpeers) {
-        data.Uint8List ip = wpeer[KEY_IP];
+        String ip = "";
+        if(wpeer[KEY_IP] is String) {
+          ip = wpeer[KEY_IP];
+        } else {
+          ip = convert.UTF8.decode(wpeer[KEY_IP]);
+        }
         data.Uint8List peeerid = wpeer[KEY_PEER_ID];
         int port = wpeer[KEY_PORT];
-        peers.add(new TrackerPeerInfo(peeerid.toList(), "", ip.toList(), port));
+        peers.add(new TrackerPeerInfo(peeerid.toList(), "", HetiIP.toRawIP(ip), port));
       }
     }
   }
