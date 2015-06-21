@@ -18,19 +18,6 @@ Map<String, TorrentFile> managedTorrentFile = {};
 html.InputElement fileInput = html.querySelector("#fileinput");
 html.InputElement managedfile = html.querySelector("#managedfile");
 
-html.InputElement startServerBtn = html.querySelector("#startserver");
-html.InputElement stopServerBtn = html.querySelector("#stopserver");
-html.InputElement loadServerBtn = html.querySelector("#loaderserver");
-
-html.SpanElement outputLocalAddressSpn = html.querySelector("#localaddress");
-html.SpanElement outputLocalPortSpn = html.querySelector("#localport");
-html.SpanElement outputGlobalAddressSpn = html.querySelector("#globaladdress");
-html.SpanElement outputGlobalPortSpn = html.querySelector("#globalport");
-
-html.InputElement inputLocalAddress = html.querySelector("#input-localaddress");
-html.InputElement inputLocalPort = html.querySelector("#input-localport");
-html.InputElement inputGlobalPort = html.querySelector("#input-globalport");
-
 // TrackerServer trackerServer = new TrackerServer(new HetiSocketBuilderChrome());
 UpnpPortMapHelper portMapHelder = new UpnpPortMapHelper(new HetiSocketBuilderChrome(), "HetimaTorrentTracker");
 
@@ -93,45 +80,7 @@ void main() {
       });
     }
   });
-/*
-  startServerBtn.onClick.listen((html.MouseEvent e) {
-    if(torrentClient == null) {
-      torrentClient = new TorrentClient(new HetiSocketBuilderChrome());
-    }
-    torrentClient.localAddress = inputLocalAddress.value;
-    torrentClient.port = int.parse(inputLocalPort.value);
-    torrentClient.start().then((_){
-      startServerBtn.style.display = "none";
-      loadServerBtn.style.display = "none";
-      stopServerBtn.style.display = "block";
 
-      print("torrent client started");
-      if(upnpIsUse) {
-        portMapHelder.basePort = torrentClient.port;
-        portMapHelder.numOfRetry = 0;
-        portMapHelder.startPortMap();
-      }
-      outputLocalAddressSpn.setInnerHtml(torrentClient.localAddress);
-      outputLocalPortSpn.setInnerHtml("${torrentClient.port}");
-    }).catchError((e){
-      startServerBtn.style.display = "block";
-      loadServerBtn.style.display = "none";      
-    });
-    startServerBtn.style.display = "none";
-    loadServerBtn.style.display = "block";
-  });
-
-  stopServerBtn.onClick.listen((html.MouseEvent e) {
-    startServerBtn.style.display = "block";
-    loadServerBtn.style.display = "none";
-    stopServerBtn.style.display = "none";
-
-    portMapHelder.deleteAllPortMap();
-    torrentClient.stop().then((_){
-      print("torrent client stoped");
-    });
-  });
-*/
   tab.onShow.listen((TabInfo info) {
     String t = info.cont;
     print("=t= ${t}");
@@ -144,35 +93,7 @@ void main() {
 //        torrentNumOfPeerSpan.setInnerHtml("${trackerServer.numOfPeer(infoHash)}");
       }
   });
-/*
-  // Adds a click event for each radio button in the group with name "gender"
-  html.querySelectorAll('[name="upnpon"]').forEach((html.InputElement radioButton) {
-    radioButton.onClick.listen((html.MouseEvent e) {
-      html.InputElement clicked = e.target;
-      print("The user is ${clicked.value}");
-      if(clicked.value == "Use") {
-        upnpIsUse = true;
-      } else {
-        upnpIsUse = false;
-      }
-    });
-  });
-  
-  portMapHelder.onUpdateGlobalIp.listen((String globalIP) {
-    outputGlobalAddressSpn.setInnerHtml(globalIP);
-  });
 
-  portMapHelder.onUpdateGlobalPort.listen((String globalPort) {
-    outputGlobalPortSpn.setInnerHtml(globalPort);    
-  });
-
-  print("=s=");
-  
-  
-  portMapHelder.startGetLocalIp().then((StartGetLocalIPResult result) {
-     inputLocalAddress.value = result.localIP;
-   });
-  */
 }
 
 class Dialog {
