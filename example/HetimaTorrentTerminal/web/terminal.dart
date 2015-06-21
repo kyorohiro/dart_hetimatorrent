@@ -100,6 +100,9 @@ class Terminal {
             output.children.add(new Element.html("<pre>${e}</pre>"));
             window.scrollTo(0, window.innerHeight + 30);
           });
+        } else {
+          output.children.add(new Element.html("<pre>not found ${args[0]}</pre>"));
+          window.scrollTo(0, window.innerHeight + 30);
         }
       }
     }
