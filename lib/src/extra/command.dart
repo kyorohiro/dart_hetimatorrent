@@ -45,10 +45,10 @@ class TorrentEngine {
     return new Future(() {
       TorrentEngine engine = new TorrentEngine._empty();
       return TrackerClient.createTrackerClient(builder, torrentfile).then((TrackerClient trackerClient) {
+        engine._builder = builder;
         engine._trackerClient = trackerClient;
         engine._torrentClient = new TorrentClient(builder);
-        engine._builder = builder;
-        new UpnpPortMapHelper(builder, appid);
+        engine._upnpPortMapClient = new UpnpPortMapHelper(builder, appid);
         return engine;
       });
     });
@@ -87,24 +87,24 @@ class StartTorrentClientCommand extends TorrentEngineCommand {
   }
 }
 
-class UpnpPortMapCommand extends TorrentEngineCommand {
+class StartUpnpPortMapCommand extends TorrentEngineCommand {
   String localIp = "";
   int localPort = 0;
   int globalPort = 0;
 
-  UpnpPortMapCommand(String localIp, int localPort, int globalPort) {
+  StartUpnpPortMapCommand(String localIp, int localPort, int globalPort) {
     this.localIp = localIp;
     this.localPort = localPort;
     this.globalPort = globalPort;
   }
 
-  static String get help => "${name} : request port map commaand";
+  static String get help => "${name} [localIp] [localPort] [globalPort]: request port map commaand";
 
-  static String get name => "addPortMap";
+  static String get name => "startPortMap";
 
   static TorrentEngineCommandBuilder builder() {
     TorrentEngineCommand builder(List<String> list) {
-      return new UpnpPortMapCommand(list[0], int.parse(list[1]), int.parse(list[2]));
+      return new StartUpnpPortMapCommand(list[0], int.parse(list[1]), int.parse(list[2]));
     }
     return new TorrentEngineCommandBuilder(builder, help);
   }
@@ -121,6 +121,63 @@ class UpnpPortMapCommand extends TorrentEngineCommand {
     });
   }
 }
+
+class StopUpnpPortMapCommand extends TorrentEngineCommand {
+
+  int port = 0;
+  StopUpnpPortMapCommand(int port) {
+    this.port = port;
+  }
+
+  static String get help => "${name} [int:port]: request port map commaand";
+  static String get name => "stopPortMap";
+
+  static TorrentEngineCommandBuilder builder() {
+    TorrentEngineCommand builder(List<String> list) {
+      return new StopUpnpPortMapCommand(int.parse(list[0]));
+    }
+    return new TorrentEngineCommandBuilder(builder, help);
+  }
+
+  Future<CommandResult> execute(TorrentEngine engine, {List<String> args: null}) {
+    return new Future(() {
+      return engine._upnpPortMapClient.deleteAllPortMap([port]).then((DeleteAllPortMapResult result) {
+        return new CommandResult("portmapped ${result.hashCode}");
+      });
+    });
+  }
+}
+
+class GetUpnpPortMapInfoCommand extends TorrentEngineCommand {
+
+  int port = 0;
+  StopUpnpPortMapCommand(int port) {
+    this.port = port;
+  }
+
+  static String get help => "${name} : request port map info";
+  static String get name => "getPortMapInfo";
+
+  static TorrentEngineCommandBuilder builder() {
+    TorrentEngineCommand builder(List<String> list) {
+      return new GetUpnpPortMapInfoCommand();
+    }
+    return new TorrentEngineCommandBuilder(builder, help);
+  }
+
+  Future<CommandResult> execute(TorrentEngine engine, {List<String> args: null}) {
+    return new Future(() {
+      return engine._upnpPortMapClient.getPortMapInfo().then((GetPortMapInfoResult result) {
+        StringBuffer buffer = new StringBuffer();
+        for(PortMapInfo info in result.infos) {
+          buffer.writeln("des:${info.description}, ip:${info.ip}, internalPort:${info.internalPort}, externalPort:${info.externalPort}");
+        }
+        return new CommandResult("portmapped ${buffer.toString()}");
+      });
+    });
+  }
+}
+
 
 class GetLocalIpCommand extends TorrentEngineCommand {
   GetLocalIpCommand() {}

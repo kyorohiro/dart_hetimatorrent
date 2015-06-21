@@ -118,7 +118,15 @@ void main() {
     // clear
     trackerServer.trackerAnnounceAddressForTorrentFile = "";
 
-    portMapHelder.deleteAllPortMap();
+    portMapHelder.getPortMapInfo(portMapHelder.appid).then((GetPortMapInfoResult r) {
+        if(r.infos.length > 0 && r.infos[0].externalPort.length != 0) {
+          int port = int.parse(r.infos[0].externalPort);
+          portMapHelder.deleteAllPortMap([port]);
+        }
+    }).catchError((e){
+      ;
+    });
+    
     trackerServer.stop().then((StopResult r) {
       startServerBtn.style.display = "block";
       stopServerBtn.style.display = "none";
