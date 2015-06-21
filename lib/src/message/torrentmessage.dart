@@ -46,7 +46,7 @@ class TorrentMessage {
     _id = id;
   }
 
-  Future<TorrentMessage> parseHandshake(EasyParser parser, [int maxOfMessageSize = 256 * 1024]) {
+  static Future<TorrentMessage> parseHandshake(EasyParser parser, [int maxOfMessageSize = 256 * 1024]) {
     parser.pop();
     return new Future(() {
       return MessageHandshake.decode(parser);
@@ -57,7 +57,7 @@ class TorrentMessage {
     });    
   }
 
-  Future<TorrentMessage> parseBasic(EasyParser parser, [int maxOfMessageSize = 256 * 1024]) {
+  static  Future<TorrentMessage> parseBasic(EasyParser parser, [int maxOfMessageSize = 256 * 1024]) {
     parser.pop();
     return new Future(() {
       return MessageNull.decode(parser).then((MessageNull nullMessage) {
@@ -84,7 +84,11 @@ class TorrentMessage {
           case TorrentMessage.SIGN_UNCHOKE:
             return MessageUnchoke.decode(parser);
           default:
-            return MessageNull.decode(parser);
+            if(nullMessage.messageContent.length == 0) {
+              return MessageKeepAlive.decode(parser);
+            } else {
+              return MessageNull.decode(parser);
+            }
         }
       });
     }).catchError((e) {

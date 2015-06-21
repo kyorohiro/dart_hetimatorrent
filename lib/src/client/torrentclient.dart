@@ -14,6 +14,7 @@ class TorrentClientFront {
 
   EasyParser _parser = null;
   HetiSocket _socket = null;
+  bool handshaked = false;
 
   static Future<TorrentClientFront> connect(HetiSocketBuilder _builder, TorrentClientPeerInfo info, List<int> infoHash, [List<int> peerId = null]) {
     return new Future(() {
@@ -33,19 +34,32 @@ class TorrentClientFront {
     _infoHash.addAll(infoHash);
     _socket = socket;
     _parser = new EasyParser(reader);
+    handshaked = false;
   }
 
   StreamController<TorrentMessage> stream = new StreamController();
   Stream<TorrentMessage> get onReceiveEvent => stream.stream;
 
-  parser() {
-    MessageHandshake.decode(_parser).then((MessageHandshake shakeEvent) {
-      stream.add(shakeEvent);
-    }).catchError((e) {
-      return MessageBitfield.decode(_parser).then((MessageBitfield bitfield) {
-        ;
+  Future<TorrentMessage> parse() {
+    if (handshaked == false) {
+      return TorrentMessage.parseHandshake(_parser);
+    } else {
+      return TorrentMessage.parseHandshake(_parser);
+    }
+  }
+
+  void startReceive() {
+    a() {
+      new Future(() {
+        parse().then((TorrentMessage message) {
+          stream.add(message);
+          a();
+        });
+      }).catchError((e) {
+        stream.addError(e);
       });
-    }).catchError((e) {});
+    }
+    a();
   }
 
   // unit.expect(message.infoHash, convert.UTF8.encode("123456789A123456789B"));//message.
@@ -59,6 +73,7 @@ class TorrentClientFront {
     });
   }
 }
+
 
 class TorrentClient {
   HetiServerSocket _server = null;
@@ -101,6 +116,7 @@ class TorrentClient {
     });
   }
 }
+
 
 class TorrentClientPeerInfoList {
   ShuffleLinkedList<TorrentClientPeerInfo> peerInfos;
