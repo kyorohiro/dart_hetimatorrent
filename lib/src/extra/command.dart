@@ -39,28 +39,26 @@ class GetPeerInfoCommand extends TorrentEngineCommand {
   String localIp = "";
   int localPort = 0;
 
-  GetPeerInfoCommand(String localIp, int localPort) {
-    this.localIp = localIp;
-    this.localPort = localPort;
+  GetPeerInfoCommand() {
   }
 
-  static String get help => "${name} [string:ip] [int:port] : start torrent client.";
-  static get name => "startTorrent";
+  static String get help => "${name}: get peer info command.";
+  static get name => "getPeerInfo";
 
   static TorrentEngineCommandBuilder builder() {
     TorrentEngineCommand builder(List<String> list) {
-      return new GetPeerInfoCommand(list[0], int.parse(list[1]));
+      return new GetPeerInfoCommand();
     }
     return new TorrentEngineCommandBuilder(builder, help);
   }
 
   Future<CommandResult> execute(TorrentEngine engine, {List<String> args: null}) {
     return new Future(() {
-      engine.torrentClient.localAddress = localIp;
-      engine.torrentClient.port = localPort;
-      return engine.torrentClient.start().then((_) {
-        return new CommandResult("started ${engine.torrentClient.localAddress} ${engine.torrentClient.port}");
-      });
+      StringBuffer buffer = new StringBuffer();
+      for(TorrentClientPeerInfo info in engine.torrentClient.peerInfos) {
+        buffer.writeln("${info.id},ip:${info.ip},port:${info.port},speed:${info.speed},ubm:${info.uploadedBytesToMe},dfm:${info.downloadedBytesFromMe},ctm:${info.chokedToMe},cfm:${info.chokedFromMe}");
+      }
+       return new CommandResult("${buffer.toString()}");
     });
   }
 }

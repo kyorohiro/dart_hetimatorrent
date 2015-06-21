@@ -7,6 +7,8 @@ class ShuffleLinkedList<X> {
   List<X> _sequential = new List();
   List<X> _shuffled = new List();
 
+  List<X> get sequential => new List.from(_sequential);
+
   X addLast(X value) {
     // contain
     {

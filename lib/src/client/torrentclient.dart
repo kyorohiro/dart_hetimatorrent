@@ -41,6 +41,7 @@ class TorrentClientManager {
   }
 }
 
+
 class TorrentClient {
   HetiServerSocket _server = null;
   HetiSocketBuilder _builder = null;
@@ -50,17 +51,19 @@ class TorrentClient {
 
   List<HetiSocket> _managedSocketList = [];
 
-  TorrentClientPeerInfoList peerInfos;
+  TorrentClientPeerInfoList _peerInfos;
+  List<TorrentClientPeerInfo>  get peerInfos => _peerInfos.peerInfos.sequential;
 
   TorrentClient(HetiSocketBuilder builder) {
     this._builder = builder;
-    peerInfos = new TorrentClientPeerInfoList();
+    _peerInfos = new TorrentClientPeerInfoList();
   }
 
   void putTrackerTorrentPeer(String ip, int port, {peerId: ""}) {
-    peerInfos.putFormTrackerPeerInfo(ip, port, peerId: peerId);
+    _peerInfos.putFormTrackerPeerInfo(ip, port, peerId: peerId);
   }
 
+  
   Future start() {
     return _builder.startServer(localAddress, port).then((HetiServerSocket serverSocket) {
       _server = serverSocket;
@@ -82,11 +85,15 @@ class TorrentClient {
   }
 }
 
+
 class TorrentClientPeerInfoList {
   ShuffleLinkedList<TorrentClientPeerInfo> peerInfos;
+
   TorrentClientPeerInfoList() {
     peerInfos = new ShuffleLinkedList();
   }
+
+  
   void putFormTrackerPeerInfo(String ip, int port, {peerId: ""}) {
     for (int i = 0; i < peerInfos.length; i++) {
       TorrentClientPeerInfo info = peerInfos.getSequential(i);
@@ -99,7 +106,10 @@ class TorrentClientPeerInfoList {
   }
 }
 
+
 class TorrentClientPeerInfo {
+  static int nid = 0;
+  int id = 0;
   String ip = "";
   int port = 0;
   int speed = 0; //per sec bytes
@@ -111,5 +121,6 @@ class TorrentClientPeerInfo {
   TorrentClientPeerInfo(String ip, int port, {peerId: ""}) {
     this.ip = ip;
     this.port = port;
+    this.id = ++nid;
   }
 }
