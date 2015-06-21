@@ -22,8 +22,7 @@ class Help extends TorrentEngineCommand {
     return new Future(() {
       StringBuffer buffer = new StringBuffer();
       for(String key in terminal._commandList.keys) {
-        buffer.writeln("[[[${key}]]]");
-        buffer.writeln("   ${terminal._commandList[key].help}");
+        buffer.writeln("[[[${key}]]]   ${terminal._commandList[key].help}");
       }
       return new CommandResult(buffer.toString());
     });
