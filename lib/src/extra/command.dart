@@ -123,7 +123,6 @@ class StartUpnpPortMapCommand extends TorrentEngineCommand {
 }
 
 class StopUpnpPortMapCommand extends TorrentEngineCommand {
-
   int port = 0;
   StopUpnpPortMapCommand(int port) {
     this.port = port;
@@ -149,7 +148,6 @@ class StopUpnpPortMapCommand extends TorrentEngineCommand {
 }
 
 class GetUpnpPortMapInfoCommand extends TorrentEngineCommand {
-
   int port = 0;
   StopUpnpPortMapCommand(int port) {
     this.port = port;
@@ -169,7 +167,7 @@ class GetUpnpPortMapInfoCommand extends TorrentEngineCommand {
     return new Future(() {
       return engine._upnpPortMapClient.getPortMapInfo().then((GetPortMapInfoResult result) {
         StringBuffer buffer = new StringBuffer();
-        for(PortMapInfo info in result.infos) {
+        for (PortMapInfo info in result.infos) {
           buffer.writeln("des:${info.description}, ip:${info.ip}, internalPort:${info.internalPort}, externalPort:${info.externalPort}");
         }
         return new CommandResult("portmapped ${buffer.toString()}");
@@ -177,7 +175,6 @@ class GetUpnpPortMapInfoCommand extends TorrentEngineCommand {
     });
   }
 }
-
 
 class GetLocalIpCommand extends TorrentEngineCommand {
   GetLocalIpCommand() {}
@@ -207,16 +204,37 @@ class GetLocalIpCommand extends TorrentEngineCommand {
 }
 
 class TrackerCommand extends TorrentEngineCommand {
-  static String get help => "${name} : request tracker command";
+  static String get help => "${name} : get localip command";
 
-  static String get name => "tracker";
+  static String get name => "requestTracker";
+
+  static TorrentEngineCommandBuilder builder() {
+    TorrentEngineCommand builder(List<String> list) {
+      return new TrackerCommand(int.parse(list[0]), list[1]);
+    }
+    return new TorrentEngineCommandBuilder(builder, help);
+  }
+
+  int port = 0;
+  String event = "";
+
+  TrackerCommand(int port, String event) {
+    this.port = port;
+    this.event = event;
+  }
 
   Future<CommandResult> execute(TorrentEngine engine, {List<String> args: null}) {
-    Completer<CommandResult> comp = new Completer();
-    engine.trackerClient.request().then((TrackerRequestResult result) {
-      print("");
+    return new Future(() {
+      engine.trackerClient.event = event;
+      engine.trackerClient.peerport = port;
+      return engine.trackerClient.request().then((TrackerRequestResult result) {
+        StringBuffer buffer = new StringBuffer();
+        buffer.writeln("interval:${result.response.interval}");
+        for (TrackerPeerInfo info in result.response.peers) {
+          buffer.writeln("ip:${info.ipAsString}, port:${info.portdAsString},");
+        }
+        return new CommandResult(buffer.toString());
+      });
     });
-
-    return comp.future;
   }
 }

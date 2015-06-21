@@ -11,8 +11,10 @@ import '../util/peeridcreator.dart';
 
 class TrackerClient {
   TrackerUrl trackerUrl;
+  HetiSocketBuilder _socketBuilder = null;
   TrackerClient._a(HetiSocketBuilder builder, TrackerUrl trackerUrl) {
     this.trackerUrl = trackerUrl;
+    _socketBuilder = builder;
   }
 
   static async.Future<TrackerClient> createTrackerClient(HetiSocketBuilder builder, TorrentFile torrentfile, {List<int> peerId: null,int peerPort:16969}) {
@@ -42,7 +44,7 @@ class TrackerClient {
 
   String get infoHash => trackerUrl.infoHashValue;
   String get header => trackerUrl.toHeader();
-  HetiSocketBuilder _socketBuilder = null;
+
 
 
   // todo support redirect
