@@ -79,9 +79,9 @@ void main() {
             Terminal terminal = new Terminal(engine, '#command-input-line', '#command-output', '#command-cmdline');
             Terminal terminalReceive = new Terminal(engine,'#event-input-line', '#event-output', '#event-cmdline');
             
-            terminal.addCommand("startTorrent", StartTorrentClientCommand.builder);
-            terminal.addCommand("portMap", UpnpPortMapCommand.builder);
-            terminal.addCommand("getLocalIp", GetLocalIpCommand.builder);
+            terminal.addCommand("startTorrent", StartTorrentClientCommand.builder());
+            terminal.addCommand("portMap", UpnpPortMapCommand.builder());
+            terminal.addCommand("getLocalIp", GetLocalIpCommand.builder());
           }).catchError((e){
             ;
           });
