@@ -34,7 +34,7 @@ class TrackerCommand extends TorrentEngineCommand {
         buffer.writeln("interval:${result.response.interval}");
         for (TrackerPeerInfo info in result.response.peers) {
           buffer.writeln("ip:${info.ipAsString}, port:${info.portdAsString},");
-          engine.torrentClient.putTrackerTorrentPeer(info.ipAsString, info.port);
+          engine.torrentClient.putTorrentPeerInfo(info.ipAsString, info.port);
         }
         return new CommandResult(buffer.toString());
       });

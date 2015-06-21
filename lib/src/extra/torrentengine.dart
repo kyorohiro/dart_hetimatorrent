@@ -45,7 +45,7 @@ class TorrentEngine {
       return TrackerClient.createTrackerClient(builder, torrentfile).then((TrackerClient trackerClient) {
         engine._builder = builder;
         engine._trackerClient = trackerClient;
-        engine._torrentClient = new TorrentClient(builder);
+        engine._torrentClient = new TorrentClient(builder, trackerClient.infoHash, trackerClient.peerId);
         engine._upnpPortMapClient = new UpnpPortMapHelper(builder, appid);
         return engine;
       });

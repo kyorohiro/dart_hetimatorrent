@@ -42,10 +42,11 @@ class TrackerClient {
   }
 
 
-  String get infoHash => trackerUrl.infoHashValue;
+  String get infoHashAsPercentEncoding => trackerUrl.infoHashValue;
   String get header => trackerUrl.toHeader();
-
-
+  String get peerIdAsPercentEncoding => trackerUrl.peerID;
+  List<int> get peerId => PercentEncode.decode(trackerUrl.peerID);
+  List<int> get infoHash => PercentEncode.decode(trackerUrl.infoHashValue);
 
   // todo support redirect
   async.Future<TrackerRequestResult> requestWithSupportRedirect(int redirectMax) {
