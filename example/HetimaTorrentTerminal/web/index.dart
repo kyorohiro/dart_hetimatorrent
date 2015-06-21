@@ -38,7 +38,6 @@ UpnpPortMapHelper portMapHelder = new UpnpPortMapHelper(new HetiSocketBuilderChr
 //
 html.SpanElement torrentHashSpan = html.querySelector("#torrent-hash");
 html.SpanElement torrentRemoveBtn = html.querySelector("#torrent-remove-btn");
-html.SpanElement torrentNumOfPeerSpan = html.querySelector("#torrent-num-of-peer");
 
 bool upnpIsUse = false;
 String selectKey = null;
