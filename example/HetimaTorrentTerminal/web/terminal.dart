@@ -108,4 +108,9 @@ class Terminal {
     }
     window.scrollTo(0, window.innerHeight + 30);
   }
+  
+  append(String message) {
+    output.children.add(new Element.html("<pre>${message}</pre>"));
+    window.scrollTo(0, window.innerHeight + 30);
+  }
 }

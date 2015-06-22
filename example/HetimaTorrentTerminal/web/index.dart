@@ -73,6 +73,7 @@ void main() {
             terminal.addCommand(ConnectCommand.name, ConnectCommand.builder());
             engine.torrentClient.onReceiveEvent.listen((TorrentMessageInfo info) {
               print("[receive message :  ${info.message.id}");
+              terminalReceive.append("receive message : ${info.message.id}");
             });
           });
         });
