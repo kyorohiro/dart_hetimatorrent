@@ -2,6 +2,7 @@ library hetimatorrent;
 
 export 'src/util/bencode.dart';
 export 'src/util/hetibencode.dart';
+export 'src/util/bitfield.dart';
 export 'src/file/torrentfile.dart';
 export 'src/file/torrentfilehelper.dart';
 export 'src/tracker/trackerurl.dart';

@@ -43,4 +43,69 @@ class Bitfield {
       _bitfieldData[i] = 0;
     }
   }
+
+  int lengthPerBit() {
+    return _bitSize;
+  }
+
+  int lengthPerByte() {
+    return _bitfieldData.length;
+  }
+
+  List<int> getBinary() {
+    return _bitfieldData;
+  }
+
+
+  bool isAllOff() {
+    int len =lengthPerBit();
+    for(int i=0;i<len;i++) {
+      if(getIsOn(i)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  bool isAllOn() {
+    int len =lengthPerBit();
+    for(int i=0;i<len;i++) {
+      if(!getIsOn(i)) {
+        return false;
+      }
+    }
+    return true;
+  }
+  
+  bool getIsOn(int number) {
+    int chunk = number~/8;
+    int pos = number%8;
+    // 8 0, 7 1, 3 3 7 7 
+    if(_bitfieldData == null || chunk>=_bitfieldData.length) {
+      return false;
+    }
+    if(((_bitfieldData[chunk]>>(7-pos))&0x01) == 0x01 ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  void setIsOn(int number, bool on) {
+    int chunk = number~/8;
+    int pos = number%8;
+    // 8 0, 7 1, 3 3 7 7 
+    if(_bitfieldData == null || chunk>= _bitfieldData.length||number>=lengthPerBit()) {
+      return;
+    }
+
+    int value = 0x01<<(7-pos);
+    int v = _bitfieldData[chunk];
+    if(on) {
+      _bitfieldData[chunk] = v|value;
+    } else {
+      value = value^0xFFFFFFFF;
+      _bitfieldData[chunk] = v&value;
+    }
+  }
 }
