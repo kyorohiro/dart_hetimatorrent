@@ -13,10 +13,11 @@ class Bitfield {
 
   Bitfield(int bitSize,{bool clearIsOne:true}) {
     this._bitSize = bitSize;
+    int byteSize = bitSize~/8;
     if (bitSize % 8 != 0) {
-      bitSize += 1;
+      byteSize += 1;
     }
-    _bitfieldData = new List.filled(bitSize, 0);
+    _bitfieldData = new List.filled(byteSize, 0);
     if(clearIsOne) {
       oneClear();
     } else {
