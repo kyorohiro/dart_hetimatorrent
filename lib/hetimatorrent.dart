@@ -19,7 +19,8 @@ export 'src/tracker/trackerserver.dart';
 
 
 export 'src/client/torrentclient.dart';
+export 'src/client/torrentclientfront.dart';
+
 
 export 'src/extra/terminal.dart';
-
 export 'src/message/message.dart';

@@ -1,7 +1,9 @@
 library hetimatorrent.extra.command;
 
 import 'dart:async';
-import 'package:hetimatorrent/hetimatorrent.dart';
+import '../client/torrentclient.dart';
+import '../client/torrentclientfront.dart';
+
 import 'torrentengine.dart';
 
 class StartTorrentClientCommand extends TorrentEngineCommand {
