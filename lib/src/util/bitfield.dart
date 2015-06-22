@@ -11,12 +11,17 @@ class Bitfield {
   int _bitSize = 0;
   List<int> _bitfieldData = [];
 
-  Bitfield(int bitSize) {
+  Bitfield(int bitSize,{bool clearIsOne:true}) {
     this._bitSize = bitSize;
     if (bitSize % 8 != 0) {
       bitSize += 1;
     }
     _bitfieldData = new List.filled(bitSize, 0);
+    if(clearIsOne) {
+      oneClear();
+    } else {
+      zeroClear();
+    }
   }
 
   void oneClear() {
