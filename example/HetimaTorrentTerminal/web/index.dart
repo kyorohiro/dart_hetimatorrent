@@ -32,9 +32,6 @@ String selectKey = null;
 TorrentClient torrentClient = null;
 
 void main() {
-  /*
-
-*/
   print("hello world");
   
   tab.init();
@@ -61,19 +58,21 @@ void main() {
           String key = PercentEncode.encode(infoHash);
           managedTorrentFile[key] = f;
           tab.add("${key}", "con-termi");
-          TorrentEngine.createTorrentEngine(new HetiSocketBuilderChrome(), f).then((TorrentEngine engine) {
+          return TorrentEngine.createTorrentEngine(new HetiSocketBuilderChrome(), f).then((TorrentEngine engine) {
             Terminal terminal = new Terminal(engine, '#command-input-line', '#command-output', '#command-cmdline');
             Terminal terminalReceive = new Terminal(engine,'#event-input-line', '#event-output', '#event-cmdline');
-            
+ 
             terminal.addCommand(StartTorrentClientCommand.name, StartTorrentClientCommand.builder());
             terminal.addCommand(GetLocalIpCommand.name, GetLocalIpCommand.builder());
             terminal.addCommand(StartUpnpPortMapCommand.name, StartUpnpPortMapCommand.builder());
             terminal.addCommand(StopUpnpPortMapCommand.name, StopUpnpPortMapCommand.builder());
             terminal.addCommand(GetUpnpPortMapInfoCommand.name, GetUpnpPortMapInfoCommand.builder());
             terminal.addCommand(TrackerCommand.name, TrackerCommand.builder());
-            terminal.addCommand(GetPeerInfoCommand.name, GetPeerInfoCommand.builder());            
-          }).catchError((e){
-            ;
+            terminal.addCommand(GetPeerInfoCommand.name, GetPeerInfoCommand.builder());
+            terminal.addCommand(HandshakeCommand.name, HandshakeCommand.builder());
+            engine.torrentClient.onReceiveEvent.listen((TorrentMessageInfo info) {
+              print("[receive message :  ${info.message.id}");
+            });
           });
         });
       }).catchError((e) {
