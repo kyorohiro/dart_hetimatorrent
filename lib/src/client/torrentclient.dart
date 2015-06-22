@@ -98,7 +98,9 @@ class TorrentClient {
   int port = 8080;
 
   List<HetiSocket> _managedSocketList = [];
-
+  List<int> get peerId => new List.from(_peerId);
+  List<int> get infoHash  => new List.from(_infoHash);
+ 
   TorrentClientPeerInfoList _peerInfos;
   List<TorrentClientPeerInfo> get peerInfos => _peerInfos.peerInfos.sequential;
 

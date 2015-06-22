@@ -63,28 +63,28 @@ class GetPeerInfoCommand extends TorrentEngineCommand {
 }
 
 class ConnectCommand extends TorrentEngineCommand {
-  String localIp = "";
-  int localPort = 0;
+  int _id = 0;
 
-  ConnectCommand() {
+  ConnectCommand(int id) {
+    this._id = id;
   }
 
-  static String get help => "${name} [number]:";
+  static String get help => "${name} [id]:";
   static get name => "connect";
 
   static TorrentEngineCommandBuilder builder() {
     TorrentEngineCommand builder(List<String> list) {
-      return new ConnectCommand();
+      return new ConnectCommand(int.parse(list[0]));
     }
     return new TorrentEngineCommandBuilder(builder, help);
   }
 
   Future<CommandResult> execute(TorrentEngine engine, {List<String> args: null}) {
     return new Future(() {
-      
-      engine.torrentClient.connect(_builder, info, infoHash)
-      StringBuffer buffer = new StringBuffer();
-       return new CommandResult("${buffer.toString()}");
+      TorrentClientPeerInfo info = engine.torrentClient.getPeerInfoFromId(_id);
+      return engine.torrentClient.connect(engine.socketBuilder, info, engine.torrentClient.infoHash).then((TorrentClientFront front) {
+        return new CommandResult("connected");
+      });
     });
   }
 }

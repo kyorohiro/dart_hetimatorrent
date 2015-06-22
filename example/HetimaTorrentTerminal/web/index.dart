@@ -70,6 +70,7 @@ void main() {
             terminal.addCommand(TrackerCommand.name, TrackerCommand.builder());
             terminal.addCommand(GetPeerInfoCommand.name, GetPeerInfoCommand.builder());
             terminal.addCommand(HandshakeCommand.name, HandshakeCommand.builder());
+            terminal.addCommand(ConnectCommand.name, ConnectCommand.builder());
             engine.torrentClient.onReceiveEvent.listen((TorrentMessageInfo info) {
               print("[receive message :  ${info.message.id}");
             });
