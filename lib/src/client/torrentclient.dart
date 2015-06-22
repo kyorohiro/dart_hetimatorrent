@@ -50,9 +50,12 @@ class TorrentClientFront {
 
   Future<TorrentMessage> parse() {
     if (handshaked == false) {
-      return TorrentMessage.parseHandshake(_parser);
+      return TorrentMessage.parseHandshake(_parser).then((TorrentMessage message) {
+        handshaked = true;
+        return message;
+      });
     } else {
-      return TorrentMessage.parseHandshake(_parser);
+      return TorrentMessage.parseBasic(_parser);
     }
   }
 
@@ -129,6 +132,7 @@ class TorrentClient {
             info.front.onReceiveEvent.listen((TorrentMessage message) {
               stream.add(new TorrentMessageInfo(info.front, message));
             });
+            info.front.startReceive();
           });
         }).catchError((e) {
           socket.close();
@@ -148,6 +152,7 @@ class TorrentClient {
         front.onReceiveEvent.listen((TorrentMessage message) {
           stream.add(new TorrentMessageInfo(info.front, message));
         });
+        front.startReceive();
         return front;
       });
     });

@@ -47,18 +47,18 @@ class TorrentMessage {
   }
 
   static Future<TorrentMessage> parseHandshake(EasyParser parser, [int maxOfMessageSize = 256 * 1024]) {
-    parser.pop();
+    parser.push();
     return new Future(() {
       return MessageHandshake.decode(parser);
     }).catchError((e) {
       parser.back();
     }).whenComplete(() {
-      parser.push();
+      parser.pop();
     });    
   }
 
   static  Future<TorrentMessage> parseBasic(EasyParser parser, [int maxOfMessageSize = 256 * 1024]) {
-    parser.pop();
+    parser.push();
     return new Future(() {
       return MessageNull.decode(parser).then((MessageNull nullMessage) {
         parser.back();
@@ -94,7 +94,7 @@ class TorrentMessage {
     }).catchError((e) {
       parser.back();
     }).whenComplete(() {
-      parser.push();
+      parser.pop();
     });
   }
 }
