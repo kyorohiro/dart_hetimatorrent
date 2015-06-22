@@ -90,10 +90,9 @@ class ConnectCommand extends TorrentEngineCommand {
 }
 
 class HandshakeCommand extends TorrentEngineCommand {
-  String localIp = "";
-  int localPort = 0;
-
-  HandshakeCommand() {
+  int _id =0;
+  HandshakeCommand(int id) {
+    _id = id;
   }
 
   static String get help => "${name} [number]:";
@@ -101,7 +100,7 @@ class HandshakeCommand extends TorrentEngineCommand {
 
   static TorrentEngineCommandBuilder builder() {
     TorrentEngineCommand builder(List<String> list) {
-      return new HandshakeCommand();
+      return new HandshakeCommand(int.parse(list[0]));
     }
     return new TorrentEngineCommandBuilder(builder, help);
   }
@@ -109,7 +108,10 @@ class HandshakeCommand extends TorrentEngineCommand {
   Future<CommandResult> execute(TorrentEngine engine, {List<String> args: null}) {
     return new Future(() {
       StringBuffer buffer = new StringBuffer();
-       return new CommandResult("${buffer.toString()}");
+      TorrentClientPeerInfo info = engine.torrentClient.getPeerInfoFromId(_id);
+      return info.front.sendHandshake().then((_){
+        return new CommandResult("sended handshake");        
+      });
     });
   }
 }

@@ -28,7 +28,7 @@ class TorrentClientFront {
     return new Future(() {
       HetiSocket socket = _builder.createClient();
       return socket.connect(info.ip, info.port).then((HetiSocket socket) {
-        new TorrentClientFront(socket, info.ip, info.port, socket.buffer, infoHash, peerId);
+        return new TorrentClientFront(socket, info.ip, info.port, socket.buffer, infoHash, peerId);
       });
     });
   }
