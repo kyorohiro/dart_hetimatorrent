@@ -16,16 +16,24 @@ class TorrentClientFront {
   HetiSocket _socket = null;
   bool handshaked = false;
 
+  String ip = "";
+  int port = 0;
+  int speed = 0; //per sec bytes
+  int downloadedBytesFromMe = 0; // Me is Hetima
+  int uploadedBytesToMe = 0; // Me is Hetima
+  int chokedFromMe = 0; // Me is Hetima
+  int chokedToMe = 0; // Me is Hetima
+
   static Future<TorrentClientFront> connect(HetiSocketBuilder _builder, TorrentClientPeerInfo info, List<int> infoHash, [List<int> peerId = null]) {
     return new Future(() {
       HetiSocket socket = _builder.createClient();
       return socket.connect(info.ip, info.port).then((HetiSocket socket) {
-        new TorrentClientFront(socket, socket.buffer, infoHash, peerId);
+        new TorrentClientFront(socket, info.ip, info.port, socket.buffer, infoHash, peerId);
       });
     });
   }
 
-  TorrentClientFront(HetiSocket socket, HetimaReader reader, List<int> infoHash, List<int> peerId) {
+  TorrentClientFront(HetiSocket socket, String ip, int port, HetimaReader reader, List<int> infoHash, List<int> peerId) {
     if (peerId == null) {
       _peerId.addAll(PeerIdCreator.createPeerid("heti69"));
     } else {
@@ -62,8 +70,6 @@ class TorrentClientFront {
     a();
   }
 
-  // unit.expect(message.infoHash, convert.UTF8.encode("123456789A123456789B"));//message.
-  // unit.expect(message.peerId, convert.UTF8.encode("123456789C123456789D"));//message.
   Future sendHandshake() {
     MessageHandshake message = new MessageHandshake(MessageHandshake.ProtocolId, [0, 0, 0, 0, 0, 0, 0, 0], _infoHash, _peerId);
     return message.encode().then((List<int> v) {
@@ -71,6 +77,15 @@ class TorrentClientFront {
         return {};
       });
     });
+  }
+}
+
+class TorrentMessageInfo {
+  TorrentMessage message;
+  TorrentClientFront front;
+  TorrentMessageInfo(TorrentClientFront front, TorrentMessage message) {
+    this.message = message;
+    this.front = front;
   }
 }
 
@@ -86,6 +101,9 @@ class TorrentClient {
 
   TorrentClientPeerInfoList _peerInfos;
   List<TorrentClientPeerInfo> get peerInfos => _peerInfos.peerInfos.sequential;
+
+  StreamController<TorrentMessageInfo> stream = new StreamController();
+  Stream<TorrentMessageInfo> get onReceiveEvent => stream.stream;
 
   TorrentClient(HetiSocketBuilder builder, List<int> infoHash, List<int> peerId) {
     this._builder = builder;
@@ -105,13 +123,27 @@ class TorrentClient {
         new Future(() {
           return socket.getSocketInfo().then((HetiSocketInfo socketInfo) {
             TorrentClientPeerInfo info = putTorrentPeerInfo(socketInfo.localAddress, socketInfo.localPort);
-            info.front = new TorrentClientFront(socket, socket.buffer, _infoHash, _peerId);
+            info.front = new TorrentClientFront(socket, socketInfo.localAddress, socketInfo.localPort, socket.buffer, _infoHash, _peerId);
+            info.front.onReceiveEvent.listen((TorrentMessage message) {
+              stream.add(new TorrentMessageInfo(info.front, message));
+            });
           });
         }).catchError((e) {
           socket.close();
         });
       });
       return {};
+    });
+  }
+
+  Future<TorrentClientFront> connect(HetiSocketBuilder _builder, TorrentClientPeerInfo info, List<int> infoHash, [List<int> peerId = null]) {
+    return new Future(() {
+      return TorrentClientFront.connect(_builder, info, infoHash, peerId).then((TorrentClientFront front) {
+        front.onReceiveEvent.listen((TorrentMessage message) {
+          stream.add(new TorrentMessageInfo(info.front, message));
+        });
+        return front;
+      });
     });
   }
 
@@ -152,16 +184,54 @@ class TorrentClientPeerInfo {
   int id = 0;
   String ip = "";
   int port = 0;
-  int speed = 0; //per sec bytes
-  int downloadedBytesFromMe = 0; // Me is Hetima
-  int uploadedBytesToMe = 0; // Me is Hetima
-  int chokedFromMe = 0; // Me is Hetima
-  int chokedToMe = 0; // Me is Hetima
-
   TorrentClientFront front = null;
+
   TorrentClientPeerInfo(String ip, int port, {peerId: ""}) {
     this.ip = ip;
     this.port = port;
     this.id = ++nid;
+  }
+
+  /// per sec bytes
+  int get speed {
+    if (front == null) {
+      return 0;
+    } else {
+      return front.speed;
+    }
+  }
+
+  /// Me is Hetima
+  int get downloadedBytesFromMe {
+    if (front == null) {
+      return 0;
+    } else {
+      return front.downloadedBytesFromMe;
+    }
+  }
+
+  /// Me is Hetima
+  int get uploadedBytesToMe {
+    if (front == null) {
+      return 0;
+    } else {
+      return front.uploadedBytesToMe;
+    }
+  }
+  /// Me is Hetima
+  int get chokedFromMe {
+    if (front == null) {
+      return 0;
+    } else {
+      return front.chokedFromMe;
+    }
+  }
+  /// Me is Hetima
+  int get chokedToMe {
+    if (front == null) {
+      return 0;
+    } else {
+      return front.chokedToMe;
+    }
   }
 }
