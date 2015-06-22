@@ -136,6 +136,10 @@ class TorrentClient {
     });
   }
 
+  TorrentClientPeerInfo getPeerInfoFromId(int id) {
+    return _peerInfos.getPeerInfoFromId(id);
+  }
+
   Future<TorrentClientFront> connect(HetiSocketBuilder _builder, TorrentClientPeerInfo info, List<int> infoHash, [List<int> peerId = null]) {
     return new Future(() {
       return TorrentClientFront.connect(_builder, info, infoHash, peerId).then((TorrentClientFront front) {
@@ -176,6 +180,16 @@ class TorrentClientPeerInfoList {
     TorrentClientPeerInfo info = new TorrentClientPeerInfo(ip, port, peerId: peerId);
     peerInfos.addLast(info);
     return info;
+  }
+  
+  TorrentClientPeerInfo getPeerInfoFromId(int id) {
+    for (int i = 0; i < peerInfos.length; i++) {
+      TorrentClientPeerInfo info = peerInfos.getSequential(i);
+      if (info.id == id) {
+        return info;
+      }
+    }
+    return null;
   }
 }
 

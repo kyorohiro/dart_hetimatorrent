@@ -62,6 +62,32 @@ class GetPeerInfoCommand extends TorrentEngineCommand {
   }
 }
 
+class ConnectCommand extends TorrentEngineCommand {
+  String localIp = "";
+  int localPort = 0;
+
+  ConnectCommand() {
+  }
+
+  static String get help => "${name} [number]:";
+  static get name => "connect";
+
+  static TorrentEngineCommandBuilder builder() {
+    TorrentEngineCommand builder(List<String> list) {
+      return new ConnectCommand();
+    }
+    return new TorrentEngineCommandBuilder(builder, help);
+  }
+
+  Future<CommandResult> execute(TorrentEngine engine, {List<String> args: null}) {
+    return new Future(() {
+      
+      engine.torrentClient.connect(_builder, info, infoHash)
+      StringBuffer buffer = new StringBuffer();
+       return new CommandResult("${buffer.toString()}");
+    });
+  }
+}
 
 class HandshakeCommand extends TorrentEngineCommand {
   String localIp = "";
@@ -70,8 +96,8 @@ class HandshakeCommand extends TorrentEngineCommand {
   HandshakeCommand() {
   }
 
-  static String get help => "${name}: get peer info command.";
-  static get name => "getPeerInfo";
+  static String get help => "${name} [number]:";
+  static get name => "handshake";
 
   static TorrentEngineCommandBuilder builder() {
     TorrentEngineCommand builder(List<String> list) {
@@ -83,9 +109,6 @@ class HandshakeCommand extends TorrentEngineCommand {
   Future<CommandResult> execute(TorrentEngine engine, {List<String> args: null}) {
     return new Future(() {
       StringBuffer buffer = new StringBuffer();
-      for(TorrentClientPeerInfo info in engine.torrentClient.peerInfos) {
-        buffer.writeln("${info.id},ip:${info.ip},port:${info.port},speed:${info.speed},ubm:${info.uploadedBytesToMe},dfm:${info.downloadedBytesFromMe},ctm:${info.chokedToMe},cfm:${info.chokedFromMe}");
-      }
        return new CommandResult("${buffer.toString()}");
     });
   }
