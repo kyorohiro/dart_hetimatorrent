@@ -9,13 +9,20 @@ import '../message/message.dart';
 import '../util/shufflelinkedlist.dart';
 
 import 'torrentclientfront.dart';
+import '../util/blockdata.dart';
+import '../util/bitfield.dart';
+
+import '../file/torrentfile.dart';
 
 class TorrentMessageInfo {
   TorrentMessage message;
-  TorrentClientFront front;
-  TorrentMessageInfo(TorrentClientFront front, TorrentMessage message) {
+  TorrentClientFront get front => _info.front;
+  TorrentClientPeerInfo get info => _info;
+  TorrentClientPeerInfo _info;  
+  
+  TorrentMessageInfo(TorrentClientPeerInfo info, TorrentMessage message) {
     this.message = message;
-    this.front = front;
+    this._info = info;
   }
 }
 
@@ -27,6 +34,7 @@ class TorrentClient {
   String localAddress = "0.0.0.0";
   int port = 8080;
 
+
   List<HetiSocket> _managedSocketList = [];
   List<int> get peerId => new List.from(_peerId);
   List<int> get infoHash  => new List.from(_infoHash);
@@ -37,11 +45,21 @@ class TorrentClient {
   StreamController<TorrentMessageInfo> stream = new StreamController();
   Stream<TorrentMessageInfo> get onReceiveEvent => stream.stream;
 
-  TorrentClient(HetiSocketBuilder builder, List<int> infoHash, List<int> peerId) {
+
+  BlockData targetBlock = null;
+
+  static Future<TorrentClient> create(HetiSocketBuilder builder, List<int> peerId, TorrentFile file, HetimaData data) {
+    return file.createInfoSha1().then((List<int> infoHash) {
+      return new TorrentClient(builder, infoHash, peerId, file.info.pieces, file.info.piece_length, file.info.files.dataSize, data);
+    });
+  }
+
+  TorrentClient(HetiSocketBuilder builder, List<int> infoHash, List<int> peerId, List<int> piece, int pieceLength, int fileSize, HetimaData data) {
     this._builder = builder;
     _peerInfos = new TorrentClientPeerInfoList();
     _infoHash.addAll(infoHash);
     _peerId.addAll(peerId);
+    targetBlock = new BlockData(data, new Bitfield(piece.length~/20), pieceLength, fileSize);
   }
 
   TorrentClientPeerInfo putTorrentPeerInfo(String ip, int port, {peerId: ""}) {
@@ -57,7 +75,7 @@ class TorrentClient {
             TorrentClientPeerInfo info = putTorrentPeerInfo(socketInfo.localAddress, socketInfo.localPort);
             info.front = new TorrentClientFront(socket, socketInfo.localAddress, socketInfo.localPort, socket.buffer, _infoHash, _peerId);
             info.front.onReceiveEvent.listen((TorrentMessage message) {
-              stream.add(new TorrentMessageInfo(info.front, message));
+              stream.add(new TorrentMessageInfo(info, message));
             });
             info.front.startReceive();
           });
@@ -77,7 +95,7 @@ class TorrentClient {
     return new Future(() {
       return TorrentClientFront.connect(_builder, info, infoHash, peerId).then((TorrentClientFront front) {
         front.onReceiveEvent.listen((TorrentMessage message) {
-          stream.add(new TorrentMessageInfo(info.front, message));
+          stream.add(new TorrentMessageInfo(info, message));
         });
         front.startReceive();
         return front;
