@@ -91,5 +91,87 @@ class TorrentClientFront {
       });
     });
   }
+
+  Future sendChoke() {
+    MessageChoke message = new MessageChoke();
+    return message.encode().then((List<int> data) {
+      return _socket.send(data).then((HetiSendInfo info) {
+        return {};
+      });
+    });
+  }
+
+  Future sendUnchoke() {
+    MessageUnchoke message = new MessageUnchoke();
+    return message.encode().then((List<int> data) {
+      return _socket.send(data).then((HetiSendInfo info) {
+        return {};
+      });
+    });
+  }
+  
+  Future sendInterested() {
+    MessageInterested message = new MessageInterested();
+    return message.encode().then((List<int> data) {
+      return _socket.send(data).then((HetiSendInfo info){
+        return {};
+      });
+    });
+  }
+  
+  Future sendNotInterested() {
+    MessageNotInterested message = new MessageNotInterested();
+    return message.encode().then((List<int> data) {
+      return _socket.send(data).then((HetiSendInfo info) {
+        return {};
+      });
+    });
+  }
+  
+  Future sendCancel(int index, int begin, int length) {
+    MessageCancel message = new MessageCancel(index, begin, length);
+    return message.encode().then((List<int> data) {
+      return _socket.send(data).then((HetiSendInfo info) {
+        return {};
+      });
+    });
+  }
+  
+  Future sendHave(int index) {
+    MessageHave message = new MessageHave(index);
+    return message.encode().then((List<int> data) {
+      return _socket.send(data).then((HetiSendInfo info) {
+        return {};
+      });
+    });
+  }
+  
+  Future sendPort(int port) {
+    MessagePort message = new MessagePort(port);
+    return message.encode().then((List<int> data) {
+      return _socket.send(data).then((HetiSendInfo info) {
+        return {};
+      });
+    });
+  }
+  
+  Future sendPiece(int index, int begin, List<int> content) {
+    MessagePiece message = new MessagePiece(index, begin, content);
+    return message.encode().then((List<int> data) {
+      return _socket.send(data).then((HetiSendInfo info) {
+        return {};
+      });
+    });
+  }
+  
+  Future sendRequest(int index, int begin, int length) {
+    MessageRequest message = new MessageRequest(index, begin, length);
+    return message.encode().then((List<int> data) {
+      return _socket.send(data).then((HetiSendInfo info) {
+        return {};
+      });
+    });
+  }
+  
 }
 
