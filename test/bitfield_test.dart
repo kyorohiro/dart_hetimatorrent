@@ -150,5 +150,37 @@ void main() {
         unit.expect(true, (i==2||i==1?true:false));
       }
     });
+    
+    
+    unit.test("test_getOffPieceAtRandom", () {
+      {
+        Bitfield field = new Bitfield(0);
+        unit.expect(-1, field.getOnPieceAtRandom());
+      }
+      {
+        Bitfield field = new Bitfield(1);
+        unit.expect(0, field.getOnPieceAtRandom());
+        field.setIsOn(0, false);
+        unit.expect(-1, field.getOnPieceAtRandom());
+      }
+
+      {
+        Bitfield field = new Bitfield(3);
+        int i = field.getOnPieceAtRandom();
+        unit.expect(true, (i==0||i==1||i==2?true:false));
+
+        field.setIsOn(1, false);
+         i = field.getOnPieceAtRandom();
+        unit.expect(true, (i==0||i==2?true:false));
+
+        field.setIsOn(2, false);
+         i = field.getOnPieceAtRandom();
+        unit.expect(i, 0);
+        
+        field.setIsOn(0, false);
+         i = field.getOnPieceAtRandom();
+        unit.expect(-1, i);
+      }
+    });
   });
 }
