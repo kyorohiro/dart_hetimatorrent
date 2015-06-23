@@ -29,7 +29,7 @@ class BlockData {
         throw {};
       }
       return _data.write(data, blockNum * _blockSize).then((WriteResult result) {
-        _head.setIsOn(0, true);
+        _head.setIsOn(blockNum, true);
         return result;
       });
     });
