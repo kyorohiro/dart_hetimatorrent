@@ -69,5 +69,59 @@ void main() {
       unit.expect(true, bitfield.isAllOff());
       unit.expect(false, bitfield.isAllOn());
     });
+    
+    unit.test("test_bitsizeIs72", () {
+      Bitfield bitfield = new Bitfield(70);
+      unit.expect(9, bitfield.getBinary().length);
+      unit.expect(70, bitfield.lengthPerBit());
+      unit.expect(9, bitfield.lengthPerByte());
+      unit.expect(false, bitfield.isAllOff());
+      unit.expect(true, bitfield.isAllOn());
+      unit.expect(0xFF, 0xFF&bitfield.getBinary()[0]);
+      unit.expect(0xFC, 0xFF&bitfield.getBinary()[8]);
+    }); 
+    
+    unit.test("test_isAllOnPerByte", () {
+      Bitfield bitfield = new Bitfield(20);
+      unit.expect(true, bitfield.isAllOnPerByte(0));
+      unit.expect(true, bitfield.isAllOnPerByte(1));
+      unit.expect(true, bitfield.isAllOnPerByte(2));
+      bitfield.zeroClear();
+      unit.expect(false, bitfield.isAllOnPerByte(0));
+      unit.expect(false, bitfield.isAllOnPerByte(1));
+      unit.expect(false, bitfield.isAllOnPerByte(2));
+      bitfield.setIsOn(0, true);
+      unit.expect(false, bitfield.isAllOnPerByte(0));
+      unit.expect(false, bitfield.isAllOnPerByte(1));
+      unit.expect(false, bitfield.isAllOnPerByte(2));
+      for(int i=0;i<8;i++) {
+        bitfield.setIsOn(0+i, true);
+      }
+      unit.expect(true, bitfield.isAllOnPerByte(0));
+      unit.expect(false, bitfield.isAllOnPerByte(1));
+      unit.expect(false, bitfield.isAllOnPerByte(2));
+      
+      bitfield.setIsOn(10, true);
+      unit.expect(true, bitfield.isAllOnPerByte(0));
+      unit.expect(false, bitfield.isAllOnPerByte(1));
+      unit.expect(false, bitfield.isAllOnPerByte(2));
+      for(int i=0;i<8;i++) {
+        bitfield.setIsOn(8+i, true);
+      }
+      unit.expect(true, bitfield.isAllOnPerByte(0));
+      unit.expect(true, bitfield.isAllOnPerByte(1));
+      unit.expect(false, bitfield.isAllOnPerByte(2));
+
+      bitfield.setIsOn(19, true);
+      unit.expect(true, bitfield.isAllOnPerByte(0));
+      unit.expect(true, bitfield.isAllOnPerByte(1));
+      unit.expect(false, bitfield.isAllOnPerByte(2));
+      for(int i=0;i<8;i++) {
+        bitfield.setIsOn(16+i, true);
+      }
+      unit.expect(true, bitfield.isAllOnPerByte(0));
+      unit.expect(true, bitfield.isAllOnPerByte(1));
+      unit.expect(true, bitfield.isAllOnPerByte(2));
+    });
   });
 }

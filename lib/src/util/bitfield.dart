@@ -109,4 +109,39 @@ class Bitfield {
       _bitfieldData[chunk] = v&value;
     }
   }
+
+  bool isAllOnPerByte(int number) {
+    int len = lengthPerByte();
+    int last = lengthPerBit()%8;
+
+    if(number>=len) {
+      return false;
+    }
+    if(number<(len-1)) {
+      if((0xFF&_bitfieldData[number]) == 0xFF) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      if((0xFF&_bitfieldData[number]) == (0xFF&BIT[last])) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
+  bool isAllOffPerByte(int number) {
+    int len = lengthPerByte();
+    if(number>=len) {
+      return false;
+    }
+    if((0xFF&_bitfieldData[number]) == 0x00) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
 }
