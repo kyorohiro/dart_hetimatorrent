@@ -1,9 +1,6 @@
 library hetimatorrent.torrent.bitfield;
 
-import 'dart:typed_data' as data;
-import 'dart:convert' as convert;
 import 'dart:core';
-import 'package:hetimacore/hetimacore.dart' as hetima;
 import 'dart:math';
 
 class Bitfield {
@@ -35,24 +32,24 @@ class Bitfield {
   }
 
   static Bitfield relative(Bitfield ina, Bitfield inb, Bitfield out) {
-    if(out == null) {
+    if (out == null) {
       int len = ina.lengthPerBit();
       out = new Bitfield(len);
     }
     int len = out.lengthPerByte();
-    if(len>inb.lengthPerByte()) {
+    if (len > inb.lengthPerByte()) {
       len = inb.lengthPerByte();
     }
-    for(int i=0;i<out.lengthPerByte();i++) {
-      out._bitfieldData[i] = (0xFF&out._bitfieldData[i]);
+    for (int i = 0; i < out.lengthPerByte(); i++) {
+      out._bitfieldData[i] = (0xFF & out._bitfieldData[i]);
     }
-    for(int i=0;i<len;i++) {
-      out._bitfieldData[i] = (0xFF&ina._bitfieldData[i]&(~inb._bitfieldData[i]));
+    for (int i = 0; i < len; i++) {
+      out._bitfieldData[i] = (0xFF & ina._bitfieldData[i] & (~inb._bitfieldData[i]));
     }
     out.update();
     return out;
   }
- 
+
   void oneClear() {
     int bitsize = _bitSize;
     int byteSize = bitsize ~/ 8;
@@ -270,6 +267,6 @@ class Bitfield {
   int getOnPieceAtRandom() {
     return getPieceAtRandom(false);
   }
-  
-  void update(){}
+
+  void update() {}
 }
