@@ -1,7 +1,6 @@
 library hetimatorrent.torrent.blockdata;
 
 import 'dart:core';
-import 'dart:math';
 import 'dart:async';
 
 import 'package:hetimacore/hetimacore.dart';
@@ -12,12 +11,18 @@ class BlockData {
   Bitfield _head;
   HetimaData _data;
   int _blockSize;
-  BlockData(HetimaData data, Bitfield head, int blockSize) {
+  int _dataSize;
+
+  BlockData(HetimaData data, Bitfield head, int blockSize, {dataSize:null}) {
+    if(dataSize == null) {
+      _dataSize = head.lengthPerBit() * blockSize;
+    } else {
+      _dataSize = dataSize;
+    }
     _data = data;
     _head = head;
     _blockSize = blockSize;
   }
-
 
   Future<WriteResult> write(List<int> data, int blockNum) {
     return new Future(() {
@@ -40,4 +45,9 @@ class BlockData {
    });
   }
 
+  bool have(int blockNum) {
+    return _head.getIsOn(blockNum);
+  }
+
+  int get dataSize => _dataSize;
 }
