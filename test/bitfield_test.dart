@@ -247,5 +247,130 @@ void main() {
       }
     });
 
+    unit.test("testUnique", () {
+      {
+        Bitfield target = new Bitfield(1974);
+        target.zeroClear();
+        List<int> indexs= [
+          434, 1157, 1455, 74, 764, 1414, 1941, 1723, 
+          446, 1442, 955, 408, 1577, 377, 767, 223,
+          1328, 629, 1875, 203, 1244, 1847, 753, 1332
+        ];
+
+        for(int index in  indexs) {
+          target.setIsOn(index, true);
+        }
+        A:for(int j=0;j<100;j++) { 
+          int ret = target.getOnPieceAtRandom();
+          for(int index in indexs) {
+            if(index==ret) {
+              break A;
+            }
+          }
+          unit.expect(true, false);
+        }
+      }
+      {
+        Bitfield target = new Bitfield(1974);
+        Bitfield myinfo = new Bitfield(1974);
+        Bitfield output = new Bitfield(1974);
+
+        target.zeroClear();
+        myinfo.zeroClear();
+
+        // crete target test data
+        List<int> indexs= [
+          434, 1157, 1455, 74, 764, 1414, 1941, 1723, 
+          446, 1442, 955, 408, 1577, 377, 767, 223,
+          1328, 629, 1875, 203, 1244, 1847, 753, 1332
+        ];
+
+        for(int index in  indexs) {
+          target.setIsOn(index, true);
+        }
+
+        //
+        Bitfield.relative(target, myinfo, output);
+        
+        A:for(int j=0;j<100;j++) { 
+          int ret = output.getOnPieceAtRandom();
+          for(int index in indexs) {
+            if(index==ret) {
+              break A;
+            }
+          }
+          unit.expect(true, false);
+        }
+      }
+    
+    
+      {
+        Bitfield target = new Bitfield(1974);
+        Bitfield myinfo = new Bitfield(1974);
+        Bitfield output = new Bitfield(1974);
+
+        target.zeroClear();
+        myinfo.zeroClear();
+
+        // crete target test data
+        List<int> indexs= [
+          434, 1157, 1455, 74, 764, 1414, 1941, 1723, 
+          446, 1442, 955, 408, 1577, 377, 767, 223,
+          1328, 629, 1875, 203, 1244, 1847, 753, 1332
+        ];
+
+        for(int index in indexs) {
+          target.setIsOn(index, true);
+        }
+
+        for(int index in indexs) {
+          myinfo.setIsOn(index, true);
+        }
+
+        //
+        Bitfield.relative(target, myinfo, output);
+        
+        A:for(int j=0;j<100;j++) { 
+          int ret = output.getOnPieceAtRandom();
+          for(int index in indexs) {
+            if(index==ret) {
+              unit.expect(true, false);
+            }
+          }
+        }
+      }
+
+
+      {
+        Bitfield target = new Bitfield(1974);
+        Bitfield myinfo = new Bitfield(1974);
+        Bitfield output = new Bitfield(1974);
+
+        target.zeroClear();
+        myinfo.zeroClear();
+
+        // crete target test data
+        List<int> indexs= [
+          434, 1157, 1455, 74, 764, 1414, 1941, 1723, 
+          446, 1442, 955, 408, 1577, 377, 767, 223,
+          1328, 629, 1875, 203, 1244, 1847, 753, 1332
+        ];
+
+        for(int index in indexs) {
+          target.setIsOn(index, true);
+        }
+
+        for(int index in indexs) {
+          myinfo.setIsOn(index, true);
+        }
+        myinfo.setIsOn(1455, false);
+
+        //
+        Bitfield.relative(target, myinfo, output);
+        int ret = output.getOnPieceAtRandom();
+        unit.expect(1455, ret);
+      }
+
+    });
   });
 }
