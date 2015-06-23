@@ -19,9 +19,25 @@ class BlockData {
   }
 
 
-  Future write(List<int> data, int blockNum) {
+  Future<WriteResult> write(List<int> data, int blockNum) {
     return new Future(() {
-      
+      if(data.length != _blockSize) {
+        throw {};
+      }
+      return _data.write(data, blockNum*_blockSize).then((WriteResult result) {
+        _head.setIsOn(0, true);
+        return result;
+      });
     });
   }
+
+  Future<ReadResult> read(int blockNum) {
+   return new Future((){
+     if(_head.getIsOn(blockNum) == false) {
+       return new ReadResult(ReadResult.NG, []);
+     }
+     return _data.read(blockNum*_blockSize, _blockSize);
+   });
+  }
+
 }
