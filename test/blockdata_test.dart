@@ -54,5 +54,31 @@ void main() {
         unit.expect(result.status, ReadResult.NG);
       });
     });
+    unit.test("test one bit", () {
+      HetimaDataMemory data = new HetimaDataMemory([1]);
+      Bitfield head = new Bitfield(5,clearIsOne:true);
+      BlockData blockData = new BlockData(data, head, 5, 21);
+      return blockData.read(0).then((ReadResult result) {
+        unit.expect(result.buffer, [0,0,0,0,0]);
+        unit.expect(result.status, ReadResult.NG);
+        return blockData.read(4);        
+      }).then((ReadResult result) {
+        unit.expect(result.buffer, [0]);
+        unit.expect(result.status, ReadResult.NG);
+      });
+    });
+    unit.test("test one byte", () {
+      HetimaDataMemory data = new HetimaDataMemory([0,1,2,3,4]);
+      Bitfield head = new Bitfield(5,clearIsOne:true);
+      BlockData blockData = new BlockData(data, head, 5, 21);
+      return blockData.read(0).then((ReadResult result) {
+        unit.expect(result.buffer, [0,1,2,3,4]);
+        unit.expect(result.status, ReadResult.OK);
+        return blockData.read(4);        
+      }).then((ReadResult result) {
+        unit.expect(result.buffer, [0]);
+        unit.expect(result.status, ReadResult.NG);
+      });
+    });
   });
 }
