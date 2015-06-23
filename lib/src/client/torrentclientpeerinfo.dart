@@ -1,18 +1,9 @@
 library hetimatorrent.torrent.client.peerinfo;
 
 import 'dart:core';
-import 'dart:async';
-import 'package:hetimacore/hetimacore.dart';
-import 'package:hetimanet/hetimanet.dart';
-import '../util/peeridcreator.dart';
-import '../message/message.dart';
 import '../util/shufflelinkedlist.dart';
 
 import 'torrentclientfront.dart';
-import '../util/blockdata.dart';
-import '../util/bitfield.dart';
-
-import '../file/torrentfile.dart';
 
 
 class TorrentClientPeerInfoList {
