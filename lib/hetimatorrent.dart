@@ -21,7 +21,7 @@ export 'src/tracker/trackerserver.dart';
 
 export 'src/client/torrentclient.dart';
 export 'src/client/torrentclientfront.dart';
-
+export 'src/client/torrentclientpeerinfo.dart';
 
 export 'src/extra/terminal.dart';
 

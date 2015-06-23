@@ -10,6 +10,7 @@ import '../util/shufflelinkedlist.dart';
 
 import 'torrentclientfront.dart';
 import 'torrentclient.dart';
+import 'torrentclientpeerinfo.dart';
 
 class TorrentAI {
 
