@@ -17,6 +17,7 @@ class TorrentEngineCommandBuilder {
     this.help = help;
   }
 }
+
 class CommandResult {
   String message = "";
   CommandResult(String message) {

@@ -5,6 +5,7 @@ import '../client/torrentclient.dart';
 import '../client/torrentclientfront.dart';
 
 import 'torrentengine.dart';
+import '../client/torrentclientpeerinfo.dart';
 
 class StartTorrentClientCommand extends TorrentEngineCommand {
   String localIp = "";
