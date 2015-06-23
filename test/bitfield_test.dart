@@ -123,5 +123,32 @@ void main() {
       unit.expect(true, bitfield.isAllOnPerByte(1));
       unit.expect(true, bitfield.isAllOnPerByte(2));
     });
+    
+    //
+    //
+    //
+    
+    unit.test("test_getPieceAtRandom", () {
+      {
+        Bitfield field = new Bitfield(0);
+        unit.expect(-1, field.getOffPieceAtRandom());
+      }
+      {
+        Bitfield field = new Bitfield(1);
+        unit.expect(-1, field.getOffPieceAtRandom());
+        field.setIsOn(0, false);
+        unit.expect(0, field.getOffPieceAtRandom());
+      }
+
+      {
+        Bitfield field = new Bitfield(3);
+        unit.expect(-1, field.getOffPieceAtRandom());
+        field.setIsOn(1, false);
+        unit.expect(1, field.getOffPieceAtRandom());
+        field.setIsOn(2, true);
+        int i = field.getOffPieceAtRandom();
+        unit.expect(true, (i==2||i==1?true:false));
+      }
+    });
   });
 }
