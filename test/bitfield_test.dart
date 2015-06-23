@@ -182,5 +182,70 @@ void main() {
         unit.expect(-1, i);
       }
     });
+    
+    unit.test("test_relative", () {
+      {
+        Bitfield myinfo = new Bitfield(22);
+        Bitfield target = new Bitfield(22);
+        Bitfield output = new Bitfield(22);
+        myinfo.oneClear();
+        target.oneClear();
+        Bitfield.relative(target, myinfo, output);
+        for(int i=0;i<22;i++) {
+          unit.expect(false, output.getIsOn(i));
+        }
+      }
+      {
+        Bitfield myinfo = new Bitfield(22);
+        Bitfield target = new Bitfield(22);
+        Bitfield output = new Bitfield(22);
+        myinfo.zeroClear();
+        target.zeroClear();
+        Bitfield.relative(target, myinfo, output);
+        for(int i=0;i<22;i++) {
+          unit.expect(false, output.getIsOn(i));
+        }
+      }
+
+      {
+        Bitfield myinfo = new Bitfield(22);
+        Bitfield target = new Bitfield(22);
+        Bitfield output = new Bitfield(22);
+        myinfo.zeroClear();
+        target.oneClear();
+        Bitfield.relative(target, myinfo, output);
+        for(int i=0;i<22;i++) {
+          unit.expect(true, output.getIsOn(i));
+        }
+      }
+      {
+        Bitfield myinfo = new Bitfield(22);
+        Bitfield target = new Bitfield(22);
+        Bitfield output = new Bitfield(22);
+        myinfo.oneClear();
+        target.zeroClear();
+        Bitfield.relative(target, myinfo, output);
+        for(int i=0;i<22;i++) {
+          unit.expect(false, output.getIsOn(i));
+        }
+      }
+
+      {
+        Bitfield myinfo = new Bitfield(22);
+        Bitfield target = new Bitfield(22);
+        Bitfield output = new Bitfield(22);
+        myinfo.zeroClear();
+        target.zeroClear();
+        target.setIsOn(1, true);
+        Bitfield.relative(target, myinfo, output);
+        
+        unit.expect(false, output.getIsOn(0));
+        unit.expect(true, output.getIsOn(1));
+        for(int i=2;i<22;i++) {
+          unit.expect(false, output.getIsOn(i));
+        }
+      }
+    });
+
   });
 }
