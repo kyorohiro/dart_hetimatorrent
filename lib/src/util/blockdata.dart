@@ -37,18 +37,20 @@ class BlockData {
 
   Future<ReadResult> read(int blockNum) {
     return new Future(() {
+      int length = _blockSize;
+      if (blockNum * _blockSize + length > _dataSize) {
+        length = _dataSize - blockNum * _blockSize;
+      }
+
       if (_head.getIsOn(blockNum) == false) {
-        return new ReadResult(ReadResult.NG, []);
+        return new ReadResult(ReadResult.NG, new List.filled(length, 0));
       }
       return _data.getLength().then((int currentDataLength) {
-        int length = _blockSize;
-        if (blockNum * _blockSize + length > _dataSize) {
-          length = _dataSize - blockNum * _blockSize;
-        }
         if (blockNum * _blockSize + length > currentDataLength) {
-          return new ReadResult(ReadResult.NG, []);
+          return new ReadResult(ReadResult.NG, new List.filled(length, 0));
+        } else {
+          return _data.read(blockNum * _blockSize, length);
         }
-        return _data.read(blockNum * _blockSize, length);
       });
     });
   }
