@@ -49,57 +49,57 @@ Future<TrackerServer> startTracker(String address, int port, TorrentFile f) {
 }
 
 void main() {
-  new Future((){
-//  unit.group("torrent file", () {
-//    unit.test("001 testdata/1k.txt.torrent", () {
-      String announce = "http://0.0.0.0:28080/announce";
-      List<int> data = UTF8.encode("hello world");
-
+  unit.group("torrent file", () {
+    unit.test("001 testdata/1k.txt.torrent", () {
       TorrentFile torrentFile = null;
       TorrentClient clientA = null;
       TorrentClient clientB = null;
       TrackerServer tracker = null;
-      return createTorrentFile(data, announce).then((TorrentFile _torrentFile) {
-        print("----0000----");
-        torrentFile = _torrentFile;
-        List<int> peerId = new List.filled(20, 1);
-        return startTorrent(torrentFile, peerId, "0.0.0.0", 18081);
-      }).then((TorrentClient client) {
-        print("----0001----");
-        clientA = client;
-        List<int> peerId = new List.filled(20, 2);        
-        return startTorrent(torrentFile, peerId, "0.0.0.0", 18082);
-      }).then((TorrentClient client) {
-        print("----0002----");
-        clientB = client;
-        return startTracker("0.0.0.0", 28080, torrentFile);
-      }).then((TrackerServer server) {
-        tracker = server;
-        return TrackerClient.createTrackerClient(new HetiSocketBuilderChrome(), torrentFile).then((TrackerClient client) {
-          client.peerport = 18081;
-          return client.request().then((TrackerRequestResult result) {
-            print("----0003----");
-            for(TrackerPeerInfo info in result.response.peers) {
-              clientA.putTorrentPeerInfo(info.ipAsString, info.port);
-            }
-            client.peerport = 18082;
-            return client.request();
-          }).then((TrackerRequestResult result) {
-            print("----0004----");
-            for(TrackerPeerInfo info in result.response.peers) {
-              clientB.putTorrentPeerInfo(info.ipAsString, info.port);
-            }
-            return null;
+      new Future(() {
+        String announce = "http://0.0.0.0:28080/announce";
+        List<int> data = UTF8.encode("hello world");
+
+
+        return createTorrentFile(data, announce).then((TorrentFile _torrentFile) {
+          print("----0000----");
+          torrentFile = _torrentFile;
+          List<int> peerId = new List.filled(20, 1);
+          return startTorrent(torrentFile, peerId, "0.0.0.0", 18081);
+        }).then((TorrentClient client) {
+          print("----0001----");
+          clientA = client;
+          List<int> peerId = new List.filled(20, 2);
+          return startTorrent(torrentFile, peerId, "0.0.0.0", 18082);
+        }).then((TorrentClient client) {
+          print("----0002----");
+          clientB = client;
+          return startTracker("0.0.0.0", 28080, torrentFile);
+        }).then((TrackerServer server) {
+          tracker = server;
+          return TrackerClient.createTrackerClient(new HetiSocketBuilderChrome(), torrentFile).then((TrackerClient client) {
+            client.peerport = 18081;
+            return client.request().then((TrackerRequestResult result) {
+              print("----0003----");
+              for (TrackerPeerInfo info in result.response.peers) {
+                clientA.putTorrentPeerInfo(info.ipAsString, info.port);
+              }
+              client.peerport = 18082;
+              return client.request();
+            }).then((TrackerRequestResult result) {
+              print("----0004----");
+              for (TrackerPeerInfo info in result.response.peers) {
+                clientB.putTorrentPeerInfo(info.ipAsString, info.port);
+              }
+              return null;
+            });
           });
-        }).then((_) {
-          print("----0005----");
-          tracker.stop();
-          clientA.stop();
-          clientB.stop();
         });
-      });
-      
-//    });
-//  });
+      }).whenComplete(() {
+        print("----0005----");
+        new Future((){tracker.stop();}).catchError((e){});
+        new Future((){clientA.stop();}).catchError((e){});
+        new Future((){clientB.stop();}).catchError((e){});
+      });//
+    });
   });
 }
