@@ -61,7 +61,7 @@ class TestCaseCreator2Client1Tracker {
   }
 
   Future createTestEnv_startAndRequestToTracker() {
-    new Future(() {
+    return new Future(() {
       TrackerClient trackerClientTmp = null;
       return _createTorrentFile().then((TorrentFile _torrentFile) {
         torrentFile = _torrentFile;
@@ -99,6 +99,7 @@ class TestCaseCreator2Client1Tracker {
       });
     }).catchError((e) {
       stop();
+      throw {};
     });
   }
 
@@ -112,6 +113,5 @@ class TestCaseCreator2Client1Tracker {
     new Future(() {
       clientB.stop();
     }).catchError((e) {});
-    throw {};
   }
 }
