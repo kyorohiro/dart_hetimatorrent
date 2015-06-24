@@ -15,31 +15,37 @@ void main() {
     unit.test("001 testdata/1k.txt.torrent", () {
       Completer<TorrentMessageInfo> ticket = new Completer();
       TestCaseCreator2Client1Tracker creator = new TestCaseCreator2Client1Tracker();
-      return  new Future(() {
-        return creator.createTestEnv_startAndRequestToTracker().then((_){
+      return new Future(() {
+        return creator.createTestEnv_startAndRequestToTracker().then((_) {
           return null;
-        }).then((_){
+        }).then((_) {
           List<TorrentClientPeerInfo> infos = creator.clientB.getPeerInfoFromXx((TorrentClientPeerInfo info) {
-            if(info.port == creator.clientAPort) {
+            if (info.port == creator.clientAPort) {
               return true;
             }
           });
           return creator.clientB.connect(infos[0]);
         }).then((TorrentClientFront front) {
+          //
+          // handshake test
           creator.clientA.onReceiveEvent.listen((TorrentMessageInfo info) {
             ticket.complete(info);
           });
-          return front.sendHandshake().then((_){
+          return front.sendHandshake().then((_) {
             return ticket.future;
+          }).then((TorrentMessageInfo info) {
+            print("----0004 C----${info.message.id}");
+            unit.expect(info.message.id, TorrentMessage.DUMMY_SIGN_SHAKEHAND);
+            return front;
           });
-        }).then((TorrentMessageInfo info){
-          print("----0004 C----${info.message.id}");
-          unit.expect(info.message.id, TorrentMessage.DUMMY_SIGN_SHAKEHAND);
+        }).then((TorrentClientFront front) {
+          //
+          //
         });
       }).whenComplete(() {
         print("----0005----");
         creator.stop();
-      });//
+      }); //
     });
   });
 }
