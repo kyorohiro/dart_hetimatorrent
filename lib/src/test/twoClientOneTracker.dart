@@ -60,7 +60,7 @@ class TestCaseCreator2Client1Tracker {
     });
   }
 
-  Future createTestEnv() {
+  Future createTestEnv_startAndRequestToTracker() {
     new Future(() {
       TrackerClient trackerClientTmp = null;
       return _createTorrentFile().then((TorrentFile _torrentFile) {
@@ -95,13 +95,13 @@ class TestCaseCreator2Client1Tracker {
           clientA.putTorrentPeerInfo(info.ipAsString, info.port);
           clientB.putTorrentPeerInfo(info.ipAsString, info.port);
         }
-        return null;
+        return {};
       });
     }).catchError((e) {
       stop();
     });
   }
-  
+
   void stop() {
     new Future(() {
       tracker.stop();
@@ -113,6 +113,5 @@ class TestCaseCreator2Client1Tracker {
       clientB.stop();
     }).catchError((e) {});
     throw {};
-    
   }
 }
