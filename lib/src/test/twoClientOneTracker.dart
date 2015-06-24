@@ -69,16 +69,10 @@ class TestCaseCreator2Client1Tracker {
         return _startTorrent(torrentFile, peerId, clientAPort);
       }).then((TorrentClient client) {
         clientA = client;
-        clientA.onReceiveEvent.listen((TorrentMessageInfo info) {
-          print("info:${info.message.id}");
-        });
         List<int> peerId = new List.filled(20, 2);
         return _startTorrent(torrentFile, peerId, clientBPort);
       }).then((TorrentClient client) {
         clientB = client;
-        clientB.onReceiveEvent.listen((TorrentMessageInfo info) {
-          print("info:${info.message.id}");
-        });
         return _startTracker(trackerPort, torrentFile);
       }).then((TrackerServer server) {
         tracker = server;

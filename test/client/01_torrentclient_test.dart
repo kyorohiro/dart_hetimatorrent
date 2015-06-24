@@ -13,6 +13,7 @@ import 'package:hetimatorrent/src/test/twoClientOneTracker.dart';
 void main() {
   unit.group("torrent file", () {
     unit.test("001 testdata/1k.txt.torrent", () {
+      Completer<TorrentMessageInfo> ticket = new Completer();
       TestCaseCreator2Client1Tracker creator = new TestCaseCreator2Client1Tracker();
       return  new Future(() {
         return creator.createTestEnv_startAndRequestToTracker().then((_){
@@ -25,13 +26,15 @@ void main() {
           });
           return creator.clientB.connect(infos[0]);
         }).then((TorrentClientFront front) {
-          print("----0004 A----");
-          return front.sendHandshake().then((_){
-            print("----0004 B----");
-            return null;
+          creator.clientA.onReceiveEvent.listen((TorrentMessageInfo info) {
+            ticket.complete(info);
           });
-        }).then((_){
-          print("----0004 C----");
+          return front.sendHandshake().then((_){
+            return ticket.future;
+          });
+        }).then((TorrentMessageInfo info){
+          print("----0004 C----${info.message.id}");
+          unit.expect(info.message.id, TorrentMessage.DUMMY_SIGN_SHAKEHAND);
         });
       }).whenComplete(() {
         print("----0005----");
