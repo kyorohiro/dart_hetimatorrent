@@ -76,6 +76,9 @@ class TestCaseCreator2Client1Tracker {
         return _startTorrent(torrentFile, peerId, clientBPort);
       }).then((TorrentClient client) {
         clientB = client;
+        clientB.onReceiveEvent.listen((TorrentMessageInfo info) {
+          print("info:${info.message.id}");
+        });
         return _startTracker(trackerPort, torrentFile);
       }).then((TrackerServer server) {
         tracker = server;
@@ -95,16 +98,21 @@ class TestCaseCreator2Client1Tracker {
         return null;
       });
     }).catchError((e) {
-      new Future(() {
-        tracker.stop();
-      }).catchError((e) {});
-      new Future(() {
-        clientA.stop();
-      }).catchError((e) {});
-      new Future(() {
-        clientB.stop();
-      }).catchError((e) {});
-      throw {};
+      stop();
     });
+  }
+  
+  void stop() {
+    new Future(() {
+      tracker.stop();
+    }).catchError((e) {});
+    new Future(() {
+      clientA.stop();
+    }).catchError((e) {});
+    new Future(() {
+      clientB.stop();
+    }).catchError((e) {});
+    throw {};
+    
   }
 }
