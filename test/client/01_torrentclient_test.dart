@@ -19,7 +19,7 @@ void main() {
           return null;
         }).then((_){
           List<TorrentClientPeerInfo> infos = creator.clientB.getPeerInfoFromXx((TorrentClientPeerInfo info) {
-            if(info.port == 18081) {
+            if(info.port == creator.clientAPort) {
               return true;
             }
           });
