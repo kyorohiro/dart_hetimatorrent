@@ -11,6 +11,7 @@ class Bitfield {
   List<int> _shuffleList = [0, 1, 2, 3, 4, 5, 6, 7];
   Random _rand = null;
 
+  List<int> get value => new List.from(_bitfieldData);
   Bitfield(int bitSize, {bool clearIsOne: true, seed: null}) {
     if (seed == null) {
       _rand = new Random();

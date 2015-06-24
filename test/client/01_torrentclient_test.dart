@@ -25,22 +25,28 @@ void main() {
             }
           });
           return creator.clientB.connect(infos[0]);
-        }).then((TorrentClientFront front) {
+        }).then((TorrentClientFront frontForAInB) {
           //
           // handshake test
           creator.clientA.onReceiveEvent.listen((TorrentMessageInfo info) {
             ticket.complete(info);
           });
-          return front.sendHandshake().then((_) {
+          return frontForAInB.sendHandshake().then((_) {
             return ticket.future;
           }).then((TorrentMessageInfo info) {
             print("----0004 C----${info.message.id}");
             unit.expect(info.message.id, TorrentMessage.DUMMY_SIGN_SHAKEHAND);
-            return front;
+            return frontForAInB;
           });
-        }).then((TorrentClientFront front) {
+        }).then((TorrentClientFront frontForAInB) {
           //
-          //
+          // bitfield
+          ticket = new Completer();
+          return frontForAInB.sendBitfield(creator.clientB.targetBlock.bitfield).then((_){
+            return ticket.future;
+          }).then((TorrentMessageInfo info) {
+            
+          });
         });
       }).whenComplete(() {
         print("----0005----");

@@ -60,4 +60,5 @@ class BlockData {
   }
 
   int get dataSize => _dataSize;
+  List<int> get bitfield => _head.value;
 }
