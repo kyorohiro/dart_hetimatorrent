@@ -74,11 +74,21 @@ class TorrentClient {
     });
   }
 
+  List<TorrentClientPeerInfo> getPeerInfoFromXx(Function filter) {
+    List<TorrentClientPeerInfo> ret = [];
+    for(TorrentClientPeerInfo info in this.peerInfos) {
+      if(true == filter(info)) {
+        ret.add(info);
+      }
+    }
+    return ret;
+  }
+
   TorrentClientPeerInfo getPeerInfoFromId(int id) {
     return _peerInfos.getPeerInfoFromId(id);
   }
 
-  Future<TorrentClientFront> connect(HetiSocketBuilder _builder, TorrentClientPeerInfo info, List<int> infoHash, [List<int> peerId = null]) {
+  Future<TorrentClientFront> connect(TorrentClientPeerInfo info){//, List<int> infoHash, [List<int> peerId = null]) {
     return new Future(() {
       return TorrentClientFront.connect(_builder, info, infoHash, peerId).then((TorrentClientFront front) {
         front.onReceiveEvent.listen((TorrentMessage message) {

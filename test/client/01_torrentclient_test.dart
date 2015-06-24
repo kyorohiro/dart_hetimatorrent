@@ -58,8 +58,6 @@ void main() {
       new Future(() {
         String announce = "http://0.0.0.0:28080/announce";
         List<int> data = UTF8.encode("hello world");
-
-
         return createTorrentFile(data, announce).then((TorrentFile _torrentFile) {
           print("----0000----");
           torrentFile = _torrentFile;
@@ -68,6 +66,9 @@ void main() {
         }).then((TorrentClient client) {
           print("----0001----");
           clientA = client;
+          clientA.onReceiveEvent.listen((TorrentMessageInfo info) {
+            print("info:${info.message.id}");
+          });
           List<int> peerId = new List.filled(20, 2);
           return startTorrent(torrentFile, peerId, "0.0.0.0", 18082);
         }).then((TorrentClient client) {
@@ -93,6 +94,21 @@ void main() {
               return null;
             });
           });
+        }).then((_){
+          List<TorrentClientPeerInfo> infos = clientB.getPeerInfoFromXx((TorrentClientPeerInfo info) {
+            if(info.port == 18081) {
+              return true;
+            }
+          });
+          return clientB.connect(infos[0]);
+        }).then((TorrentClientFront front) {
+          print("----0004 A----");
+          return front.sendHandshake().then((_){
+            print("----0004 B----");
+            return null;
+          });
+        }).then((_){
+          print("----0004 C----");
         });
       }).whenComplete(() {
         print("----0005----");
