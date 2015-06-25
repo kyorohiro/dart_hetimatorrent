@@ -19,10 +19,9 @@ void main() {
         return creator.createTestEnv_startAndRequestToTracker().then((_) {
           return null;
         }).then((_) {
-          // clientA have fullset data
-          creator.clientB.targetBlock.write(data, blockNum);
-          
-          return null;
+          //
+          // clientB have fullset data
+          return creator.clientB.targetBlock.writeFullData(new HetimaDataMemory(creator.data));
         }).then((_){
           //
           // connect from clientB to clientA
@@ -54,6 +53,9 @@ void main() {
           }).then((TorrentMessageInfo info) {
             print("----0004 D----${info.message.id}");
             unit.expect(info.message.id, TorrentMessage.SIGN_BITFIELD);
+            MessageBitfield bitfield = info.message;
+            print("----0004 E----${bitfield.bitfield}");
+            unit.expect(creator.clientB.targetBlock.bitfield, bitfield.bitfield);
           });
         });
       }).whenComplete(() {

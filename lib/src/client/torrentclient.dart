@@ -46,7 +46,7 @@ class TorrentClient {
     _peerInfos = new TorrentClientPeerInfoList();
     _infoHash.addAll(infoHash);
     _peerId.addAll(peerId);
-    targetBlock = new BlockData(data, new Bitfield(piece.length~/20), pieceLength, fileSize);
+    targetBlock = new BlockData(data, new Bitfield(piece.length~/20,clearIsOne:false), pieceLength, fileSize);
   }
 
   TorrentClientPeerInfo putTorrentPeerInfo(String ip, int port, {peerId: ""}) {
