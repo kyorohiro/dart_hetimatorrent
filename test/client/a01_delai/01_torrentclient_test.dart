@@ -41,7 +41,6 @@ void main() {
           return frontForBInA.sendHandshake().then((_) {
             return ticket.future;
           }).then((TorrentClientMessage info) {
-            ticket = new Completer();
             print("----0004 C----${info.message.id}");
             unit.expect(info.message.id, TorrentMessage.DUMMY_SIGN_SHAKEHAND);
             return frontForBInA;
@@ -50,6 +49,7 @@ void main() {
           //
           // bitfield
           print("----0004 CC----");
+          ticket = new Completer();
           return frontForBInA.sendBitfield(creator.clientB.targetBlock.bitfield).then((_){
             return ticket.future;
           }).then((TorrentClientMessage info) {
@@ -59,6 +59,16 @@ void main() {
             unit.expect(creator.clientB.targetBlock.bitfield, bitfield.bitfield);
             return frontForBInA;
           });          
+        }).then((TorrentClientFront frontForBinA){
+          ticket = new Completer();
+          return frontForBinA.sendRequest(0, 0, creator.clientA.targetBlock.blockSize).then((_){
+            return ticket.future;
+          }).then((TorrentClientMessage message) {
+            unit.expect(message.message.id, TorrentMessage.SIGN_PIECE);
+            MessagePiece pieceMessage = message.message;
+            print("----0007 ${pieceMessage.content}");
+
+          });
         });
       }).whenComplete(() {
         creator.stop();
