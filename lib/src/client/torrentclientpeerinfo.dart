@@ -43,7 +43,7 @@ class TorrentClientPeerInfo {
   String ip = "";
   int port = 0;
   TorrentClientFront front = null;
-  bool amI = false;
+
 
   TorrentClientPeerInfo(String ip, int port, {peerId: ""}) {
     this.ip = ip;
@@ -91,6 +91,13 @@ class TorrentClientPeerInfo {
       return 0;
     } else {
       return front.chokedToMe;
+    }
+  }
+  bool get amI {
+    if (front == null) {
+      return false;
+    } else {
+      return front.amI;
     }
   }
 }

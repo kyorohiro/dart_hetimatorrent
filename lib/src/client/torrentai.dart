@@ -28,7 +28,7 @@ class TorrenAIEmpty extends TorrentAI {
   }
 }
 
-class TorrentAIBasicDelivery extends TorrentAI {
+class TorrentAIBasic extends TorrentAI {
   Future onReceive(TorrentClient client, TorrentClientPeerInfo info,
       TorrentMessage message) {
     return new Future(() {
@@ -71,6 +71,10 @@ class TorrentAIBasicDelivery extends TorrentAI {
             }
           }
           break;
+        case TorrentMessage.SIGN_BITFIELD:
+        {
+          break;
+        }
       }
     });
   }

@@ -22,7 +22,7 @@ void main() {
         }).then((_) {
           //
           // clientB have fullset data
-          creator.clientB.ai = new TorrentAIBasicDelivery();
+          creator.clientB.ai = new TorrentAIBasic();
           return creator.clientB.targetBlock.writeFullData(new HetimaDataMemory(creator.data));
         }).then((_){
           //

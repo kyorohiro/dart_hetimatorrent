@@ -105,7 +105,6 @@ class TorrentClient {
   void _internalOnReceive(TorrentClientFront front, TorrentClientPeerInfo info) {
     front.onReceiveEvent.listen((TorrentMessage message) {
       messageStream.add(new TorrentClientMessage(info, message));
-      signalOwnConnectCheck(message, info);
       _ai.onReceive(this, info, message);
     });
     front.onReceiveSignal.listen((TorrentClientFrontSignal signal) {
@@ -115,18 +114,7 @@ class TorrentClient {
     });
   }
 
-  void signalOwnConnectCheck(TorrentMessage message,TorrentClientPeerInfo info) {
-    if(message.id != TorrentMessage.DUMMY_SIGN_SHAKEHAND) {
-      return;
-    }
-    MessageHandshake handshakeMessage = message;
-    if (handshakeMessage.peerId == this.peerId) {
-      info.front.close();
-      info.amI = true;
-      TorrentClientFrontSignal frontSignal = new TorrentClientFrontSignal()..id= TorrentClientFrontSignal.ID_CLOSE..reason=TorrentClientFrontSignal.REASON_OWN_CONNECTION;
-      _signalStream.add(new TorrentClientSignal()..info=info..signal=frontSignal);
-    }
-  }
+
 
   Future stop() {
     
