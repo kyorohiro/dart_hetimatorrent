@@ -85,8 +85,23 @@ class TorrentClientFront {
         parse().then((TorrentMessage message) {
           //
           // signal
-          if (message.id == TorrentMessage.DUMMY_SIGN_SHAKEHAND) {
-            TorrentClientFrontSignal.doEvent(this, TorrentClientFrontSignal.ACT_HANDSHAKE_RECEIVE, [message]);
+          switch (message.id) {
+            case TorrentMessage.DUMMY_SIGN_SHAKEHAND:
+                TorrentClientFrontSignal.doEvent(this, TorrentClientFrontSignal.ACT_HANDSHAKE_RECEIVE, [message]);
+              break;
+            case TorrentMessage.SIGN_INTERESTED:
+                TorrentClientFrontSignal.doEvent(this, TorrentClientFrontSignal.ACT_INTERESTED_RECEIVE, [message]);
+              break;
+            case TorrentMessage.SIGN_NOTINTERESTED:
+                TorrentClientFrontSignal.doEvent(this, TorrentClientFrontSignal.ACT_NOTINTERESTED_RECEIVE, [message]);
+              break;
+            case TorrentMessage.SIGN_CHOKE:
+                TorrentClientFrontSignal.doEvent(this, TorrentClientFrontSignal.ACT_CHOKE_RECEIVE, [message]);
+              break;
+            case TorrentMessage.SIGN_UNCHOKE:
+                TorrentClientFrontSignal.doEvent(this, TorrentClientFrontSignal.ACT_UNCHOKE_RECEIVE, [message]);
+              break;
+
           }
 
           //
@@ -125,6 +140,7 @@ class TorrentClientFront {
     MessageChoke message = new MessageChoke();
     return message.encode().then((List<int> data) {
       return _socket.send(data).then((HetiSendInfo info) {
+        TorrentClientFrontSignal.doEvent(this, TorrentClientFrontSignal.ACT_CHOKE_SEND, []);
         return {};
       });
     });
@@ -134,6 +150,7 @@ class TorrentClientFront {
     MessageUnchoke message = new MessageUnchoke();
     return message.encode().then((List<int> data) {
       return _socket.send(data).then((HetiSendInfo info) {
+        TorrentClientFrontSignal.doEvent(this, TorrentClientFrontSignal.ACT_UNCHOKE_SEND, []);
         return {};
       });
     });
@@ -143,6 +160,7 @@ class TorrentClientFront {
     MessageInterested message = new MessageInterested();
     return message.encode().then((List<int> data) {
       return _socket.send(data).then((HetiSendInfo info) {
+        TorrentClientFrontSignal.doEvent(this, TorrentClientFrontSignal.ACT_INTERESTED_SEND, []);
         return {};
       });
     });
@@ -152,6 +170,7 @@ class TorrentClientFront {
     MessageNotInterested message = new MessageNotInterested();
     return message.encode().then((List<int> data) {
       return _socket.send(data).then((HetiSendInfo info) {
+        TorrentClientFrontSignal.doEvent(this, TorrentClientFrontSignal.ACT_NOTINTERESTED_SEND, []);
         return {};
       });
     });
@@ -225,36 +244,44 @@ class TorrentClientFrontSignal {
   static const int ACT_UNCHOKE_RECEIVE = 6000 + TorrentMessage.SIGN_UNCHOKE;
   static const int ACT_INTERESTED_SEND = 5000 + TorrentMessage.SIGN_INTERESTED;
   static const int ACT_INTERESTED_RECEIVE = 6000 + TorrentMessage.SIGN_INTERESTED;
+  static const int ACT_NOTINTERESTED_SEND = 5000 + TorrentMessage.SIGN_NOTINTERESTED;
+  static const int ACT_NOTINTERESTED_RECEIVE = 6000 + TorrentMessage.SIGN_NOTINTERESTED;
 
   static void doEvent(TorrentClientFront front, int act, List<Object> args) {
     switch (act) {
-      case ACT_HANDSHAKE_RECEIVE:{
-        front._handshakedToMe = true;
-        _signalHandshake(front);
-        _signalHandshakeOwnConnectCheck(front, args[0]);
-      }
+      case ACT_HANDSHAKE_RECEIVE:
+        {
+          front._handshakedToMe = true;
+          _signalHandshake(front);
+          _signalHandshakeOwnConnectCheck(front, args[0]);
+        }
         break;
-      case ACT_HANDSHAKE_SEND:{
+      case ACT_HANDSHAKE_SEND:
+        {
           front._handshakedFromMe = true;
           _signalHandshake(front);
         }
         break;
-      case ACT_CHOKE_SEND: {
-        front._handshakedFromMe = true;
-      }
-      break;
-      case ACT_CHOKE_RECEIVE: {
-        front._handshakedToMe = true;        
-      }
-      break;
-      case ACT_INTERESTED_SEND: {
-        front._interestedFromMe = true;        
-      }
-      break;
-      case ACT_INTERESTED_RECEIVE: {
-        front._interestedToMe = true;        
-      }
-      break;
+      case ACT_CHOKE_SEND:
+        {
+          front._handshakedFromMe = true;
+        }
+        break;
+      case ACT_CHOKE_RECEIVE:
+        {
+          front._handshakedToMe = true;
+        }
+        break;
+      case ACT_INTERESTED_SEND:
+        {
+          front._interestedFromMe = true;
+        }
+        break;
+      case ACT_INTERESTED_RECEIVE:
+        {
+          front._interestedToMe = true;
+        }
+        break;
     }
   }
 
@@ -277,5 +304,4 @@ class TorrentClientFrontSignal {
       front._streamSignal.add(frontSignal);
     }
   }
-  
 }
