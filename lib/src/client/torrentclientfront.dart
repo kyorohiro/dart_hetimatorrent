@@ -24,6 +24,13 @@ class TorrentClientFront {
   int chokedFromMe = 0; // Me is Hetima
   int chokedToMe = 0; // Me is Hetima
 
+  bool _handshakedToMe = false;
+  bool _handshakedFromMe = false;
+  bool get handshakeToMe => _handshakedToMe;
+  bool get handshakeFromMe => _handshakedFromMe;
+
+  Map<String, Object> tmpForAI = {};
+
   static Future<TorrentClientFront> connect(HetiSocketBuilder _builder, TorrentClientPeerInfo info, List<int> infoHash, [List<int> peerId = null]) {
     return new Future(() {
       HetiSocket socket = _builder.createClient();
@@ -42,6 +49,8 @@ class TorrentClientFront {
     _infoHash.addAll(infoHash);
     _socket = socket;
     _parser = new EasyParser(reader);
+    _handshakedFromMe = false;
+    _handshakedToMe = false;
     handshaked = false;
   }
 
@@ -64,6 +73,9 @@ class TorrentClientFront {
       new Future(() {
         parse().then((TorrentMessage message) {
           stream.add(message);
+          if(message == TorrentMessage.DUMMY_SIGN_SHAKEHAND) {
+            this._handshakedToMe = true;
+          }
           a();
         });
       }).catchError((e) {
@@ -77,6 +89,7 @@ class TorrentClientFront {
     MessageHandshake message = new MessageHandshake(MessageHandshake.ProtocolId, [0, 0, 0, 0, 0, 0, 0, 0], _infoHash, _peerId);
     return message.encode().then((List<int> v) {
       return _socket.send(v).then((HetiSendInfo info) {
+        _handshakedFromMe = true;
         return {};
       });
     });
