@@ -26,7 +26,7 @@ class TestCaseCreator2Client1Tracker {
     return new Future(() {
       HetimaDataMemory target = new HetimaDataMemory();
       List<int> peerId = new List.filled(20, 1);
-      return TorrentClient.create(new HetiSocketBuilderChrome(), peerId, torrentFile, target,ai:new EmptyAI()).then((TorrentClient client) {
+      return TorrentClient.create(new HetiSocketBuilderChrome(), peerId, torrentFile, target,ai:new TorrenAIEmpty()).then((TorrentClient client) {
         client.localAddress = localAddress;
         client.port = port;
         return client.start().then((_) {

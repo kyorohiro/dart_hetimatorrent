@@ -1,0 +1,34 @@
+{
+  "name": "HetimaDelphinium",
+  "version": "0.1.4",
+  
+  "manifest_version": 2,
+    
+  "app": {
+    "background": {
+      "scripts": ["background.js"]
+    }
+  },
+  "sockets": {
+        "udp": {
+            "send": ["*:*"],
+            "bind": ["*:*"],
+            "multicastMembership": ""
+        },
+        "tcp": {
+            "connect": "*"
+        },
+        "tcpServer": {
+            "listen": "*"
+        }
+    }, 
+  "permissions": [
+    "storage",
+    {
+      "sockets": ["udp-send-to", "udp-bind", "udp-multicast-membership","tcp-listen","tcp-connect:*:*"]
+    },
+    "system.network",
+    "unlimitedStorage",
+    {"fileSystem": ["write", "retainEntries", "directory", "retainEntries"]} 
+  ]
+}

@@ -15,7 +15,7 @@ abstract class TorrentAI {
       TorrentClientSignal message);
 }
 
-class EmptyAI {
+class TorrenAIEmpty {
   Future onReceive(TorrentClient client, TorrentClientPeerInfo info, TorrentMessage message) {
     return new Future((){
       ;
