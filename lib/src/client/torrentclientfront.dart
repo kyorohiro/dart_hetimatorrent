@@ -40,8 +40,9 @@ class TorrentClientFront {
   bool get interestedFromMe => _interestedFromMe;
   
   Bitfield _bitfieldToMe = null;
+  Bitfield _bitfieldFromMe = null;
   Bitfield get bitfieldToMe => _bitfieldToMe;
-
+  Bitfield get bitfieldFromMe => _bitfieldFromMe;
   Map<String, Object> tmpForAI = {};
 
   static Future<TorrentClientFront> connect(HetiSocketBuilder _builder, TorrentClientPeerInfo info, int bitfieldSize, List<int> infoHash,  [List<int> peerId = null]) {
@@ -65,6 +66,8 @@ class TorrentClientFront {
     _handshakedFromMe = false;
     _handshakedToMe = false;
     _bitfieldToMe = new Bitfield(bitfieldSize, clearIsOne:false);
+    _bitfieldFromMe = new Bitfield(bitfieldSize, clearIsOne:false);
+    
   }
 
   StreamController<TorrentMessage> stream = new StreamController();
@@ -283,6 +286,9 @@ class TorrentClientFrontSignal {
         MessageBitfield messageBitfile = args[0];
         front._bitfieldToMe.writeByte(messageBitfile.bitfield);
       }
+        break;
+      case ACT_BITFIELD_SEND: 
+        front._bitfieldToMe.writeByte(args[0]);
         break;
     }
   }
