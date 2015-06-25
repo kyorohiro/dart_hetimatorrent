@@ -7,6 +7,7 @@ import 'package:hetimanet/hetimanet.dart';
 import '../util/peeridcreator.dart';
 import '../message/message.dart';
 import 'torrentclientpeerinfo.dart';
+import '../util/bitfield.dart';
 
 class TorrentClientFront {
   List<int> _peerId = [];
@@ -15,6 +16,7 @@ class TorrentClientFront {
   EasyParser _parser = null;
   HetiSocket _socket = null;
   bool handshaked = false;
+
 
   String ip = "";
   int port = 0;
@@ -36,19 +38,22 @@ class TorrentClientFront {
   bool _interestedFromMe = false;
   bool get interestedToMe => _interestedToMe;
   bool get interestedFromMe => _interestedFromMe;
+  
+  Bitfield _bitfieldToMe = null;
+  Bitfield get bitfieldToMe => _bitfieldToMe;
 
   Map<String, Object> tmpForAI = {};
 
-  static Future<TorrentClientFront> connect(HetiSocketBuilder _builder, TorrentClientPeerInfo info, List<int> infoHash, [List<int> peerId = null]) {
+  static Future<TorrentClientFront> connect(HetiSocketBuilder _builder, TorrentClientPeerInfo info, int bitfieldSize, List<int> infoHash,  [List<int> peerId = null]) {
     return new Future(() {
       HetiSocket socket = _builder.createClient();
       return socket.connect(info.ip, info.port).then((HetiSocket socket) {
-        return new TorrentClientFront(socket, info.ip, info.port, socket.buffer, infoHash, peerId);
+        return new TorrentClientFront(socket, info.ip, info.port, socket.buffer, bitfieldSize, infoHash, peerId);
       });
     });
   }
 
-  TorrentClientFront(HetiSocket socket, String ip, int port, HetimaReader reader, List<int> infoHash, List<int> peerId) {
+  TorrentClientFront(HetiSocket socket, String ip, int port, HetimaReader reader, int bitfieldSize, List<int> infoHash, List<int> peerId) {
     if (peerId == null) {
       _peerId.addAll(PeerIdCreator.createPeerid("heti69"));
     } else {
@@ -59,7 +64,7 @@ class TorrentClientFront {
     _parser = new EasyParser(reader);
     _handshakedFromMe = false;
     _handshakedToMe = false;
-    handshaked = false;
+    _bitfieldToMe = new Bitfield(bitfieldSize, clearIsOne:false);
   }
 
   StreamController<TorrentMessage> stream = new StreamController();
@@ -101,7 +106,9 @@ class TorrentClientFront {
             case TorrentMessage.SIGN_UNCHOKE:
                 TorrentClientFrontSignal.doEvent(this, TorrentClientFrontSignal.ACT_UNCHOKE_RECEIVE, [message]);
               break;
-
+            case TorrentMessage.SIGN_BITFIELD:
+              TorrentClientFrontSignal.doEvent(this, TorrentClientFrontSignal.ACT_BITFIELD_RECEIVE, [message]);
+              break;
           }
 
           //
@@ -131,6 +138,7 @@ class TorrentClientFront {
     MessageBitfield message = new MessageBitfield(bitfield);
     return message.encode().then((List<int> v) {
       return _socket.send(v).then((HetiSendInfo info) {
+        TorrentClientFrontSignal.doEvent(this, TorrentClientFrontSignal.ACT_BITFIELD_SEND, [bitfield]);
         return {};
       });
     });
@@ -246,41 +254,35 @@ class TorrentClientFrontSignal {
   static const int ACT_INTERESTED_RECEIVE = 6000 + TorrentMessage.SIGN_INTERESTED;
   static const int ACT_NOTINTERESTED_SEND = 5000 + TorrentMessage.SIGN_NOTINTERESTED;
   static const int ACT_NOTINTERESTED_RECEIVE = 6000 + TorrentMessage.SIGN_NOTINTERESTED;
-
+  static const int ACT_BITFIELD_SEND = 5000 + TorrentMessage.SIGN_BITFIELD;
+  static const int ACT_BITFIELD_RECEIVE = 6000 + TorrentMessage.SIGN_BITFIELD;
   static void doEvent(TorrentClientFront front, int act, List<Object> args) {
     switch (act) {
       case ACT_HANDSHAKE_RECEIVE:
-        {
           front._handshakedToMe = true;
           _signalHandshake(front);
           _signalHandshakeOwnConnectCheck(front, args[0]);
-        }
         break;
       case ACT_HANDSHAKE_SEND:
-        {
           front._handshakedFromMe = true;
           _signalHandshake(front);
-        }
         break;
       case ACT_CHOKE_SEND:
-        {
           front._handshakedFromMe = true;
-        }
         break;
       case ACT_CHOKE_RECEIVE:
-        {
           front._handshakedToMe = true;
-        }
         break;
       case ACT_INTERESTED_SEND:
-        {
           front._interestedFromMe = true;
-        }
         break;
       case ACT_INTERESTED_RECEIVE:
-        {
           front._interestedToMe = true;
-        }
+        break;
+      case ACT_BITFIELD_RECEIVE: {
+        MessageBitfield messageBitfile = args[0];
+        front._bitfieldToMe.writeByte(messageBitfile.bitfield);
+      }
         break;
     }
   }

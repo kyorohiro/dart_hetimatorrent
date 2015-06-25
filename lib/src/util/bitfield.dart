@@ -51,6 +51,12 @@ class Bitfield {
     return out;
   }
 
+  //
+  // todo addtest
+  void writeByte(List<int> bytes) {
+   _bitfieldData.setRange(0, bytes.length, bytes); 
+  }
+
   void oneClear() {
     int bitsize = _bitSize;
     int byteSize = bitsize ~/ 8;

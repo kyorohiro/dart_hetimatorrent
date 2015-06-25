@@ -29,8 +29,7 @@ class TorrenAIEmpty extends TorrentAI {
 }
 
 class TorrentAIBasic extends TorrentAI {
-  Future onReceive(TorrentClient client, TorrentClientPeerInfo info,
-      TorrentMessage message) {
+  Future onReceive(TorrentClient client, TorrentClientPeerInfo info, TorrentMessage message) {
     return new Future(() {
       TorrentClientFront front = info.front;
       switch (message.id) {
