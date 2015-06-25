@@ -9,8 +9,8 @@ import 'torrentclientfront.dart';
 import 'torrentclientpeerinfo.dart';
 
 abstract class TorrentAI {
-  Future onReceive(
-      TorrentClient client, TorrentClientPeerInfo info, TorrentMessage message);
+  Future onReceive(TorrentClient client, TorrentClientPeerInfo info, TorrentMessage message);
+  Future onSignal(TorrentClient client, TorrentClientPeerInfo info, TorrentClientSignal message);
 }
 
 class TorrentAIBasicDelivery extends TorrentAI {
@@ -22,6 +22,12 @@ class TorrentAIBasicDelivery extends TorrentAI {
           return front.sendHandshake();
         }
       }
+    });
+  }
+  
+  Future onSignal(TorrentClient client, TorrentClientPeerInfo info, TorrentClientSignal message) {
+    return new Future((){
+      
     });
   }
 }

@@ -30,8 +30,11 @@ class TorrentClient {
   TorrentClientPeerInfoList _peerInfos;
   List<TorrentClientPeerInfo> get peerInfos => _peerInfos.peerInfos.sequential;
 
-  StreamController<TorrentMessageInfo> stream = new StreamController();
-  Stream<TorrentMessageInfo> get onReceiveEvent => stream.stream;
+  StreamController<TorrentClientMessage> messageStream = new StreamController();
+  Stream<TorrentClientMessage> get onReceiveEvent => messageStream.stream;
+
+  StreamController<TorrentClientSignal> _signalStream = new StreamController.broadcast();
+  Stream<TorrentClientSignal> get onReceiveSignal => _signalStream.stream;
 
   BlockData _targetBlock = null;
   BlockData get targetBlock => _targetBlock;
@@ -100,8 +103,13 @@ class TorrentClient {
   
   void _internalOnReceive(TorrentClientFront front, TorrentClientPeerInfo info) {
     front.onReceiveEvent.listen((TorrentMessage message) {
-      stream.add(new TorrentMessageInfo(info, message));
+      messageStream.add(new TorrentClientMessage(info, message));
       _ai.onReceive(this, info, message);
+    });
+    front.onReceiveSignal.listen((TorrentClientFrontSignal signal) {
+      TorrentClientSignal sig =  new TorrentClientSignal()..info = info..signal=signal;
+      _signalStream.add(sig);
+      _ai.onSignal(this, info, sig);
     });
   }
 
@@ -124,15 +132,20 @@ class TorrentClient {
 
 }
 
-class TorrentMessageInfo {
+class TorrentClientMessage {
   TorrentMessage message;
   TorrentClientFront get front => _info.front;
   TorrentClientPeerInfo get info => _info;
   TorrentClientPeerInfo _info;  
   
-  TorrentMessageInfo(TorrentClientPeerInfo info, TorrentMessage message) {
+  TorrentClientMessage(TorrentClientPeerInfo info, TorrentMessage message) {
     this.message = message;
     this._info = info;
   }
+}
+
+class TorrentClientSignal {
+  TorrentClientPeerInfo info;
+  TorrentClientFrontSignal signal;
 }
 
