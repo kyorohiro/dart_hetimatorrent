@@ -24,9 +24,9 @@ import 'messagerequest.dart';
 import 'messagepiece.dart';
 
 class TorrentMessage {
-  static const int DUMMY_SIGN_SHAKEHAND = 1001;
-  static const int DUMMY_SIGN_KEEPALIVE = 1002;
-  static const int DUMMY_SIGN_NULL = 1003;
+  static const int DUMMY_SIGN_SHAKEHAND = 501;
+  static const int DUMMY_SIGN_KEEPALIVE = 502;
+  static const int DUMMY_SIGN_NULL = 503;
   static const int SIGN_CHOKE = 0;
   static const int SIGN_UNCHOKE = 1;
   static const int SIGN_INTERESTED = 2;

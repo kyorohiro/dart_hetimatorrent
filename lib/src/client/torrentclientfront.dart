@@ -32,6 +32,10 @@ class TorrentClientFront {
 
   bool _amI = false;
   bool get amI => _amI;
+  bool _interestedToMe = false;
+  bool _interestedFromMe = false;
+  bool get interestedToMe => _interestedToMe;
+  bool get interestedFromMe => _interestedFromMe;
 
   Map<String, Object> tmpForAI = {};
 
@@ -213,8 +217,14 @@ class TorrentClientFrontSignal {
   int id = 0;
   int reason = 0;
 
-  static const int ACT_HANDSHAKE_SEND = 5001;
-  static const int ACT_HANDSHAKE_RECEIVE = 6001;
+  static const int ACT_HANDSHAKE_SEND = 5000 + TorrentMessage.DUMMY_SIGN_SHAKEHAND;
+  static const int ACT_HANDSHAKE_RECEIVE = 6000 + TorrentMessage.DUMMY_SIGN_SHAKEHAND;
+  static const int ACT_CHOKE_SEND = 5000 + TorrentMessage.SIGN_CHOKE;
+  static const int ACT_CHOKE_RECEIVE = 6000 + TorrentMessage.SIGN_CHOKE;
+  static const int ACT_UNCHOKE_SEND = 5000 + TorrentMessage.SIGN_UNCHOKE;
+  static const int ACT_UNCHOKE_RECEIVE = 6000 + TorrentMessage.SIGN_UNCHOKE;
+  static const int ACT_INTERESTED_SEND = 5000 + TorrentMessage.SIGN_INTERESTED;
+  static const int ACT_INTERESTED_RECEIVE = 6000 + TorrentMessage.SIGN_INTERESTED;
 
   static void doEvent(TorrentClientFront front, int act, List<Object> args) {
     switch (act) {
@@ -229,6 +239,22 @@ class TorrentClientFrontSignal {
           _signalHandshake(front);
         }
         break;
+      case ACT_CHOKE_SEND: {
+        front._handshakedFromMe = true;
+      }
+      break;
+      case ACT_CHOKE_RECEIVE: {
+        front._handshakedToMe = true;        
+      }
+      break;
+      case ACT_INTERESTED_SEND: {
+        front._interestedFromMe = true;        
+      }
+      break;
+      case ACT_INTERESTED_RECEIVE: {
+        front._interestedToMe = true;        
+      }
+      break;
     }
   }
 
@@ -251,4 +277,5 @@ class TorrentClientFrontSignal {
       front._streamSignal.add(frontSignal);
     }
   }
+  
 }
