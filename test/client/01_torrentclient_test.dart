@@ -45,7 +45,7 @@ void main() {
           return frontForAInB.sendBitfield(creator.clientB.targetBlock.bitfield).then((_){
             return ticket.future;
           }).then((TorrentMessageInfo info) {
-            
+            print("----0004 D----${info.message.id}");
           });
         });
       }).whenComplete(() {
