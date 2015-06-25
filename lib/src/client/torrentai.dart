@@ -15,7 +15,7 @@ abstract class TorrentAI {
       TorrentClientSignal message);
 }
 
-class TorrenAIEmpty {
+class TorrenAIEmpty extends TorrentAI {
   Future onReceive(TorrentClient client, TorrentClientPeerInfo info, TorrentMessage message) {
     return new Future((){
       ;
@@ -51,13 +51,13 @@ class TorrentAIBasicDelivery extends TorrentAI {
             int len = requestMessage.length;
             if (false == client.targetBlock.have(index)) {
               //
+              // 
               front.close();
               return null;
             } else {
               return client.targetBlock.read(index).then((ReadResult result) {
                 return front
-                    .sendPiece(
-                        index, begin, result.buffer.sublist(begin, begin + len))
+                    .sendPiece(index, begin, result.buffer.sublist(begin, begin + len))
                     .then((_) {
                   ;
                 });
