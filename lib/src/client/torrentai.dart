@@ -56,8 +56,14 @@ class TorrentAIBasicDelivery extends TorrentAI {
               return null;
             } else {
               return client.targetBlock.read(index).then((ReadResult result) {
+                int end = begin+len;
+                List cont = new List.filled(len, 0);
+                if(len > result.buffer.length) {
+                  end = result.buffer.length;
+                }
+                cont.setRange(begin, end, result.buffer);
                 return front
-                    .sendPiece(index, begin, result.buffer.sublist(begin, begin + len))
+                    .sendPiece(index, begin, cont)
                     .then((_) {
                   ;
                 });

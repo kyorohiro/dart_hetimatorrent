@@ -15,6 +15,7 @@ void main() {
     unit.test("001 testdata/1k.txt.torrent", () {
       Completer<TorrentClientMessage> ticket = new Completer();
       TestCaseCreator2Client1Tracker creator = new TestCaseCreator2Client1Tracker();
+      creator.data = UTF8.encode("helloworld!");
       return new Future(() {
         return creator.createTestEnv_startAndRequestToTracker().then((_) {
           return null;
@@ -67,7 +68,27 @@ void main() {
             unit.expect(message.message.id, TorrentMessage.SIGN_PIECE);
             MessagePiece pieceMessage = message.message;
             print("----0007 ${pieceMessage.content}");
-
+            unit.expect(pieceMessage.content, [104, 101, 108, 108, 111]);
+            //
+            ticket = new Completer();
+            return frontForBinA.sendRequest(1, 0, creator.clientA.targetBlock.blockSize).then((_){
+              return ticket.future;
+            });
+          }).then((TorrentClientMessage message) {
+            unit.expect(message.message.id, TorrentMessage.SIGN_PIECE);
+            MessagePiece pieceMessage = message.message;
+            unit.expect(pieceMessage.content, [119, 111, 114, 108, 100]);
+            print("----0008 ${pieceMessage.content}");
+            ticket = new Completer();
+            return frontForBinA.sendRequest(2, 0, creator.clientA.targetBlock.blockSize).then((_){
+              return ticket.future;
+            });
+          }).then((TorrentClientMessage message) {
+            unit.expect(message.message.id, TorrentMessage.SIGN_PIECE);
+            MessagePiece pieceMessage = message.message;
+            print("----0008 ${pieceMessage.content}");
+            unit.expect(pieceMessage.content, [33, 0, 0, 0, 0]);
+          
           });
         });
       }).whenComplete(() {

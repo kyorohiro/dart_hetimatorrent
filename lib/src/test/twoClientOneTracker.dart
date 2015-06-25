@@ -16,7 +16,7 @@ class TestCaseCreator2Client1Tracker {
 
   String localAddress = "0.0.0.0";
   String announce = "http://0.0.0.0:28080/announce";
-  List<int> data = UTF8.encode("helloworld");
+  List<int> data = UTF8.encode("helloworld!");
   int clientAPort = 18081;
   int clientBPort = 18082;
   int trackerPort = 28080;
