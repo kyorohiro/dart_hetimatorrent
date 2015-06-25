@@ -9,19 +9,19 @@ import 'torrentclientfront.dart';
 import 'torrentclientpeerinfo.dart';
 
 abstract class TorrentAI {
-  Future onReceive(TorrentClient client, TorrentClientPeerInfo info, TorrentMessage message);
+  Future onReceive(
+      TorrentClient client, TorrentClientPeerInfo info, TorrentMessage message);
 }
 
-
 class TorrentAIBasicDelivery extends TorrentAI {
-
-  Future onReceive(TorrentClient client, TorrentClientPeerInfo info, TorrentMessage message) {
-    TorrentClientFront front = client.getPeerInfoFromId(info.id);
-    if(message.id == TorrentMessage.SIGN_PIECE) {
-      front.sendHandshake().then((_){
-        //
-      });
-    }
+  Future onReceive(TorrentClient client, TorrentClientPeerInfo info,TorrentMessage message) {
+    return new Future(() {
+      TorrentClientFront front = info.front;
+      if (message.id == TorrentMessage.SIGN_PIECE) {
+        if (false == front.handshakeToMe) {
+          return front.sendHandshake();
+        }
+      }
+    });
   }
-
 }

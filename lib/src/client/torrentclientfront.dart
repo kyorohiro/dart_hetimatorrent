@@ -57,6 +57,9 @@ class TorrentClientFront {
   StreamController<TorrentMessage> stream = new StreamController();
   Stream<TorrentMessage> get onReceiveEvent => stream.stream;
 
+  StreamController<TorrentClientFrontSignal> _streamSignal = new StreamController.broadcast();
+  Stream<TorrentClientFrontSignal> get onReceiveSignal => _streamSignal.stream;
+
   Future<TorrentMessage> parse() {
     if (handshaked == false) {
       return TorrentMessage.parseHandshake(_parser).then((TorrentMessage message) {
@@ -85,6 +88,11 @@ class TorrentClientFront {
     a();
   }
 
+  void _signalHandshake() {
+    if(_handshakedFromMe == true && _handshakedToMe == true) {
+      _streamSignal.add(new TorrentClientFrontSignal()..id = TorrentClientFrontSignal.HANDSHAKED);
+    }
+  }
   Future sendHandshake() {
     MessageHandshake message = new MessageHandshake(MessageHandshake.ProtocolId, [0, 0, 0, 0, 0, 0, 0, 0], _infoHash, _peerId);
     return message.encode().then((List<int> v) {
@@ -184,6 +192,11 @@ class TorrentClientFront {
       });
     });
   }
-  
+
+}
+
+class TorrentClientFrontSignal {
+  static const HANDSHAKED = 1;
+  int id = 0;
 }
 
