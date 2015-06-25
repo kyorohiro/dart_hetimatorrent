@@ -23,7 +23,6 @@ class TorrentClient {
   String localAddress = "0.0.0.0";
   int port = 8080;
 
-  List<HetiSocket> _managedSocketList = [];
   List<int> get peerId => new List.from(_peerId);
   List<int> get infoHash  => new List.from(_infoHash);
  
@@ -39,19 +38,21 @@ class TorrentClient {
   BlockData _targetBlock = null;
   BlockData get targetBlock => _targetBlock;
 
-  static Future<TorrentClient> create(HetiSocketBuilder builder, List<int> peerId, TorrentFile file, HetimaData data) {
+  static Future<TorrentClient> create(HetiSocketBuilder builder, List<int> peerId, TorrentFile file, HetimaData data, {TorrentAI ai:null}) {
     return file.createInfoSha1().then((List<int> infoHash) {
-      return new TorrentClient(builder, peerId, infoHash, file.info.pieces, file.info.piece_length, file.info.files.dataSize, data);
+      return new TorrentClient(builder, peerId, infoHash, file.info.pieces, file.info.piece_length, file.info.files.dataSize, data,ai:ai);
     });
   }
 
-  TorrentClient(HetiSocketBuilder builder, List<int> peerId, List<int> infoHash,  List<int> piece, 
-                int pieceLength, int fileSize, HetimaData data) {
+  TorrentClient(HetiSocketBuilder builder, 
+                List<int> peerId, List<int> infoHash,  List<int> piece, 
+                int pieceLength, int fileSize, HetimaData data,{TorrentAI ai:null}) {
     this._builder = builder;
     _peerInfos = new TorrentClientPeerInfoList();
     _infoHash.addAll(infoHash);
     _peerId.addAll(peerId);
     _targetBlock = new BlockData(data, new Bitfield(piece.length~/20,clearIsOne:false), pieceLength, fileSize);
+    this.ai = ai;
   }
 
   TorrentClientPeerInfo putTorrentPeerInfo(String ip, int port, {peerId: ""}) {
@@ -104,6 +105,7 @@ class TorrentClient {
   void _internalOnReceive(TorrentClientFront front, TorrentClientPeerInfo info) {
     front.onReceiveEvent.listen((TorrentMessage message) {
       messageStream.add(new TorrentClientMessage(info, message));
+      signalOwnConnectCheck(message, info);
       _ai.onReceive(this, info, message);
     });
     front.onReceiveSignal.listen((TorrentClientFrontSignal signal) {
@@ -113,13 +115,31 @@ class TorrentClient {
     });
   }
 
-  Future stop() {
-    _server.close();
-    for (HetiSocket s in _managedSocketList) {
-      s.close();
+  void signalOwnConnectCheck(TorrentMessage message,TorrentClientPeerInfo info) {
+    MessageHandshake handshakeMessage = message;
+    if (handshakeMessage.peerId == this.peerId) {
+      info.front.close();
+      info.amI = true;
+      TorrentClientFrontSignal frontSignal = new TorrentClientFrontSignal()..id= TorrentClientFrontSignal.ID_CLOSE..reason=TorrentClientFrontSignal.REASON_OWN_CONNECTION;
+      _signalStream.add(new TorrentClientSignal()..info=info..signal=frontSignal);
     }
+  }
+
+  Future stop() {    
+    for (TorrentClientPeerInfo s in _peerInfos) {
+      new Future(() {
+       if(s.front != null && s.front.isClose != false) {
+         return s.front.close();
+       }
+      }).catchError((e){;});
+    }
+
+    new Future(() {
+      return _server.close();      
+    }).catchError((e){;});
+
     return new Future(() {
-      return {};
+      return new Future((){});
     });
   }
 

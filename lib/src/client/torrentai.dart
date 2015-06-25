@@ -15,6 +15,19 @@ abstract class TorrentAI {
       TorrentClientSignal message);
 }
 
+class EmptyAI {
+  Future onReceive(TorrentClient client, TorrentClientPeerInfo info, TorrentMessage message) {
+    return new Future((){
+      ;
+    });
+  }
+  Future onSignal(TorrentClient client, TorrentClientPeerInfo info, TorrentClientSignal message) {
+    return new Future((){
+      ;
+    });
+  }
+}
+
 class TorrentAIBasicDelivery extends TorrentAI {
   Future onReceive(TorrentClient client, TorrentClientPeerInfo info,
       TorrentMessage message) {
@@ -23,16 +36,11 @@ class TorrentAIBasicDelivery extends TorrentAI {
       switch (message.id) {
         case TorrentMessage.DUMMY_SIGN_SHAKEHAND:
           {
-            MessageHandshake handshakeMessage = message;
-            if (true == front.handshakeToMe) {
-              return true;
-            }
-            if (handshakeMessage.peerId == client.peerId) {
-              front.close();
-              info.amI = true;
+            if (true == front.handshakeToMe || info.amI == true) {
               return null;
+            } else {
+              return front.sendHandshake();
             }
-            return front.sendHandshake();
           }
           break;
         case TorrentMessage.SIGN_REQUEST:
@@ -47,7 +55,10 @@ class TorrentAIBasicDelivery extends TorrentAI {
               return null;
             } else {
               return client.targetBlock.read(index).then((ReadResult result) {
-                return front.sendPiece(index, begin, result.buffer.sublist(begin, begin + len)).then((_) {
+                return front
+                    .sendPiece(
+                        index, begin, result.buffer.sublist(begin, begin + len))
+                    .then((_) {
                   ;
                 });
               });
@@ -61,7 +72,7 @@ class TorrentAIBasicDelivery extends TorrentAI {
   Future onSignal(TorrentClient client, TorrentClientPeerInfo info,
       TorrentClientSignal signal) {
     return new Future(() {
-      if (signal.signal == TorrentClientFrontSignal.HANDSHAKED) {
+      if (signal.signal == TorrentClientFrontSignal.ID_HANDSHAKED) {
         info.front.sendBitfield(client.targetBlock.bitfield);
       }
     });

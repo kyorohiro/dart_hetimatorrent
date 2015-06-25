@@ -5,7 +5,6 @@ import 'package:hetimacore/hetimacore_cl.dart';
 import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimanet/hetimanet.dart';
 import 'package:hetimanet/hetimanet_chrome.dart';
-
 import 'dart:convert';
 import 'dart:async';
 
@@ -27,7 +26,7 @@ class TestCaseCreator2Client1Tracker {
     return new Future(() {
       HetimaDataMemory target = new HetimaDataMemory();
       List<int> peerId = new List.filled(20, 1);
-      return TorrentClient.create(new HetiSocketBuilderChrome(), peerId, torrentFile, target).then((TorrentClient client) {
+      return TorrentClient.create(new HetiSocketBuilderChrome(), peerId, torrentFile, target,ai:new EmptyAI()).then((TorrentClient client) {
         client.localAddress = localAddress;
         client.port = port;
         return client.start().then((_) {

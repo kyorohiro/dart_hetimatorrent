@@ -91,7 +91,7 @@ class TorrentClientFront {
 
   void _signalHandshake() {
     if(_handshakedFromMe == true && _handshakedToMe == true) {
-      _streamSignal.add(new TorrentClientFrontSignal()..id = TorrentClientFrontSignal.HANDSHAKED);
+      _streamSignal.add(new TorrentClientFrontSignal()..id = TorrentClientFrontSignal.ID_HANDSHAKED);
     }
   }
   Future sendHandshake() {
@@ -200,7 +200,10 @@ class TorrentClientFront {
 }
 
 class TorrentClientFrontSignal {
-  static const HANDSHAKED = 1;
+  static const ID_HANDSHAKED = 1;
+  static const ID_CLOSE = 2;
+  static const REASON_OWN_CONNECTION = 2001;
   int id = 0;
+  int reason = 0;
 }
 
