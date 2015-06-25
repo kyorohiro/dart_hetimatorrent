@@ -116,6 +116,9 @@ class TorrentClient {
   }
 
   void signalOwnConnectCheck(TorrentMessage message,TorrentClientPeerInfo info) {
+    if(message.id != TorrentMessage.DUMMY_SIGN_SHAKEHAND) {
+      return;
+    }
     MessageHandshake handshakeMessage = message;
     if (handshakeMessage.peerId == this.peerId) {
       info.front.close();
