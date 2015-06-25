@@ -19,6 +19,13 @@ void main() {
         return creator.createTestEnv_startAndRequestToTracker().then((_) {
           return null;
         }).then((_) {
+          // clientA have fullset data
+          creator.clientB.targetBlock.write(data, blockNum);
+          
+          return null;
+        }).then((_){
+          //
+          // connect from clientB to clientA
           List<TorrentClientPeerInfo> infos = creator.clientB.getPeerInfoFromXx((TorrentClientPeerInfo info) {
             if (info.port == creator.clientAPort) {
               return true;
@@ -46,6 +53,7 @@ void main() {
             return ticket.future;
           }).then((TorrentMessageInfo info) {
             print("----0004 D----${info.message.id}");
+            unit.expect(info.message.id, TorrentMessage.SIGN_BITFIELD);
           });
         });
       }).whenComplete(() {

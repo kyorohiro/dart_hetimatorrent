@@ -12,6 +12,9 @@ class BlockData {
   int _blockSize;
   int _dataSize;
 
+  int get blockSize => _blockSize;
+  int get dataSize => _dataSize;
+
   BlockData(HetimaData data, Bitfield head, int blockSize, int dataSize) {
     if (dataSize == null) {
       _dataSize = head.lengthPerBit() * blockSize;
@@ -28,10 +31,31 @@ class BlockData {
       if (data.length != _blockSize) {
         throw {};
       }
-      return _data.write(data, blockNum * _blockSize).then((WriteResult result) {
+      return _data
+          .write(data, blockNum * _blockSize)
+          .then((WriteResult result) {
         _head.setIsOn(blockNum, true);
         return result;
       });
+    });
+  }
+
+  Future<WriteResult> writeFullData(HetimaData data) {
+    return new Future(() {
+      int index = 0;
+      a() {
+        return data.read(index*blockSize, blockSize).then((ReadResult result) {
+          return write(result.buffer, index);
+        }).then((WriteResult result) {
+          index++;
+          if (index * blockSize < dataSize) {
+            a();
+          } else {
+            return result;
+          }
+        });
+      }
+      return a();
     });
   }
 
