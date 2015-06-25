@@ -128,8 +128,9 @@ class TorrentClient {
     }
   }
 
-  Future stop() {    
-    for (TorrentClientPeerInfo s in _peerInfos) {
+  Future stop() {
+    
+    for (TorrentClientPeerInfo s in this.peerInfos) {
       new Future(() {
        if(s.front != null && s.front.isClose != false) {
          return s.front.close();
