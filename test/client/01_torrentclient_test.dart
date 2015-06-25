@@ -51,7 +51,6 @@ void main() {
           return frontForAInB.sendBitfield(creator.clientB.targetBlock.bitfield).then((_){
             return ticket.future;
           }).then((TorrentMessageInfo info) {
-            print("----0004 D----${info.message.id}");
             unit.expect(info.message.id, TorrentMessage.SIGN_BITFIELD);
             MessageBitfield bitfield = info.message;
             print("----0004 E----${bitfield.bitfield}");
@@ -59,7 +58,6 @@ void main() {
           });
         });
       }).whenComplete(() {
-        print("----0005----");
         creator.stop();
       }); //
     });

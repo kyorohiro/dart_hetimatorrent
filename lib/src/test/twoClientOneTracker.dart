@@ -21,6 +21,7 @@ class TestCaseCreator2Client1Tracker {
   int clientAPort = 18081;
   int clientBPort = 18082;
   int trackerPort = 28080;
+  int pieceLength = 5; // 5byte
 
   Future<TorrentClient> _startTorrent(TorrentFile torrentFile, List<int> peerId, int port) {
     return new Future(() {
@@ -40,6 +41,7 @@ class TestCaseCreator2Client1Tracker {
     return new Future(() {
       TorrentFileCreator cre = new TorrentFileCreator();
       cre.announce = announce;
+      cre.piececLength = 5;
       HetimaDataMemory target = new HetimaDataMemory();
       target.write(data, 0);
       return cre.createFromSingleFile(target).then((TorrentFileCreatorResult result) {
