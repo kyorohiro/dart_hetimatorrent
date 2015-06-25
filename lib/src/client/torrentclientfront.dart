@@ -28,6 +28,7 @@ class TorrentClientFront {
   bool _handshakedFromMe = false;
   bool get handshakeToMe => _handshakedToMe;
   bool get handshakeFromMe => _handshakedFromMe;
+  bool get isClose => _socket.isClosed;
 
   Map<String, Object> tmpForAI = {};
 
@@ -193,6 +194,9 @@ class TorrentClientFront {
     });
   }
 
+  void close() {
+    _socket.close();
+  }
 }
 
 class TorrentClientFrontSignal {

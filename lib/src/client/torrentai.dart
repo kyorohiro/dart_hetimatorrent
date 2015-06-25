@@ -17,17 +17,25 @@ class TorrentAIBasicDelivery extends TorrentAI {
   Future onReceive(TorrentClient client, TorrentClientPeerInfo info,TorrentMessage message) {
     return new Future(() {
       TorrentClientFront front = info.front;
-      if (message.id == TorrentMessage.SIGN_PIECE) {
-        if (false == front.handshakeToMe) {
-          return front.sendHandshake();
+      if (message.id == TorrentMessage.DUMMY_SIGN_SHAKEHAND) {
+        MessageHandshake handshakeMessage = message;
+        if (true == front.handshakeToMe) {
+          return true;
         }
+        if(handshakeMessage.peerId == client.peerId) {
+          front.close();
+          info.amI = true;
+        }
+        return front.sendHandshake();
       }
     });
   }
   
-  Future onSignal(TorrentClient client, TorrentClientPeerInfo info, TorrentClientSignal message) {
+  Future onSignal(TorrentClient client, TorrentClientPeerInfo info, TorrentClientSignal signal) {
     return new Future((){
-      
+      if(signal.signal == TorrentClientFrontSignal.HANDSHAKED) {
+        info.front.sendBitfield(client.targetBlock.bitfield);
+      }
     });
   }
 }
