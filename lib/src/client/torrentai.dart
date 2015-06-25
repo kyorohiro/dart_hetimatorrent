@@ -38,15 +38,20 @@ class TorrentAIBasicDelivery extends TorrentAI {
         case TorrentMessage.SIGN_REQUEST:
           {
             MessageRequest requestMessage = message;
+            int index = requestMessage.index;
             int begin = requestMessage.begin;
             int len = requestMessage.length;
-            
-            return client.targetBlock.read(requestMessage.index).then((ReadResult result) {
-              return front.sendPiece(requestMessage.index, requestMessage.begin,
-                 result.buffer.sublist(begin, begin + len)).then((_){
-                ;
+            if (false == client.targetBlock.have(index)) {
+              //
+              front.close();
+              return null;
+            } else {
+              return client.targetBlock.read(index).then((ReadResult result) {
+                return front.sendPiece(index, begin, result.buffer.sublist(begin, begin + len)).then((_) {
+                  ;
+                });
               });
-            });
+            }
           }
           break;
       }
