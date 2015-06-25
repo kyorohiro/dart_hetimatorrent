@@ -36,7 +36,7 @@ class TorrentAIBasicDelivery extends TorrentAI {
       switch (message.id) {
         case TorrentMessage.DUMMY_SIGN_SHAKEHAND:
           {
-            if (true == front.handshakeToMe || info.amI == true) {
+            if (true == front.handshakeFromMe || info.amI == true) {
               return null;
             } else {
               return front.sendHandshake();
@@ -72,7 +72,7 @@ class TorrentAIBasicDelivery extends TorrentAI {
   Future onSignal(TorrentClient client, TorrentClientPeerInfo info,
       TorrentClientSignal signal) {
     return new Future(() {
-      if (signal.signal == TorrentClientFrontSignal.ID_HANDSHAKED) {
+      if (signal.signal.id == TorrentClientFrontSignal.ID_HANDSHAKED) {
         info.front.sendBitfield(client.targetBlock.bitfield);
       }
     });

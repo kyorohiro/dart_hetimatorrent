@@ -83,6 +83,9 @@ class TestCaseCreator2Client1Tracker {
         trackerClientTmp.peerport = clientAPort;
         return client.request();
       }).then((TrackerRequestResult result) {
+        return TrackerClient.createTrackerClient(new HetiSocketBuilderChrome(), torrentFile);
+      }).then((TrackerClient client) {
+        trackerClientTmp = client;
         trackerClientTmp.peerport = clientBPort;
         return trackerClientTmp.request();
       }).then((TrackerRequestResult result) {

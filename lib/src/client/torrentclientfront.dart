@@ -77,7 +77,7 @@ class TorrentClientFront {
       new Future(() {
         parse().then((TorrentMessage message) {
           stream.add(message);
-          if(message == TorrentMessage.DUMMY_SIGN_SHAKEHAND) {
+          if(message.id == TorrentMessage.DUMMY_SIGN_SHAKEHAND) {
             this._handshakedToMe = true;
           }
           a();
@@ -99,6 +99,7 @@ class TorrentClientFront {
     return message.encode().then((List<int> v) {
       return _socket.send(v).then((HetiSendInfo info) {
         _handshakedFromMe = true;
+        _signalHandshake();
         return {};
       });
     });

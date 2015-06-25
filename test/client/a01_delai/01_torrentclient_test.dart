@@ -27,7 +27,7 @@ void main() {
           //
           // connect from clientB to clientA
           List<TorrentClientPeerInfo> infos = creator.clientA.getPeerInfoFromXx((TorrentClientPeerInfo info) {
-            if (info.port == creator.clientAPort) {
+            if (info.port == creator.clientBPort) {
               return true;
             }
           });
@@ -41,6 +41,7 @@ void main() {
           return frontForBInA.sendHandshake().then((_) {
             return ticket.future;
           }).then((TorrentClientMessage info) {
+            ticket = new Completer();
             print("----0004 C----${info.message.id}");
             unit.expect(info.message.id, TorrentMessage.DUMMY_SIGN_SHAKEHAND);
             return frontForBInA;
@@ -48,7 +49,7 @@ void main() {
         }).then((TorrentClientFront frontForBInA) {
           //
           // bitfield
-          ticket = new Completer();
+          print("----0004 CC----");
           return frontForBInA.sendBitfield(creator.clientB.targetBlock.bitfield).then((_){
             return ticket.future;
           }).then((TorrentClientMessage info) {
@@ -56,7 +57,8 @@ void main() {
             MessageBitfield bitfield = info.message;
             print("----0004 E----${bitfield.bitfield}");
             unit.expect(creator.clientB.targetBlock.bitfield, bitfield.bitfield);
-          });
+            return frontForBInA;
+          });          
         });
       }).whenComplete(() {
         creator.stop();

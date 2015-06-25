@@ -16,7 +16,7 @@ class TorrentClientPeerInfoList {
   TorrentClientPeerInfo putFormTrackerPeerInfo(String ip, int port, {peerId: ""}) {
     for (int i = 0; i < peerInfos.length; i++) {
       TorrentClientPeerInfo info = peerInfos.getSequential(i);
-      if (info.ip == ip || info.port == port) {
+      if (info.ip == ip && info.port == port) {
         // alredy added in peerinfo
         return info;
       }
