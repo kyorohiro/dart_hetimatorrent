@@ -100,12 +100,27 @@
     <div id="com-create" style="width:100%; height:calc(100% - 70px);">
      <h3>[Target File]</h3>
      <div>
-       <input type="file" id="create-fileinput">
+       
      </div>
      <table>
        <tr>
+       <td>file</td>
+       <td><input type="file" id="create-fileinput"></td>
+       </tr>
+
+       <tr>
        <td>announce</td>
        <td><input type="text" id="create-announce" value="http://0.0.0.0:6969/announce"></td>
+       </tr>
+       
+       <tr>
+       <td>piece length(kbyte)</td>
+       <td><input type="number" id="create-piece-length" value="256"></td>
+       </tr>
+
+       <tr>
+       <td>output</td>
+       <td><a id="create-link">link</a></td>
        </tr>
      </table>
     </div>
