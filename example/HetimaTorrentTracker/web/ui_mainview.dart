@@ -124,15 +124,17 @@ class CreateItem {
         html.File n = inputFile.files[0];
         TorrentFileCreator cre = new TorrentFileCreator();
         cre.announce = inputAnnounce.value;
-        cre.piececLength = int.parse(inputPieceLength.value);
+        cre.piececLength = int.parse(inputPieceLength.value) * 1024;
         return cre.createFromSingleFile(new HetimaDataBlob(n)).then((TorrentFileCreatorResult r) {
           List<int> buffer = Bencode.encode(r.torrentFile.mMetadata);
           HetimaDataFS fs = new HetimaDataFS("a.torrent");
           return fs.write(buffer, 0).then((WriteResult r) {
-            return fs.getEntry().then((html.Entry e) {
-              inputLink.href = e.toUrl();
-              (e as html.FileEntry).file().then((html.File f) {
-                _rawFile = f;
+            return fs.truncate(buffer.length).then((_) {
+              return fs.getEntry().then((html.Entry e) {
+                inputLink.href = e.toUrl();
+                (e as html.FileEntry).file().then((html.File f) {
+                  _rawFile = f;
+                });
               });
             });
           });
