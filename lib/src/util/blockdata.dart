@@ -16,6 +16,7 @@ class BlockData {
   int get dataSize => _dataSize;
 
   List<int> get bitfield => _head.value;
+  int get bitSize => _head.lengthPerBit();
 
   BlockData(HetimaData data, Bitfield head, int blockSize, int dataSize) {
     if (dataSize == null) {
