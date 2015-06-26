@@ -114,7 +114,7 @@ class MainItem {
 
 //
 //
-class Item {
+class HashItem {
   html.SpanElement torrentHashSpan = html.querySelector("#torrent-hash");
   html.SpanElement torrentRemoveBtn = html.querySelector("#torrent-remove-btn");
   html.SpanElement torrentNumOfPeerSpan = html.querySelector("#torrent-num-of-peer");
@@ -150,24 +150,21 @@ void main() {
 
   Map<String, TorrentFile> managedTorrentFile = {};
   TrackerModel model = new TrackerModel();
-  Item item = null;
+  HashItem item = null;
   MainItem mainImte = null;
   
   print("hello world");
   tab.init();
   dialog.init();
-  item = new Item();
+  item = new HashItem();
   mainImte = new MainItem();
 
   item.init(model, managedTorrentFile, tab);
   mainImte.init(model, managedTorrentFile, tab, dialog);
 
-
-
   tab.onShow.listen((TabInfo info) {
     print("=t= ${info.cont}");
     item.contain(model, managedTorrentFile, info.key);
   });
-
 
 }
