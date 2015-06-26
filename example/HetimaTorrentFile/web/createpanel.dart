@@ -4,7 +4,7 @@ class CreatePanel {
   ui.VerticalPanel _createForSubPanel = new ui.VerticalPanel();
   ui.FileUpload _fileUpload = new ui.FileUpload();
 
-  ui.Hyperlink _downloadLink = new ui.Hyperlink();
+
   ui.TextBox _announceField = new ui.TextBox();
   ui.ListBox _pieceLengthList = new ui.ListBox();
   List<String> _pieceLengthListType = ["16kb", "64kb", "256kb", "1024kb", "4096kb", "16384kb", "65536kb", "262144kb"];
