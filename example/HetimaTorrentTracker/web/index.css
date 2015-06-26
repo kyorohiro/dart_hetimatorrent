@@ -1,25 +1,113 @@
+html {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
 body {
-  background-color: #F8F8F8;
-  font-family: 'Open Sans', sans-serif;
-  font-size: 14px;
-  font-weight: normal;
-  line-height: 1.2em;
-  margin: 15px;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    font-family: Arial, Helvetica, sans-serif, Tahoma, Verdana, sans-serif;
+    font-size: 12px;
+    background: rgb(14, 98, 165);
+    color: white;
 }
 
-h1, p {
-  color: #333;
+#container {
+  height: 100%;
+  width: 100%;
+  display: flex;
 }
 
-#container_id {
-  height: 400px;
-  position: relative;
-  border: 1px solid #ccc;
-  background-color: #fff;
+#controls {
+  height: 100%;
+  width: 240px;  
+  padding: 4px;
 }
 
-#text_id {
-  font-size: 24pt;
-  text-align: center;
-  margin-top: 140px;
+#editor-container { 
+  height: 100%;
+  width: calc(100% - 240px);        
+}
+
+#editor {
+  height: 100%;
+  width: 100%;
+}
+
+.control {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;  
+}
+
+.info-custom-css{
+  background-color: #fcf8e3;
+  color: #3a87ad;
+}
+
+.warning-custom-css{
+  color: #c09853;
+  background-color: yellow;
+}
+
+.error-custom-css{
+  color: #D8000C;
+  background-color: red;
+}
+
+
+nav > ul {
+  border-bottom: 1px solid #8c7e7e;
+  font-size: 0;
+}
+
+nav > ul > li {
+    margin-bottom: -1px;
+    padding: 10px 15px;
+    display: inline-block;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border: 1px solid #8c7e7e;
+    color: #8C7E7E;
+    background: #F2F0F0;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+nav > ul > li:not(:last-child) {
+    margin-right: 10px;
+}
+
+nav > ul > li.selected {
+    background: #fff;
+    border-bottom: 1px solid #fff;
+}
+
+
+// スクロールバー全体
+.scrollbox::-webkit-scrollbar {
+  width:10px;
+  background:#ffeeee;
+}
+// 横スクロールバー全体
+.scrollbox::-webkit-scrollbar:horizontal {
+  height:10px;
+}
+// スクロールバー上下左右末端のボタン
+.scrollbox::-webkit-scrollbar-button {
+  width:10px;
+  height:10px;
+  background:#666;
+}
+// ドラッグするツマミ部分
+.scrollbox::-webkit-scrollbar-thumb {
+  background:#999;
+}
+// 右下角部分
+.scrollbox::-webkit-scrollbar-corner {
+  background:#ddd;
 }
