@@ -85,7 +85,7 @@ class ConnectCommand extends TorrentEngineCommand {
   Future<CommandResult> execute(TorrentEngine engine, {List<String> args: null}) {
     return new Future(() {
       TorrentClientPeerInfo info = engine.torrentClient.getPeerInfoFromId(_id);
-      return engine.torrentClient.connect(engine.socketBuilder, info, engine.torrentClient.infoHash).then((TorrentClientFront front) {
+      return engine.torrentClient.connect(info).then((TorrentClientFront front) {
         return new CommandResult("connected");
       });
     });
