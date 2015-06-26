@@ -1,8 +1,7 @@
-library app;
+library app.mainview;
 
 import 'dart:html' as html;
 import 'dart:async';
-import 'package:chrome/chrome_app.dart' as chrome;
 import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimacore/hetimacore_cl.dart';
 import 'package:hetimanet/hetimanet.dart';
@@ -11,6 +10,69 @@ import 'package:hetimanet/hetimanet_chrome.dart';
 import 'package:hetimatorrent/hetimatorrent.dart';
 import 'dialog.dart';
 
+class Model {
+  bool upnpIsUse = false;
+  String selectKey = null;
+
+///
+  TrackerServer trackerServer = new TrackerServer(new HetiSocketBuilderChrome());
+  UpnpPortMapHelper portMapHelder = new UpnpPortMapHelper(new HetiSocketBuilderChrome(), "HetimaTorrentTracker");
+
+  void onRemoveInfoHashFromTracker(List<int> removeHash) {
+    trackerServer.removeInfoHash(PercentEncode.decode(selectKey));
+  }
+
+  void onAddInfoHashFromTracker(TorrentFile f) {
+    trackerServer.addInfoHash(f);
+  }
+
+  Future onStop() {
+    // clear
+    trackerServer.trackerAnnounceAddressForTorrentFile = "";
+
+    portMapHelder.getPortMapInfo(portMapHelder.appid).then((GetPortMapInfoResult r) {
+      if (r.infos.length > 0 && r.infos[0].externalPort.length != 0) {
+        int port = int.parse(r.infos[0].externalPort);
+        portMapHelder.deleteAllPortMap([port]);
+      }
+    }).catchError((e) {
+      ;
+    });
+
+    return trackerServer.stop();
+  }
+
+  Future onStart(String localIP, int localPort, int globalPort) {
+    trackerServer.address = localIP;
+    trackerServer.port = localPort;
+    return trackerServer.start().then((StartResult r) {
+      if (upnpIsUse == true) {
+        portMapHelder.basePort = globalPort;
+        portMapHelder.numOfRetry = 0;
+        portMapHelder.localAddress = localIP;
+        portMapHelder.localPort = localPort;
+
+        portMapHelder.startGetExternalIp().then((_) {}).catchError((e) {}).whenComplete(() {
+          portMapHelder.startPortMap().then((_) {
+            trackerServer.trackerAnnounceAddressForTorrentFile = "http://${portMapHelder.externalIp}:${portMapHelder.externalPort}/announce";
+          }).catchError((e) {
+            print("error ${e}");
+          });
+        });
+      }
+      return [trackerServer.address, "${trackerServer.port}"];
+    });
+  }
+
+  int onGetNumOfPeer(List<int> infoHash) {
+    return trackerServer.numOfPeer(infoHash);
+  }
+}
+
+
+//
+//
+//
 Tab tab = new Tab();
 Dialog dialog = new Dialog();
 Map<String, TorrentFile> managedTorrentFile = {};
@@ -31,30 +93,28 @@ html.InputElement inputLocalAddress = html.querySelector("#input-localaddress");
 html.InputElement inputLocalPort = html.querySelector("#input-localport");
 html.InputElement inputGlobalPort = html.querySelector("#input-globalport");
 
-TrackerServer trackerServer = new TrackerServer(new HetiSocketBuilderChrome());
-UpnpPortMapHelper portMapHelder = new UpnpPortMapHelper(new HetiSocketBuilderChrome(), "HetimaTorrentTracker");
-
 //
 //
 html.SpanElement torrentHashSpan = html.querySelector("#torrent-hash");
 html.SpanElement torrentRemoveBtn = html.querySelector("#torrent-remove-btn");
 html.SpanElement torrentNumOfPeerSpan = html.querySelector("#torrent-num-of-peer");
 
-bool upnpIsUse = false;
-String selectKey = null;
 
+Model model = new Model();
+//
+//
+//
 void main() {
   print("hello world");
   tab.init();
   dialog.init();
 
   torrentRemoveBtn.onClick.listen((html.MouseEvent e) {
-    if(selectKey != null) {
-      tab.remove(selectKey);
-      managedTorrentFile.remove(selectKey);
-      trackerServer.removeInfoHash(PercentEncode.decode(selectKey));
-      print("##===> ${managedTorrentFile.length}");
-      selectKey = null;
+    if (model.selectKey != null) {
+      tab.remove(model.selectKey);
+      managedTorrentFile.remove(model.selectKey);
+      model.onRemoveInfoHashFromTracker(PercentEncode.decode(model.selectKey));
+      model.selectKey = null;
     }
   });
 
@@ -70,7 +130,7 @@ void main() {
           String key = PercentEncode.encode(infoHash);
           managedTorrentFile[key] = f;
           tab.add("${key}", "con-now");
-          trackerServer.addInfoHash(f);
+          model.onAddInfoHashFromTracker(f);
         });
       }).catchError((e) {
         dialog.show("failed parse torrent");
@@ -82,29 +142,13 @@ void main() {
     loadServerBtn.style.display = "block";
     stopServerBtn.style.display = "none";
     startServerBtn.style.display = "none";
-    
-    trackerServer.address = inputLocalAddress.value;
-    trackerServer.port = int.parse(inputLocalPort.value);
-    trackerServer.start().then((StartResult r) {
-      outputLocalPortSpn.innerHtml = "${trackerServer.port}";
-      outputLocalAddressSpn.innerHtml = trackerServer.address;
+
+    model.onStart(inputLocalAddress.value, int.parse(inputLocalPort.value), int.parse(inputGlobalPort.value)).then((List<String> v) {
+      outputLocalPortSpn.innerHtml = v[1];
+      outputLocalAddressSpn.innerHtml = v[0];
       stopServerBtn.style.display = "block";
       startServerBtn.style.display = "none";
       loadServerBtn.style.display = "none";
-      if(upnpIsUse == true) {
-        portMapHelder.basePort = int.parse(inputGlobalPort.value);
-        portMapHelder.numOfRetry = 0;
-        portMapHelder.localAddress = inputLocalAddress.value;
-        portMapHelder.localPort = int.parse(inputLocalPort.value);
-        
-        portMapHelder.startGetExternalIp().then((_){}).catchError((e){}).whenComplete((){
-          portMapHelder.startPortMap().then((_){
-            trackerServer.trackerAnnounceAddressForTorrentFile = "http://${portMapHelder.externalIp}:${portMapHelder.externalPort}/announce";
-          }).catchError((e){
-            print("error ${e}");
-          });          
-        });
-      }
     }).catchError((e) {
       stopServerBtn.style.display = "none";
       startServerBtn.style.display = "block";
@@ -116,19 +160,8 @@ void main() {
     loadServerBtn.style.display = "block";
     stopServerBtn.style.display = "none";
     startServerBtn.style.display = "none";
-    // clear
-    trackerServer.trackerAnnounceAddressForTorrentFile = "";
 
-    portMapHelder.getPortMapInfo(portMapHelder.appid).then((GetPortMapInfoResult r) {
-        if(r.infos.length > 0 && r.infos[0].externalPort.length != 0) {
-          int port = int.parse(r.infos[0].externalPort);
-          portMapHelder.deleteAllPortMap([port]);
-        }
-    }).catchError((e){
-      ;
-    });
-    
-    trackerServer.stop().then((StopResult r) {
+    model.onStop().then((StopResult r) {
       startServerBtn.style.display = "block";
       stopServerBtn.style.display = "none";
       loadServerBtn.style.display = "none";
@@ -143,13 +176,13 @@ void main() {
     String t = info.cont;
     print("=t= ${t}");
 
-      String key = info.key;
-      if (managedTorrentFile.containsKey(key)) {
-        torrentHashSpan.setInnerHtml("${info.key}");
-        selectKey = key;
-        List<int> infoHash = PercentEncode.decode(info.key);
-        torrentNumOfPeerSpan.setInnerHtml("${trackerServer.numOfPeer(infoHash)}");
-      }
+    String key = info.key;
+    if (managedTorrentFile.containsKey(key)) {
+      torrentHashSpan.setInnerHtml("${info.key}");
+      model.selectKey = key;
+      List<int> infoHash = PercentEncode.decode(info.key);
+      torrentNumOfPeerSpan.setInnerHtml("${model.onGetNumOfPeer(infoHash)}");
+    }
   });
 
   // Adds a click event for each radio button in the group with name "gender"
@@ -157,26 +190,23 @@ void main() {
     radioButton.onClick.listen((html.MouseEvent e) {
       html.InputElement clicked = e.target;
       print("The user is ${clicked.value}");
-      if(clicked.value == "Use") {
-        upnpIsUse = true;
+      if (clicked.value == "Use") {
+        model.upnpIsUse = true;
       } else {
-        upnpIsUse = false;
+        model.upnpIsUse = false;
       }
     });
   });
-  
-  portMapHelder.onUpdateGlobalIp.listen((String globalIP) {
+
+  model.portMapHelder.onUpdateGlobalIp.listen((String globalIP) {
     outputGlobalAddressSpn.setInnerHtml(globalIP);
   });
 
-  portMapHelder.onUpdateGlobalPort.listen((String globalPort) {
-    outputGlobalPortSpn.setInnerHtml(globalPort);    
+  model.portMapHelder.onUpdateGlobalPort.listen((String globalPort) {
+    outputGlobalPortSpn.setInnerHtml(globalPort);
   });
 
-  print("=s=");
-  
-  portMapHelder.startGetLocalIp().then((StartGetLocalIPResult result) {
+  model.portMapHelder.startGetLocalIp().then((StartGetLocalIPResult result) {
     inputLocalAddress.value = result.localIP;
   });
 }
-
