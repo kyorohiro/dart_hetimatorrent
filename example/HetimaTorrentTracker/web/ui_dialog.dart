@@ -32,13 +32,17 @@ class Dialog {
 class Tab {
   html.InputElement tabContainer = html.querySelector("#tabcont");
   Map<String, String> tabs = {
-    "#m00_clone": "#com-clone"
+    
   };
 
   html.Element current = null;
 
   int v = 100;
   Map<String, String> keyManager = {};
+  
+  Tab(Map<String,String> v) {
+    tabs.addAll(v);
+  }
   void add(String key, String cont) {
     keyManager[key] = "#d00_${v++}";
     tabs[keyManager[key]] = "#${cont}";

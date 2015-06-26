@@ -12,7 +12,7 @@ import 'ui_dialog.dart';
 import 'modeL_tracker.dart';
 
 
-Tab tab = new Tab();
+Tab tab = new Tab({"#m00_clone": "#com-clone"});
 Dialog dialog = new Dialog();
 
 Map<String, TorrentFile> managedTorrentFile = {};
