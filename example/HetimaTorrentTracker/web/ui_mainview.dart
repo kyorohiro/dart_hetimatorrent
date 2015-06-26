@@ -145,7 +145,10 @@ class HashItem {
 //
 //
 void main() {
-  Tab tab = new Tab({"#m00_clone": "#com-clone"});
+  Tab tab = new Tab({
+    "#m00_clone": "#com-clone",
+    "#m00_create": "#com-create",
+    });
   Dialog dialog = new Dialog();
 
   Map<String, TorrentFile> managedTorrentFile = {};
