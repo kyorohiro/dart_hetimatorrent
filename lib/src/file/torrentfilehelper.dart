@@ -13,12 +13,11 @@ class TorrentFileCreator {
   String announce = "http://127.0.0.1:6969";
   String name = "name";
   int piececLength = 16 * 1024;
-
-  async.Future<TorrentFileCreatorResult> createFromSingleFile(hetima.HetimaData target) {
+  async.Future<TorrentFileCreatorResult> createFromSingleFile(hetima.HetimaData target, {concurrency: false, threadNum: 2, cache: true, cacheSize: 1024, cacheNum: 3}) {
     async.Completer<TorrentFileCreatorResult> ret = new async.Completer();
     TorrentPieceHashCreator helper = new TorrentPieceHashCreator();
     target.getLength().then((int targetLength) {
-      helper.createPieceHash(target, piececLength).then((CreatePieceHashResult r) {
+      helper.createPieceHash(target, piececLength, concurrency: concurrency, threadNum: threadNum, cache: cache, cacheSize: cacheSize, cacheNum: cacheNum).then((CreatePieceHashResult r) {
         Map file = {};
         Map info = {};
         file[TorrentFile.KEY_ANNOUNCE] = announce;
@@ -73,33 +72,85 @@ class TorrentInfoHashCreator {
 }
 
 class TorrentPieceHashCreator {
-  async.Future<CreatePieceHashResult> createPieceHash(hetima.HetimaData file, int pieceLength) {
+  async.Future<CreatePieceHashResult> createPieceHash(hetima.HetimaData file, int pieceLength, {concurrency: false, threadNum: 2, cache: true, cacheSize: 1024, cacheNum: 3}) {
     async.Completer<CreatePieceHashResult> compleater = new async.Completer();
     CreatePieceHashResult result = new CreatePieceHashResult();
     result.pieceLength = pieceLength;
-    result.targetFile = file;
-    _createPieceHash(compleater, result);
-
+    new async.Future(() {
+      if (cache == true) {
+        return hetima.HetimaDataCache.createWithReuseCashData(file, cacheSize: cacheSize, cacheNum: cacheNum).then((hetima.HetimaDataCache c) {
+          result.targetFile = c;
+        });
+      } else {
+        return new async.Future(() {
+          result.targetFile = file;
+        });
+      }
+    }).then((_) {
+      // result._tmpStart = 500000*1000;
+      if (concurrency == true) {
+        _createPieceHashConcurrency(compleater, result);
+      } else {
+        _createPieceHash(compleater, result);
+      }
+    });
     return compleater.future;
+  }
+
+  void _createPieceHashConcurrency(async.Completer<CreatePieceHashResult> compleater, CreatePieceHashResult result) {
+    int start = result._tmpStart;
+    int end = result._tmpStart + result.pieceLength;
+    //new async.Future.delayed(new Duration(microseconds: 10), () {
+      result.targetFile.getLength().then((int length) {
+        if (end > length) {
+          end = length;
+        }
+        result.targetFile.read(start, end-start).then((hetima.ReadResult e) {
+          new async.Future(() {
+            crypto.SHA1 sha1 = new crypto.SHA1();
+            sha1.add(e.buffer.sublist(0, end - start));
+            result.add(sha1.close());
+            if (end == length) {
+              compleater.complete(result);
+            }
+          });
+          result._tmpStart = end;
+          if (end != length) {
+            _createPieceHashConcurrency(compleater, result);
+          }
+        });
+      });
+   /// });
   }
 
   void _createPieceHash(async.Completer<CreatePieceHashResult> compleater, CreatePieceHashResult result) {
     int start = result._tmpStart;
     int end = result._tmpStart + result.pieceLength;
-    result.targetFile.getLength().then((int length) {
-      if (end > length) {
-        end = length;
-      }
-      result.targetFile.read(start, end).then((hetima.ReadResult e) {
-        crypto.SHA1 sha1 = new crypto.SHA1();
-        sha1.add(e.buffer.sublist(0, end - start));
-        result.add(sha1.close());
-        result._tmpStart = end;
-        if (end == length) {
-          compleater.complete(result);
-        } else {
-          _createPieceHash(compleater, result);
+    new async.Future.delayed(new Duration(microseconds: 10), () {
+      int timeZ = new DateTime.now().millisecond;
+      result.targetFile.getLength().then((int length) {
+        if (end > length) {
+          end = length;
         }
+        int timeA = new DateTime.now().millisecond;
+        result.targetFile.read(start, end-start).then((hetima.ReadResult e) {
+          if (e.buffer == null) {
+            _createPieceHash(compleater, result);
+            return;
+          }
+          int timeB = new DateTime.now().millisecond;
+          crypto.SHA1 sha1 = new crypto.SHA1();
+          sha1.add(e.buffer.sublist(0, end - start));
+          result.add(sha1.close());
+          result._tmpStart = end;
+          int timeC = new DateTime.now().millisecond;
+          print("time:${timeA-timeZ} ${timeB-timeA} ${timeC-timeB}");
+          if (end == length) {
+            compleater.complete(result);
+          } else {
+            _createPieceHash(compleater, result);
+          }
+        });
       });
     });
   }

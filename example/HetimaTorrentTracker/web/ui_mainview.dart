@@ -1,13 +1,73 @@
 library app.mainview;
 
 import 'dart:html' as html;
+import 'dart:async';
 import 'package:chrome/chrome_app.dart' as chrome;
 import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimacore/hetimacore_cl.dart';
 import 'package:hetimanet/hetimanet.dart';
+import 'package:hetimanet/hetimanet_chrome.dart';
 import 'package:hetimatorrent/hetimatorrent.dart';
 import 'ui_dialog.dart';
-import 'modeL_tracker.dart';
+//import 'modeL_tracker.dart';
+class TrackerModel {
+  bool upnpIsUse = false;
+  String selectKey = null;
+
+///
+  TrackerServer trackerServer = new TrackerServer(new HetiSocketBuilderChrome());
+  UpnpPortMapHelper portMapHelder = new UpnpPortMapHelper(new HetiSocketBuilderChrome(), "HetimaTorrentTracker");
+
+  void onRemoveInfoHashFromTracker(List<int> removeHash) {
+    trackerServer.removeInfoHash(PercentEncode.decode(selectKey));
+  }
+
+  void onAddInfoHashFromTracker(TorrentFile f) {
+    trackerServer.addInfoHash(f);
+  }
+
+  Future onStop() {
+    // clear
+    trackerServer.trackerAnnounceAddressForTorrentFile = "";
+
+    portMapHelder.getPortMapInfo(portMapHelder.appid).then((GetPortMapInfoResult r) {
+      if (r.infos.length > 0 && r.infos[0].externalPort.length != 0) {
+        int port = int.parse(r.infos[0].externalPort);
+        portMapHelder.deleteAllPortMap([port]);
+      }
+    }).catchError((e) {
+      ;
+    });
+
+    return trackerServer.stop();
+  }
+
+  Future onStart(String localIP, int localPort, int globalPort) {
+    trackerServer.address = localIP;
+    trackerServer.port = localPort;
+    return trackerServer.start().then((StartResult r) {
+      if (upnpIsUse == true) {
+        portMapHelder.basePort = globalPort;
+        portMapHelder.numOfRetry = 0;
+        portMapHelder.localAddress = localIP;
+        portMapHelder.localPort = localPort;
+
+        portMapHelder.startGetExternalIp().then((_) {}).catchError((e) {}).whenComplete(() {
+          portMapHelder.startPortMap().then((_) {
+            trackerServer.trackerAnnounceAddressForTorrentFile = "http://${portMapHelder.externalIp}:${portMapHelder.externalPort}/announce";
+          }).catchError((e) {
+            print("error ${e}");
+          });
+        });
+      }
+      return [trackerServer.address, "${trackerServer.port}"];
+    });
+  }
+
+  int onGetNumOfPeer(List<int> infoHash) {
+    return trackerServer.numOfPeer(infoHash);
+  }
+}
 
 class MainItem {
   html.InputElement fileInput = html.querySelector("#fileinput");
@@ -113,6 +173,11 @@ class CreateItem {
   html.InputElement inputAnnounce = html.querySelector("#create-announce");
   html.InputElement inputPieceLength = html.querySelector("#create-piece-length");
   html.AnchorElement inputLink = html.querySelector("#create-link");
+
+  html.InputElement inputCacheSize = html.querySelector("#create-cache-size");
+  html.InputElement inputThreadNum = html.querySelector("#create-thread-num");
+
+
   html.File _rawFile = null;
   Dialog dialog = null;
 
@@ -120,18 +185,28 @@ class CreateItem {
     dialog = d;
     inputFile.onChange.listen((html.Event e) {
       print("==");
+      inputLink.style.display = "none";
       if (inputFile.files.length > 0) {
+
         html.File n = inputFile.files[0];
         TorrentFileCreator cre = new TorrentFileCreator();
         cre.announce = inputAnnounce.value;
         cre.piececLength = int.parse(inputPieceLength.value) * 1024;
-        return cre.createFromSingleFile(new HetimaDataBlob(n)).then((TorrentFileCreatorResult r) {
+        
+        int cashSize = int.parse(inputCacheSize.value);
+        if(cashSize > 0 && cashSize < cre.piececLength) {
+          cashSize = cashSize*2;
+        }
+        int threadNum = int.parse(inputThreadNum.value);
+        return cre.createFromSingleFile(new HetimaDataBlob(n),
+            concurrency: (threadNum>0), threadNum:threadNum,cache: (cashSize>0), cacheSize: cashSize, cacheNum: 2).then((TorrentFileCreatorResult r) {
           List<int> buffer = Bencode.encode(r.torrentFile.mMetadata);
           HetimaDataFS fs = new HetimaDataFS("a.torrent");
           return fs.write(buffer, 0).then((WriteResult r) {
             return fs.truncate(buffer.length).then((_) {
               return fs.getEntry().then((html.Entry e) {
                 inputLink.href = e.toUrl();
+                inputLink.style.display = "block";
                 (e as html.FileEntry).file().then((html.File f) {
                   _rawFile = f;
                 });
