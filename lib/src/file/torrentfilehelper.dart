@@ -97,7 +97,7 @@ class TorrentPieceHashCreator {
     }).then((_) {
       // result._tmpStart = 500000*1000;
       if (concurrency == true) {
-        _createPieceHashConcurrency(compleater, result, progress: progress);
+        _createPieceHashConcurrency(compleater, result, progress: progress, numOfIso:threadNum);
       } else {
         _createPieceHash(compleater, result, progress: progress);
       }
@@ -105,12 +105,12 @@ class TorrentPieceHashCreator {
     return compleater.future;
   }
 
-  void _createPieceHashConcurrency(async.Completer<CreatePieceHashResult> compleater, CreatePieceHashResult result, {Function progress: null}) {
+  void _createPieceHashConcurrency(async.Completer<CreatePieceHashResult> compleater, CreatePieceHashResult result, {Function progress: null,numOfIso:3}) {
 
     //new async.Future.delayed(new Duration(microseconds: 10), () {
     // int timeZ = new DateTime.now().millisecond;
     int length = 0;
-    SHA1Iso s = new SHA1Iso(3);
+    SHA1Iso s = new SHA1Iso(numOfIso);
     int id = 0;
     a() {
       int start = result._tmpStart;
@@ -121,7 +121,7 @@ class TorrentPieceHashCreator {
       // int timeA = new DateTime.now().millisecond;
       result.targetFile.read(start, end - start).then((hetima.ReadResult e) {
         new async.Future(() {}).then((_) {
-          if(++id >= 3) {
+          if(++id >= numOfIso) {
             id = 0;
           }
           s.requestSingle(e.buffer,id).then((List<List<int>> dd) {
