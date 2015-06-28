@@ -56,18 +56,15 @@ class SHA1Iso {
             c.complete();
           }
         }
-        else if (message is String) {
-          print(message);
-        } 
         else if (message is List && message.length == 20) {
           List<List<int>> ret = [];
           ret.add(message);
-          print("receice ${id}");
+         // print("receice ${id}");
           receivePort[id].c.complete(ret);
           receivePort[id].accessTicket.complete({});
         }
         else {
-          print("a${message}");
+         //print("a${message}");
         }
       });
       Isolate.spawnUri(new Uri.file(path), [], port.sendPort);
@@ -77,13 +74,13 @@ class SHA1Iso {
 
   Future<RequestSingleWaitReturn> requestSingleWait(List<int> bytes, int id) {
     if(receivePort[id].c == null || receivePort[id].c.isCompleted) {
-      print("--send ${id}");
+     // print("--send ${id}");
       RequestSingleWaitReturn v = new RequestSingleWaitReturn();
       v.v = requestSingle(bytes, id);
       return new Future((){return v;});
     } else {
       return receivePort[id].accessTicket.future.then((_){
-        print("++send ${id}");
+     // print("++send ${id}");
         RequestSingleWaitReturn v = new RequestSingleWaitReturn();
         v.v = requestSingle(bytes, id);
         return v;
@@ -94,7 +91,7 @@ class SHA1Iso {
   Future<List<List<int>>> requestSingle(List<int> bytes, int id) {
     receivePort[id].c = new Completer();
     receivePort[id].accessTicket = new Completer();
-    print("send ${id}");
+   // print("send ${id}");
     receivePort[id].sendPort.send(bytes);
     return receivePort[id].c.future;
   }

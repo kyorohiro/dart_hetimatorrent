@@ -123,14 +123,13 @@ class TorrentPieceHashCreator {
         if (++id >= numOfIso) {
           id = 0;
         }
+        int begine = start;
         s.requestSingleWait(e.buffer, id).then((RequestSingleWaitReturn v) {
-
           v.v.then((List<List<int>> dd) {
             if (progress != null) {
               progress(end);
             }
-            print("${dd[0].length} ${result.pieceBuffer.size()}");
-            result.add(dd[0]);
+            result.addWithStart(begine, dd[0]);
             if (end == length) {
               __timeE = new DateTime.now().millisecondsSinceEpoch;
               print("[time]:${__timeE-__timeS}");
@@ -141,7 +140,6 @@ class TorrentPieceHashCreator {
           if (end != length) {
             a();
           }
-
         });
       });
     }
@@ -207,7 +205,29 @@ class CreatePieceHashResult {
   hetima.ArrayBuilder pieceBuffer = new hetima.ArrayBuilder();
   hetima.HetimaData targetFile = null;
 
+  List cash = [];
+
   void add(List<int> data) {
     pieceBuffer.appendIntList(data, 0, data.length);
+    {
+      int l = cash.length;
+      for (int i = 0; i < l; i++) {
+        for (int j = 0; j < cash.length; j++) {
+          if (pieceBuffer.size() == cash[j]["s"]) {
+            List<int> d = cash.removeAt(j)["v"];
+            pieceBuffer.appendIntList(d, 0, d.length);
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  void addWithStart(int start, List<int> data) {
+    if (pieceBuffer.size() == start) {
+      add(data);
+    } else {
+      cash.add({"s": start, "v": data});
+    }
   }
 }
