@@ -112,28 +112,36 @@ class TorrentPieceHashCreator {
     int length = 0;
     SHA1Iso s = new SHA1Iso(numOfIso);
     int id = 0;
+
+    List<int> startList = [];
+    List<int> endList = [];
+
+    int i = 0;
     a() {
-      int start = result._tmpStart;
-      int end = result._tmpStart + result.pieceLength;
-      if (end > length) {
-        end = length;
-      }
+      int start = startList[i];
+      int end = endList[i];
+      i++;
       // int timeA = new DateTime.now().millisecond;
       result.targetFile.read(start, end - start).then((hetima.ReadResult e) {
         if (++id >= numOfIso) {
           id = 0;
         }
-        int begine = start;
+        int begine = 20 * start ~/ result.pieceLength;
         s.requestSingleWait(e.buffer, id).then((RequestSingleWaitReturn v) {
           v.v.then((List<List<int>> dd) {
             if (progress != null) {
               progress(end);
             }
             result.addWithStart(begine, dd[0]);
-            if (end == length) {
+            print("WWW${result.pieceBuffer.size()} == ${20*length~/result.pieceLength})");
+            if (result.pieceBuffer.size() == 20 * startList.length) {
               __timeE = new DateTime.now().millisecondsSinceEpoch;
               print("[time]:${__timeE-__timeS}");
-              compleater.complete(result);
+              if (result.cash.length != 0) {
+                print("############ERROR ${result.cash.length} :: ${end} == ${length} ${result.cash[0]}");
+              } else {
+                compleater.complete(result);
+              }
             }
           });
           result._tmpStart = end;
@@ -143,11 +151,27 @@ class TorrentPieceHashCreator {
         });
       });
     }
-
+    z() {
+      int start = 0;
+      int end = 0;
+      while (true) {
+        start = end;
+        end = start + result.pieceLength;
+        if (end > length) {
+          end = length;
+        }
+        startList.add(start);
+        endList.add(end);
+        if (end >= length) {
+          break;
+        }
+      }
+      a();
+    }
     result.targetFile.getLength().then((int len) {
       length = len;
       s.init().then((_) {
-        a();
+        z();
       });
     });
     /// });
@@ -227,6 +251,7 @@ class CreatePieceHashResult {
     if (pieceBuffer.size() == start) {
       add(data);
     } else {
+      print("${pieceBuffer.size()} == ${start}");
       cash.add({"s": start, "v": data});
     }
   }
