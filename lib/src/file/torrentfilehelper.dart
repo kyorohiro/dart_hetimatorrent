@@ -157,16 +157,16 @@ class TorrentPieceHashCreator {
     int length = 0;
 
     a() {
-      int timeZ = new DateTime.now().millisecondsSinceEpoch;
+     // int timeZ = new DateTime.now().millisecondsSinceEpoch;
       int start = result._tmpStart;
       int end = result._tmpStart + result.pieceLength;
 
       if (end > length) {
         end = length;
       }
-      int timeA = new DateTime.now().millisecondsSinceEpoch;
+    //  int timeA = new DateTime.now().millisecondsSinceEpoch;
       result.targetFile.read(start, end - start, tmp: _tmp).then((hetima.ReadResult e) {
-        int timeB = new DateTime.now().millisecondsSinceEpoch;
+     //   int timeB = new DateTime.now().millisecondsSinceEpoch;
         crypto.SHA1 sha1 = new crypto.SHA1();
         if (e.length == e.buffer.length) {
           sha1.add(e.buffer);
@@ -175,8 +175,8 @@ class TorrentPieceHashCreator {
         }
         result.add(sha1.close());
         result._tmpStart = end;
-        int timeC = new DateTime.now().millisecondsSinceEpoch;
-        print("time:${timeA-timeZ} ${timeB-timeA} ${timeC-timeB}");
+       // int timeC = new DateTime.now().millisecondsSinceEpoch;
+     //   print("time:${timeA-timeZ} ${timeB-timeA} ${timeC-timeB}");
         if (progress != null) {
           progress(end);
         }
