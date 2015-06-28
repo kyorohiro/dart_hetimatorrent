@@ -79,7 +79,7 @@ class TorrentPieceHashCreator {
   int __timeS = 0;
   int __timeE = 0;
 
-  async.Future<CreatePieceHashResult> createPieceHash(hetima.HetimaData file, int pieceLength, {concurrency: false, threadNum: 2, cache: true, cacheSize: 1024, cacheNum: 3, Function progress: null}) {
+  async.Future<CreatePieceHashResult> createPieceHash(hetima.HetimaData file, int pieceLength, {concurrency: false, threadNum: 2, cache: true, cacheSize: 1024, cacheNum: 3, Function progress: null, isopath: "sha1Isolate.dart"}) {
     async.Completer<CreatePieceHashResult> compleater = new async.Completer();
     CreatePieceHashResult result = new CreatePieceHashResult();
     result.pieceLength = pieceLength;
@@ -97,7 +97,7 @@ class TorrentPieceHashCreator {
     }).then((_) {
       // result._tmpStart = 500000*1000;
       if (concurrency == true) {
-        _createPieceHashConcurrency(compleater, result, progress: progress, numOfIso: threadNum);
+        _createPieceHashConcurrency(compleater, result, progress: progress, numOfIso: threadNum, isopath: isopath);
       } else {
         _createPieceHash(compleater, result, progress: progress);
       }
@@ -105,7 +105,7 @@ class TorrentPieceHashCreator {
     return compleater.future;
   }
 
-  void _createPieceHashConcurrency(async.Completer<CreatePieceHashResult> compleater, CreatePieceHashResult result, {Function progress: null, numOfIso: 3}) {
+  void _createPieceHashConcurrency(async.Completer<CreatePieceHashResult> compleater, CreatePieceHashResult result, {Function progress: null, numOfIso: 3, isopath: "sha1Isolate.dart"}) {
 
     //new async.Future.delayed(new Duration(microseconds: 10), () {
     // int timeZ = new DateTime.now().millisecond;
@@ -170,7 +170,7 @@ class TorrentPieceHashCreator {
     }
     result.targetFile.getLength().then((int len) {
       length = len;
-      s.init().then((_) {
+      s.init(path:isopath).then((_) {
         z();
       });
     });
