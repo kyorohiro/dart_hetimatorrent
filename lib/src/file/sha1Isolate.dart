@@ -6,12 +6,12 @@ import 'dart:async';
 
 class SHA1IsoSub {
   void main(List<String> args, SendPort sendPort) {
-    print("created SHA1IsoSub");
+    //print("created SHA1IsoSub");
     ReceivePort fromMainIsolate = new ReceivePort();
     sendPort.send(fromMainIsolate.sendPort);
 
     fromMainIsolate.listen((message) {
-      print("message SHA1IsoSub");
+     // print("message SHA1IsoSub");
       List<int> parameters = message;
       crypto.SHA1 sha1 = new crypto.SHA1();
       sha1.add(parameters);

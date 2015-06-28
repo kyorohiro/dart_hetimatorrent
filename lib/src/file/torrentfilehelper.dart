@@ -79,7 +79,8 @@ class TorrentPieceHashCreator {
   int __timeS = 0;
   int __timeE = 0;
 
-  async.Future<CreatePieceHashResult> createPieceHash(hetima.HetimaData file, int pieceLength, {concurrency: false, threadNum: 2, cache: true, cacheSize: 1024, cacheNum: 3, Function progress: null, isopath: "sha1Isolate.dart"}) {
+  async.Future<CreatePieceHashResult> createPieceHash(hetima.HetimaData file, int pieceLength,
+      {concurrency: false, threadNum: 2, cache: true, cacheSize: 1024, cacheNum: 3, Function progress: null, isopath: "sha1Isolate.dart"}) {
     async.Completer<CreatePieceHashResult> compleater = new async.Completer();
     CreatePieceHashResult result = new CreatePieceHashResult();
     result.pieceLength = pieceLength;
@@ -107,17 +108,14 @@ class TorrentPieceHashCreator {
 
   void _createPieceHashConcurrency(async.Completer<CreatePieceHashResult> compleater, CreatePieceHashResult result, {Function progress: null, numOfIso: 3, isopath: "sha1Isolate.dart"}) {
 
-    //new async.Future.delayed(new Duration(microseconds: 10), () {
     // int timeZ = new DateTime.now().millisecond;
-    int length = 0;
     SHA1Iso s = new SHA1Iso(numOfIso);
     int id = 0;
 
     List<int> startList = [];
     List<int> endList = [];
 
-    int i = 0;
-    a() {
+    innerCreatePiece(int length, int i) {
       int start = startList[i];
       int end = endList[i];
       i++;
@@ -133,7 +131,7 @@ class TorrentPieceHashCreator {
               progress(end);
             }
             result.addWithStart(begine, dd[0]);
-            print("WWW${result.pieceBuffer.size()} == ${20*length~/result.pieceLength})");
+         //   print("WWW${result.pieceBuffer.size()} == ${20*length~/result.pieceLength})");
             if (result.pieceBuffer.size() == 20 * startList.length) {
               __timeE = new DateTime.now().millisecondsSinceEpoch;
               print("[time]:${__timeE-__timeS}");
@@ -144,47 +142,51 @@ class TorrentPieceHashCreator {
               }
             }
           });
-          result._tmpStart = end;
           if (end != length) {
-            a();
+            innerCreatePiece(length, i+1);
           }
         });
       });
     }
-    z() {
-      int start = 0;
-      int end = 0;
-      while (true) {
-        start = end;
-        end = start + result.pieceLength;
-        if (end > length) {
-          end = length;
-        }
-        startList.add(start);
-        endList.add(end);
-        if (end >= length) {
-          break;
-        }
-      }
-      a();
-    }
-    result.targetFile.getLength().then((int len) {
-      length = len;
-      s.init(path:isopath).then((_) {
-        z();
+    result.targetFile.getLength().then((int length) {
+      s.init(path: isopath).then((_) {
+        List<List<int>> ret = _calcStartEnd(length, result.pieceLength);
+        startList = ret[0];
+        endList = ret[0];
+        innerCreatePiece(length, 0);
       });
     });
-    /// });
+  }
+
+  List<List<int>> _calcStartEnd(int fileLength,int pieceLength) {
+    int start = 0;
+    int end = 0;
+    List<List<int>> ret = [[],[]];
+    while (true) {
+      start = end;
+      end = start + pieceLength;
+      if (end > fileLength) {
+        end = fileLength;
+      }
+      ret[0].add(start);
+      ret[1].add(end);
+      if (end >= fileLength) {
+        break;
+      }
+    }
+    return ret;
   }
 
   void _createPieceHash(async.Completer<CreatePieceHashResult> compleater, CreatePieceHashResult result, {Function progress: null}) {
     List<int> _tmp = new List(result.pieceLength);
-    int length = 0;
+    List<int> startList = [];
+    List<int> endList = [];
 
-    a() {
+    
+    innerCreatePiece(int length, int i) {
       // int timeZ = new DateTime.now().millisecondsSinceEpoch;
-      int start = result._tmpStart;
-      int end = result._tmpStart + result.pieceLength;
+      int start = startList[i];
+      int end = endList[i];
 
       if (end > length) {
         end = length;
@@ -199,32 +201,34 @@ class TorrentPieceHashCreator {
           sha1.add(e.buffer.sublist(0, e.length));
         }
         result.add(sha1.close());
-        result._tmpStart = end;
         // int timeC = new DateTime.now().millisecondsSinceEpoch;
         //   print("time:${timeA-timeZ} ${timeB-timeA} ${timeC-timeB}");
+
         if (progress != null) {
           progress(end);
         }
+
         if (end == length) {
           __timeE = new DateTime.now().millisecondsSinceEpoch;
           print("[time]:${__timeE-__timeS}");
           compleater.complete(result);
         } else {
           new async.Future.delayed(new Duration(microseconds: 10), () {
-            a();
+            innerCreatePiece(length, i+1);
           });
         }
       });
     }
-    result.targetFile.getLength().then((int l) {
-      length = l;
-      a();
+    result.targetFile.getLength().then((int length) {
+      List<List<int>> ret = _calcStartEnd(length, result.pieceLength);
+      startList = ret[0];
+      endList = ret[0];
+      innerCreatePiece(length, 0);
     });
   }
 }
 
 class CreatePieceHashResult {
-  int _tmpStart = 0;
   int pieceLength = 0;
   hetima.ArrayBuilder pieceBuffer = new hetima.ArrayBuilder();
   hetima.HetimaData targetFile = null;
@@ -233,15 +237,17 @@ class CreatePieceHashResult {
 
   void add(List<int> data) {
     pieceBuffer.appendIntList(data, 0, data.length);
-    {
-      int l = cash.length;
-      for (int i = 0; i < l; i++) {
-        for (int j = 0; j < cash.length; j++) {
-          if (pieceBuffer.size() == cash[j]["s"]) {
-            List<int> d = cash.removeAt(j)["v"];
-            pieceBuffer.appendIntList(d, 0, d.length);
-            break;
-          }
+    updateCash();
+  }
+
+  void updateCash() {
+    int l = cash.length;
+    for (int i = 0; i < l; i++) {
+      for (int j = 0; j < cash.length; j++) {
+        if (pieceBuffer.size() == cash[j]["s"]) {
+          List<int> d = cash.removeAt(j)["v"];
+          pieceBuffer.appendIntList(d, 0, d.length);
+          break;
         }
       }
     }
