@@ -97,7 +97,7 @@ class TorrentPieceHashCreator {
     }).then((_) {
       // result._tmpStart = 500000*1000;
       if (concurrency == true) {
-        _createPieceHashConcurrency(compleater, result, progress: progress, numOfIso:threadNum);
+        _createPieceHashConcurrency(compleater, result, progress: progress, numOfIso: threadNum);
       } else {
         _createPieceHash(compleater, result, progress: progress);
       }
@@ -105,7 +105,7 @@ class TorrentPieceHashCreator {
     return compleater.future;
   }
 
-  void _createPieceHashConcurrency(async.Completer<CreatePieceHashResult> compleater, CreatePieceHashResult result, {Function progress: null,numOfIso:3}) {
+  void _createPieceHashConcurrency(async.Completer<CreatePieceHashResult> compleater, CreatePieceHashResult result, {Function progress: null, numOfIso: 3}) {
 
     //new async.Future.delayed(new Duration(microseconds: 10), () {
     // int timeZ = new DateTime.now().millisecond;
@@ -120,14 +120,16 @@ class TorrentPieceHashCreator {
       }
       // int timeA = new DateTime.now().millisecond;
       result.targetFile.read(start, end - start).then((hetima.ReadResult e) {
-        new async.Future(() {}).then((_) {
-          if(++id >= numOfIso) {
-            id = 0;
-          }
-          s.requestSingle(e.buffer,id).then((List<List<int>> dd) {
+        if (++id >= numOfIso) {
+          id = 0;
+        }
+        s.requestSingleWait(e.buffer, id).then((RequestSingleWaitReturn v) {
+
+          v.v.then((List<List<int>> dd) {
             if (progress != null) {
               progress(end);
             }
+            print("${dd[0].length} ${result.pieceBuffer.size()}");
             result.add(dd[0]);
             if (end == length) {
               __timeE = new DateTime.now().millisecondsSinceEpoch;
@@ -135,17 +137,18 @@ class TorrentPieceHashCreator {
               compleater.complete(result);
             }
           });
+          result._tmpStart = end;
+          if (end != length) {
+            a();
+          }
+
         });
-        result._tmpStart = end;
-        if (end != length) {
-          a();
-        }
       });
     }
 
     result.targetFile.getLength().then((int len) {
       length = len;
-      s.init().then((_){
+      s.init().then((_) {
         a();
       });
     });
@@ -157,16 +160,16 @@ class TorrentPieceHashCreator {
     int length = 0;
 
     a() {
-     // int timeZ = new DateTime.now().millisecondsSinceEpoch;
+      // int timeZ = new DateTime.now().millisecondsSinceEpoch;
       int start = result._tmpStart;
       int end = result._tmpStart + result.pieceLength;
 
       if (end > length) {
         end = length;
       }
-    //  int timeA = new DateTime.now().millisecondsSinceEpoch;
+      //  int timeA = new DateTime.now().millisecondsSinceEpoch;
       result.targetFile.read(start, end - start, tmp: _tmp).then((hetima.ReadResult e) {
-     //   int timeB = new DateTime.now().millisecondsSinceEpoch;
+        //   int timeB = new DateTime.now().millisecondsSinceEpoch;
         crypto.SHA1 sha1 = new crypto.SHA1();
         if (e.length == e.buffer.length) {
           sha1.add(e.buffer);
@@ -175,8 +178,8 @@ class TorrentPieceHashCreator {
         }
         result.add(sha1.close());
         result._tmpStart = end;
-       // int timeC = new DateTime.now().millisecondsSinceEpoch;
-     //   print("time:${timeA-timeZ} ${timeB-timeA} ${timeC-timeB}");
+        // int timeC = new DateTime.now().millisecondsSinceEpoch;
+        //   print("time:${timeA-timeZ} ${timeB-timeA} ${timeC-timeB}");
         if (progress != null) {
           progress(end);
         }
