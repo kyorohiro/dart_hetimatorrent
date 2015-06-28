@@ -20,7 +20,7 @@ class SHA1IsoSub {
 }
 
 class SHA1IsoInfo {
-  ReceivePort receivePort= null;
+  ReceivePort receivePort = null;
   StreamSubscription streanSubscription = null;
 }
 
@@ -33,11 +33,11 @@ class SHA1Iso {
     }
 
     for (int i = 0; i < num; i++) {
-      receivePort.add(new SHA1IsoInfo()..receivePort=new ReceivePort());
+      receivePort.add(new SHA1IsoInfo()..receivePort = new ReceivePort());
     }
   }
 
-  Future init({String path:"sha1Isolate.dart"}) {
+  Future init({String path: "sha1Isolate.dart"}) {
     Completer c = new Completer();
     int count = 0;
     for (SHA1IsoInfo info in receivePort) {
@@ -60,7 +60,7 @@ class SHA1Iso {
     return c.future;
   }
 
-  Future<List<List<int>>> request(List<List<int>> bytes) {
+  Future<List<List<int>>> request(List<List<int>> bytes, int id) {
     Completer c = new Completer();
     int count = 0;
     int length = receivePort.length;
@@ -80,6 +80,18 @@ class SHA1Iso {
       });
       receivePort[i].receivePort.sendPort.send(bytes[i]);
     }
+    return c.future;
+  }
+  Future<List<List<int>>> requestSingle(List<int> bytes, int id) {
+    Completer c = new Completer();
+    List<List<int>> ret = [];
+    receivePort[id].streanSubscription.onData((message) {
+      if (message is List) {
+        ret.add(message);
+        c.complete(ret);
+      }
+    });
+    receivePort[id].receivePort.sendPort.send(bytes);
     return c.future;
   }
 }

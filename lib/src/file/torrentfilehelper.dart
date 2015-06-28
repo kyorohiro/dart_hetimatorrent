@@ -111,6 +111,7 @@ class TorrentPieceHashCreator {
     // int timeZ = new DateTime.now().millisecond;
     int length = 0;
     SHA1Iso s = new SHA1Iso(3);
+    int id = 0;
     a() {
       int start = result._tmpStart;
       int end = result._tmpStart + result.pieceLength;
@@ -120,9 +121,10 @@ class TorrentPieceHashCreator {
       // int timeA = new DateTime.now().millisecond;
       result.targetFile.read(start, end - start).then((hetima.ReadResult e) {
         new async.Future(() {}).then((_) {
-          List<List<int>> bytes = [];
-          bytes.add(e.buffer);
-          s.request(bytes).then((List<List<int>> dd) {
+          if(++id >= 3) {
+            id = 0;
+          }
+          s.requestSingle(e.buffer,id).then((List<List<int>> dd) {
             if (progress != null) {
               progress(end);
             }
@@ -133,17 +135,6 @@ class TorrentPieceHashCreator {
               compleater.complete(result);
             }
           });
-
-          /*
-         //  int timeB = new DateTime.now().millisecond;
-         crypto.SHA1 sha1 = new crypto.SHA1();
-         sha1.add(e.buffer);
-         result.add(sha1.close());
-         // int timeC = new DateTime.now().millisecond;
-         // print("time:${timeA-timeZ} ${timeB-timeA} ${timeC-timeB}");
-          * *
-          */
-
         });
         result._tmpStart = end;
         if (end != length) {
