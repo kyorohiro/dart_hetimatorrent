@@ -9,6 +9,7 @@ export 'src/util/blockdata.dart';
 
 export 'src/file/torrentfile.dart';
 export 'src/file/torrentfilehelper.dart';
+export 'src/file/sha1Isolate.dart';
 
 export 'src/tracker/trackerurl.dart';
 export 'src/tracker/trackerrequest.dart';

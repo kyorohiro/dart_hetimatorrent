@@ -8,17 +8,20 @@ import 'package:hetimanet/hetimanet.dart' as hetima;
 import 'torrentfile.dart';
 import '../util/bencode.dart';
 import 'package:crypto/crypto.dart' as crypto;
+import 'sha1Isolate.dart';
 
 class TorrentFileCreator {
   String announce = "http://127.0.0.1:6969";
   String name = "name";
   int piececLength = 16 * 1024;
 
-  async.Future<TorrentFileCreatorResult> createFromSingleFile(hetima.HetimaData target, {concurrency: false, threadNum: 2, cache: true, cacheSize: 1024, cacheNum: 3, Function progress:null}) {
+  async.Future<TorrentFileCreatorResult> createFromSingleFile(hetima.HetimaData target, {concurrency: false, threadNum: 2, cache: true, cacheSize: 1024, cacheNum: 3, Function progress: null}) {
     async.Completer<TorrentFileCreatorResult> ret = new async.Completer();
     TorrentPieceHashCreator helper = new TorrentPieceHashCreator();
     target.getLength().then((int targetLength) {
-      helper.createPieceHash(target, piececLength, concurrency: concurrency, threadNum: threadNum, cache: cache, cacheSize: cacheSize, cacheNum: cacheNum, progress:progress).then((CreatePieceHashResult r) {
+      helper
+          .createPieceHash(target, piececLength, concurrency: concurrency, threadNum: threadNum, cache: cache, cacheSize: cacheSize, cacheNum: cacheNum, progress: progress)
+          .then((CreatePieceHashResult r) {
         Map file = {};
         Map info = {};
         file[TorrentFile.KEY_ANNOUNCE] = announce;
@@ -76,7 +79,7 @@ class TorrentPieceHashCreator {
   int __timeS = 0;
   int __timeE = 0;
 
-  async.Future<CreatePieceHashResult> createPieceHash(hetima.HetimaData file, int pieceLength, {concurrency: false, threadNum: 2, cache: true, cacheSize: 1024, cacheNum: 3, Function progress:null}) {
+  async.Future<CreatePieceHashResult> createPieceHash(hetima.HetimaData file, int pieceLength, {concurrency: false, threadNum: 2, cache: true, cacheSize: 1024, cacheNum: 3, Function progress: null}) {
     async.Completer<CreatePieceHashResult> compleater = new async.Completer();
     CreatePieceHashResult result = new CreatePieceHashResult();
     result.pieceLength = pieceLength;
@@ -94,51 +97,71 @@ class TorrentPieceHashCreator {
     }).then((_) {
       // result._tmpStart = 500000*1000;
       if (concurrency == true) {
-        _createPieceHashConcurrency(compleater, result,progress:progress);
+        _createPieceHashConcurrency(compleater, result, progress: progress);
       } else {
-        _createPieceHash(compleater, result, progress:progress);
+        _createPieceHash(compleater, result, progress: progress);
       }
     });
     return compleater.future;
   }
 
-  void _createPieceHashConcurrency(async.Completer<CreatePieceHashResult> compleater, CreatePieceHashResult result, {Function progress:null}) {
-    int start = result._tmpStart;
-    int end = result._tmpStart + result.pieceLength;
+  void _createPieceHashConcurrency(async.Completer<CreatePieceHashResult> compleater, CreatePieceHashResult result, {Function progress: null}) {
+
     //new async.Future.delayed(new Duration(microseconds: 10), () {
     // int timeZ = new DateTime.now().millisecond;
-    result.targetFile.getLength().then((int length) {
+    int length = 0;
+    SHA1Iso s = new SHA1Iso(3);
+    a() {
+      int start = result._tmpStart;
+      int end = result._tmpStart + result.pieceLength;
       if (end > length) {
         end = length;
       }
       // int timeA = new DateTime.now().millisecond;
       result.targetFile.read(start, end - start).then((hetima.ReadResult e) {
         new async.Future(() {}).then((_) {
-          //  int timeB = new DateTime.now().millisecond;
-          crypto.SHA1 sha1 = new crypto.SHA1();
-          sha1.add(e.buffer);
-          result.add(sha1.close());
-          // int timeC = new DateTime.now().millisecond;
-          // print("time:${timeA-timeZ} ${timeB-timeA} ${timeC-timeB}");
-          if(progress != null) {
-            progress(end);
-          }
-          if (end == length) {
-            __timeE = new DateTime.now().millisecondsSinceEpoch;
-            print("[time]:${__timeE-__timeS}");
-            compleater.complete(result);
-          }
+          List<List<int>> bytes = [];
+          bytes.add(e.buffer);
+          s.request(bytes).then((List<List<int>> dd) {
+            if (progress != null) {
+              progress(end);
+            }
+            result.add(dd[0]);
+            if (end == length) {
+              __timeE = new DateTime.now().millisecondsSinceEpoch;
+              print("[time]:${__timeE-__timeS}");
+              compleater.complete(result);
+            }
+          });
+
+          /*
+         //  int timeB = new DateTime.now().millisecond;
+         crypto.SHA1 sha1 = new crypto.SHA1();
+         sha1.add(e.buffer);
+         result.add(sha1.close());
+         // int timeC = new DateTime.now().millisecond;
+         // print("time:${timeA-timeZ} ${timeB-timeA} ${timeC-timeB}");
+          * *
+          */
+
         });
         result._tmpStart = end;
         if (end != length) {
-          _createPieceHashConcurrency(compleater, result, progress:progress);
+          a();
         }
+      });
+    }
+
+    result.targetFile.getLength().then((int len) {
+      length = len;
+      s.init().then((_){
+        a();
       });
     });
     /// });
   }
 
-  void _createPieceHash(async.Completer<CreatePieceHashResult> compleater, CreatePieceHashResult result,{Function progress:null}) {
+  void _createPieceHash(async.Completer<CreatePieceHashResult> compleater, CreatePieceHashResult result, {Function progress: null}) {
     List<int> _tmp = new List(result.pieceLength);
     int length = 0;
 
@@ -163,7 +186,7 @@ class TorrentPieceHashCreator {
         result._tmpStart = end;
         int timeC = new DateTime.now().millisecondsSinceEpoch;
         print("time:${timeA-timeZ} ${timeB-timeA} ${timeC-timeB}");
-        if(progress != null) {
+        if (progress != null) {
           progress(end);
         }
         if (end == length) {
