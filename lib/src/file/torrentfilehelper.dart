@@ -151,7 +151,7 @@ class TorrentPieceHashCreator {
       s.init(path: isopath).then((_) {
         List<List<int>> ret = _calcStartEnd(length, result.pieceLength);
         startList = ret[0];
-        endList = ret[0];
+        endList = ret[1];
         innerCreatePiece(length, 0);
       });
     });
@@ -221,7 +221,7 @@ class TorrentPieceHashCreator {
     result.targetFile.getLength().then((int length) {
       List<List<int>> ret = _calcStartEnd(length, result.pieceLength);
       startList = ret[0];
-      endList = ret[0];
+      endList = ret[1];
       innerCreatePiece(length, 0);
     });
   }
