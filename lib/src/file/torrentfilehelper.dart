@@ -118,7 +118,6 @@ class TorrentPieceHashCreator {
     innerCreatePiece(int length, int i) {
       int start = startList[i];
       int end = endList[i];
-      i++;
       // int timeA = new DateTime.now().millisecond;
       result.targetFile.read(start, end - start).then((hetima.ReadResult e) {
         if (++id >= numOfIso) {
