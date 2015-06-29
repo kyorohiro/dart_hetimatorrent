@@ -11,7 +11,7 @@ class SHA1IsoSub {
     sendPort.send(fromMainIsolate.sendPort);
 
     fromMainIsolate.listen((message) {
-     // print("message SHA1IsoSub");
+      //print("message SHA1IsoSub");
       List<int> parameters = message;
       crypto.SHA1 sha1 = new crypto.SHA1();
       sha1.add(parameters);
@@ -44,10 +44,13 @@ class SHA1Iso {
   Future init({String path: "sha1Isolate.dart"}) {
     Completer c = new Completer();
     int count = 0;
-    for (int id =0;id< receivePort.length;id++) {
+    for (int ii =0;ii< receivePort.length;ii++) {
+      int id = ii;
       SHA1IsoInfo info = receivePort[id];
       ReceivePort port = info.receivePort;
       info.streanSubscription = port.listen((message) {
+        //print("### receice ${id}");
+
         if (message is SendPort) {
           count++;
           info.sendPort = message;
@@ -59,12 +62,16 @@ class SHA1Iso {
         else if (message is List && message.length == 20) {
           List<List<int>> ret = [];
           ret.add(message);
-         // print("receice ${id}");
-          receivePort[id].c.complete(ret);
-          receivePort[id].accessTicket.complete({});
+       //   print("receice ${id} ${receivePort[id].c.isCompleted} ${receivePort[id].accessTicket.isCompleted} ${ret}");
+          //if(receivePort[id].c.isCompleted == false) {
+            receivePort[id].c.complete(ret);
+          //}
+          //if(receivePort[id].accessTicket == false) {
+            receivePort[id].accessTicket.complete({});
+          //}
         }
         else {
-         //print("a${message}");
+         print("a${message}");
         }
       });
       Isolate.spawnUri(new Uri.file(path), [], port.sendPort);
@@ -79,6 +86,7 @@ class SHA1Iso {
       v.v = requestSingle(bytes, id);
       return new Future((){return v;});
     } else {
+     // print("+*send ${id}");
       return receivePort[id].accessTicket.future.then((_){
      // print("++send ${id}");
         RequestSingleWaitReturn v = new RequestSingleWaitReturn();
@@ -91,8 +99,9 @@ class SHA1Iso {
   Future<List<List<int>>> requestSingle(List<int> bytes, int id) {
     receivePort[id].c = new Completer();
     receivePort[id].accessTicket = new Completer();
-   // print("send ${id}");
+   // print("send[A] ${id}");
     receivePort[id].sendPort.send(bytes);
+   // print("send[B] ${id}");
     return receivePort[id].c.future;
   }
 }

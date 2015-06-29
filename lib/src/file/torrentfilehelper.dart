@@ -15,12 +15,12 @@ class TorrentFileCreator {
   String name = "name";
   int piececLength = 16 * 1024;
 
-  async.Future<TorrentFileCreatorResult> createFromSingleFile(hetima.HetimaData target, {concurrency: false, threadNum: 2, cache: true, cacheSize: 1024, cacheNum: 3, Function progress: null}) {
+  async.Future<TorrentFileCreatorResult> createFromSingleFile(hetima.HetimaData target, {concurrency: false, threadNum: 2, cache: true, cacheSize: 1024, cacheNum: 3, Function progress: null,isopath: "sha1Isolate.dart"}) {
     async.Completer<TorrentFileCreatorResult> ret = new async.Completer();
     TorrentPieceHashCreator helper = new TorrentPieceHashCreator();
     target.getLength().then((int targetLength) {
       helper
-          .createPieceHash(target, piececLength, concurrency: concurrency, threadNum: threadNum, cache: cache, cacheSize: cacheSize, cacheNum: cacheNum, progress: progress)
+          .createPieceHash(target, piececLength, concurrency: concurrency, threadNum: threadNum, cache: cache, cacheSize: cacheSize, cacheNum: cacheNum, progress: progress,isopath:isopath)
           .then((CreatePieceHashResult r) {
         Map file = {};
         Map info = {};
@@ -114,23 +114,34 @@ class TorrentPieceHashCreator {
 
     List<int> startList = [];
     List<int> endList = [];
+    List<List<int>> cash = [];
+    for(int i = 0;i<numOfIso;i++) {
+      cash.add(new List.filled(result.pieceLength, 0));
+    }
+    
 
     innerCreatePiece(int length, int i) {
       int start = startList[i];
       int end = endList[i];
-      // int timeA = new DateTime.now().millisecond;
       result.targetFile.read(start, end - start).then((hetima.ReadResult e) {
         if (++id >= numOfIso) {
           id = 0;
         }
         int begine = 20 * start ~/ result.pieceLength;
-        s.requestSingleWait(e.buffer, id).then((RequestSingleWaitReturn v) {
+        
+        List<int> v = null;
+        if(e.buffer.length == result.pieceLength) {
+          cash[id].setAll(0, e.buffer);
+          v = cash[id];
+        } else {
+          v = e.buffer.toList(growable:false);
+        }
+        s.requestSingleWait(v, id).then((RequestSingleWaitReturn v) {
           v.v.then((List<List<int>> dd) {
             if (progress != null) {
               progress(end);
             }
             result.addWithStart(begine, dd[0]);
-         //   print("WWW${result.pieceBuffer.size()} == ${20*length~/result.pieceLength})");
             if (result.pieceBuffer.size() == 20 * startList.length) {
               __timeE = new DateTime.now().millisecondsSinceEpoch;
               print("[time]:${__timeE-__timeS}");
@@ -139,15 +150,16 @@ class TorrentPieceHashCreator {
               } else {
                 compleater.complete(result);
               }
-            }
+            }            
           });
           if (end != length) {
             innerCreatePiece(length, i+1);
-          }
+          } 
         });
       });
     }
     result.targetFile.getLength().then((int length) {
+      print("---path---${isopath}");
       s.init(path: isopath).then((_) {
         List<List<int>> ret = _calcStartEnd(length, result.pieceLength);
         startList = ret[0];
@@ -156,7 +168,9 @@ class TorrentPieceHashCreator {
       });
     });
   }
-
+/*
+ * 
+ */
   List<List<int>> _calcStartEnd(int fileLength,int pieceLength) {
     int start = 0;
     int end = 0;

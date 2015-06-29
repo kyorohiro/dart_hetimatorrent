@@ -204,7 +204,7 @@ class CreateItem {
           outputProgress.setInnerHtml("${v} / ${n.size}");
         }
         return cre.createFromSingleFile(new HetimaDataBlob(n),
-            concurrency: (threadNum>1), threadNum:threadNum,cache: (cashSize>0), cacheSize: cashSize, cacheNum: 3, progress:onPro).then((TorrentFileCreatorResult r) {
+            concurrency: (threadNum>1), threadNum:threadNum-1,cache: (cashSize>0), cacheSize: cashSize, cacheNum: 3, progress:onPro,isopath:"subiso.dart").then((TorrentFileCreatorResult r) {
           List<int> buffer = Bencode.encode(r.torrentFile.mMetadata);
           HetimaDataFS fs = new HetimaDataFS("a.torrent");
           return fs.write(buffer, 0).then((WriteResult r) {
