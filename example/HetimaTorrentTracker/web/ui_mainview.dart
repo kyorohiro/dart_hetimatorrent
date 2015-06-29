@@ -9,7 +9,7 @@ import 'package:hetimanet/hetimanet.dart';
 import 'package:hetimanet/hetimanet_chrome.dart';
 import 'package:hetimatorrent/hetimatorrent.dart';
 import 'ui_dialog.dart';
-import 'modeL_tracker.dart';
+import 'model_tracker.dart';
 
 class MainItem {
   html.InputElement fileInput = html.querySelector("#fileinput");

@@ -28,11 +28,21 @@ void main() {
   });
 }
 
+
 void createTorrentFile(FileSelectResult r) {
   hetima.TorrentFileCreator creator = new hetima.TorrentFileCreator();
   creator.announce = mView.announce;
   creator.piececLength = mView.pieceLength;
-  creator.createFromSingleFile(r.file).then((hetima.TorrentFileCreatorResult r) {
+
+  int fileLength = 1;
+  r.file.getLength().then((int length) {
+    fileLength = length;
+  });
+  void onProgress(int v) {
+      mView.progress = "${v}/${fileLength}";
+  }
+
+  creator.createFromSingleFile(r.file,threadNum:mView.numOfWorer,isopath:"subiso.dart",progress:onProgress).then((hetima.TorrentFileCreatorResult r) {
     hetima.HetimaDataFS fsfile = new hetima.HetimaDataFS(creator.name + ".torrent");
     fsfile.getLength().then((int length) {
       List<int> buffer = hetima.Bencode.encode(r.torrentFile.mMetadata);

@@ -21,10 +21,13 @@ class MainView {
 
   int get pieceLength => _mCreatePanel.getPieceLength(); 
   String get announce => _mCreatePanel.getAnnounce();
+  int get numOfWorer => _mCreatePanel.getNumOfWorker();
   void set downloadFile(html.File file) => _mCreatePanel.setFile(file);
   void set downloadHref(String href) => _mCreatePanel.setHref(href);
   void set torrentInfo(String info) => _mLoadPanel.setTorrentInfo(info);
+  void set progress(String info) =>_mCreatePanel.setProgress(info);
 
+  
   void intialize() {
     _mLoadPanel.init();
     _mCreatePanel.init();

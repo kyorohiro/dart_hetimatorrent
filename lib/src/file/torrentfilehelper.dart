@@ -15,12 +15,13 @@ class TorrentFileCreator {
   String name = "name";
   int piececLength = 16 * 1024;
 
-  async.Future<TorrentFileCreatorResult> createFromSingleFile(hetima.HetimaData target, {concurrency: false, threadNum: 2, cache: true, cacheSize: 1024, cacheNum: 3, Function progress: null,isopath: "sha1Isolate.dart"}) {
+  async.Future<TorrentFileCreatorResult> createFromSingleFile(hetima.HetimaData target, {threadNum: 1, cacheSize: 0, cacheNum: 3, Function progress: null,isopath:null}) {
     async.Completer<TorrentFileCreatorResult> ret = new async.Completer();
     TorrentPieceHashCreator helper = new TorrentPieceHashCreator();
+
     target.getLength().then((int targetLength) {
       helper
-          .createPieceHash(target, piececLength, concurrency: concurrency, threadNum: threadNum, cache: cache, cacheSize: cacheSize, cacheNum: cacheNum, progress: progress,isopath:isopath)
+          .createPieceHash(target, piececLength, threadNum: threadNum, cacheSize: cacheSize, cacheNum: cacheNum, progress: progress,isopath:isopath)
           .then((CreatePieceHashResult r) {
         Map file = {};
         Map info = {};
@@ -80,11 +81,14 @@ class TorrentPieceHashCreator {
   int __timeE = 0;
 
   async.Future<CreatePieceHashResult> createPieceHash(hetima.HetimaData file, int pieceLength,
-      {concurrency: false, threadNum: 2, cache: true, cacheSize: 1024, cacheNum: 3, Function progress: null, isopath: "sha1Isolate.dart"}) {
+      {threadNum: 1, cacheSize: 0, cacheNum: 3, Function progress: null, isopath: "sha1Isolate.dart"}) {
     async.Completer<CreatePieceHashResult> compleater = new async.Completer();
     CreatePieceHashResult result = new CreatePieceHashResult();
     result.pieceLength = pieceLength;
     __timeS = new DateTime.now().millisecondsSinceEpoch;
+    
+    bool cache = (cacheSize > 0 && cacheNum > 0);
+    bool concurrency  = (threadNum > 1 && isopath!=null);
     new async.Future(() {
       if (cache == true) {
         return hetima.HetimaDataCache.createWithReuseCashData(file, cacheSize: cacheSize, cacheNum: cacheNum).then((hetima.HetimaDataCache c) {
