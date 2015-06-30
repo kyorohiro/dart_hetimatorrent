@@ -98,8 +98,8 @@ void main() {
               terminalReceive.append("receive message : ${info.toString()}");
             });
             engine.torrentClient.onReceiveSignal.listen((TorrentClientSignal signal){
-              print("[receive signal :  ${signal.id}");
-              terminalReceive.append("receive message : ${signal.id}");              
+              print("[receive signal :  ${signal.toString()}");
+              terminalReceive.append("receive signal : ${signal..toString()}");              
             });
             managedTorrentFile[key] = f;
             managedEngine[key] = engine;

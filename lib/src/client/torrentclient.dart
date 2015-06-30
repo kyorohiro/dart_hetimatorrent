@@ -160,6 +160,9 @@ class TorrentClientMessage {
     this._info = info;
   }
   
+  String toString() {
+    return "signal:info:${info.id} ${info.ip} ${info.port} message:${message.toString()}";
+  }
 }
 
 class TorrentClientSignal {

@@ -245,6 +245,10 @@ class TorrentClientFrontSignal {
   int id = 0;
   int reason = 0;
 
+  String toString() {
+    return TorrentClientFrontSignal.toText(this);
+  }
+
   static const int ACT_HANDSHAKE_SEND = 5000 + TorrentMessage.DUMMY_SIGN_SHAKEHAND;
   static const int ACT_HANDSHAKE_RECEIVE = 6000 + TorrentMessage.DUMMY_SIGN_SHAKEHAND;
   static const int ACT_CHOKE_SEND = 5000 + TorrentMessage.SIGN_CHOKE;
@@ -290,7 +294,6 @@ class TorrentClientFrontSignal {
       default:
         return "other(${signal.id})";
     }
-    
   }
   static void doEvent(TorrentClientFront front, int act, List<Object> args) {
     switch (act) {
