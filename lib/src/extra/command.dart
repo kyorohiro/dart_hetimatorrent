@@ -139,7 +139,7 @@ class BitfieldCommand extends TorrentEngineCommand {
     return new Future(() {
       TorrentClientPeerInfo info = engine.torrentClient.getPeerInfoFromId(_id);
       return info.front.sendBitfield(engine.torrentClient.targetBlock.bitfield).then((_){
-        return new CommandResult("sended handshake");        
+        return new CommandResult("sended bitfield");        
       });
     });
   }

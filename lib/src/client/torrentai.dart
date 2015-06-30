@@ -23,7 +23,7 @@ class TorrenAIEmpty extends TorrentAI {
   }
   Future onSignal(TorrentClient client, TorrentClientPeerInfo info, TorrentClientSignal message) {
     return new Future((){
-      print("Empty AI signal : ${message.signal.id}");
+      print("Empty AI signal : ${message.id}");
     });
   }
 }
@@ -81,7 +81,7 @@ class TorrentAIBasic extends TorrentAI {
   Future onSignal(TorrentClient client, TorrentClientPeerInfo info,
       TorrentClientSignal signal) {
     return new Future(() {
-      if (signal.signal.id == TorrentClientFrontSignal.ID_HANDSHAKED) {
+      if (signal.id == TorrentClientFrontSignal.ID_HANDSHAKED) {
         info.front.sendBitfield(client.targetBlock.bitfield);
       }
     });

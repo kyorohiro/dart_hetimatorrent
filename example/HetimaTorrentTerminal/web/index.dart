@@ -95,7 +95,11 @@ void main() {
             
             engine.torrentClient.onReceiveEvent.listen((TorrentClientMessage info) {
               print("[receive message :  ${info.message.id}");
-              terminalReceive.append("receive message : ${info.message.id}");
+              terminalReceive.append("receive message : ${info.toString()}");
+            });
+            engine.torrentClient.onReceiveSignal.listen((TorrentClientSignal signal){
+              print("[receive signal :  ${signal.id}");
+              terminalReceive.append("receive message : ${signal.id}");              
             });
             managedTorrentFile[key] = f;
             managedEngine[key] = engine;
