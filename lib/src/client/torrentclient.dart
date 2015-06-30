@@ -66,9 +66,10 @@ class TorrentClient {
       _server.onAccept().listen((HetiSocket socket) {
         new Future(() {
           return socket.getSocketInfo().then((HetiSocketInfo socketInfo) {
-            TorrentClientPeerInfo info = putTorrentPeerInfo(socketInfo.localAddress, socketInfo.localPort);
+            print("--accept ${socketInfo.localAddress}, ${socketInfo.localPort} ###");
+            TorrentClientPeerInfo info = putTorrentPeerInfo(socketInfo.peerAddress, socketInfo.peerPort);
             print("--add #############${info.id} ${info.port}");
-            info.front = new TorrentClientFront(socket, socketInfo.localAddress, socketInfo.localPort, socket.buffer, this._targetBlock.bitSize, _infoHash, _peerId);
+            info.front = new TorrentClientFront(socket, socketInfo.peerAddress, socketInfo.peerPort, socket.buffer, this._targetBlock.bitSize, _infoHash, _peerId);
             _internalOnReceive(info.front, info);
             info.front.startReceive();
           });

@@ -17,8 +17,8 @@ class TorrentClientFront {
   HetiSocket _socket = null;
   bool handshaked = false;
 
-  String ip = "";
-  int port = 0;
+  String _peerIp = "";
+  int _peerPort = 0;
   int speed = 0; //per sec bytes
   int downloadedBytesFromMe = 0; // Me is Hetima
   int uploadedBytesToMe = 0; // Me is Hetima
@@ -53,12 +53,14 @@ class TorrentClientFront {
     });
   }
 
-  TorrentClientFront(HetiSocket socket, String ip, int port, HetimaReader reader, int bitfieldSize, List<int> infoHash, List<int> peerId) {
+  TorrentClientFront(HetiSocket socket, String peerIp, int peerPort, HetimaReader reader, int bitfieldSize, List<int> infoHash, List<int> peerId) {
     if (peerId == null) {
       _peerId.addAll(PeerIdCreator.createPeerid("heti69"));
     } else {
       _peerId.addAll(peerId);
     }
+    _peerIp = peerIp;
+    _peerPort = peerPort;
     _infoHash.addAll(infoHash);
     _socket = socket;
     _parser = new EasyParser(reader);
