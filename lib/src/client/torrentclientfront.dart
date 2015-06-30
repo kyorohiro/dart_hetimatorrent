@@ -257,6 +257,41 @@ class TorrentClientFrontSignal {
   static const int ACT_NOTINTERESTED_RECEIVE = 6000 + TorrentMessage.SIGN_NOTINTERESTED;
   static const int ACT_BITFIELD_SEND = 5000 + TorrentMessage.SIGN_BITFIELD;
   static const int ACT_BITFIELD_RECEIVE = 6000 + TorrentMessage.SIGN_BITFIELD;
+  static String toText(TorrentClientFrontSignal signal) {
+    switch(signal.id) {
+      case ID_HANDSHAKED:
+        return "[ID] Handshaked ok(${signal.id})";
+      case ID_CLOSE:
+        return "[ID] Closed ${signal.id} ${signal.reason}";
+      case ACT_HANDSHAKE_SEND:
+        return "handshake send(${signal.id})";
+      case ACT_HANDSHAKE_RECEIVE:
+        return "handshake receive(${signal.id})";
+      case ACT_CHOKE_SEND:
+        return "choke send(${signal.id})";
+      case ACT_CHOKE_RECEIVE:
+        return "choke receive(${signal.id})";
+      case ACT_UNCHOKE_SEND:
+        return "unchoke send(${signal.id})";
+      case ACT_UNCHOKE_RECEIVE:
+        return "unchoke receive(${signal.id})";
+      case ACT_INTERESTED_SEND:
+        return "interested send(${signal.id})";
+      case ACT_INTERESTED_RECEIVE:
+        return "interested receive(${signal.id})";
+      case ACT_NOTINTERESTED_SEND:
+        return "notinterested send(${signal.id})";
+      case ACT_NOTINTERESTED_RECEIVE:
+        return "notinterested receive(${signal.id})";
+      case ACT_BITFIELD_SEND:
+        return "bitfield send(${signal.id})";
+      case ACT_BITFIELD_RECEIVE:
+        return "bitfield receive(${signal.id})";
+      default:
+        return "other(${signal.id})";
+    }
+    
+  }
   static void doEvent(TorrentClientFront front, int act, List<Object> args) {
     switch (act) {
       case ACT_HANDSHAKE_RECEIVE:

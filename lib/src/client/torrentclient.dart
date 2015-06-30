@@ -159,6 +159,7 @@ class TorrentClientMessage {
     this.message = message;
     this._info = info;
   }
+  
 }
 
 class TorrentClientSignal {
@@ -166,4 +167,8 @@ class TorrentClientSignal {
   TorrentClientFrontSignal _signal;
   int get id => _signal.id;
   int get reason => _signal.reason;
+  
+  String toString() {
+    return "signal:info:${info.id} ${info.ip} ${info.port} signal:${TorrentClientFrontSignal.toText(_signal)}";
+  }
 }
