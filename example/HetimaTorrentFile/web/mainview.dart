@@ -26,6 +26,7 @@ class MainView {
   void set downloadHref(String href) => _mCreatePanel.setHref(href);
   void set torrentInfo(String info) => _mLoadPanel.setTorrentInfo(info);
   void set progress(String info) =>_mCreatePanel.setProgress(info);
+  void set crearing(bool isC) => _mCreatePanel.crearing(isC);
 
   
   void intialize() {

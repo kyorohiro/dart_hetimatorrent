@@ -52,7 +52,13 @@ class CreatePanel {
   void setFile(html.File file) {
     _rawFile = file;
   }
-
+  void crearing(bool isC) {
+    if(isC == true){
+      _fileUpload.visible = false;
+    } else {
+      _fileUpload.visible = true;      
+    }
+  }
   void init() {
     ui.Anchor anchor;
     ui.Grid grid = new ui.Grid(8, 5);

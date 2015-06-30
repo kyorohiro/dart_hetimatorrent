@@ -42,6 +42,8 @@ void createTorrentFile(FileSelectResult r) {
       mView.progress = "${v}/${fileLength}";
   }
 
+
+  mView.crearing = true;
   creator.createFromSingleFile(r.file,threadNum:mView.numOfWorer,isopath:"subiso.dart",progress:onProgress).then((hetima.TorrentFileCreatorResult r) {
     hetima.HetimaDataFS fsfile = new hetima.HetimaDataFS(creator.name + ".torrent");
     fsfile.getLength().then((int length) {
@@ -57,6 +59,8 @@ void createTorrentFile(FileSelectResult r) {
         mView.downloadHref = e.toUrl();
         mView.downloadFile = f;
       });
+    }).catchError((e){}).whenComplete((){
+      mView.crearing = false;
     });
   });
 }
