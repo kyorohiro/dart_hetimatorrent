@@ -52,7 +52,11 @@ class TorrentClient {
     _infoHash.addAll(infoHash);
     _peerId.addAll(peerId);
     _targetBlock = new BlockData(data, new Bitfield(piece.length~/20,clearIsOne:false), pieceLength, fileSize);
-    this.ai = ai;
+    if(ai == null)  {
+      this.ai = new TorrentAIBasic();
+    } else {
+      this.ai = ai;
+    }
   }
 
   TorrentClientPeerInfo putTorrentPeerInfo(String ip, int port, {peerId: ""}) {
@@ -66,6 +70,7 @@ class TorrentClient {
         new Future(() {
           return socket.getSocketInfo().then((HetiSocketInfo socketInfo) {
             TorrentClientPeerInfo info = putTorrentPeerInfo(socketInfo.localAddress, socketInfo.localPort);
+            print("--add #############${info.id} ${info.port}");
             info.front = new TorrentClientFront(socket, socketInfo.localAddress, socketInfo.localPort, socket.buffer,this._targetBlock.bitSize, _infoHash, _peerId);
             _internalOnReceive(info.front, info);
             info.front.startReceive();
@@ -95,6 +100,7 @@ class TorrentClient {
   Future<TorrentClientFront> connect(TorrentClientPeerInfo info){//, List<int> infoHash, [List<int> peerId = null]) {
     return new Future(() {
       return TorrentClientFront.connect(_builder, info, this._targetBlock.bitSize, infoHash, peerId).then((TorrentClientFront front) {
+        info.front = front;
         _internalOnReceive(front, info);
         front.startReceive();
         return front;

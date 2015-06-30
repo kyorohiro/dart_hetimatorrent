@@ -1,3 +1,4 @@
+library app.terminal;
 import 'dart:core';
 import 'dart:html';
 import 'dart:async';
@@ -63,13 +64,13 @@ class Terminal {
   }
 
   void processNewCommand(KeyboardEvent event) {
-    print("processNewCommand: --");
+    /*print("processNewCommand: --");
     print("--ctrlKey = ${event.ctrlKey}");
     print("--keyCoede = ${event.keyCode}");
     print("--metaKey = ${event.metaKey}");
     print("--altKey ${event.altKey}");
     print("--shiftkey ${event.shiftKey}");
-    print("--charCode ${event.charCode}");
+    print("--charCode ${event.charCode}");*/
     int enterKey = 13;
     int tabKey = 9;
 

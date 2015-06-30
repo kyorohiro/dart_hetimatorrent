@@ -18,12 +18,12 @@ abstract class TorrentAI {
 class TorrenAIEmpty extends TorrentAI {
   Future onReceive(TorrentClient client, TorrentClientPeerInfo info, TorrentMessage message) {
     return new Future((){
-      ;
+      print("Empty AI receive : ${message.id}");
     });
   }
   Future onSignal(TorrentClient client, TorrentClientPeerInfo info, TorrentClientSignal message) {
     return new Future((){
-      ;
+      print("Empty AI signal : ${message.signal.id}");
     });
   }
 }

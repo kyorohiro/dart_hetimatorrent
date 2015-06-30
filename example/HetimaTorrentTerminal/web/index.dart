@@ -1,8 +1,6 @@
 library app;
 
 import 'dart:html' as html;
-import 'dart:async';
-import 'package:chrome/chrome_app.dart' as chrome;
 import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimacore/hetimacore_cl.dart';
 import 'package:hetimanet/hetimanet.dart';
@@ -14,18 +12,12 @@ import 'dialogtab.dart';
 
 Tab tab = new Tab({"#m00_clone": "#con-clone"});
 Dialog dialog = new Dialog();
+
 Map<String, TorrentFile> managedTorrentFile = {};
+Map<String, TorrentEngine> managedEngine = {};
 
-html.InputElement fileInput = html.querySelector("#fileinput");
-html.InputElement managedfile = html.querySelector("#managedfile");
 
-// TrackerServer trackerServer = new TrackerServer(new HetiSocketBuilderChrome());
-UpnpPortMapHelper portMapHelder = new UpnpPortMapHelper(new HetiSocketBuilderChrome(), "HetimaTorrentTracker");
 
-//
-//
-html.SpanElement torrentHashSpan = html.querySelector("#torrent-hash");
-html.SpanElement torrentRemoveBtn = html.querySelector("#torrent-remove-btn");
 
 bool upnpIsUse = false;
 String selectKey = null;
@@ -33,6 +25,19 @@ String selectKey = null;
 TorrentClient torrentClient = null;
 
 void main() {
+  html.InputElement fileInput = html.querySelector("#fileinput");
+  html.InputElement managedfile = html.querySelector("#managedfile");
+
+// TrackerServer trackerServer = new TrackerServer(new HetiSocketBuilderChrome());
+  UpnpPortMapHelper portMapHelder = new UpnpPortMapHelper(new HetiSocketBuilderChrome(), "HetimaTorrentTracker");
+
+  //
+  //
+  html.SpanElement torrentHashSpan = html.querySelector("#torrent-hash");
+  html.SpanElement torrentRemoveBtn = html.querySelector("#torrent-remove-btn");
+  html.InputElement torrentSeedFile= html.querySelector("#torrent-seeddata");
+  
+  
   print("hello world");
   
   tab.init();
@@ -44,12 +49,27 @@ void main() {
       managedTorrentFile.remove(selectKey);
       print("##===> ${managedTorrentFile.length}");
       selectKey = null;
+      managedTorrentFile.remove(selectKey);
+      managedEngine.remove(selectKey);
     }
   });
 
+  torrentSeedFile.onChange.listen((html.Event e) {
+     if(torrentSeedFile == null || torrentSeedFile.files.length == 0) {
+       return;
+     }
+     torrentSeedFile.style.display = "none";
+     html.File targetFile = torrentSeedFile.files[0];
+     managedEngine[selectKey].torrentClient.targetBlock.writeFullData(new HetimaDataBlob(targetFile)).then((WriteResult r) {
+       torrentSeedFile.style.display = "block";       
+     });
+  });
+
+  int  v = 0;
   fileInput.onChange.listen((html.Event e) {
-    print("==");
+    print("=finle selected=");
     List<html.File> s = [];
+    print("##===> ${fileInput.files}");
     s.addAll(fileInput.files);
     while (s.length > 0) {
       html.File n = s.removeAt(0);
@@ -57,9 +77,8 @@ void main() {
       TorrentFile.createTorrentFileFromTorrentFile(new HetimaFileToBuilder(new HetimaDataBlob(n))).then((TorrentFile f) {
         return f.createInfoSha1().then((List<int> infoHash) {
           String key = PercentEncode.encode(infoHash);
-          managedTorrentFile[key] = f;
           tab.add("${key}", "con-termi");
-          return TorrentEngine.createTorrentEngine(new HetiSocketBuilderChrome(), f).then((TorrentEngine engine) {
+          return TorrentEngine.createTorrentEngine(new HetiSocketBuilderChrome(), f, new HetimaDataFS("aZ${v++}",erace:true)).then((TorrentEngine engine) {
             Terminal terminal = new Terminal(engine, '#command-input-line', '#command-output', '#command-cmdline');
             Terminal terminalReceive = new Terminal(engine,'#event-input-line', '#event-output', '#event-cmdline');
  
@@ -72,10 +91,15 @@ void main() {
             terminal.addCommand(GetPeerInfoCommand.name, GetPeerInfoCommand.builder());
             terminal.addCommand(HandshakeCommand.name, HandshakeCommand.builder());
             terminal.addCommand(ConnectCommand.name, ConnectCommand.builder());
+            terminal.addCommand(BitfieldCommand.name, BitfieldCommand.builder());
+            
             engine.torrentClient.onReceiveEvent.listen((TorrentClientMessage info) {
               print("[receive message :  ${info.message.id}");
               terminalReceive.append("receive message : ${info.message.id}");
             });
+            managedTorrentFile[key] = f;
+            managedEngine[key] = engine;
+
           });
         });
       }).catchError((e) {
@@ -90,7 +114,7 @@ void main() {
 
       String key = info.key;
       if (managedTorrentFile.containsKey(key)) {
-        torrentHashSpan.setInnerHtml("${info.key}");
+        torrentHashSpan.setInnerHtml("${key}");
         selectKey = key;
 //        List<int> infoHash = PercentEncode.decode(info.key);
 //        torrentNumOfPeerSpan.setInnerHtml("${trackerServer.numOfPeer(infoHash)}");

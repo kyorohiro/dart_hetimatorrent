@@ -119,3 +119,29 @@ class HandshakeCommand extends TorrentEngineCommand {
   }
 }
 
+class BitfieldCommand extends TorrentEngineCommand {
+  int _id =0;
+  BitfieldCommand(int id) {
+    _id = id;
+  }
+
+  static String get help => "${name} [number]:";
+  static get name => "bitfield";
+
+  static TorrentEngineCommandBuilder builder() {
+    TorrentEngineCommand builder(List<String> list) {
+      return new BitfieldCommand(int.parse(list[0]));
+    }
+    return new TorrentEngineCommandBuilder(builder, help);
+  }
+
+  Future<CommandResult> execute(TorrentEngine engine, {List<String> args: null}) {
+    return new Future(() {
+      TorrentClientPeerInfo info = engine.torrentClient.getPeerInfoFromId(_id);
+      return info.front.sendBitfield(engine.torrentClient.targetBlock.bitfield).then((_){
+        return new CommandResult("sended handshake");        
+      });
+    });
+  }
+}
+
