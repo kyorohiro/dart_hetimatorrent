@@ -97,4 +97,37 @@ class TorrentMessage {
       parser.pop();
     });
   }
+  
+  static String toText(int id) {
+    switch(id) {
+      case  DUMMY_SIGN_SHAKEHAND:
+        return "shakehand(${id})";
+      case DUMMY_SIGN_KEEPALIVE:
+        return "keepalive(${id})";
+      case DUMMY_SIGN_NULL:
+        return "null(${id})";
+      case SIGN_CHOKE:
+        return "choke(${id})";
+      case SIGN_UNCHOKE:
+        return "unchoke(${id})";
+      case SIGN_INTERESTED:
+        return "interested(${id})";
+      case SIGN_NOTINTERESTED:
+        return "notinterested(${id})";
+      case SIGN_HAVE:
+        return "have(${id})";
+      case SIGN_BITFIELD:
+        return "bitfield(${id})";
+      case SIGN_REQUEST:
+        return "request(${id})";
+      case SIGN_PIECE:
+        return "piece(${id})";
+      case SIGN_CANCEL:
+        return "cancel(${id})";
+      case SIGN_PORT:
+        return "port(${id})";
+      default:
+        return "other(${id})";
+    }
+  }
 }
