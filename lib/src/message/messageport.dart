@@ -54,4 +54,8 @@ class MessagePort extends TorrentMessage {
       return builder.toList();
     });
   }
+
+  String toString() {
+    return "${TorrentMessage.toText(id)}: ${_mPort}";
+  }
 }

@@ -72,4 +72,8 @@ class MessageCancel extends TorrentMessage {
       return builder.toList();
     });
   }
+  
+  String toString() {
+    return "${TorrentMessage.toText(id)}:${_mIndex} ${_mBegin} ${_mLength}";
+  }
 }

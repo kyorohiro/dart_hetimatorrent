@@ -72,4 +72,8 @@ class MessagePiece extends TorrentMessage {
       return builder.toList();
     });
   }
+
+  String toString() {
+    return "${TorrentMessage.toText(id)}: ${_mIndex} ${_mBegin} contLen=${_mContent.length}";
+  }
 }

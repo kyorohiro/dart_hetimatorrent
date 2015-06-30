@@ -12,7 +12,7 @@ class MessageBitfield extends TorrentMessage {
 
   List<int> _mBitfield = []; // *
 
-  List<int> get bitfield => new List.from(_mBitfield,growable:false);
+  List<int> get bitfield => new List.from(_mBitfield, growable: false);
 
   MessageBitfield._empty() : super(TorrentMessage.SIGN_BITFIELD) {
     _mBitfield.clear();
@@ -56,5 +56,9 @@ class MessageBitfield extends TorrentMessage {
       builder.appendIntList(_mBitfield);
       return builder.toList();
     });
+  }
+
+  String toString() {
+    return "${TorrentMessage.toText(id)}:${bitfield}";
   }
 }

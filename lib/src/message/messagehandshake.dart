@@ -85,5 +85,8 @@ class MessageHandshake extends TorrentMessage {
     });
   }
 
+  String toString() {
+    return "${TorrentMessage.toText(id)}: ${_mProtocolId} ${_mReserved} ${_mInfoHash} ${_mPeerID}";
+  }
   
 }
