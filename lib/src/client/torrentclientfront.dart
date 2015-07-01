@@ -244,13 +244,6 @@ class TorrentClientFrontSignal {
   static const ID_HANDSHAKED = 1;
   static const ID_CLOSE = 2;
   static const REASON_OWN_CONNECTION = 2001;
-  int id = 0;
-  int reason = 0;
-
-  String toString() {
-    return TorrentClientFrontSignal.toText(this);
-  }
-
   static const int ACT_HANDSHAKE_SEND = 5000 + TorrentMessage.DUMMY_SIGN_SHAKEHAND;
   static const int ACT_HANDSHAKE_RECEIVE = 6000 + TorrentMessage.DUMMY_SIGN_SHAKEHAND;
   static const int ACT_CHOKE_SEND = 5000 + TorrentMessage.SIGN_CHOKE;
@@ -263,6 +256,15 @@ class TorrentClientFrontSignal {
   static const int ACT_NOTINTERESTED_RECEIVE = 6000 + TorrentMessage.SIGN_NOTINTERESTED;
   static const int ACT_BITFIELD_SEND = 5000 + TorrentMessage.SIGN_BITFIELD;
   static const int ACT_BITFIELD_RECEIVE = 6000 + TorrentMessage.SIGN_BITFIELD;
+
+  int id = 0;
+  int reason = 0;
+
+  String toString() {
+    return TorrentClientFrontSignal.toText(this);
+  }
+
+
   static String toText(TorrentClientFrontSignal signal) {
     switch(signal.id) {
       case ID_HANDSHAKED:
@@ -297,6 +299,7 @@ class TorrentClientFrontSignal {
         return "other(${signal.id})";
     }
   }
+
   static void doEvent(TorrentClientFront front, int act, List<Object> args) {
     switch (act) {
       case ACT_HANDSHAKE_RECEIVE:

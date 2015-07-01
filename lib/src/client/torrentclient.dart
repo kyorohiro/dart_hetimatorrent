@@ -72,6 +72,7 @@ class TorrentClient {
             info.front = new TorrentClientFront(socket, socketInfo.peerAddress, socketInfo.peerPort, socket.buffer, this._targetBlock.bitSize, _infoHash, _peerId);
             _internalOnReceive(info.front, info);
             info.front.startReceive();
+            _signalStream.add(new TorrentClientSignalWithPeerInfo(info, TorrentClientSignal.ID_ACCEPT, 0, ""));
           });
         }).catchError((e) {
           socket.close();
@@ -102,6 +103,7 @@ class TorrentClient {
         info.front = front;
         _internalOnReceive(front, info);
         front.startReceive();
+        _signalStream.add(new TorrentClientSignalWithPeerInfo(info, TorrentClientSignal.ID_CONNECTED, 0, ""));
         return front;
       });
     });
@@ -113,9 +115,7 @@ class TorrentClient {
       _ai.onReceive(this, info, message);
     });
     front.onReceiveSignal.listen((TorrentClientFrontSignal signal) {
-      TorrentClientSignal sig = new TorrentClientSignal()
-        ..info = info
-        .._signal = signal;
+      TorrentClientSignal sig = new TorrentClientSignalWithPeerInfo(info, signal.id, signal.reason, signal.toString());
       _signalStream.add(sig);
       _ai.onSignal(this, info, sig);
     });
@@ -160,19 +160,37 @@ class TorrentClientMessage {
     this.message = message;
     this._info = info;
   }
-  
+
   String toString() {
     return "signal:info:${info.id} ${info.ip} ${info.port} message:${message.toString()}";
   }
 }
 
 class TorrentClientSignal {
-  TorrentClientPeerInfo info;
-  TorrentClientFrontSignal _signal;
-  int get id => _signal.id;
-  int get reason => _signal.reason;
-  
+  static int ID_CONNECTED = 1001;
+  static int ID_ACCEPT = 1002;
+  int _id = 0;
+  int _reason = 0;
+  int get id => _id;
+  int get reason => _reason;
+
+  TorrentClientSignal(int id, int reason) {
+    _id = id;
+    _reason = reason;
+  }
+}
+
+class TorrentClientSignalWithPeerInfo extends TorrentClientSignal {
+  TorrentClientPeerInfo _info;
+  String _message = "";
+  TorrentClientPeerInfo get info => _info;
+
+  TorrentClientSignalWithPeerInfo(TorrentClientPeerInfo info, int id, int reason, String message) : super(id, reason) {
+    this._info = info;
+    this._message = message;
+  }
+
   String toString() {
-    return "signal:info:${info.id} ${info.ip} ${info.port} signal:${TorrentClientFrontSignal.toText(_signal)}";
+    return "signal:info:${_info.id} ${_info.ip} ${_info.port} signal:${_message}";
   }
 }
