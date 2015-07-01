@@ -68,6 +68,9 @@ class TorrentClientFront {
     _handshakedToMe = false;
     _bitfieldToMe = new Bitfield(bitfieldSize, clearIsOne: false);
     _bitfieldFromMe = new Bitfield(bitfieldSize, clearIsOne: false);
+    _socket.onClose().listen((HetiCloseInfo info) {
+      _streamSignal.add(new TorrentClientFrontSignal()..id=TorrentClientFrontSignal.ID_CLOSE);
+    });
   }
 
   StreamController<TorrentMessage> stream = new StreamController();
