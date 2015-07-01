@@ -93,6 +93,7 @@ void main() {
             terminal.addCommand(ConnectCommand.name, ConnectCommand.builder());
             terminal.addCommand(BitfieldCommand.name, BitfieldCommand.builder());
             terminal.addCommand(RequestCommand.name, RequestCommand.builder());
+            terminal.addCommand(PieceCommand.name,PieceCommand.builder());
             engine.torrentClient.onReceiveEvent.listen((TorrentClientMessage info) {
               print("[receive message :  ${info.message.id}");
               terminalReceive.append("receive message : ${info.toString()}");

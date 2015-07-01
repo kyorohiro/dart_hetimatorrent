@@ -192,11 +192,11 @@ class PieceCommand extends TorrentEngineCommand {
   }
 
   static String get help => "${name} [id] [index] [begin] [length]:";
-  static get name => "request";
+  static get name => "piece";
 
   static TorrentEngineCommandBuilder builder() {
     TorrentEngineCommand builder(List<String> list) {
-      return new RequestCommand(int.parse(list[0]), int.parse(list[0]), int.parse(list[0]), int.parse(list[0]));
+      return new PieceCommand(int.parse(list[0]), int.parse(list[0]), int.parse(list[0]), int.parse(list[0]));
     }
     return new TorrentEngineCommandBuilder(builder, help);
   }
@@ -212,3 +212,34 @@ class PieceCommand extends TorrentEngineCommand {
     });
   }
 }
+
+
+class HaveCommand extends TorrentEngineCommand {
+  int _id = 0;
+  int _index = 0;
+  HaveCommand(int id, int index) {
+    _id = id;
+    _index = index;
+  }
+
+  static String get help => "${name} [id] [index]";
+  static get name => "have";
+
+  static TorrentEngineCommandBuilder builder() {
+    TorrentEngineCommand builder(List<String> list) {
+      return new HaveCommand(int.parse(list[0]), int.parse(list[0]));
+    }
+    return new TorrentEngineCommandBuilder(builder, help);
+  }
+
+  Future<CommandResult> execute(TorrentEngine engine, {List<String> args: null}) {
+    return new Future(() {
+      TorrentClientPeerInfo info = engine.torrentClient.getPeerInfoFromId(_id);
+        return info.front.sendHave(_index).then((_) {
+          return new CommandResult("sended have");
+        });
+    });
+  }
+}
+
+
