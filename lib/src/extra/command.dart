@@ -163,7 +163,7 @@ class RequestCommand extends TorrentEngineCommand {
 
   static TorrentEngineCommandBuilder builder() {
     TorrentEngineCommand builder(List<String> list) {
-      return new RequestCommand(int.parse(list[0]), int.parse(list[0]), int.parse(list[0]), int.parse(list[0]));
+      return new RequestCommand(int.parse(list[0]), int.parse(list[1]), int.parse(list[2]), int.parse(list[3]));
     }
     return new TorrentEngineCommandBuilder(builder, help);
   }
@@ -195,7 +195,7 @@ class PieceCommand extends TorrentEngineCommand {
 
   static TorrentEngineCommandBuilder builder() {
     TorrentEngineCommand builder(List<String> list) {
-      return new PieceCommand(int.parse(list[0]), int.parse(list[0]), int.parse(list[0]), int.parse(list[0]));
+      return new PieceCommand(int.parse(list[0]), int.parse(list[1]), int.parse(list[2]), int.parse(list[3]));
     }
     return new TorrentEngineCommandBuilder(builder, help);
   }
@@ -229,7 +229,7 @@ class CancelCommand extends TorrentEngineCommand {
 
   static TorrentEngineCommandBuilder builder() {
     TorrentEngineCommand builder(List<String> list) {
-      return new CancelCommand(int.parse(list[0]), int.parse(list[0]), int.parse(list[0]), int.parse(list[0]));
+      return new CancelCommand(int.parse(list[0]), int.parse(list[1]), int.parse(list[2]), int.parse(list[3]));
     }
     return new TorrentEngineCommandBuilder(builder, help);
   }
@@ -257,7 +257,7 @@ class HaveCommand extends TorrentEngineCommand {
 
   static TorrentEngineCommandBuilder builder() {
     TorrentEngineCommand builder(List<String> list) {
-      return new HaveCommand(int.parse(list[0]), int.parse(list[0]));
+      return new HaveCommand(int.parse(list[0]), int.parse(list[1]));
     }
     return new TorrentEngineCommandBuilder(builder, help);
   }
