@@ -98,6 +98,10 @@ void main() {
             terminal.addCommand(HaveCommand.name,HaveCommand.builder());
             terminal.addCommand(ChokeCommand.name,ChokeCommand.builder());
             terminal.addCommand(UnchokeCommand.name,UnchokeCommand.builder());
+            terminal.addCommand(InterestedCommand.name,InterestedCommand.builder());
+            terminal.addCommand(NotInterestedCommand.name,NotInterestedCommand.builder());         
+            
+            
             engine.torrentClient.onReceiveEvent.listen((TorrentClientMessage info) {
               print("[receive message :  ${info.message.id}");
               terminalReceive.append("receive message : ${info.toString()}");

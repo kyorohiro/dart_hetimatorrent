@@ -323,3 +323,58 @@ class UnchokeCommand extends TorrentEngineCommand {
     });
   }
 }
+
+
+class InterestedCommand extends TorrentEngineCommand {
+  int _id = 0;
+  InterestedCommand(int id) {
+    _id = id;
+  }
+
+  static String get help => "${name} [id]";
+  static get name => "interested";
+
+  static TorrentEngineCommandBuilder builder() {
+    TorrentEngineCommand builder(List<String> list) {
+      return new InterestedCommand(int.parse(list[0]));
+    }
+    return new TorrentEngineCommandBuilder(builder, help);
+  }
+
+  Future<CommandResult> execute(TorrentEngine engine, {List<String> args: null}) {
+    return new Future(() {
+      TorrentClientPeerInfo info = engine.torrentClient.getPeerInfoFromId(_id);
+      return info.front.sendInterested().then((_) {
+        return new CommandResult("sended unchoke");
+      });
+    });
+  }
+}
+
+
+class NotInterestedCommand extends TorrentEngineCommand {
+  int _id = 0;
+  NotInterestedCommand(int id) {
+    _id = id;
+  }
+
+  static String get help => "${name} [id]";
+  static get name => "notinterested";
+
+  static TorrentEngineCommandBuilder builder() {
+    TorrentEngineCommand builder(List<String> list) {
+      return new NotInterestedCommand(int.parse(list[0]));
+    }
+    return new TorrentEngineCommandBuilder(builder, help);
+  }
+
+  Future<CommandResult> execute(TorrentEngine engine, {List<String> args: null}) {
+    return new Future(() {
+      TorrentClientPeerInfo info = engine.torrentClient.getPeerInfoFromId(_id);
+      return info.front.sendNotInterested().then((_) {
+        return new CommandResult("sended unchoke");
+      });
+    });
+  }
+}
+
