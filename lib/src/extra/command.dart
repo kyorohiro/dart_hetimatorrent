@@ -378,3 +378,31 @@ class NotInterestedCommand extends TorrentEngineCommand {
   }
 }
 
+
+class PortCommand extends TorrentEngineCommand {
+  int _id = 0;
+  int _port = 0;
+  PortCommand(int id, int port) {
+    _id = id;
+    _port = port;
+  }
+
+  static String get help => "${name} [id] [port]";
+  static get name => "port";
+
+  static TorrentEngineCommandBuilder builder() {
+    TorrentEngineCommand builder(List<String> list) {
+      return new PortCommand(int.parse(list[0]), int.parse(list[1]));
+    }
+    return new TorrentEngineCommandBuilder(builder, help);
+  }
+
+  Future<CommandResult> execute(TorrentEngine engine, {List<String> args: null}) {
+    return new Future(() {
+      TorrentClientPeerInfo info = engine.torrentClient.getPeerInfoFromId(_id);
+      return info.front.sendPort(_port).then((_) {
+        return new CommandResult("sended unchoke");
+      });
+    });
+  }
+}

@@ -99,7 +99,8 @@ void main() {
             terminal.addCommand(ChokeCommand.name,ChokeCommand.builder());
             terminal.addCommand(UnchokeCommand.name,UnchokeCommand.builder());
             terminal.addCommand(InterestedCommand.name,InterestedCommand.builder());
-            terminal.addCommand(NotInterestedCommand.name,NotInterestedCommand.builder());         
+            terminal.addCommand(NotInterestedCommand.name,NotInterestedCommand.builder());    
+            terminal.addCommand(PortCommand.name,PortCommand.builder()); 
             
             
             engine.torrentClient.onReceiveEvent.listen((TorrentClientMessage info) {
