@@ -178,7 +178,6 @@ class RequestCommand extends TorrentEngineCommand {
   }
 }
 
-
 class PieceCommand extends TorrentEngineCommand {
   int _id = 0;
   int _index = 0;
@@ -205,7 +204,7 @@ class PieceCommand extends TorrentEngineCommand {
     return new Future(() {
       TorrentClientPeerInfo info = engine.torrentClient.getPeerInfoFromId(_id);
       return engine.torrentClient.targetBlock.read(_index).then((ReadResult result) {
-        return info.front.sendPiece(_index, _begin, result.buffer.sublist(_begin, _begin+_length)).then((_) {
+        return info.front.sendPiece(_index, _begin, result.buffer.sublist(_begin, _begin + _length)).then((_) {
           return new CommandResult("sended piece");
         });
       });
@@ -213,6 +212,37 @@ class PieceCommand extends TorrentEngineCommand {
   }
 }
 
+class CancelCommand extends TorrentEngineCommand {
+  int _id = 0;
+  int _index = 0;
+  int _begin = 0;
+  int _length = 0;
+  CancelCommand(int id, int index, int begin, int length) {
+    _id = id;
+    _index = index;
+    _begin = begin;
+    _length = length;
+  }
+
+  static String get help => "${name} [id] [index] [begin] [length]:";
+  static get name => "cancel";
+
+  static TorrentEngineCommandBuilder builder() {
+    TorrentEngineCommand builder(List<String> list) {
+      return new CancelCommand(int.parse(list[0]), int.parse(list[0]), int.parse(list[0]), int.parse(list[0]));
+    }
+    return new TorrentEngineCommandBuilder(builder, help);
+  }
+
+  Future<CommandResult> execute(TorrentEngine engine, {List<String> args: null}) {
+    return new Future(() {
+      TorrentClientPeerInfo info = engine.torrentClient.getPeerInfoFromId(_id);
+      return info.front.sendCancel(_index, _begin, _length).then((_) {
+        return new CommandResult("sended cancel");
+      });
+    });
+  }
+}
 
 class HaveCommand extends TorrentEngineCommand {
   int _id = 0;
@@ -235,11 +265,61 @@ class HaveCommand extends TorrentEngineCommand {
   Future<CommandResult> execute(TorrentEngine engine, {List<String> args: null}) {
     return new Future(() {
       TorrentClientPeerInfo info = engine.torrentClient.getPeerInfoFromId(_id);
-        return info.front.sendHave(_index).then((_) {
-          return new CommandResult("sended have");
-        });
+      return info.front.sendHave(_index).then((_) {
+        return new CommandResult("sended have");
+      });
     });
   }
 }
 
+class ChokeCommand extends TorrentEngineCommand {
+  int _id = 0;
+  ChokeCommand(int id) {
+    _id = id;
+  }
 
+  static String get help => "${name} [id]";
+  static get name => "choke";
+
+  static TorrentEngineCommandBuilder builder() {
+    TorrentEngineCommand builder(List<String> list) {
+      return new ChokeCommand(int.parse(list[0]));
+    }
+    return new TorrentEngineCommandBuilder(builder, help);
+  }
+
+  Future<CommandResult> execute(TorrentEngine engine, {List<String> args: null}) {
+    return new Future(() {
+      TorrentClientPeerInfo info = engine.torrentClient.getPeerInfoFromId(_id);
+      return info.front.sendChoke().then((_) {
+        return new CommandResult("sended have");
+      });
+    });
+  }
+}
+
+class UnchokeCommand extends TorrentEngineCommand {
+  int _id = 0;
+  UnchokeCommand(int id) {
+    _id = id;
+  }
+
+  static String get help => "${name} [id]";
+  static get name => "unchoke";
+
+  static TorrentEngineCommandBuilder builder() {
+    TorrentEngineCommand builder(List<String> list) {
+      return new UnchokeCommand(int.parse(list[0]));
+    }
+    return new TorrentEngineCommandBuilder(builder, help);
+  }
+
+  Future<CommandResult> execute(TorrentEngine engine, {List<String> args: null}) {
+    return new Future(() {
+      TorrentClientPeerInfo info = engine.torrentClient.getPeerInfoFromId(_id);
+      return info.front.sendUnchoke().then((_) {
+        return new CommandResult("sended unchoke");
+      });
+    });
+  }
+}
