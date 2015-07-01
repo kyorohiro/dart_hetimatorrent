@@ -92,7 +92,7 @@ void main() {
             terminal.addCommand(HandshakeCommand.name, HandshakeCommand.builder());
             terminal.addCommand(ConnectCommand.name, ConnectCommand.builder());
             terminal.addCommand(BitfieldCommand.name, BitfieldCommand.builder());
-            
+            terminal.addCommand(RequestCommand.name, RequestCommand.builder());
             engine.torrentClient.onReceiveEvent.listen((TorrentClientMessage info) {
               print("[receive message :  ${info.message.id}");
               terminalReceive.append("receive message : ${info.toString()}");
