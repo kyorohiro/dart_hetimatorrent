@@ -29,7 +29,7 @@ class BlockData {
     _blockSize = blockSize;
   }
 
-  Future<WriteResult> write(List<int> data, int blockNum) {
+  Future<WriteResult> writeBlock(List<int> data, int blockNum) {
     return new Future(() {
       
       if (data.length != _blockSize) {
@@ -52,7 +52,7 @@ class BlockData {
       int index = 0;
       a() {
         return data.read(index*blockSize, blockSize).then((ReadResult result) {
-          return write(result.buffer, index);
+          return writeBlock(result.buffer, index);
         }).then((WriteResult result) {
           index++;
           if (index * blockSize < dataSize) {
@@ -66,7 +66,7 @@ class BlockData {
     });
   }
 
-  Future<ReadResult> read(int blockNum) {
+  Future<ReadResult> readBlock(int blockNum) {
     return new Future(() {
       int length = _blockSize;
       if (blockNum * _blockSize + length > _dataSize) {

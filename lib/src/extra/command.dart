@@ -203,7 +203,7 @@ class PieceCommand extends TorrentEngineCommand {
   Future<CommandResult> execute(TorrentEngine engine, {List<String> args: null}) {
     return new Future(() {
       TorrentClientPeerInfo info = engine.torrentClient.getPeerInfoFromId(_id);
-      return engine.torrentClient.targetBlock.read(_index).then((ReadResult result) {
+      return engine.torrentClient.targetBlock.readBlock(_index).then((ReadResult result) {
         return info.front.sendPiece(_index, _begin, result.buffer.sublist(_begin, _begin + _length)).then((_) {
           return new CommandResult("sended piece");
         });

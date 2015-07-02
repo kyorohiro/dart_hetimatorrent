@@ -54,7 +54,7 @@ class TorrentAIBasic extends TorrentAI {
               front.close();
               return null;
             } else {
-              return client.targetBlock.read(index).then((ReadResult result) {
+              return client.targetBlock.readBlock(index).then((ReadResult result) {
                 int end = begin+len;
                 List cont = new List.filled(len, 0);
                 if(len > result.buffer.length) {
