@@ -85,7 +85,9 @@ class BlockData {
           //
           if(infoList.size() == 1 && infoList.getPieceInfo(0).start== 0 && infoList.getPieceInfo(0).end==_blockSize) {
             _head.setIsOn(blockNum, true);            
+            _writePartData.remove(blockNum);
           }
+          
         }
         return result;
       });
