@@ -69,11 +69,6 @@ void main() {
 
   torrentOutput.onClick.listen((_) {
     print("click");
-    if(torrentSeedFile == null || torrentSeedFile.files.length == 0) {
-      return;
-    }
-    torrentSeedFile.style.display = "none";
-    html.File targetFile = torrentSeedFile.files[0];
     saveFile(managedEngine[selectKey].torrentClient.targetBlock.getData());
   });
 
@@ -152,15 +147,13 @@ void main() {
 void saveFile(HetimaData copyFrom) {
   String choseFile = "";
   try {
-    chrome.fileSystem.chooseEntry(new chrome.ChooseEntryOptions(type: chrome.ChooseEntryType.SAVE_FILE, suggestedName: "a.torrent")).then((chrome.ChooseEntryResult chooseEntryResult) {
+    chrome.fileSystem.chooseEntry(new chrome.ChooseEntryOptions(type: chrome.ChooseEntryType.SAVE_FILE, suggestedName: "rawdata")).then((chrome.ChooseEntryResult chooseEntryResult) {
       choseFile = chooseEntryResult.entry.toUrl();
       chrome.fileSystem.getWritableEntry(chooseEntryResult.entry).then((chrome.ChromeFileEntry copyTo) {
         copyFrom.getLength().then((int length) {
           copyFrom.read(0, length).then((ReadResult readResult) {
             chrome.ArrayBuffer buffer = new chrome.ArrayBuffer.fromBytes(readResult.buffer.toList());
-//              copyTo.remove().then((e){
             copyTo.writeBytes(buffer);
-//              });
           });
         });
       });
