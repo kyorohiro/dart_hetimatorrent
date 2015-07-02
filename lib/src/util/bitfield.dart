@@ -3,21 +3,35 @@ library hetimatorrent.torrent.bitfield;
 import 'dart:core';
 import 'dart:math';
 
-class Bitfield {
+abstract class BitfieldInter {
+  static final List<int> BIT = [0xFF, 0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC, 0xFE];
+  List<int> get value;
+  List<int> get rawValue;
+  void writeByte(List<int> bytes);
+  void oneClear() ;
+  void zeroClear();
+  int lengthPerBit();
+  int lengthPerByte();
+  List<int> getBinary();
+  bool isAllOff();
+  bool isAllOn();
+  bool getIsOn(int number);
+  void setIsOn(int number, bool on);
+  bool isAllOnPerByte(int number);
+  bool isAllOffPerByte(int number);
+  void update() {}
+}
+
+class Bitfield extends BitfieldInter {
   static final List<int> BIT = [0xFF, 0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC, 0xFE];
 
   int _bitSize = 0;
   List<int> _bitfieldData = [];
-  List<int> _shuffleList = [0, 1, 2, 3, 4, 5, 6, 7];
-  Random _rand = null;
 
   List<int> get value => new List.from(_bitfieldData);
+  List<int> get rawValue => _bitfieldData;
   Bitfield(int bitSize, {bool clearIsOne: true, seed: null}) {
-    if (seed == null) {
-      _rand = new Random();
-    } else {
-      _rand = new Random(seed);
-    }
+
 
     this._bitSize = bitSize;
     int byteSize = bitSize ~/ 8;
@@ -32,7 +46,7 @@ class Bitfield {
     }
   }
 
-  static Bitfield relative(Bitfield ina, Bitfield inb, Bitfield out) {
+  static BitfieldInter relative(BitfieldInter ina, BitfieldInter inb, BitfieldInter out) {
     if (out == null) {
       int len = ina.lengthPerBit();
       out = new Bitfield(len);
@@ -41,11 +55,12 @@ class Bitfield {
     if (len > inb.lengthPerByte()) {
       len = inb.lengthPerByte();
     }
+    out.value;
     for (int i = 0; i < out.lengthPerByte(); i++) {
-      out._bitfieldData[i] = (0xFF & out._bitfieldData[i]);
+      out.rawValue[i] = (0xFF & out.rawValue[i]);
     }
     for (int i = 0; i < len; i++) {
-      out._bitfieldData[i] = (0xFF & ina._bitfieldData[i] & (~inb._bitfieldData[i]));
+      out.rawValue[i] = (0xFF & ina.rawValue[i] & (~inb.rawValue[i]));
     }
     out.update();
     return out;
@@ -175,105 +190,8 @@ class Bitfield {
     }
   }
 
-  int getOffPieceAtRandomPerByte(int numPerByte) {
-    return getPieceAtRandomPerByte(numPerByte, true);
-  }
-
-  int getOnPieceAtRandomPerByte(int numPerByte) {
-    return getPieceAtRandomPerByte(numPerByte, false);
-  }
-
-  //
-  // TODO next work following method is wrong
-  //
-  int getPieceAtRandom(bool isOff) {
-    int byteLength = lengthPerByte();
-    if (byteLength <= 0) {
-      return -1;
-    }
-    int ia = _rand.nextInt(byteLength);
-    bool findedAtIA = false;
-    for (int i = ia; i < byteLength; i++) {
-      if (isOff) {
-        if (!isAllOnPerByte(i)) {
-          ia = i;
-          findedAtIA = true;
-          break;
-        }
-      } else {
-        if (!isAllOffPerByte(i)) {
-          ia = i;
-          findedAtIA = true;
-          break;
-        }
-      }
-    }
-
-    if (!findedAtIA) {
-      for (int i = ia; i >= 0; i--) {
-        if (isOff) {
-          if (!isAllOnPerByte(i)) {
-            ia = i;
-            findedAtIA = true;
-            break;
-          }
-        } else {
-          if (!isAllOffPerByte(i)) {
-            ia = i;
-            findedAtIA = true;
-            break;
-          }
-        }
-      }
-    }
-    if (!findedAtIA) {
-      return -1;
-    }
-
-    if (isOff) {
-      return getOffPieceAtRandomPerByte(ia);
-    } else {
-      return getOnPieceAtRandomPerByte(ia);
-    }
-  }
-
-  int getPieceAtRandomPerByte(int numPerByte, bool isOff) {
-    int byteLength = lengthPerByte();
-    if (byteLength <= 0) {
-      return -1;
-    }
-    _shuffle(_shuffleList);
-
-    int rn = 8;
-    if (rn > (lengthPerBit() - numPerByte * 8)) {
-      rn = (lengthPerBit() - numPerByte * 8);
-    }
-    for (int i = 0; i < 8; i++) {
-      if ((numPerByte * 8 + _shuffleList[i]) < lengthPerBit() && isOff != getIsOn(numPerByte * 8 + _shuffleList[i])) {
-        return (numPerByte * 8 + _shuffleList[i]);
-      }
-    }
-    return -1;
-  }
-
-  void _shuffle(List<int> shufflelist) {
-    int tmp1 = 0;
-    int tmp2 = 0;
-    for (int i = 0; i < 8; i++) {
-      tmp1 = _rand.nextInt(8);
-      tmp2 = shufflelist[i];
-      shufflelist[i] = shufflelist[tmp1];
-      shufflelist[tmp1] = tmp2;
-    }
-  }
-
-  int getOffPieceAtRandom() {
-    return getPieceAtRandom(true);
-  }
-
-  int getOnPieceAtRandom() {
-    return getPieceAtRandom(false);
-  }
 
   void update() {}
 }
+
+

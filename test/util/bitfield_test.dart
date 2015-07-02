@@ -130,18 +130,19 @@ void main() {
     
     unit.test("test_getPieceAtRandom", () {
       {
-        Bitfield field = new Bitfield(0);
+        DDBitfield field = new DDBitfield(new Bitfield(0));
         unit.expect(-1, field.getOffPieceAtRandom());
       }
       {
-        Bitfield field = new Bitfield(1);
+        Bitfield fieldBase = new Bitfield(1);
+        DDBitfield field = new DDBitfield(new Bitfield(1));
         unit.expect(-1, field.getOffPieceAtRandom());
         field.setIsOn(0, false);
         unit.expect(0, field.getOffPieceAtRandom());
       }
 
       {
-        Bitfield field = new Bitfield(3);
+        DDBitfield field = new DDBitfield(new Bitfield(3));
         unit.expect(-1, field.getOffPieceAtRandom());
         field.setIsOn(1, false);
         unit.expect(1, field.getOffPieceAtRandom());
@@ -154,18 +155,18 @@ void main() {
     
     unit.test("test_getOffPieceAtRandom", () {
       {
-        Bitfield field = new Bitfield(0);
+        DDBitfield field = new DDBitfield(new Bitfield(0));
         unit.expect(-1, field.getOnPieceAtRandom());
       }
       {
-        Bitfield field = new Bitfield(1);
+        DDBitfield field = new DDBitfield(new Bitfield(1));
         unit.expect(0, field.getOnPieceAtRandom());
         field.setIsOn(0, false);
         unit.expect(-1, field.getOnPieceAtRandom());
       }
 
       {
-        Bitfield field = new Bitfield(3);
+        DDBitfield field = new DDBitfield(new Bitfield(3));
         int i = field.getOnPieceAtRandom();
         unit.expect(true, (i==0||i==1||i==2?true:false));
 
@@ -249,7 +250,7 @@ void main() {
 
     unit.test("testUnique", () {
       {
-        Bitfield target = new Bitfield(1974);
+        DDBitfield target = new DDBitfield(new Bitfield(1974));
         target.zeroClear();
         List<int> indexs= [
           434, 1157, 1455, 74, 764, 1414, 1941, 1723, 
@@ -273,7 +274,7 @@ void main() {
       {
         Bitfield target = new Bitfield(1974);
         Bitfield myinfo = new Bitfield(1974);
-        Bitfield output = new Bitfield(1974);
+        DDBitfield output = new DDBitfield(new Bitfield(1974));
 
         target.zeroClear();
         myinfo.zeroClear();
@@ -307,7 +308,7 @@ void main() {
       {
         Bitfield target = new Bitfield(1974);
         Bitfield myinfo = new Bitfield(1974);
-        Bitfield output = new Bitfield(1974);
+        DDBitfield output = new DDBitfield(new Bitfield(1974));
 
         target.zeroClear();
         myinfo.zeroClear();
@@ -344,8 +345,7 @@ void main() {
       {
         Bitfield target = new Bitfield(1974);
         Bitfield myinfo = new Bitfield(1974);
-        Bitfield output = new Bitfield(1974);
-
+        DDBitfield output = new DDBitfield(new Bitfield(1974));
         target.zeroClear();
         myinfo.zeroClear();
 
