@@ -9,6 +9,7 @@ import 'package:hetimanet/hetimanet_chrome.dart';
 import 'package:hetimatorrent/hetimatorrent.dart';
 import 'terminal.dart';
 import 'dialogtab.dart';
+import 'package:chrome/chrome_app.dart' as chrome;
 
 Tab tab = new Tab({"#m00_clone": "#con-clone"});
 Dialog dialog = new Dialog();
@@ -22,7 +23,7 @@ Map<String, TorrentEngine> managedEngine = {};
 bool upnpIsUse = false;
 String selectKey = null;
 
-TorrentClient torrentClient = null;
+//TorrentClient torrentClient = null;
 
 void main() {
   html.InputElement fileInput = html.querySelector("#fileinput");
@@ -35,7 +36,8 @@ void main() {
   //
   html.SpanElement torrentHashSpan = html.querySelector("#torrent-hash");
   html.SpanElement torrentRemoveBtn = html.querySelector("#torrent-remove-btn");
-  html.InputElement torrentSeedFile= html.querySelector("#torrent-seeddata");
+  html.InputElement torrentSeedFile = html.querySelector("#torrent-seeddata");
+  html.AnchorElement torrentOutput = html.querySelector("#torrent-output");
   
   
   print("hello world");
@@ -63,6 +65,16 @@ void main() {
      managedEngine[selectKey].torrentClient.targetBlock.writeFullData(new HetimaDataBlob(targetFile)).then((WriteResult r) {
        torrentSeedFile.style.display = "block";       
      });
+  });
+
+  torrentOutput.onClick.listen((_) {
+    print("click");
+    if(torrentSeedFile == null || torrentSeedFile.files.length == 0) {
+      return;
+    }
+    torrentSeedFile.style.display = "none";
+    html.File targetFile = torrentSeedFile.files[0];
+    saveFile(managedEngine[selectKey].torrentClient.targetBlock.getData());
   });
 
   int  v = 0;
@@ -137,3 +149,23 @@ void main() {
 
 }
 
+void saveFile(HetimaData copyFrom) {
+  String choseFile = "";
+  try {
+    chrome.fileSystem.chooseEntry(new chrome.ChooseEntryOptions(type: chrome.ChooseEntryType.SAVE_FILE, suggestedName: "a.torrent")).then((chrome.ChooseEntryResult chooseEntryResult) {
+      choseFile = chooseEntryResult.entry.toUrl();
+      chrome.fileSystem.getWritableEntry(chooseEntryResult.entry).then((chrome.ChromeFileEntry copyTo) {
+        copyFrom.getLength().then((int length) {
+          copyFrom.read(0, length).then((ReadResult readResult) {
+            chrome.ArrayBuffer buffer = new chrome.ArrayBuffer.fromBytes(readResult.buffer.toList());
+//              copyTo.remove().then((e){
+            copyTo.writeBytes(buffer);
+//              });
+          });
+        });
+      });
+    });
+  } catch (e) {
+    dialog.show("failed to copy");
+  }
+}

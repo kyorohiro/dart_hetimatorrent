@@ -31,6 +31,10 @@ class BlockData {
     _blockSize = blockSize;
   }
 
+  HetimaData getData() {
+    return _data;
+  }
+
   Future<WriteResult> writeBlock(List<int> data, int blockNum) {
     return new Future(() {
       
