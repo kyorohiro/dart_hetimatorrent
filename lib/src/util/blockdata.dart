@@ -18,7 +18,7 @@ class BlockData {
 
   List<int> get bitfield => _head.value;
   int get bitSize => _head.lengthPerBit();
-  Map<int,PieceInfoList> _writeData = {};
+  Map<int,PieceInfoList> _writePartData = {};
 
   BlockData(HetimaData data, Bitfield head, int blockSize, int dataSize) {
     if (dataSize == null) {
@@ -46,8 +46,8 @@ class BlockData {
           //
           //
           //
-          if(_writeData.containsKey(blockNum)){
-            _writeData.remove(blockNum);
+          if(_writePartData.containsKey(blockNum)){
+            _writePartData.remove(blockNum);
           }
         }
         return result;
@@ -55,22 +55,27 @@ class BlockData {
     });
   }
 
+  List<int> pieceInfoLength() {
+    return new List.from(_writePartData.keys);
+  }
+
+  PieceInfoList getPieceInfo(int blockNum) {
+    return _writePartData[blockNum];
+  }
+
   Future<WriteResult> writePartBlock(List<int> data, int blockNum, int begin, int length) {
     return new Future(() {
       
-      if (data.length != _blockSize) {
-        int lastLength = dataSize%blockSize;
-        if(!(_head.lengthPerBit()-1 == blockNum && data.length == lastLength)) {
+      if (begin+length > _blockSize || _head.lengthPerBit()-1 <= blockNum ) {
           throw  {};
-        }
       }
       return _data.write(data, blockNum * _blockSize).then((WriteResult result) {
         {
           //
           //
           PieceInfoList infoList = null;
-          if(_writeData.containsKey(blockNum)) {
-            infoList = _writeData[blockNum];
+          if(_writePartData.containsKey(blockNum)) {
+            infoList = _writePartData[blockNum];
           } else {
             infoList = new PieceInfoList();
           }
