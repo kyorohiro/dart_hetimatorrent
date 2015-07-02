@@ -2,9 +2,6 @@ library pieceinfo.test;
 
 import 'package:unittest/unittest.dart' as unit;
 import 'package:hetimatorrent/hetimatorrent.dart';
-import 'package:hetimacore/hetimacore.dart';
-import 'dart:typed_data' as type;
-import 'dart:convert' as convert;
 
 void main() {
   unit.group('A group of tests', () {
