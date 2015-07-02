@@ -5,6 +5,7 @@ import 'dart:async';
 
 import 'package:hetimacore/hetimacore.dart';
 import 'bitfield.dart';
+import 'pieceinfo.dart';
 
 class BlockData {
   Bitfield _head;
@@ -17,6 +18,7 @@ class BlockData {
 
   List<int> get bitfield => _head.value;
   int get bitSize => _head.lengthPerBit();
+  Map<int,PieceInfoList> _writeData = {};
 
   BlockData(HetimaData data, Bitfield head, int blockSize, int dataSize) {
     if (dataSize == null) {
@@ -38,10 +40,47 @@ class BlockData {
           throw  {};
         }
       }
-      return _data
-          .write(data, blockNum * _blockSize)
-          .then((WriteResult result) {
+      return _data.write(data, blockNum * _blockSize).then((WriteResult result) {
         _head.setIsOn(blockNum, true);
+        {
+          //
+          //
+          //
+          if(_writeData.containsKey(blockNum)){
+            _writeData.remove(blockNum);
+          }
+        }
+        return result;
+      });
+    });
+  }
+
+  Future<WriteResult> writePartBlock(List<int> data, int blockNum, int begin, int length) {
+    return new Future(() {
+      
+      if (data.length != _blockSize) {
+        int lastLength = dataSize%blockSize;
+        if(!(_head.lengthPerBit()-1 == blockNum && data.length == lastLength)) {
+          throw  {};
+        }
+      }
+      return _data.write(data, blockNum * _blockSize).then((WriteResult result) {
+        {
+          //
+          //
+          PieceInfoList infoList = null;
+          if(_writeData.containsKey(blockNum)) {
+            infoList = _writeData[blockNum];
+          } else {
+            infoList = new PieceInfoList();
+          }
+          infoList.append(begin, begin+length);
+          //
+          //
+          if(infoList.size() == 1 && infoList.getPieceInfo(0).start== 0 && infoList.getPieceInfo(0).end==_blockSize) {
+            _head.setIsOn(blockNum, true);            
+          }
+        }
         return result;
       });
     });
