@@ -7,6 +7,7 @@ export 'src/util/ddbitfield.dart';
 export 'src/util/shufflelinkedlist.dart';
 export 'src/util/peeridcreator.dart';
 export 'src/util/blockdata.dart';
+export 'src/util/pieceinfo.dart';
 
 export 'src/file/torrentfile.dart';
 export 'src/file/torrentfilehelper.dart';
