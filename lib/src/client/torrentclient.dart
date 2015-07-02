@@ -110,12 +110,23 @@ class TorrentClient {
   void _internalOnReceive(TorrentClientFront front, TorrentClientPeerInfo info) {
     front.onReceiveEvent.listen((TorrentMessage message) {
       messageStream.add(new TorrentClientMessage(info, message));
+      if(message is MessagePiece) {
+        onPieceMessage(message);
+      }
       _ai.onReceive(this, info, message);
     });
     front.onReceiveSignal.listen((TorrentClientFrontSignal signal) {
       TorrentClientSignal sig = new TorrentClientSignalWithPeerInfo(info, signal.id, signal.reason, signal.toString());
       _signalStream.add(sig);
       _ai.onSignal(this, info, sig);
+    });
+  }
+
+  void onPieceMessage(MessagePiece piece) {
+    _targetBlock.writePartBlock(piece.content, piece.index, piece.begin, piece.content.length).then((WriteResult w) {
+      if(_targetBlock.have(piece.index)) {
+        _signalStream.add(new TorrentClientSignal(TorrentClientSignal.ID_SET_PIECE, piece.index, "set piece : index:${piece.index}"));
+      }
     });
   }
 
@@ -167,25 +178,29 @@ class TorrentClientMessage {
 class TorrentClientSignal {
   static int ID_CONNECTED = 1001;
   static int ID_ACCEPT = 1002;
+  static int ID_SET_PIECE = 1003;
   int _id = 0;
   int _reason = 0;
   int get id => _id;
   int get reason => _reason;
+  String _message = "";
 
-  TorrentClientSignal(int id, int reason) {
+  TorrentClientSignal(int id, int reason, String message) {
     _id = id;
     _reason = reason;
+  }
+
+  String toString() {
+    return "${_message}";
   }
 }
 
 class TorrentClientSignalWithPeerInfo extends TorrentClientSignal {
   TorrentClientPeerInfo _info;
-  String _message = "";
   TorrentClientPeerInfo get info => _info;
 
-  TorrentClientSignalWithPeerInfo(TorrentClientPeerInfo info, int id, int reason, String message) : super(id, reason) {
+  TorrentClientSignalWithPeerInfo(TorrentClientPeerInfo info, int id, int reason, String message) : super(id, reason, message) {
     this._info = info;
-    this._message = message;
   }
 
   String toString() {
