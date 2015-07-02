@@ -8,11 +8,40 @@ import 'dart:convert' as convert;
 
 void main() {
   unit.group('A group of tests', () {
-    unit.test("bencode: string", () {
-      type.Uint8List out = Bencode.encode("test");
-      unit.expect("4:test", convert.UTF8.decode(out.toList()));
-      type.Uint8List text = Bencode.decode(out);
-      unit.expect("test", convert.UTF8.decode(text.toList()));
+    unit.test("pieceinfo: 0-1", () {
+      PieceInfoList infoList = new PieceInfoList();
+      infoList.append(0, 1);
+      unit.expect(infoList.size(),1);
+      unit.expect(infoList.getPieceInfo(0).start,0);
+      unit.expect(infoList.getPieceInfo(0).end,1);
+    });
+    
+    unit.test("pieceinfo: 100-200", () {
+      PieceInfoList infoList = new PieceInfoList();
+      infoList.append(100, 200);
+      unit.expect(infoList.size(),1);
+      unit.expect(infoList.getPieceInfo(0).start,100);
+      unit.expect(infoList.getPieceInfo(0).end,200);
+    });
+
+    unit.test("pieceinfo: 100-200,201-300", () {
+      PieceInfoList infoList = new PieceInfoList();
+      infoList.append(100, 200);
+      infoList.append(201, 300);
+      unit.expect(infoList.size(),2);
+      unit.expect(infoList.getPieceInfo(0).start,100);
+      unit.expect(infoList.getPieceInfo(0).end,200);
+      unit.expect(infoList.getPieceInfo(1).start,201);
+      unit.expect(infoList.getPieceInfo(1).end,300);
+    });
+    
+    unit.test("pieceinfo: 100-200,200-300", () {
+      PieceInfoList infoList = new PieceInfoList();
+      infoList.append(100, 200);
+      infoList.append(200, 300);
+      unit.expect(infoList.size(),1);
+      unit.expect(infoList.getPieceInfo(0).start,100);
+      unit.expect(infoList.getPieceInfo(0).end,300);
     });
   });
 }
