@@ -235,7 +235,11 @@ void main() {
           return blockData.readBlock(4);        
         }).then((ReadResult result) {
            unit.expect(result.buffer, [20]);
-        });        
+        }).then((_){
+          unit.expect(blockData.pieceInfoBlockNums().length, 1);
+          unit.expect(blockData.getPieceInfo(1).getPieceInfo(0).start,1);
+          unit.expect(blockData.getPieceInfo(1).getPieceInfo(0).end,4);
+        });
       });
     });
 /*

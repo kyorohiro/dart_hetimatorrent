@@ -55,7 +55,7 @@ class BlockData {
     });
   }
 
-  List<int> pieceInfoLength() {
+  List<int> pieceInfoBlockNums() {
     return new List.from(_writePartData.keys);
   }
 
@@ -78,6 +78,7 @@ class BlockData {
             infoList = _writePartData[blockNum];
           } else {
             infoList = new PieceInfoList();
+            _writePartData[blockNum] = infoList;
           }
           infoList.append(begin, begin+length);
           //
