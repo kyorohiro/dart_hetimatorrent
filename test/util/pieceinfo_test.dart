@@ -63,5 +63,15 @@ void main() {
       unit.expect(infoList.getPieceInfo(0).start,0);
       unit.expect(infoList.getPieceInfo(0).end,500);
     });
+    
+    unit.test("pieceinfo: 100-200,150-180, 180-199", () {
+      PieceInfoList infoList = new PieceInfoList();
+      infoList.append(100, 200);
+      infoList.append(150, 180);
+      infoList.append(180, 199);
+      unit.expect(infoList.size(),1);
+      unit.expect(infoList.getPieceInfo(0).start,100);
+      unit.expect(infoList.getPieceInfo(0).end,200);
+    });
   });
 }
