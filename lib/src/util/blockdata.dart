@@ -140,4 +140,8 @@ class BlockData {
   bool have(int blockNum) {
     return _head.getIsOn(blockNum);
   }
+  
+  bool haveAll() {
+    return _head.isAllOn();
+  }
 }

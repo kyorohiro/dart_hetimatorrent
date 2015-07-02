@@ -111,7 +111,7 @@ class TorrentClient {
     front.onReceiveEvent.listen((TorrentMessage message) {
       messageStream.add(new TorrentClientMessage(info, message));
       if(message is MessagePiece) {
-        onPieceMessage(message);
+        _onPieceMessage(message);
       }
       _ai.onReceive(this, info, message);
     });
@@ -122,10 +122,13 @@ class TorrentClient {
     });
   }
 
-  void onPieceMessage(MessagePiece piece) {
+  void _onPieceMessage(MessagePiece piece) {
     _targetBlock.writePartBlock(piece.content, piece.index, piece.begin, piece.content.length).then((WriteResult w) {
       if(_targetBlock.have(piece.index)) {
         _signalStream.add(new TorrentClientSignal(TorrentClientSignal.ID_SET_PIECE, piece.index, "set piece : index:${piece.index}"));
+      }
+      if(_targetBlock.haveAll()) {
+        _signalStream.add(new TorrentClientSignal(TorrentClientSignal.ID_SET_PIECE_ALL, piece.index, "set piece all"));        
       }
     });
   }
@@ -179,6 +182,7 @@ class TorrentClientSignal {
   static int ID_CONNECTED = 1001;
   static int ID_ACCEPT = 1002;
   static int ID_SET_PIECE = 1003;
+  static int ID_SET_PIECE_ALL = 1004;
   int _id = 0;
   int _reason = 0;
   int get id => _id;
