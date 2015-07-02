@@ -69,7 +69,7 @@ class BlockData {
       if (begin+length > _blockSize || _head.lengthPerBit()-1 <= blockNum ) {
           throw  {};
       }
-      return _data.write(data, blockNum * _blockSize).then((WriteResult result) {
+      return _data.write(data.sublist(0,length), blockNum * _blockSize + begin).then((WriteResult result) {
         {
           //
           //
