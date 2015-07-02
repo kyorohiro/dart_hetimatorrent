@@ -70,7 +70,7 @@ class BlockData {
   Future<WriteResult> writePartBlock(List<int> data, int blockNum, int begin, int length) {
     return new Future(() {
       int lastLength = dataSize%blockSize;
-      if (begin+length > _blockSize || _head.lengthPerBit()-1 <= blockNum ) {
+      if (begin+length > _blockSize || _head.lengthPerBit()-1 < blockNum ) {
           throw  {};
       }
       return _data.write(data.sublist(0,length), blockNum * _blockSize + begin).then((WriteResult result) {
