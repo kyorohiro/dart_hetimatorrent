@@ -1,7 +1,6 @@
 library app.mainview.model.seeder;
 
 import 'dart:async';
-import 'dart:html' as html;
 import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimanet/hetimanet.dart';
 import 'package:hetimanet/hetimanet_chrome.dart';
@@ -15,17 +14,15 @@ class SeederModel {
   int localPort = 18080;
   int globalPort = 18080;
   bool useUpnp = false;
-  
+
   Future start(TorrentFile torrentFile, HetimaData seed) {
-    return TorrentClient.create(new HetiSocketBuilderChrome(),
-        PeerIdCreator.createPeerid("seeder"),
-        torrentFile, seed).then((TorrentClient client){
+    return TorrentClient.create(new HetiSocketBuilderChrome(), PeerIdCreator.createPeerid("seeder"), torrentFile, seed).then((TorrentClient client) {
       _client = client;
       client.localAddress = localIp;
       client.port = localPort;
       return client.start();
-    }).then((_){
-      if(useUpnp == true) {
+    }).then((_) {
+      if (useUpnp == true) {
         _portMapHelder = new UpnpPortMapHelper(new HetiSocketBuilderChrome(), "HetimaTorrentTracker");
         _portMapHelder.basePort = globalPort;
         _portMapHelder.numOfRetry = 0;
@@ -37,8 +34,8 @@ class SeederModel {
           return null;
         });
       }
-    }).catchError((e){
-      if(_client != null) {
+    }).catchError((e) {
+      if (_client != null) {
         _client.stop();
         _client = null;
         _portMapHelder = null;
@@ -48,14 +45,24 @@ class SeederModel {
   }
 
   Future stop() {
-    return new Future((){
-      if(_client != null) {
+    return new Future(() {
+      if (_client != null) {
         _client.stop();
         _client = null;
       }
-      if(_portMapHelder != null) {
-        _portMapHelder = null;
-      }
+      if (_portMapHelder != null) {
+        return _portMapHelder.getPortMapInfo("HetimaTorrentTracker").then((GetPortMapInfoResult result) {
+          List<int> deleteExternalPortList = [];
+          for (PortMapInfo info in result.infos) {
+            try {
+              deleteExternalPortList.add(int.parse(info.externalPort));
+            } catch (e) {
+              ;
+            }
+          }
+          return _portMapHelder.deleteAllPortMap(deleteExternalPortList);
+        });
+      } 
     });
   }
 }
