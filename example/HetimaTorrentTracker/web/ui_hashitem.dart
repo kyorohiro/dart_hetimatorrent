@@ -5,6 +5,8 @@ import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimatorrent/hetimatorrent.dart';
 import 'ui_dialog.dart';
 import 'model_tracker.dart';
+import 'model_seeder.dart';
+
 
 //
 //
@@ -23,13 +25,14 @@ class HashItem {
   html.ObjectElement loadServerBtn = html.querySelector("#torrent-loaderserver");
      
      
-  init(TrackerModel model, Map<String, TorrentFile> managedTorrentFile, Tab tab) {
+  init(TrackerModel trackerModel, Map<String, TorrentFile> managedTorrentFile, Tab tab) {
+    SeederModel model = new SeederModel();
     torrentRemoveBtn.onClick.listen((html.MouseEvent e) {
-      if (model.selectKey != null) {
-        tab.remove(model.selectKey);
-        managedTorrentFile.remove(model.selectKey);
-        model.removeInfoHashFromTracker(PercentEncode.decode(model.selectKey));
-        model.selectKey = null;
+      if (trackerModel.selectKey != null) {
+        tab.remove(trackerModel.selectKey);
+        managedTorrentFile.remove(trackerModel.selectKey);
+        trackerModel.removeInfoHashFromTracker(PercentEncode.decode(trackerModel.selectKey));
+        trackerModel.selectKey = null;
       }
     });
     
@@ -75,6 +78,19 @@ class HashItem {
         startServerBtn.style.display = "none";
         stopServerBtn.style.display = "block";
         loadServerBtn.style.display = "none";
+      });
+    });
+    
+    // Adds a click event for each radio button in the group with name "gender"
+    html.querySelectorAll('[name="torrent-upnpon"]').forEach((html.InputElement radioButton) {
+      radioButton.onClick.listen((html.MouseEvent e) {
+        html.InputElement clicked = e.target;
+        print("The user is ${clicked.value}");
+        if (clicked.value == "Use") {
+          model.upnpIsUse = true;
+        } else {
+          model.upnpIsUse = false;
+        }
       });
     });
   }
