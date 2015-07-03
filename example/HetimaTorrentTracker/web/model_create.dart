@@ -10,7 +10,7 @@ import 'package:hetimatorrent/hetimatorrent.dart';
 class CreateFileModel {
   html.File _rawFile = null;
 
-  Future createFile(html.File n, String announce, int pieceLength, int cashSize, int threadNum, String fileName, Function onPro(int v)) {
+  Future createFile(html.File n, String announce, int pieceLength, int cashSize, int threadNum, String fileName, Function onPro) {
     TorrentFileCreator cre = new TorrentFileCreator();
     cre.announce = announce;
     cre.piececLength = pieceLength;
@@ -18,7 +18,7 @@ class CreateFileModel {
     if (cashSize > 0 && cashSize < cre.piececLength) {
       cashSize = cashSize * 2;
     }
-    return cre.createFromSingleFile(new HetimaDataBlob(n), threadNum: threadNum - 1, cacheSize: cashSize, cacheNum: 3, progress: onPro, isopath: "subiso.dart").then((TorrentFileCreatorResult r) {
+    return cre.createFromSingleFile(new HetimaDataBlob(n), threadNum: threadNum , cacheSize: cashSize, cacheNum: 3, progress: onPro, isopath: "subiso.dart").then((TorrentFileCreatorResult r) {
       List<int> buffer = Bencode.encode(r.torrentFile.mMetadata);
       HetimaDataFS fs = new HetimaDataFS(fileName);
       return fs.write(buffer, 0).then((WriteResult r) {
