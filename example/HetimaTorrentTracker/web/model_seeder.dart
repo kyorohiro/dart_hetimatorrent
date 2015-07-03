@@ -46,4 +46,16 @@ class SeederModel {
       throw e;
     });
   }
+
+  Future stop() {
+    return new Future((){
+      if(_client != null) {
+        _client.stop();
+        _client = null;
+      }
+      if(_portMapHelder != null) {
+        _portMapHelder = null;
+      }
+    });
+  }
 }
