@@ -81,21 +81,62 @@
      [Content3] now
      -->
     <div id="con-now" style="width:100%; height:calc(100% - 70px); display:none;">
-        <div>
-         <label>[hash]:</label> <br>  
+         <h2>#Information------------</h2>
+         <h3>[Hash]</h3>
          <span id="torrent-hash">...</span>
-        </div> 
-        <div>
-         <label>[peer num]:</label> <br>  
-         <span id="torrent-num-of-peer">...</span>
-        </div> 
-        <div>
+
+         <h3>[Peer Num]</h3> 
+         <span id="torrent-num-of-peer">...</span><br>
          <button id="torrent-remove-btn">REMOVE</button>
-        </div>
-        <div>
-         <label>[seed]:</label> <br>
+
+        <hr>
+
+        <h2>#Seeder------------</h2>
+        <h3>[Seed File]</h3>
          <input type="file" id="create-seedfile">
-        </div>
+
+        <h3>[UPnP Support]</h3>    
+    　　   <input type="radio" name="torrent-upnpon" value="Use"> Use
+       　　<input type="radio" name="torrent-upnpon" value="Unuse" checked> Unuse
+
+     　　<h3>[Server]</h3>
+      　　 <table>
+       　　<tr>
+      　　　 <td>local address</td>
+      　　　 <td><input type="text" id="torrent-input-localaddress" value="0.0.0.0"></td>
+     　　  </tr>
+      　　 <tr>       
+     　　　  <td>local port</td>
+     　　　  <td><input type="text" id="torrent-input-localport" value="6969"></td>
+      　　 </tr>
+       　　<tr>
+       　　　<td>global port</td>
+       　　　<td><input type="text" id="torrent-input-globalport" value="6969"></td>
+       　　</tr>
+          </table>
+          <button id="torrent-startserver" style="display:block">Start</button>
+          <button id="torrent-stopserver" style="display:none">Stop</button>     
+          <object id="torrent-loaderserver" type="image/svg+xml" data="loader_b.svg" width="32" height="32" style="display: none"></object>
+
+     <h3>[Information]</h3>
+     <div>
+       <div>
+         <label>local address:</label>   
+         <span id="torrent-localaddress">...</span>
+       </div>
+       <div>
+         <label>local port:</label>   
+         <span id="torrent-localport">...</span>
+       </div>
+       <div> 
+         <label>global address:</label>   
+         <span id="torrent-globaladdress">...</span>
+       </div>    
+       <div>    
+         <label>global port:</label>   
+         <span id="torrent-globalport">...</span>
+       </div>    
+     </div>
     </div> 
     
         <!--

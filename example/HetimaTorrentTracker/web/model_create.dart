@@ -9,6 +9,8 @@ import 'package:hetimatorrent/hetimatorrent.dart';
 
 class CreateFileModel {
   html.File _rawFile = null;
+  TorrentClient client = null;
+  
 
   Future createFile(html.File n, String announce, int pieceLength, int cashSize, int threadNum, String name, String fileName, Function onPro) {
     TorrentFileCreator cre = new TorrentFileCreator();
