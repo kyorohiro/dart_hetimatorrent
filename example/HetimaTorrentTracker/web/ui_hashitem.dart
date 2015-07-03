@@ -32,6 +32,19 @@ class HashItem {
         model.selectKey = null;
       }
     });
+    
+    seedFile.onChange.listen((html.Event e) {
+      print("==");
+      if(seedFile.files.length <= 0) {
+        return;
+      }
+      localAddress.style.display = "block";
+      localport.style.display  = "block";
+      globalport.style.display  = "block";
+      startServer.style.display  = "block";
+      stopServer.style.display  = "none";
+      loadServer.style.display  = "none";
+    });
   }
 
   void contain(TrackerModel model, Map<String, TorrentFile> managedTorrentFile, String key) {
