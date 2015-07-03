@@ -13,6 +13,8 @@ class HashItem {
   html.SpanElement torrentRemoveBtn = html.querySelector("#torrent-remove-btn");
   html.SpanElement torrentNumOfPeerSpan = html.querySelector("#torrent-num-of-peer");
 // "torrent-upnpon"
+  
+  html.InputElement seedFile = html.querySelector("#torrent-seedfile");
   html.InputElement localAddress = html.querySelector("#torrent-input-localaddress");
   html.InputElement localport = html.querySelector("#torrent-input-localport");
   html.InputElement globalport = html.querySelector("#torrent-input-globalport");
@@ -33,6 +35,7 @@ class HashItem {
       }
     });
   }
+
   void contain(TrackerModel model, Map<String, TorrentFile> managedTorrentFile, String key) {
     if (managedTorrentFile.containsKey(key)) {
       torrentHashSpan.setInnerHtml("${key}");
