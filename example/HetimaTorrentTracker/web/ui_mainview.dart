@@ -40,7 +40,7 @@ class MainItem {
             String key = PercentEncode.encode(infoHash);
             managedTorrentFile[key] = f;
             tab.add("${key}", "con-now");
-            model.onAddInfoHashFromTracker(f);
+            model.addInfoHashFromTracker(f);
           });
         }).catchError((e) {
           dialog.show("failed parse torrent");
@@ -53,7 +53,7 @@ class MainItem {
       stopServerBtn.style.display = "none";
       startServerBtn.style.display = "none";
 
-      model.onStart(inputLocalAddress.value, int.parse(inputLocalPort.value), int.parse(inputGlobalPort.value)).then((List<String> v) {
+      model.startTracker(inputLocalAddress.value, int.parse(inputLocalPort.value), int.parse(inputGlobalPort.value)).then((List<String> v) {
         outputLocalPortSpn.innerHtml = v[1];
         outputLocalAddressSpn.innerHtml = v[0];
         stopServerBtn.style.display = "block";
@@ -71,7 +71,7 @@ class MainItem {
       stopServerBtn.style.display = "none";
       startServerBtn.style.display = "none";
 
-      model.onStop().then((StopResult r) {
+      model.stopTracker().then((StopResult r) {
         startServerBtn.style.display = "block";
         stopServerBtn.style.display = "none";
         loadServerBtn.style.display = "none";

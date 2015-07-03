@@ -14,15 +14,15 @@ class TrackerModel {
   TrackerServer trackerServer = new TrackerServer(new HetiSocketBuilderChrome());
   UpnpPortMapHelper portMapHelder = new UpnpPortMapHelper(new HetiSocketBuilderChrome(), "HetimaTorrentTracker");
 
-  void onRemoveInfoHashFromTracker(List<int> removeHash) {
+  void removeInfoHashFromTracker(List<int> removeHash) {
     trackerServer.removeInfoHash(PercentEncode.decode(selectKey));
   }
 
-  void onAddInfoHashFromTracker(TorrentFile f) {
+  void addInfoHashFromTracker(TorrentFile f) {
     trackerServer.addInfoHash(f);
   }
 
-  Future onStop() {
+  Future stopTracker() {
     // clear
     trackerServer.trackerAnnounceAddressForTorrentFile = "";
 
@@ -38,7 +38,7 @@ class TrackerModel {
     return trackerServer.stop();
   }
 
-  Future onStart(String localIP, int localPort, int globalPort) {
+  Future startTracker(String localIP, int localPort, int globalPort) {
     trackerServer.address = localIP;
     trackerServer.port = localPort;
     return trackerServer.start().then((StartResult r) {
@@ -60,7 +60,7 @@ class TrackerModel {
     });
   }
 
-  int onGetNumOfPeer(List<int> infoHash) {
+  int getNumOfPeer(List<int> infoHash) {
     return trackerServer.numOfPeer(infoHash);
   }
 }

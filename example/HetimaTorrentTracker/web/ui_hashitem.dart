@@ -18,7 +18,7 @@ class HashItem {
       if (model.selectKey != null) {
         tab.remove(model.selectKey);
         managedTorrentFile.remove(model.selectKey);
-        model.onRemoveInfoHashFromTracker(PercentEncode.decode(model.selectKey));
+        model.removeInfoHashFromTracker(PercentEncode.decode(model.selectKey));
         model.selectKey = null;
       }
     });
@@ -28,7 +28,7 @@ class HashItem {
       torrentHashSpan.setInnerHtml("${key}");
       model.selectKey = key;
       List<int> infoHash = PercentEncode.decode(key);
-      torrentNumOfPeerSpan.setInnerHtml("${model.onGetNumOfPeer(infoHash)}");
+      torrentNumOfPeerSpan.setInnerHtml("${model.getNumOfPeer(infoHash)}");
     }
   }
 }
