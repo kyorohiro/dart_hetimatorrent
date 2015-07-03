@@ -8,8 +8,8 @@ import 'package:hetimanet/hetimanet_chrome.dart';
 import 'package:hetimatorrent/hetimatorrent.dart';
 
 class SeederModel {
-  TorrentClient client = null;
-  UpnpPortMapHelper portMapHelder = new UpnpPortMapHelper(new HetiSocketBuilderChrome(), "HetimaTorrentTracker");
+  TorrentClient _client = null;
+  UpnpPortMapHelper _portMapHelder = null;
 
   String localIp = "0.0.0.0";
   int localPort = 18080;
@@ -20,14 +20,16 @@ class SeederModel {
     return TorrentClient.create(new HetiSocketBuilderChrome(),
         PeerIdCreator.createPeerid("seeder"),
         torrentFile, seed).then((TorrentClient client){
+      _client = client;
       client.localAddress = localIp;
       client.port = localPort;
       return client.start();
     }).then((_){
       if(useUpnp == true) {
-        portMapHelder.basePort = globalPort;
-        portMapHelder.numOfRetry = 0;
-        return portMapHelder.startPortMap().then((StartPortMapResult r) {
+        _portMapHelder = new UpnpPortMapHelper(new HetiSocketBuilderChrome(), "HetimaTorrentTracker");
+        _portMapHelder.basePort = globalPort;
+        _portMapHelder.numOfRetry = 0;
+        return _portMapHelder.startPortMap().then((StartPortMapResult r) {
           return null;
         });
       } else {
@@ -35,6 +37,13 @@ class SeederModel {
           return null;
         });
       }
+    }).catchError((e){
+      if(_client != null) {
+        _client.stop();
+        _client = null;
+        _portMapHelder = null;
+      }
+      throw e;
     });
   }
 }
