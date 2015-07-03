@@ -16,7 +16,7 @@ class CreateItem {
   html.InputElement inputCacheSize = html.querySelector("#create-cache-size");
   html.InputElement inputThreadNum = html.querySelector("#create-thread-num");
   html.SpanElement outputProgress = html.querySelector("#create-progress");
-
+  html.InputElement inputCreateName = html.querySelector("#create-name");
   Dialog dialog = null;
   CreateFileModel createFileModel = new CreateFileModel();
 
@@ -40,7 +40,7 @@ class CreateItem {
           onPro(int v) {
             outputProgress.setInnerHtml("${v} / ${n.size}");
           }
-          createFileModel.createFile(n, announce, pieceLength, cashSize, threadNum, "a.torrent", onPro).then((_) {
+          createFileModel.createFile(n, announce, pieceLength, cashSize, threadNum, inputCreateName.value, "a.torrent", onPro).then((_) {
             inputLink.href = "dummy";
             inputLink.style.display = "block";
           });

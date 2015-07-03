@@ -10,10 +10,11 @@ import 'package:hetimatorrent/hetimatorrent.dart';
 class CreateFileModel {
   html.File _rawFile = null;
 
-  Future createFile(html.File n, String announce, int pieceLength, int cashSize, int threadNum, String fileName, Function onPro) {
+  Future createFile(html.File n, String announce, int pieceLength, int cashSize, int threadNum, String name, String fileName, Function onPro) {
     TorrentFileCreator cre = new TorrentFileCreator();
     cre.announce = announce;
     cre.piececLength = pieceLength;
+    cre.name = name;
 
     if (cashSize > 0 && cashSize < cre.piececLength) {
       cashSize = cashSize * 2;
