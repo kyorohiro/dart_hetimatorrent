@@ -52,12 +52,20 @@ class Tab {
   }
 
   void remove(String key) {
-    tabs.remove(keyManager[key]);
+
     html.Element t = html.querySelector(keyManager[key]);
+    html.Element tt = html.querySelector(tabs[keyManager[key]]);
+    tabs.remove(keyManager[key]);
     if (t != null) {
       tabContainer.nodes.remove(t);
     }
+    if (tt != null) {
+      tt.style.display = "none";
+    }
     updateTab();
+    for(String key in tabs.keys) {
+      print("##--> ${key} ${tabs[key]}");
+    }
   }
 
   void selectTab(String id) {
@@ -93,16 +101,19 @@ class Tab {
       if (displayList.contains(t)) {
         html.Element tt = html.querySelector(tabs[t]);
         if (tt != null) {
+          print("++none ${t} ${tabs[t]} ");
           blockList.add(tt);
         }
       } else {
         html.Element tt = html.querySelector(tabs[t]);
         if (tt != null) {
           tt.style.display = "none";
+          print("--none ${t} ${tabs[t]} ");
         }
       }
     }
     for(html.Element tt in blockList) {
+      print("++none ${tt} ");
       tt.style.display = "block";
     }
   }
@@ -110,6 +121,7 @@ class Tab {
   StreamController<TabInfo> _controller = new StreamController<TabInfo>();
   Stream<TabInfo> get onShow => _controller.stream;
   void update(List<String> ids) {
+    print("update == ${ids}");
     for (String id in ids) {
       if (tabs.containsKey(id)) {
         TabInfo ret = new TabInfo()
