@@ -21,8 +21,6 @@ class HashItem {
   html.ButtonElement startServer = html.querySelector("#torrent-startserver");
   html.ButtonElement stopServer = html.querySelector("#torrent-stopserver");
   html.ObjectElement loadServer = html.querySelector("#torrent-loaderserver");
-  html.SpanElement outputLocalPort = html.querySelector("#torrent-localport");
-  html.SpanElement outputGlobalPort = html.querySelector("#torrent-globalport");
      
      
   init(TrackerModel model, Map<String, TorrentFile> managedTorrentFile, Tab tab) {
