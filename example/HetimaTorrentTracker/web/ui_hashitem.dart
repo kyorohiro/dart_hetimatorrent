@@ -18,9 +18,9 @@ class HashItem {
   html.InputElement localAddress = html.querySelector("#torrent-input-localaddress");
   html.InputElement localport = html.querySelector("#torrent-input-localport");
   html.InputElement globalport = html.querySelector("#torrent-input-globalport");
-  html.ButtonElement startServer = html.querySelector("#torrent-startserver");
-  html.ButtonElement stopServer = html.querySelector("#torrent-stopserver");
-  html.ObjectElement loadServer = html.querySelector("#torrent-loaderserver");
+  html.ButtonElement startServerBtn = html.querySelector("#torrent-startserver");
+  html.ButtonElement stopServerBtn = html.querySelector("#torrent-stopserver");
+  html.ObjectElement loadServerBtn = html.querySelector("#torrent-loaderserver");
      
      
   init(TrackerModel model, Map<String, TorrentFile> managedTorrentFile, Tab tab) {
@@ -41,9 +41,41 @@ class HashItem {
       localAddress.style.display = "block";
       localport.style.display  = "block";
       globalport.style.display  = "block";
-      startServer.style.display  = "block";
-      stopServer.style.display  = "none";
-      loadServer.style.display  = "none";
+      startServerBtn.style.display  = "block";
+      stopServerBtn.style.display  = "none";
+      loadServerBtn.style.display  = "none";
+    });
+    
+    startServerBtn.onClick.listen((html.MouseEvent e) {
+      loadServerBtn.style.display = "block";
+      stopServerBtn.style.display = "none";
+      startServerBtn.style.display = "none";
+
+      model.startTracker(localAddress.value, int.parse(localport.value), int.parse(globalport.value)).then((List<String> v) {
+        stopServerBtn.style.display = "block";
+        startServerBtn.style.display = "none";
+        loadServerBtn.style.display = "none";
+      }).catchError((e) {
+        stopServerBtn.style.display = "none";
+        startServerBtn.style.display = "block";
+        loadServerBtn.style.display = "none";
+      });
+    });
+
+    stopServerBtn.onClick.listen((html.MouseEvent e) {
+      loadServerBtn.style.display = "block";
+      stopServerBtn.style.display = "none";
+      startServerBtn.style.display = "none";
+
+      model.stopTracker().then((StopResult r) {
+        startServerBtn.style.display = "block";
+        stopServerBtn.style.display = "none";
+        loadServerBtn.style.display = "none";
+      }).catchError((e) {
+        startServerBtn.style.display = "none";
+        stopServerBtn.style.display = "block";
+        loadServerBtn.style.display = "none";
+      });
     });
   }
 
