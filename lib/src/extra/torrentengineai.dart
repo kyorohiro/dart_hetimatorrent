@@ -15,7 +15,8 @@ class TorrentEngineAI extends TorrentAI {
   bool isGo = false;
 
   String baseLocalAddress = "0.0.0.0";
-  int basePort = 18080;
+  int baseLocalPort = 18080;
+  int baseGlobalPort = 18080;
   int baseNumOfRetry = 10;
 
   TorrentClient _torrent = null;
@@ -68,7 +69,7 @@ class TorrentEngineAI extends TorrentAI {
   Future _startTorrent() {
     int retry = 0;
     a() {
-      return this._torrent.start(baseLocalAddress, basePort + retry).then((_) {
+      return this._torrent.start(baseLocalAddress, baseLocalPort + retry, baseGlobalPort).then((_) {
         if (usePortMap == true) {
           return _startPortMap().then((_) {
             _torrent.globalPort = _upnpPortMapClient.externalPort;
@@ -92,7 +93,7 @@ class TorrentEngineAI extends TorrentAI {
 
   Future _startPortMap() {
     _upnpPortMapClient.numOfRetry = baseNumOfRetry;
-    _upnpPortMapClient.basePort = basePort;
+    _upnpPortMapClient.basePort = baseGlobalPort;
     _upnpPortMapClient.localAddress = _torrent.localAddress;
     _upnpPortMapClient.localPort = _torrent.localPort;
     return _upnpPortMapClient.startPortMap();

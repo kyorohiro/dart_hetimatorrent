@@ -54,8 +54,8 @@ class TorrentEngine {
       {appid: "hetima_torrent_engine",
       haveAllData: false, 
       String localAddress: "0.0.0.0",
-      int port: 18085,
-      int retryNum:10}) {
+      int localPort: 18085,int globalPort: 18085,
+      int retryNum:10, bool useUpnp:false}) {
     return new Future(() {
       TorrentEngine engine = new TorrentEngine._empty();
       return TrackerClient.createTrackerClient(builder, torrentfile).then((TrackerClient trackerClient) {
@@ -66,8 +66,10 @@ class TorrentEngine {
         engine._upnpPortMapClient = new UpnpPortMapHelper(builder, appid);
         engine.ai = new TorrentEngineAI(engine._torrentClient, engine._trackerClient, engine._upnpPortMapClient);
         engine.ai.baseLocalAddress = localAddress;
-        engine.ai.basePort = port;
+        engine.ai.baseLocalPort = localPort;
+        engine.ai.baseGlobalPort = globalPort;
         engine.ai.baseNumOfRetry = retryNum;
+        engine.ai.usePortMap = useUpnp;
         return engine;
       });
     });

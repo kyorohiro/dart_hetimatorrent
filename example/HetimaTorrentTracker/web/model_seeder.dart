@@ -14,7 +14,9 @@ class SeederModel {
   bool useUpnp = false;
 
   Future<SeederModelStartResult> startEngine(TorrentFile torrentFile, HetimaData seed, bool haveAllData) {
-    return TorrentEngine.createTorrentEngine(new HetiSocketBuilderChrome(), torrentFile, seed, haveAllData: haveAllData).then((TorrentEngine engine) {
+    return TorrentEngine.createTorrentEngine(
+        new HetiSocketBuilderChrome(), torrentFile, seed, haveAllData: haveAllData
+        ,globalPort:_engine.globalPort,localPort:_engine.localPort,useUpnp:useUpnp).then((TorrentEngine engine) {
       _engine = engine;
       return _engine.go().then((_){
         this.localIp = _engine.localIp;
