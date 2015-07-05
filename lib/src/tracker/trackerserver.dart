@@ -74,7 +74,7 @@ class TrackerServer {
         return;
       }
 
-      TrackerPeerManager peerManager = new TrackerPeerManager(infoHash,f);
+      TrackerPeerManager peerManager = new TrackerPeerManager(infoHash, f);
       _peerManagerList.add(peerManager);
       if (outputLog) {
         print("TrackerServer#add:###add: ${infoHash}");
@@ -82,6 +82,7 @@ class TrackerServer {
     });
   }
 
+  async.StreamSubscription res = null;
   async.Future<StartResult> start() {
     if (outputLog) {
       print("TrackerServer#start");
@@ -95,9 +96,10 @@ class TrackerServer {
     }).catchError((e) {
       c.completeError(e);
     });
-    try {
-      _server.onResponse.listen(onListen);
-    } catch (e) {}
+    if (res == null) {
+        res = _server.onResponse.listen(onListen);
+    }
+
     return c.future;
   }
 
@@ -130,7 +132,7 @@ class TrackerServer {
         for (TrackerPeerManager manager in _peerManagerList) {
           if (PercentEncode.encode(manager.managedInfoHash) == parameter["infohash"]) {
             String addr = trackerAnnounceAddressForTorrentFile;
-            if((addr == null || addr.length == 0) || parameter["mode"] == "l") {
+            if ((addr == null || addr.length == 0) || parameter["mode"] == "l") {
               addr = "http://${address}:${port}/announce";
             }
             manager.torrentFile.announce = addr;

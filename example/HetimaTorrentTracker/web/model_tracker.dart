@@ -26,7 +26,8 @@ class TrackerModel {
     // clear
     trackerServer.trackerAnnounceAddressForTorrentFile = "";
 
-    portMapHelder.getPortMapInfo(portMapHelder.appid).then((GetPortMapInfoResult r) {
+    List<Future> v = new List(2);
+    v[0] = portMapHelder.getPortMapInfo(portMapHelder.appid).then((GetPortMapInfoResult r) {
       if (r.infos.length > 0 && r.infos[0].externalPort.length != 0) {
         int port = int.parse(r.infos[0].externalPort);
         portMapHelder.deleteAllPortMap([port]);
@@ -35,7 +36,8 @@ class TrackerModel {
       ;
     });
 
-    return trackerServer.stop();
+    v[1] = trackerServer.stop();
+    return Future.wait(v);
   }
 
   Future startTracker(String localIP, int localPort, int globalPort) {
@@ -48,15 +50,20 @@ class TrackerModel {
         portMapHelder.localAddress = localIP;
         portMapHelder.localPort = localPort;
 
-        portMapHelder.startGetExternalIp().then((_) {}).catchError((e) {}).whenComplete(() {
-          portMapHelder.startPortMap().then((_) {
+        return portMapHelder.startGetExternalIp().then((_) {}).catchError((e) {}).then((_) {
+          return portMapHelder.startPortMap().then((_) {
             trackerServer.trackerAnnounceAddressForTorrentFile = "http://${portMapHelder.externalIp}:${portMapHelder.externalPort}/announce";
-          }).catchError((e) {
-            print("error ${e}");
+            return [trackerServer.address, "${trackerServer.port}"];
           });
         });
+      } else {
+        return [trackerServer.address, "${trackerServer.port}"];
       }
-      return [trackerServer.address, "${trackerServer.port}"];
+    }).catchError((e) {
+      print("error ${e}");
+      return stopTracker().whenComplete((){
+        throw e;
+      });
     });
   }
 
