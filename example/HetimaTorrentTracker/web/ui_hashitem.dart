@@ -57,7 +57,10 @@ class HashItem {
       stopServerBtn.style.display = "none";
       startServerBtn.style.display = "none";
       TorrentFile torrentFile = managedTorrentFile[trackerModel.selectKey];
-      model.startEngine(torrentFile, new HetimaDataBlob(seedFile), true).then((_) {
+      model.startEngine(torrentFile, new HetimaDataBlob(seedFile), true).then((SeederModelStartResult ret) {
+        localAddress.value = ret.localIp;
+        localport.value = "${ret.localPort}";
+        globalport.value = "${ret.globalPort}";
         stopServerBtn.style.display = "block";
         startServerBtn.style.display = "none";
         loadServerBtn.style.display = "none";

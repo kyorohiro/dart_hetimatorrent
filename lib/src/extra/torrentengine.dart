@@ -4,6 +4,8 @@ import 'dart:async';
 import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimanet/hetimanet.dart';
 import 'package:hetimatorrent/hetimatorrent.dart';
+import '../client/torrentclient.dart';
+import '../tracker/trackerclient.dart';
 import 'torrentengineai.dart';
 
 abstract class TorrentEngineCommand {
@@ -39,9 +41,21 @@ class TorrentEngine {
   UpnpPortMapHelper get upnpPortMapClient => _upnpPortMapClient;
 
   TorrentEngineAI ai = null;
-  TorrentEngine._empty() {;}
+  
+  int get localPort => _torrentClient.localPort;
+  String get localIp => _torrentClient.localAddress;
+  int get globalPort => _torrentClient.globalPort;
 
-  static Future<TorrentEngine> createTorrentEngine(HetiSocketBuilder builder, TorrentFile torrentfile, HetimaData cash, {appid: "hetima_torrent_engine", haveAllData: false, aiIsOn: false}) {
+  TorrentEngine._empty() {
+    ;
+  }
+
+  static Future<TorrentEngine> createTorrentEngine(HetiSocketBuilder builder, TorrentFile torrentfile, HetimaData cash, 
+      {appid: "hetima_torrent_engine",
+      haveAllData: false, 
+      String localAddress: "0.0.0.0",
+      int port: 18085,
+      int retryNum:10}) {
     return new Future(() {
       TorrentEngine engine = new TorrentEngine._empty();
       return TrackerClient.createTrackerClient(builder, torrentfile).then((TrackerClient trackerClient) {
@@ -50,7 +64,10 @@ class TorrentEngine {
         engine._torrentClient = new TorrentClient(builder, trackerClient.peerId, trackerClient.infoHash, torrentfile.info.pieces, torrentfile.info.piece_length, torrentfile.info.files.dataSize, cash,
             ai: engine.ai, haveAllData: haveAllData);
         engine._upnpPortMapClient = new UpnpPortMapHelper(builder, appid);
-        engine.ai = new TorrentEngineAI(engine._torrentClient, engine._trackerClient, engine._upnpPortMapClient)..aiIsOn = aiIsOn;
+        engine.ai = new TorrentEngineAI(engine._torrentClient, engine._trackerClient, engine._upnpPortMapClient);
+        engine.ai.baseLocalAddress = localAddress;
+        engine.ai.basePort = port;
+        engine.ai.baseNumOfRetry = retryNum;
         return engine;
       });
     });
@@ -60,7 +77,7 @@ class TorrentEngine {
     ai.usePortMap = usePortMap;
     return ai.go();
   }
-  
+
   Future stop() {
     return ai.stop();
   }

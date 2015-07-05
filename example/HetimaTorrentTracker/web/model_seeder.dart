@@ -13,10 +13,15 @@ class SeederModel {
   int globalPort = 18080;
   bool useUpnp = false;
 
-  Future startEngine(TorrentFile torrentFile, HetimaData seed, bool haveAllData) {
-    return TorrentEngine.createTorrentEngine(new HetiSocketBuilderChrome(), torrentFile, seed, haveAllData: haveAllData, aiIsOn: true).then((TorrentEngine engine) {
+  Future<SeederModelStartResult> startEngine(TorrentFile torrentFile, HetimaData seed, bool haveAllData) {
+    return TorrentEngine.createTorrentEngine(new HetiSocketBuilderChrome(), torrentFile, seed, haveAllData: haveAllData).then((TorrentEngine engine) {
       _engine = engine;
-      return _engine.go();
+      return _engine.go().then((_){
+        this.localIp = _engine.localIp;
+        this.globalPort = _engine.globalPort;
+        this.localPort = _engine.localPort;
+        return new SeederModelStartResult()..localIp=localIp..localPort=localPort..globalPort=globalPort;
+      });
     });
   }
 
@@ -29,4 +34,10 @@ class SeederModel {
       }
     });
   }
+}
+
+class SeederModelStartResult {
+  String localIp = "0.0.0.0";
+  int localPort = 18080;
+  int globalPort = 18080;
 }
