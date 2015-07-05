@@ -2,6 +2,7 @@ library app.mainview.hashitem;
 
 import 'dart:html' as html;
 import 'package:hetimacore/hetimacore.dart';
+import 'package:hetimacore/hetimacore_cl.dart';
 import 'package:hetimatorrent/hetimatorrent.dart';
 import 'ui_dialog.dart';
 import 'model_tracker.dart';
@@ -23,10 +24,11 @@ class HashItem {
   html.ButtonElement startServerBtn = html.querySelector("#torrent-startserver");
   html.ButtonElement stopServerBtn = html.querySelector("#torrent-stopserver");
   html.ObjectElement loadServerBtn = html.querySelector("#torrent-loaderserver");
-     
-     
+
+  html.File seedRawFile = null;
   init(TrackerModel trackerModel, Map<String, TorrentFile> managedTorrentFile, Tab tab) {
     SeederModel model = new SeederModel();
+
     torrentRemoveBtn.onClick.listen((html.MouseEvent e) {
       if (trackerModel.selectKey != null) {
         tab.remove(trackerModel.selectKey);
@@ -41,6 +43,7 @@ class HashItem {
       if(seedFile.files.length <= 0) {
         return;
       }
+      seedRawFile = seedFile.files[0];
       localAddress.style.display = "block";
       localport.style.display  = "block";
       globalport.style.display  = "block";
@@ -53,8 +56,8 @@ class HashItem {
       loadServerBtn.style.display = "block";
       stopServerBtn.style.display = "none";
       startServerBtn.style.display = "none";
-
-      model.startTracker(localAddress.value, int.parse(localport.value), int.parse(globalport.value)).then((List<String> v) {
+      TorrentFile torrentFile = managedTorrentFile[trackerModel.selectKey];
+      model.startEngine(torrentFile, new HetimaDataBlob(seedFile), true).then((_) {
         stopServerBtn.style.display = "block";
         startServerBtn.style.display = "none";
         loadServerBtn.style.display = "none";
@@ -70,7 +73,7 @@ class HashItem {
       stopServerBtn.style.display = "none";
       startServerBtn.style.display = "none";
 
-      model.stopTracker().then((StopResult r) {
+      model.stopEngine().then((StopResult r) {
         startServerBtn.style.display = "block";
         stopServerBtn.style.display = "none";
         loadServerBtn.style.display = "none";
@@ -87,9 +90,9 @@ class HashItem {
         html.InputElement clicked = e.target;
         print("The user is ${clicked.value}");
         if (clicked.value == "Use") {
-          model.upnpIsUse = true;
+          model.useUpnp = true;
         } else {
-          model.upnpIsUse = false;
+          model.useUpnp = false;
         }
       });
     });

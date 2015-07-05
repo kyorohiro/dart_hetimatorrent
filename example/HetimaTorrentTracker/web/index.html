@@ -10,7 +10,7 @@
    <div style="width:100%; height:50px; background-color:#ccf;">
      <nav>
         <ul id="tabcont" class="menu">
-          <li id="m00_clone" style="background-color: #ff6666; font-weight: bold;" >( + )</li>
+          <li id="m00_clone" style="background-color: #ff6666; font-weight: bold;" >( Tracker )</li>
           <li id="m00_create" style="background-color: #66ff66; font-weight: bold;" >( Create )</li>
         </ul>
       </nav>
@@ -77,30 +77,43 @@
      //
    </div>
 
+
+
+
+
+
     <!--
      [Content3] now
      -->
     <div id="con-now" style="width:100%; height:calc(100% - 70px); display:none;">
-         <h2>#Information------------</h2>
-         <h3>[Hash]</h3>
-         <span id="torrent-hash">...</span>
-
-         <h3>[Peer Num]</h3> 
-         <span id="torrent-num-of-peer">...</span><br>
-         <button id="torrent-remove-btn">REMOVE</button>
-
+         <table>
+         <tr>
+           <td>[Hash]</td>
+           <td><span id="torrent-hash">...</span></td>
+         </tr>
+         <tr>
+           <td>[Peer Num]</td>
+           <td><span id="torrent-num-of-peer">...</span></td>
+         </tr>
+         <tr>
+           <td>[Remove Tab]</td>
+           <td><button id="torrent-remove-btn">REMOVE</button></td>
+         </tr>
+         </table>
         <hr>
-
-        <h2>#Seeder------------</h2>
-        <h3>[Seed File]</h3>
-         <input type="file" id="torrent-seedfile">
-
-        <h3>[UPnP Support]</h3>    
-    　　   <input type="radio" name="torrent-upnpon" value="Use"> Use
-       　　<input type="radio" name="torrent-upnpon" value="Unuse" checked> Unuse
-
-     　　<h3>[Server]</h3>
+          
       　　 <table>
+          <tr >
+      　　　 <td>select seed file</td>
+      　　　 <td><input type="file" id="torrent-seedfile" style="width:25%; height:25%; background-color: #99cc00"></td>
+     　　  </tr>          
+          <tr>
+      　　　 <td>upnp support</td>
+      　　　 <td>
+              <input type="radio" name="torrent-upnpon" value="Use"> Use 
+              <input type="radio" name="torrent-upnpon" value="Unuse" checked> Unuse
+            </td>
+     　　  </tr>
        　　<tr>
       　　　 <td>local address</td>
       　　　 <td><input type="text" id="torrent-input-localaddress" value="0.0.0.0" style="display: none"></td>
@@ -118,8 +131,12 @@
           <button id="torrent-stopserver" style="display:none" >Stop</button>     
           <object id="torrent-loaderserver" type="image/svg+xml" data="loader_b.svg" width="32" height="32" style="display: none"></object>
     </div> 
+
+
+
+
     
-        <!--
+    <!--
      [Content1] add
      -->
     <div id="com-create" style="width:100%; height:calc(100% - 70px);">

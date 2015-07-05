@@ -10,6 +10,10 @@ import '../file/torrentfile.dart';
 import '../util/peeridcreator.dart';
 
 class TrackerClient {
+  static const String EVENT_STARTED = TrackerUrl.VALUE_EVENT_STARTED;
+  static const String EVENT_COMPLETED = TrackerUrl.VALUE_EVENT_COMPLETED;
+  static const String EVENT_STOPPED = TrackerUrl.VALUE_EVENT_STOPPED;
+
   TrackerUrl trackerUrl;
   HetiSocketBuilder _socketBuilder = null;
   TrackerClient._a(HetiSocketBuilder builder, TrackerUrl trackerUrl) {

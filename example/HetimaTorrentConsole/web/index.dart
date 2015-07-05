@@ -108,6 +108,7 @@ void main() {
             terminal.addCommand(InterestedCommand.name,InterestedCommand.builder());
             terminal.addCommand(NotInterestedCommand.name,NotInterestedCommand.builder());    
             terminal.addCommand(PortCommand.name,PortCommand.builder()); 
+            terminal.addCommand(StopTorrentClientCommand.name, StopTorrentClientCommand.builder());
             
             
             engine.torrentClient.onReceiveEvent.listen((TorrentClientMessage info) {

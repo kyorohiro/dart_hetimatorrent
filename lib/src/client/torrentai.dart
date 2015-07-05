@@ -7,6 +7,8 @@ import 'package:hetimacore/hetimacore.dart';
 import 'torrentclient.dart';
 import 'torrentclientfront.dart';
 import 'torrentclientpeerinfo.dart';
+import '../tracker/trackerclient.dart';
+import 'torrentclientmessage.dart';
 
 abstract class TorrentAI {
   Future onReceive(
@@ -29,6 +31,7 @@ class TorrenAIEmpty extends TorrentAI {
 }
 
 class TorrentAIBasic extends TorrentAI {
+
   Future onReceive(TorrentClient client, TorrentClientPeerInfo info, TorrentMessage message) {
     return new Future(() {
       TorrentClientFront front = info.front;

@@ -29,15 +29,40 @@ class StartTorrentClientCommand extends TorrentEngineCommand {
 
   Future<CommandResult> execute(TorrentEngine engine, {List<String> args: null}) {
     return new Future(() {
-      engine.torrentClient.localAddress = localIp;
-      engine.torrentClient.port = localPort;
-      return engine.torrentClient.start().then((_) {
-        return new CommandResult("started ${engine.torrentClient.localAddress} ${engine.torrentClient.port}");
+      return engine.torrentClient.start(localIp, localPort).then((_) {
+        return new CommandResult("started ${engine.torrentClient.localAddress} ${engine.torrentClient.localPort}");
       });
     });
   }
 }
 
+class StopTorrentClientCommand extends TorrentEngineCommand {
+
+  StopTorrentClientCommand() {
+  }
+
+  static String get help => "${name}: stop torrent client.";
+  static get name => "stopTorrent";
+
+  static TorrentEngineCommandBuilder builder() {
+    TorrentEngineCommand builder(List<String> list) {
+      return new StopTorrentClientCommand();
+    }
+    return new TorrentEngineCommandBuilder(builder, help);
+  }
+
+  Future<CommandResult> execute(TorrentEngine engine, {List<String> args: null}) {
+    return new Future(() {
+      if(engine.torrentClient != null) {
+       return  engine.torrentClient.stop().then((_){
+        return new CommandResult("stopped");
+       });
+      } else {
+        return new CommandResult("already stopped");
+      }
+    });
+  }
+}
 class GetPeerInfoCommand extends TorrentEngineCommand {
   String localIp = "";
   int localPort = 0;

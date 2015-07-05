@@ -4,23 +4,31 @@ import 'dart:core';
 import 'dart:async';
 import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimanet/hetimanet.dart';
-import '../message/message.dart';
 
 import 'torrentclientfront.dart';
+import 'torrentclientpeerinfo.dart';
+import 'torrentai.dart';
+import 'torrentclientmessage.dart';
+
 import '../util/blockdata.dart';
 import '../util/bitfield.dart';
 
+import '../message/message.dart';
+
 import '../file/torrentfile.dart';
-import 'torrentclientpeerinfo.dart';
-import 'torrentai.dart';
+import '../tracker/trackerclient.dart';
 
 class TorrentClient {
   HetiServerSocket _server = null;
   HetiSocketBuilder _builder = null;
   List<int> _peerId = [];
   List<int> _infoHash = [];
-  String localAddress = "0.0.0.0";
-  int port = 8080;
+  String _localAddress = "0.0.0.0";
+  int _localPort = 8080;
+
+  String get localAddress => _localAddress;
+  int get localPort => _localPort;
+  int globalPort = 8080;
 
   List<int> get peerId => new List.from(_peerId);
   List<int> get infoHash => new List.from(_infoHash);
@@ -37,18 +45,22 @@ class TorrentClient {
   BlockData _targetBlock = null;
   BlockData get targetBlock => _targetBlock;
 
+  TorrentAI _ai = null;
+  bool _isStart = false;
+  bool get isStart => _isStart;
+
   static Future<TorrentClient> create(HetiSocketBuilder builder, List<int> peerId, TorrentFile file, HetimaData data, {TorrentAI ai: null}) {
     return file.createInfoSha1().then((List<int> infoHash) {
       return new TorrentClient(builder, peerId, infoHash, file.info.pieces, file.info.piece_length, file.info.files.dataSize, data, ai: ai);
     });
   }
 
-  TorrentClient(HetiSocketBuilder builder, List<int> peerId, List<int> infoHash, List<int> piece, int pieceLength, int fileSize, HetimaData data, {TorrentAI ai: null}) {
+  TorrentClient(HetiSocketBuilder builder, List<int> peerId, List<int> infoHash, List<int> piece, int pieceLength, int fileSize, HetimaData data, {TorrentAI ai: null, haveAllData: false}) {
     this._builder = builder;
     _peerInfos = new TorrentClientPeerInfoList();
     _infoHash.addAll(infoHash);
     _peerId.addAll(peerId);
-    _targetBlock = new BlockData(data, new Bitfield(piece.length ~/ 20, clearIsOne: false), pieceLength, fileSize);
+    _targetBlock = new BlockData(data, new Bitfield(piece.length ~/ 20, clearIsOne: haveAllData), pieceLength, fileSize);
     if (ai == null) {
       this.ai = new TorrentAIBasic();
     } else {
@@ -60,8 +72,14 @@ class TorrentClient {
     return _peerInfos.putFormTrackerPeerInfo(ip, port, peerId: peerId);
   }
 
-  Future start() {
-    return _builder.startServer(localAddress, port).then((HetiServerSocket serverSocket) {
+  Future start(String localAddress, int localPort,[int globalPort=null]) {
+    this._localAddress = localAddress;
+    this._localPort = localPort;
+    this.globalPort = globalPort;
+    if(this.globalPort == null) {
+      this.globalPort = localPort;
+    }
+    return _builder.startServer(localAddress, localPort).then((HetiServerSocket serverSocket) {
       _server = serverSocket;
       _server.onAccept().listen((HetiSocket socket) {
         new Future(() {
@@ -70,13 +88,39 @@ class TorrentClient {
             info.front = new TorrentClientFront(socket, socketInfo.peerAddress, socketInfo.peerPort, socket.buffer, this._targetBlock.bitSize, _infoHash, _peerId);
             _internalOnReceive(info.front, info);
             info.front.startReceive();
+            _isStart = true;
             _signalStream.add(new TorrentClientSignalWithPeerInfo(info, TorrentClientSignal.ID_ACCEPT, 0, "accepted"));
           });
         }).catchError((e) {
           socket.close();
         });
       });
+      _signalStream.add(new TorrentClientSignal(TorrentClientSignal.ID_STARTED_CLIENT, 0, "started client"));
       return {};
+    });
+  }
+
+  Future stop() {
+    for (TorrentClientPeerInfo s in this.peerInfos) {
+      new Future(() {
+        if (s.front != null && s.front.isClose != false) {
+          return s.front.close();
+        }
+      }).catchError((e) {
+        ;
+      });
+    }
+
+    new Future(() {
+      _isStart = false;
+      _signalStream.add(new TorrentClientSignal(TorrentClientSignal.ID_STOPPED_CLIENT, 0, "stopped client"));
+      return _server.close();
+    }).catchError((e) {
+      ;
+    });
+
+    return new Future(() {
+      return new Future(() {});
     });
   }
 
@@ -110,7 +154,7 @@ class TorrentClient {
   void _internalOnReceive(TorrentClientFront front, TorrentClientPeerInfo info) {
     front.onReceiveEvent.listen((TorrentMessage message) {
       messageStream.add(new TorrentClientMessage(info, message));
-      if(message is MessagePiece) {
+      if (message is MessagePiece) {
         _onPieceMessage(message);
       }
       _ai.onReceive(this, info, message);
@@ -124,90 +168,17 @@ class TorrentClient {
 
   void _onPieceMessage(MessagePiece piece) {
     _targetBlock.writePartBlock(piece.content, piece.index, piece.begin, piece.content.length).then((WriteResult w) {
-      if(_targetBlock.have(piece.index)) {
+      if (_targetBlock.have(piece.index)) {
         _signalStream.add(new TorrentClientSignal(TorrentClientSignal.ID_SET_PIECE, piece.index, "set piece : index:${piece.index}"));
       }
-      if(_targetBlock.haveAll()) {
-        _signalStream.add(new TorrentClientSignal(TorrentClientSignal.ID_SET_PIECE_ALL, piece.index, "set piece all"));        
+      if (_targetBlock.haveAll()) {
+        _signalStream.add(new TorrentClientSignal(TorrentClientSignal.ID_SET_PIECE_ALL, piece.index, "set piece all"));
       }
     });
   }
 
-  Future stop() {
-    for (TorrentClientPeerInfo s in this.peerInfos) {
-      new Future(() {
-        if (s.front != null && s.front.isClose != false) {
-          return s.front.close();
-        }
-      }).catchError((e) {
-        ;
-      });
-    }
-
-    new Future(() {
-      return _server.close();
-    }).catchError((e) {
-      ;
-    });
-
-    return new Future(() {
-      return new Future(() {});
-    });
-  }
-
-  TorrentAI _ai = null;
   void set ai(TorrentAI v) {
     _ai = v;
   }
   TorrentAI get ai => _ai;
-}
-
-class TorrentClientMessage {
-  TorrentMessage message;
-  TorrentClientFront get front => _info.front;
-  TorrentClientPeerInfo get info => _info;
-  TorrentClientPeerInfo _info;
-
-  TorrentClientMessage(TorrentClientPeerInfo info, TorrentMessage message) {
-    this.message = message;
-    this._info = info;
-  }
-
-  String toString() {
-    return "signal:info:${info.id} ${info.ip} ${info.port} message:${message.toString()}";
-  }
-}
-
-class TorrentClientSignal {
-  static int ID_CONNECTED = 1001;
-  static int ID_ACCEPT = 1002;
-  static int ID_SET_PIECE = 1003;
-  static int ID_SET_PIECE_ALL = 1004;
-  int _id = 0;
-  int _reason = 0;
-  int get id => _id;
-  int get reason => _reason;
-  String _message = "";
-
-  TorrentClientSignal(int id, int reason, String message) {
-    _id = id;
-    _reason = reason;
-  }
-
-  String toString() {
-    return "${_message}";
-  }
-}
-
-class TorrentClientSignalWithPeerInfo extends TorrentClientSignal {
-  TorrentClientPeerInfo _info;
-  TorrentClientPeerInfo get info => _info;
-
-  TorrentClientSignalWithPeerInfo(TorrentClientPeerInfo info, int id, int reason, String message) : super(id, reason, message) {
-    this._info = info;
-  }
-
-  String toString() {
-    return "signal:info:${_info.id} ${_info.ip} ${_info.port} signal:${_message}";
-  }
 }

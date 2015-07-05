@@ -43,24 +43,23 @@ class StartUpnpPortMapCommand extends TorrentEngineCommand {
 }
 
 class StopUpnpPortMapCommand extends TorrentEngineCommand {
-  int port = 0;
-  StopUpnpPortMapCommand(int port) {
-    this.port = port;
+
+  StopUpnpPortMapCommand() {
   }
 
-  static String get help => "${name} [int:port]: request port map commaand";
+  static String get help => "${name}: request port map commaand";
   static String get name => "stopPortMap";
 
   static TorrentEngineCommandBuilder builder() {
     TorrentEngineCommand builder(List<String> list) {
-      return new StopUpnpPortMapCommand(int.parse(list[0]));
+      return new StopUpnpPortMapCommand();
     }
     return new TorrentEngineCommandBuilder(builder, help);
   }
 
   Future<CommandResult> execute(TorrentEngine engine, {List<String> args: null}) {
     return new Future(() {
-      return engine.upnpPortMapClient.deleteAllPortMap([port]).then((DeleteAllPortMapResult result) {
+      return engine.upnpPortMapClient.deletePortMapFromAppIdDesc().then((DeleteAllPortMapResult result) {
         return new CommandResult("portmapped ${result.hashCode}");
       });
     });
