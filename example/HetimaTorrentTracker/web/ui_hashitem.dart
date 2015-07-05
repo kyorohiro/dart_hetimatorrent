@@ -64,7 +64,7 @@ class HashItem {
       model.localPort = int.parse(localport.value);
       model.localIp = localAddress.value;
       model.globalIp = globalAddress.value;
-      model.startEngine(torrentFile, new HetimaDataBlob(seedFile), true).then((SeederModelStartResult ret) {
+      model.startEngine(torrentFile, new HetimaDataBlob(seedRawFile), true).then((SeederModelStartResult ret) {
         localAddress.value = ret.localIp;
         localport.value = "${ret.localPort}";
         globalport.value = "${ret.globalPort}";
