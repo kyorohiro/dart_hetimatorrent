@@ -120,7 +120,9 @@ class TrackerServer {
       if (infoHashAsString == null && (item.path == "/" || item.path == "/index.html")) {
         StringBuffer cont = new StringBuffer();
         for (TrackerPeerManager manager in _peerManagerList) {
-          cont.writeln("""<div><a href="/your.torrent?infohash=${PercentEncode.encode(manager.managedInfoHash)}">${PercentEncode.encode(manager.managedInfoHash)}</a></div>""");
+          cont.writeln("""<div>[${PercentEncode.encode(manager.managedInfoHash)}]</div>""");
+          cont.writeln("""<div><a href="/your.torrent?infohash=${PercentEncode.encode(manager.managedInfoHash)}&mode=g">  global</a></div>""");
+          cont.writeln("""<div><a href="/your.torrent?infohash=${PercentEncode.encode(manager.managedInfoHash)}&mode=l">  local</a></div>""");
         }
         _server.response(item.req, new HetimaBuilderToFile(new ArrayBuilder.fromList(UTF8.encode("<html><head></head><body><div>[managed hash]</div>${cont}</body></html>"))),
             contentType: "text/html");
@@ -128,7 +130,7 @@ class TrackerServer {
         for (TrackerPeerManager manager in _peerManagerList) {
           if (PercentEncode.encode(manager.managedInfoHash) == parameter["infohash"]) {
             String addr = trackerAnnounceAddressForTorrentFile;
-            if(addr == null || addr.length == 0) {
+            if((addr == null || addr.length == 0) || parameter["mode"] == "l") {
               addr = "http://${address}:${port}/announce";
             }
             manager.torrentFile.announce = addr;
