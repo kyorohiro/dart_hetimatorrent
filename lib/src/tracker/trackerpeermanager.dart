@@ -54,7 +54,7 @@ class TrackerPeerManager {
         return false;
       }
     });
-    TrackerPeerInfo added = managedPeerAddress.addLast(new TrackerPeerInfo(request.peerId, request.address, request.ip, request.port));
+    TrackerPeerInfo added = managedPeerAddress.addLast(new TrackerPeerInfo(request.peerId, request.address, request.ip, request.port, request.optIp));
     added.update();
     if (managedPeerAddress.length > max) {
       managedPeerAddress.removeHead();
@@ -66,8 +66,9 @@ class TrackerPeerManager {
     response.interval = this.interval;
     managedPeerAddress.shuffle();
     for (int i = 0; i < 50 && i < managedPeerAddress.length; i++) {
-      response.peers.add(managedPeerAddress.getShuffled(i));
+        response.peers.add(managedPeerAddress.getShuffled(i));
     }
     return response;
   }
+
 }

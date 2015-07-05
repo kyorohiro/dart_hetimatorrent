@@ -1,4 +1,5 @@
 library hetimatorrent.torrent.trackerresponse;
+
 import 'dart:core';
 import 'dart:typed_data' as data;
 import 'dart:async' as async;
@@ -19,8 +20,7 @@ class TrackerResponse {
 
   int interval = 10;
   List<TrackerPeerInfo> peers = [];
-  TrackerResponse() {
-  }
+  TrackerResponse() {}
 
   TrackerResponse.bencode(data.Uint8List contents) {
     Map<String, Object> c = Bencode.decode(contents);
@@ -56,7 +56,7 @@ class TrackerResponse {
       List<Object> wpeers = c[KEY_PEERS];
       for (Map<String, Object> wpeer in wpeers) {
         String ip = "";
-        if(wpeer[KEY_IP] is String) {
+        if (wpeer[KEY_IP] is String) {
           ip = wpeer[KEY_IP];
         } else {
           ip = convert.UTF8.decode(wpeer[KEY_IP]);
@@ -68,14 +68,33 @@ class TrackerResponse {
     }
   }
 
-  Map<String, Object> createResponse(bool isCompat) {
+  Map<String, Object> createResponse(bool isCompat, [bool toGlobalDevice = true]) {
     Map ret = new Map();
     ret[KEY_INTERVAL] = interval;
     if (isCompat) {
       ArrayBuilder builder = new ArrayBuilder();
       for (TrackerPeerInfo p in peers) {
-        builder.appendIntList(p.ip, 0, p.ip.length);
-        builder.appendIntList(ByteOrder.parseShortByte(p.port, ByteOrder.BYTEORDER_BIG_ENDIAN), 0, 2);
+        if (toGlobalDevice) {
+          //
+          // return global ip only, when target device is from global ip.
+          // for global network device
+          if (true == HetiIP.isLocalNetwork(p.ip)) {
+            if (false == HetiIP.isLocalNetwork(p.optIp) && HetiIP.isIpV4(p.optIp)) {
+              builder.appendIntList(p.optIp, 0, p.optIp.length);
+              builder.appendIntList(ByteOrder.parseShortByte(p.port, ByteOrder.BYTEORDER_BIG_ENDIAN), 0, 2);
+            }
+          } else if (HetiIP.isIpV4(p.ip)) {
+            builder.appendIntList(p.ip, 0, p.ip.length);
+            builder.appendIntList(ByteOrder.parseShortByte(p.port, ByteOrder.BYTEORDER_BIG_ENDIAN), 0, 2);
+          }
+        } else {
+          //
+          // for localnetwork device
+          if (true == HetiIP.isIpV4(p.ip)) {
+            builder.appendIntList(p.ip, 0, p.ip.length);
+            builder.appendIntList(ByteOrder.parseShortByte(p.port, ByteOrder.BYTEORDER_BIG_ENDIAN), 0, 2);
+          }
+        }
       }
       ret[KEY_PEERS] = builder.toUint8List();
     } else {
@@ -90,4 +109,5 @@ class TrackerResponse {
     }
     return ret;
   }
+
 }

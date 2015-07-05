@@ -13,6 +13,7 @@ class TrackerRequest {
   String uploadedAsString = "";
   String leftAsString = "";
   String address = "";
+  String optIp = "";
   List<int> ip = null;
 
   TrackerRequest.fromMap(Map<String, String> parameter, String _address, List<int> _ip) {
@@ -24,6 +25,11 @@ class TrackerRequest {
     uploadedAsString = parameter[TrackerUrl.KEY_UPLOADED];
     leftAsString = parameter[TrackerUrl.KEY_LEFT];
     address = _address;
+    if(parameter.containsKey(TrackerUrl.KEY_OPT_IP)) {
+      optIp = parameter[TrackerUrl.KEY_OPT_IP];
+    } else {
+      optIp = "";
+    }
     ip = new List.from(_ip);
   }
   

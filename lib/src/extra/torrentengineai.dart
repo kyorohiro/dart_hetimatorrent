@@ -15,6 +15,7 @@ class TorrentEngineAI extends TorrentAI {
   bool isGo = false;
 
   String baseLocalAddress = "0.0.0.0";
+  String baseGlobalIp = "0.0.0.0";
   int baseLocalPort = 18080;
   int baseGlobalPort = 18080;
   int baseNumOfRetry = 10;
@@ -63,18 +64,22 @@ class TorrentEngineAI extends TorrentAI {
       if (usePortMap == true) {
         return _upnpPortMapClient.deletePortMapFromAppIdDesc().catchError((e) {});
       }
-    });
+    }).whenComplete((){isGo = false;});
   }
 
   Future _startTorrent() {
     int retry = 0;
     a() {
-      return this._torrent.start(baseLocalAddress, baseLocalPort + retry, baseGlobalPort).then((_) {
+      return this._torrent.start(baseLocalAddress, baseLocalPort + retry, baseGlobalIp, baseGlobalPort).then((_) {
         if (usePortMap == true) {
           return _startPortMap().then((_) {
             _torrent.globalPort = _upnpPortMapClient.externalPort;
           }).catchError((e) {
             _torrent.globalPort = _torrent.localPort;
+          }).then((_){
+            return _upnpPortMapClient.startGetExternalIp().then((StartGetExternalIp ip) {
+              _torrent.globalIp = ip.externalIp;
+            }).catchError((e){;});
           });
         } else {
           _torrent.globalPort = _torrent.localPort;
@@ -99,6 +104,14 @@ class TorrentEngineAI extends TorrentAI {
     return _upnpPortMapClient.startPortMap();
   }
 
+  bool localNetworkIp(String ip) {
+    if(ip.startsWith(new RegExp("127\.|0\.|10\.|192\."))) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Future _startTracker(int intervalSec) {
     return new Future.delayed(new Duration(seconds: intervalSec)).then((_) {
       if(isGo == false) {
@@ -106,6 +119,11 @@ class TorrentEngineAI extends TorrentAI {
       }
       _tracker.event = TrackerClient.EVENT_STARTED;
       _tracker.peerport = _torrent.globalPort;
+      if(localNetworkIp(_torrent.globalIp)) {
+         _tracker.optIp = null; 
+      } else {
+        _tracker.optIp = _torrent.globalIp;
+      }
       return _tracker.request().then((TrackerRequestResult r) {
         for (TrackerPeerInfo info in r.response.peers) {
           _torrent.putTorrentPeerInfo(info.ipAsString, info.port);

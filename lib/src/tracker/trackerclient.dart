@@ -44,6 +44,12 @@ class TrackerClient {
   void set event(String event) {
     trackerUrl.event = event;
   }
+  
+  void set optIp(String ip) {
+    trackerUrl.ip = ip;
+  }
+  
+  String get optIp => trackerUrl.ip;
 
 
   String get infoHashAsPercentEncoding => trackerUrl.infoHashValue;

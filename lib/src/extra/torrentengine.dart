@@ -45,6 +45,7 @@ class TorrentEngine {
   int get localPort => _torrentClient.localPort;
   String get localIp => _torrentClient.localAddress;
   int get globalPort => _torrentClient.globalPort;
+  String get globalIp => _torrentClient.globalIp;
 
   TorrentEngine._empty() {
     ;
@@ -53,8 +54,8 @@ class TorrentEngine {
   static Future<TorrentEngine> createTorrentEngine(HetiSocketBuilder builder, TorrentFile torrentfile, HetimaData cash, 
       {appid: "hetima_torrent_engine",
       haveAllData: false, 
-      String localAddress: "0.0.0.0",
       int localPort: 18085,int globalPort: 18085,
+      String globalIp:"0.0.0.0",String localIp:"0.0.0.0",
       int retryNum:10, bool useUpnp:false}) {
     return new Future(() {
       TorrentEngine engine = new TorrentEngine._empty();
@@ -62,14 +63,16 @@ class TorrentEngine {
         engine._builder = builder;
         engine._trackerClient = trackerClient;
         engine._torrentClient = new TorrentClient(builder, trackerClient.peerId, trackerClient.infoHash, torrentfile.info.pieces, torrentfile.info.piece_length, torrentfile.info.files.dataSize, cash,
-            ai: engine.ai, haveAllData: haveAllData);
+            ai: engine.ai, haveAllData: haveAllData);        
+        //
         engine._upnpPortMapClient = new UpnpPortMapHelper(builder, appid);
         engine.ai = new TorrentEngineAI(engine._torrentClient, engine._trackerClient, engine._upnpPortMapClient);
-        engine.ai.baseLocalAddress = localAddress;
+        engine.ai.baseLocalAddress = localIp;
         engine.ai.baseLocalPort = localPort;
         engine.ai.baseGlobalPort = globalPort;
         engine.ai.baseNumOfRetry = retryNum;
         engine.ai.usePortMap = useUpnp;
+        engine.ai.baseGlobalIp = globalIp;
         return engine;
       });
     });

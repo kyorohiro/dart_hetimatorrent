@@ -29,6 +29,7 @@ class TorrentClient {
   String get localAddress => _localAddress;
   int get localPort => _localPort;
   int globalPort = 8080;
+  String globalIp = "0.0.0.0";
 
   List<int> get peerId => new List.from(_peerId);
   List<int> get infoHash => new List.from(_infoHash);
@@ -72,10 +73,11 @@ class TorrentClient {
     return _peerInfos.putFormTrackerPeerInfo(ip, port, peerId: peerId);
   }
 
-  Future start(String localAddress, int localPort,[int globalPort=null]) {
+  Future start(String localAddress, int localPort,[String  globalIp=null, int globalPort=null]) {
     this._localAddress = localAddress;
     this._localPort = localPort;
     this.globalPort = globalPort;
+    this.globalIp = globalIp;
     if(this.globalPort == null) {
       this.globalPort = localPort;
     }

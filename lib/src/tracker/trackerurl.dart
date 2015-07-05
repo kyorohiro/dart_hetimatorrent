@@ -18,7 +18,8 @@ class TrackerUrl {
   static const String KEY_UPLOADED = "uploaded";
   static const String KEY_LEFT = "left";
   static final String KEY_COMPACT = "compact";
-
+  static const String KEY_OPT_IP = "ip";
+  
   String trackerHost = "127.0.0.1";
   int trackerPort = 6969;
   String path = "/announce";
@@ -31,6 +32,7 @@ class TrackerUrl {
   int downloaded = 0;
   int uploaded = 0;
   int left = 0;
+  String ip = null;
 
   void set announce(String announce) {
     HttpUrlDecoder decoder = new HttpUrlDecoder();
@@ -46,34 +48,18 @@ class TrackerUrl {
   }
 
   String toHeader() {
-    return "?" +
-        KEY_INFO_HASH +
-        "=" +
-        infoHashValue +
-        "&" +
-        KEY_PORT +
-        "=" +
-        port.toString() +
-        "&" +
-        KEY_PEER_ID +
-        "=" +
-        peerID +
-        "&" +
-        KEY_EVENT +
-        "=" +
-        event +
-        "&" +
-        KEY_UPLOADED +
-        "=" +
-        uploaded.toString() +
-        "&" +
-        KEY_DOWNLOADED +
-        "=" +
-        downloaded.toString() +
-        "&" +
-        KEY_LEFT +
-        "=" +
-        left.toString();
+    String ret =  
+        "?${KEY_INFO_HASH}=${infoHashValue}"+
+        "&${KEY_PORT}=${port.toString()}"+
+        "&${KEY_PEER_ID}=${peerID}"+
+        "&${KEY_EVENT}=${event}"+
+        "&${KEY_UPLOADED}=${uploaded}"+
+        "&${KEY_DOWNLOADED}=${downloaded}" +
+        "&${KEY_LEFT}=${left.toString()}";
+    if(ip != null) {
+      ret += "${KEY_OPT_IP}:${ip}";
+    }
+    return ret;
   }
 
   TrackerUrl(String announce, List<int> infoHash, List<int> peerId, {String event:TrackerUrl.VALUE_EVENT_STARTED, int downloaded:0,int uploaded:0,int left:0,port:6969}) {

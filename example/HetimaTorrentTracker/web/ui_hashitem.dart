@@ -18,6 +18,8 @@ class HashItem {
 // "torrent-upnpon"
   
   html.InputElement seedFile = html.querySelector("#torrent-seedfile");
+  
+  html.InputElement globalAddress = html.querySelector("#torrent-input-globaladdress");
   html.InputElement localAddress = html.querySelector("#torrent-input-localaddress");
   html.InputElement localport = html.querySelector("#torrent-input-localport");
   html.InputElement globalport = html.querySelector("#torrent-input-globalport");
@@ -46,6 +48,7 @@ class HashItem {
       seedRawFile = seedFile.files[0];
       localAddress.style.display = "block";
       localport.style.display  = "block";
+      globalAddress.style.display = "block";
       globalport.style.display  = "block";
       startServerBtn.style.display  = "block";
       stopServerBtn.style.display  = "none";
@@ -60,11 +63,12 @@ class HashItem {
       model.globalPort = int.parse(globalport.value);
       model.localPort = int.parse(localport.value);
       model.localIp = localAddress.value;
-
+      model.globalIp = globalAddress.value;
       model.startEngine(torrentFile, new HetimaDataBlob(seedFile), true).then((SeederModelStartResult ret) {
         localAddress.value = ret.localIp;
         localport.value = "${ret.localPort}";
         globalport.value = "${ret.globalPort}";
+        globalAddress.value = "${ret.globalIp}";
         stopServerBtn.style.display = "block";
         startServerBtn.style.display = "none";
         loadServerBtn.style.display = "none";
@@ -100,6 +104,18 @@ class HashItem {
           model.useUpnp = true;
         } else {
           model.useUpnp = false;
+        }
+      });
+    });
+    
+    html.querySelectorAll('[name="torrent-upnpon"]').forEach((html.InputElement radioButton) {
+      radioButton.onClick.listen((html.MouseEvent e) {
+        html.InputElement clicked = e.target;
+        print("The user is ${clicked.value}");
+        if (clicked.value == "Use") {
+          model.useUpnp = true;
+        } else {
+          model.useUpnp  = false;
         }
       });
     });

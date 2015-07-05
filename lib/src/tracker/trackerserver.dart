@@ -145,7 +145,7 @@ class TrackerServer {
           List<int> ip = HetiIP.toRawIP(info.peerAddress);
 
           updateResponse(parameter, ip);
-          List<int> cont = createResponse(item.option);
+          List<int> cont = createResponse(item.option, HetiIP.toRawIP(info.peerAddress));
           _server.response(item.req, new HetimaDataMemory(cont), contentType: "text/plain");
         });
       } else {
@@ -160,7 +160,7 @@ class TrackerServer {
     });
   }
 
-  List<int> createResponse(String query) {
+  List<int> createResponse(String query, List<int> ip) {
     if (outputLog) {
       print("TrackerServer#onListen" + query);
     }
@@ -187,7 +187,7 @@ class TrackerServer {
       return Bencode.encode(errorResponse).toList();
     } else {
       // managed torrent data
-      type.Uint8List buffer = Bencode.encode(manager.createResponse().createResponse(isCompact));
+      type.Uint8List buffer = Bencode.encode(manager.createResponse().createResponse(isCompact, HetiIP.isLocalNetwork(ip)));
       if (outputLog) {
         print("TrackerServer#onListen:###managed" + PercentEncode.encode(buffer.toList()));
       }

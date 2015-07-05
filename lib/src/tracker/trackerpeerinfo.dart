@@ -2,7 +2,7 @@ library hetimatorrent.torrent.trackerpeerinfo;
 
 import 'dart:core';
 import 'package:hetimacore/hetimacore.dart';
-
+import 'package:hetimanet/hetimanet.dart';
 
 class TrackerPeerInfo {
   List<int> peerId;
@@ -10,13 +10,22 @@ class TrackerPeerInfo {
   List<int> ip;
   int port;
   int _time = 0;
+  String optIpAsString = "";
+  List<int> get optIp {
+    if(optIpAsString == null || optIpAsString.length == 0)  {
+      return new List.from(ip);
+    } else {
+      return HetiIP.toRawIP(optIpAsString);
+    }
+  }
 
   int get time => _time;
-  TrackerPeerInfo(List<int> _peerId, String _address, List<int> _ip, int _port) {
+  TrackerPeerInfo(List<int> _peerId, String _address, List<int> _ip, int _port, [String optIp=""]) {
     peerId = new List.from(_peerId);
     address = _address;
     ip = new List.from(_ip);
     port = _port;
+    this.optIpAsString = optIp; 
     update();
   }
 
