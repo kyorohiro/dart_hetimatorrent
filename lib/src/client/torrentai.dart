@@ -74,10 +74,15 @@ class TorrentAIBasic extends TorrentAI {
       //
       //
       // 2 peer change
-      int now = new DateTime.now().millisecondsSinceEpoch;
       unchokeInterestedPeer.shuffle();
       if(unchokeInterestedPeer.length < (_maxUnchoke-2)) {
-        
+        unchokeInterestedPeer.sort((TorrentClientPeerInfo x, TorrentClientPeerInfo  y){
+          return x.front.uploadSpeedFromUnchokeFromMe - y.front.uploadSpeedFromUnchokeFromMe;
+        });
+        unchokeInterestedPeer.removeLast();
+        if(unchokeInterestedPeer.length < (_maxUnchoke-2)) {
+          unchokeInterestedPeer.removeLast();
+        }
       }
 
       //
