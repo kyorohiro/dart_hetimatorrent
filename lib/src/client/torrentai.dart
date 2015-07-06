@@ -67,8 +67,34 @@ class TorrentAIBasic extends TorrentAI {
         }
         return false;
       });
-      
-      
+
+      List<TorrentClientPeerInfo> nextUnchoke = [];
+      nextUnchoke.addAll(newPeer);
+      nextUnchoke.addAll(chokedInterestPeer);
+
+      //
+      //
+      // 2 peer change
+      if(unchokeInterestedPeer.length < (_maxUnchoke-2)) {
+//        unchokeInterestedPeer.
+      }
+
+      //
+      // add include peer
+      int unchokeNum = _maxUnchoke- unchokeInterestedPeer.length;
+      nextUnchoke.shuffle();
+      for(int i=0;i<unchokeNum;i++){
+        TorrentClientPeerInfo info = nextUnchoke.removeLast();
+        info.front.sendUnchoke();
+      }
+
+      //
+      // send unchoke
+      for(TorrentClientPeerInfo info in nextUnchoke) {
+        if(info.chokedFromMe == false) {
+          info.front.sendChoke();
+        }
+      }      
     });
   }
 
