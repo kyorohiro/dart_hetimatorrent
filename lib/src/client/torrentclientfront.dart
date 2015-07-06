@@ -36,10 +36,10 @@ class TorrentClientFront {
 
   bool _amI = false;
   bool get amI => _amI;
-  bool _interestedToMe = false;
-  bool _interestedFromMe = false;
-  bool get interestedToMe => _interestedToMe;
-  bool get interestedFromMe => _interestedFromMe;
+  int _interestedToMe = STATE_NONE;
+  int _interestedFromMe = STATE_NONE;
+  int get interestedToMe => _interestedToMe;
+  int get interestedFromMe => _interestedFromMe;
 
   Bitfield _bitfieldToMe = null;
   Bitfield _bitfieldFromMe = null;
@@ -340,16 +340,16 @@ class TorrentClientFrontSignal {
         front.chokedToMe = TorrentClientFront.STATE_OFF;
         break;       
       case ACT_INTERESTED_SEND:
-        front._interestedFromMe = true;
+        front._interestedFromMe = TorrentClientFront.STATE_ON;
         break;
       case ACT_NOTINTERESTED_SEND:
-        front._interestedFromMe = false;
+        front._interestedFromMe = TorrentClientFront.STATE_OFF;
         break;
       case ACT_INTERESTED_RECEIVE:
-        front._interestedToMe = true;
+        front._interestedToMe = TorrentClientFront.STATE_ON;
         break;
       case ACT_NOTINTERESTED_RECEIVE:
-        front._interestedToMe = false;
+        front._interestedToMe = TorrentClientFront.STATE_OFF;
         break;
       case ACT_BITFIELD_RECEIVE:
         MessageBitfield messageBitfile = args[0];
