@@ -44,78 +44,10 @@ class TorrentAIBasic extends TorrentAI {
     _maxConnect = maxConnect;
   }
 
+
   Future onTick(TorrentClient client) {
     return new Future(() {
-      List<TorrentClientPeerInfo> unchokeInterestedPeer = client.rawPeerInfos.getPeerInfo((TorrentClientPeerInfo info) {
-        if (info.front != null && info.front.isClose == false && info.front.interestedToMe == TorrentClientFront.STATE_ON && info.front.chokedFromMe == TorrentClientFront.STATE_ON) {
-          return true;
-        }
-        return false;
-      });
-
-      List<TorrentClientPeerInfo> newPeer = client.rawPeerInfos.getPeerInfo((TorrentClientPeerInfo info) {
-        if (info.front != null && info.front.isClose == false && info.front.chokedFromMe == TorrentClientFront.STATE_NONE) {
-          return true;
-        }
-        return false;
-      });
-
-      List<TorrentClientPeerInfo> chokedInterestPeer = client.rawPeerInfos.getPeerInfo((TorrentClientPeerInfo info) {
-        if (info.front != null && info.front.isClose == false && info.front.chokedFromMe == TorrentClientFront.STATE_OFF) {
-          return true;
-        }
-        return false;
-      });
-
-      List<TorrentClientPeerInfo> nextUnchoke = [];
-      nextUnchoke.addAll(newPeer);
-      nextUnchoke.addAll(chokedInterestPeer);
-
-      //
-      //
-      // 2 peer change
-      unchokeInterestedPeer.shuffle();
-      if(unchokeInterestedPeer.length < (_maxUnchoke-2)) {
-        unchokeInterestedPeer.sort((TorrentClientPeerInfo x, TorrentClientPeerInfo  y){
-          return x.front.uploadSpeedFromUnchokeFromMe - y.front.uploadSpeedFromUnchokeFromMe;
-        });
-        unchokeInterestedPeer.removeLast();
-        if(unchokeInterestedPeer.length < (_maxUnchoke-2)) {
-          unchokeInterestedPeer.removeLast();
-        }
-      }
-
-      //
-      // add include peer
-      //
-      int unchokeNum = _maxUnchoke- unchokeInterestedPeer.length;
-      nextUnchoke.shuffle();
-      int numOfSendedUnchoke = 0;
-      
-      // first intersted peer
-      for(int i=0;i<unchokeNum;i++){
-        TorrentClientPeerInfo info = nextUnchoke.removeLast();
-        if(info.front.interestedToMe == true) {
-          info.front.sendUnchoke();
-          numOfSendedUnchoke++;
-        }
-      }
-
-      // secound notinterested peer
-      for(int i=0;i<(_maxUnchoke-numOfSendedUnchoke);i++) {
-        TorrentClientPeerInfo info = nextUnchoke.removeLast();
-        if(info.front.interestedToMe == false) {
-          info.front.sendUnchoke();
-        }
-      }
-
-      //
-      // send unchoke
-      for(TorrentClientPeerInfo info in nextUnchoke) {
-        if(info.chokedFromMe == false) {
-          info.front.sendChoke();
-        }
-      }      
+        _chokeTest(client);
     });
   }
 
@@ -184,5 +116,78 @@ class TorrentAIBasic extends TorrentAI {
           break;
       }
     });
+  }
+
+  void _chokeTest(TorrentClient client) {
+    List<TorrentClientPeerInfo> unchokeInterestedPeer = client.rawPeerInfos.getPeerInfo((TorrentClientPeerInfo info) {
+      if (info.front != null && info.front.isClose == false && info.front.interestedToMe == TorrentClientFront.STATE_ON && info.front.chokedFromMe == TorrentClientFront.STATE_ON) {
+        return true;
+      }
+      return false;
+    });
+
+    List<TorrentClientPeerInfo> newPeer = client.rawPeerInfos.getPeerInfo((TorrentClientPeerInfo info) {
+      if (info.front != null && info.front.isClose == false && info.front.chokedFromMe == TorrentClientFront.STATE_NONE) {
+        return true;
+      }
+      return false;
+    });
+
+    List<TorrentClientPeerInfo> chokedInterestPeer = client.rawPeerInfos.getPeerInfo((TorrentClientPeerInfo info) {
+      if (info.front != null && info.front.isClose == false && info.front.chokedFromMe == TorrentClientFront.STATE_OFF) {
+        return true;
+      }
+      return false;
+    });
+
+    List<TorrentClientPeerInfo> nextUnchoke = [];
+    nextUnchoke.addAll(newPeer);
+    nextUnchoke.addAll(chokedInterestPeer);
+
+    //
+    //
+    // 2 peer change
+    unchokeInterestedPeer.shuffle();
+    if(unchokeInterestedPeer.length < (_maxUnchoke-2)) {
+      unchokeInterestedPeer.sort((TorrentClientPeerInfo x, TorrentClientPeerInfo  y){
+        return x.front.uploadSpeedFromUnchokeFromMe - y.front.uploadSpeedFromUnchokeFromMe;
+      });
+      unchokeInterestedPeer.removeLast();
+      if(unchokeInterestedPeer.length < (_maxUnchoke-2)) {
+        unchokeInterestedPeer.removeLast();
+      }
+    }
+
+    //
+    // add include peer
+    //
+    int unchokeNum = _maxUnchoke- unchokeInterestedPeer.length;
+    nextUnchoke.shuffle();
+    int numOfSendedUnchoke = 0;
+    
+    // first intersted peer
+    for(int i=0;i<unchokeNum;i++){
+      TorrentClientPeerInfo info = nextUnchoke.removeLast();
+      if(info.front.interestedToMe == true) {
+        info.front.sendUnchoke();
+        numOfSendedUnchoke++;
+      }
+    }
+
+    // secound notinterested peer
+    for(int i=0;i<(_maxUnchoke-numOfSendedUnchoke);i++) {
+      TorrentClientPeerInfo info = nextUnchoke.removeLast();
+      if(info.front.interestedToMe == false) {
+        info.front.sendUnchoke();
+      }
+    }
+
+    //
+    // send unchoke
+    for(TorrentClientPeerInfo info in nextUnchoke) {
+      if(info.chokedFromMe == false) {
+        info.front.sendChoke();
+      }
+    }      
   }
 }
