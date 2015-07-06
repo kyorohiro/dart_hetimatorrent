@@ -166,7 +166,7 @@ class TorrentAIBasic extends TorrentAI {
     int numOfSendedUnchoke = 0;
     
     // first intersted peer
-    for(int i=0;i<unchokeNum;i++){
+    for(int i=0;i<unchokeNum&&0<nextUnchoke.length;i++){
       TorrentClientPeerInfo info = nextUnchoke.removeLast();
       if(info.front.interestedToMe == true) {
         info.front.sendUnchoke();
@@ -175,7 +175,7 @@ class TorrentAIBasic extends TorrentAI {
     }
 
     // secound notinterested peer
-    for(int i=0;i<(_maxUnchoke-numOfSendedUnchoke);i++) {
+    for(int i=0;i<(_maxUnchoke-numOfSendedUnchoke)&&0<nextUnchoke.length;i++) {
       TorrentClientPeerInfo info = nextUnchoke.removeLast();
       if(info.front.interestedToMe == false) {
         info.front.sendUnchoke();
