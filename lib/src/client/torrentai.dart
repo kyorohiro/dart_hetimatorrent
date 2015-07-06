@@ -82,11 +82,26 @@ class TorrentAIBasic extends TorrentAI {
 
       //
       // add include peer
+      //
       int unchokeNum = _maxUnchoke- unchokeInterestedPeer.length;
       nextUnchoke.shuffle();
+      int numOfSendedUnchoke = 0;
+      
+      // first intersted peer
       for(int i=0;i<unchokeNum;i++){
         TorrentClientPeerInfo info = nextUnchoke.removeLast();
-        info.front.sendUnchoke();
+        if(info.front.interestedToMe == true) {
+          info.front.sendUnchoke();
+          numOfSendedUnchoke++;
+        }
+      }
+
+      // secound notinterested peer
+      for(int i=0;i<(_maxUnchoke-numOfSendedUnchoke);i++) {
+        TorrentClientPeerInfo info = nextUnchoke.removeLast();
+        if(info.front.interestedToMe == false) {
+          info.front.sendUnchoke();
+        }
       }
 
       //
