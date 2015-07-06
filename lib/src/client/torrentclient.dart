@@ -170,10 +170,10 @@ class TorrentClient {
     front.onReceiveSignal.listen((TorrentClientFrontSignal signal) {
       switch(signal.id) {
         case TorrentClientFrontSignal.ID_PIECE_RECEIVE:
-          this._downloaded = signal.v;
+          this._downloaded += signal.v;
           break;
         case TorrentClientFrontSignal.ID_PIECE_SEND:
-          this._uploaded = signal.v;
+          this._uploaded += signal.v;
           break;
       }
       TorrentClientSignal sig = new TorrentClientSignalWithPeerInfo(info, signal.id, signal.reason, signal.toString());
