@@ -25,7 +25,7 @@ void main() {
   dialog.init();
   item = new HashItem();
   mainImte = new MainItem();
-  item.init(model, managedTorrentFile, tab);
+  item.init(model, managedTorrentFile, tab, dialog);
   mainImte.init(model, managedTorrentFile, tab, dialog);
   createImte.init(model, managedTorrentFile, tab, dialog);
 

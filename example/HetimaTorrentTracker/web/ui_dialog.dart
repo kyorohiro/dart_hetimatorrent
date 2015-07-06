@@ -31,16 +31,14 @@ class Dialog {
 
 class Tab {
   html.InputElement tabContainer = html.querySelector("#tabcont");
-  Map<String, String> tabs = {
-    
-  };
+  Map<String, String> tabs = {};
 
   html.Element current = null;
 
   int v = 100;
   Map<String, String> keyManager = {};
-  
-  Tab(Map<String,String> v) {
+
+  Tab(Map<String, String> v) {
     tabs.addAll(v);
   }
   void add(String key, String cont) {
@@ -52,7 +50,6 @@ class Tab {
   }
 
   void remove(String key) {
-
     html.Element t = html.querySelector(keyManager[key]);
     html.Element tt = html.querySelector(tabs[keyManager[key]]);
     tabs.remove(keyManager[key]);
@@ -63,7 +60,7 @@ class Tab {
       tt.style.display = "none";
     }
     updateTab();
-    for(String key in tabs.keys) {
+    for (String key in tabs.keys) {
       print("##--> ${key} ${tabs[key]}");
     }
   }
@@ -112,7 +109,7 @@ class Tab {
         }
       }
     }
-    for(html.Element tt in blockList) {
+    for (html.Element tt in blockList) {
       print("++none ${tt} ");
       tt.style.display = "block";
     }
@@ -125,11 +122,11 @@ class Tab {
     for (String id in ids) {
       if (tabs.containsKey(id)) {
         TabInfo ret = new TabInfo()
-                  ..cont = tabs[id]
-                  ..key = id;
-        if(keyManager.containsValue(id)){
-          for(String key in keyManager.keys) {
-            if(keyManager[key] == id) {
+          ..cont = tabs[id]
+          ..key = id;
+        if (keyManager.containsValue(id)) {
+          for (String key in keyManager.keys) {
+            if (keyManager[key] == id) {
               ret.key = key;
               break;
             }

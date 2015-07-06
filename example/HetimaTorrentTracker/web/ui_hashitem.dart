@@ -28,7 +28,7 @@ class HashItem {
   html.ObjectElement loadServerBtn = html.querySelector("#torrent-loaderserver");
 
   html.File seedRawFile = null;
-  init(TrackerModel trackerModel, Map<String, TorrentFile> managedTorrentFile, Tab tab) {
+  init(TrackerModel trackerModel, Map<String, TorrentFile> managedTorrentFile, Tab tab, Dialog dialog) {
     SeederModel model = new SeederModel();
 
     torrentRemoveBtn.onClick.listen((html.MouseEvent e) {
@@ -76,6 +76,7 @@ class HashItem {
         stopServerBtn.style.display = "none";
         startServerBtn.style.display = "block";
         loadServerBtn.style.display = "none";
+        dialog.show("Failed to start torrent");
       });
     });
 
@@ -92,6 +93,7 @@ class HashItem {
         startServerBtn.style.display = "none";
         stopServerBtn.style.display = "block";
         loadServerBtn.style.display = "none";
+        dialog.show("Failed to stop torrent");
       });
     });
     

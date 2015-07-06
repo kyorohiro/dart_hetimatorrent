@@ -7,8 +7,6 @@ import 'package:hetimanet/hetimanet.dart';
 import 'package:hetimatorrent/hetimatorrent.dart';
 import 'ui_dialog.dart';
 import 'model_tracker.dart';
-import 'ui_createitem.dart';
-import 'ui_hashitem.dart';
 
 class MainItem {
   html.InputElement fileInput = html.querySelector("#fileinput");
@@ -43,7 +41,7 @@ class MainItem {
             model.addInfoHashFromTracker(f);
           });
         }).catchError((e) {
-          dialog.show("failed parse torrent");
+          dialog.show("Failed to parse torrent");
         });
       }
     });
@@ -63,6 +61,7 @@ class MainItem {
         stopServerBtn.style.display = "none";
         startServerBtn.style.display = "block";
         loadServerBtn.style.display = "none";
+        dialog.show("Failed to start tracker");
       });
     });
 
@@ -79,6 +78,7 @@ class MainItem {
         startServerBtn.style.display = "none";
         stopServerBtn.style.display = "block";
         loadServerBtn.style.display = "none";
+        dialog.show("Failed to stop tracker");
       });
     });
 
@@ -108,5 +108,3 @@ class MainItem {
     });
   }
 }
-
-
