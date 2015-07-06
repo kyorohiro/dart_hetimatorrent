@@ -47,7 +47,9 @@ class TorrentAIBasic extends TorrentAI {
 
   Future onTick(TorrentClient client) {
     return new Future(() {
-      
+      List<TorrentClientPeerInfo> livingPeer =  client.rawPeerInfos.getPeerInfo((TorrentClientPeerInfo info) {
+        return false;
+      });
     });
   }
 
