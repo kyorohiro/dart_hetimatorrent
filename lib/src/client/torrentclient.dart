@@ -53,6 +53,7 @@ class TorrentClient {
   TorrentAI _ai = null;
   bool _isStart = false;
   bool get isStart => _isStart;
+  int tickSec = 6;
 
   static Future<TorrentClient> create(HetiSocketBuilder builder, List<int> peerId, TorrentFile file, HetimaData data, {TorrentAI ai: null}) {
     return file.createInfoSha1().then((List<int> infoHash) {
@@ -102,10 +103,28 @@ class TorrentClient {
         });
       });
       _signalStream.add(new TorrentClientSignal(TorrentClientSignal.ID_STARTED_CLIENT, 0, "started client"));
-      return {};
+      return new Future((){_tick();return {};});
     });
   }
 
+  Future _tick() {
+    t() {
+      return new Future.delayed(new Duration(seconds: tickSec)).then((_) {
+        if(_ai != null) {
+          _ai.onTick(this);
+        }
+        if (_isStart == true) {
+          t();
+        }
+      });
+    }
+    return new Future(() {
+      if (_isStart != true) {
+        _isStart = true;
+        t();
+      }
+    });
+  }
   Future stop() {
     List<Future> w = [];
     Future f = null;

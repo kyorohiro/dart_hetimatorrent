@@ -51,6 +51,17 @@ class TorrentEngineAI extends TorrentAI {
     }
   }
 
+  @override
+  Future onTick(TorrentClient client) {
+    if (isGo != true) {
+      return new Future(() {
+        print("Empty AI tick : ${client.peerId}");
+      });
+    } else {
+      return basic.onTick(client);
+    }
+  }
+
   Future go() {
     return _startTorrent().then((_) {
       isGo = true;
@@ -142,4 +153,5 @@ class TorrentEngineAI extends TorrentAI {
       });
     });
   }
+
 }

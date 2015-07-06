@@ -12,26 +12,26 @@ import 'torrentclientmessage.dart';
 abstract class TorrentAI {
   Future onReceive(TorrentClient client, TorrentClientPeerInfo info, TorrentMessage message);
   Future onSignal(TorrentClient client, TorrentClientPeerInfo info, TorrentClientSignal message);
-  Future start();
-  Future stop();
+  Future onTick(TorrentClient client);
 }
 
 class TorrenAIEmpty extends TorrentAI {
   Future onReceive(TorrentClient client, TorrentClientPeerInfo info, TorrentMessage message) {
     return new Future(() {
-      print("Empty AI receive : ${message.id}");
+      print("Empty AI receive : ${message.id} ${client.peerId}");
     });
   }
+
   Future onSignal(TorrentClient client, TorrentClientPeerInfo info, TorrentClientSignal message) {
     return new Future(() {
-      print("Empty AI signal : ${message.id}");
+      print("Empty AI signal : ${message.id} ${client.peerId}");
     });
   }
-  Future start() {
-    return new Future(() {});
-  }
-  Future stop() {
-    return new Future(() {});
+
+  Future onTick(TorrentClient client) {
+    return new Future(() {
+      print("Empty AI signal : ${client.peerId}");
+    });
   }
 }
 
@@ -39,39 +39,15 @@ class TorrentAIBasic extends TorrentAI {
   bool _isStart = false;
   int _maxUnchoke = 8;
   int _maxConnect = 20;
-  int _tickTime = 5;
 
-  TorrentAIBasic({maxUnchoke: 8, maxConnect: 20, tickTime: 5}) {
+  TorrentAIBasic({maxUnchoke: 8, maxConnect: 20}) {
     _maxUnchoke = maxUnchoke;
     _maxConnect = maxConnect;
   }
 
-  Future start() {
-    t() {
-      return new Future.delayed(new Duration(seconds: _tickTime)).then((_) {
-        onTick();
-        if (_isStart == true) {
-          t();
-        }
-      });
-    }
+  Future onTick(TorrentClient client) {
     return new Future(() {
-      if (_isStart != true) {
-        _isStart = true;
-        t();
-      }
-    });
-  }
-
-  Future stop() {
-    return new Future(() {
-      _isStart = false;
-    });
-  }
-
-  Future onTick() {
-    return new Future(() {
-      _isStart = false;
+      
     });
   }
 
