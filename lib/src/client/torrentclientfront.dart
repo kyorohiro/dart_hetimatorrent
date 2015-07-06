@@ -28,6 +28,12 @@ class TorrentClientFront {
   int chokedFromMe = STATE_NONE; // Me is Hetima
   int chokedToMe = STATE_NONE; // Me is Hetima
 
+  int _unchokedStartTime = 0;
+  int _uploadedBytesFromUnchokedStartTime = 0;
+
+  int get unchokedStartTime => _unchokedStartTime;
+  int get uploadSpeedFromUnchokeFromMe => _uploadedBytesFromUnchokedStartTime~/(new DateTime.now().millisecondsSinceEpoch - _unchokedStartTime);
+
   bool _handshakedToMe = false;
   bool _handshakedFromMe = false;
   bool get handshakeToMe => _handshakedToMe;
@@ -329,6 +335,8 @@ class TorrentClientFrontSignal {
         break;
       case ACT_CHOKE_SEND:
         front.chokedFromMe = TorrentClientFront.STATE_ON;
+        front._unchokedStartTime = new DateTime.now().millisecondsSinceEpoch;
+        front._uploadedBytesFromUnchokedStartTime = 0;
         break;
       case ACT_UNCHOKE_SEND:
         front.chokedFromMe = TorrentClientFront.STATE_OFF;
@@ -360,6 +368,7 @@ class TorrentClientFrontSignal {
         break;
       case ACT_PIECE_SEND:
         front.uploadedBytesToMe += (args[0] as MessagePiece).content.length;
+        front._uploadedBytesFromUnchokedStartTime += (args[0] as MessagePiece).content.length;
         front._streamSignal.add(new TorrentClientFrontSignal()
         ..id = TorrentClientFrontSignal.ID_PIECE_SEND
         ..reason = 0

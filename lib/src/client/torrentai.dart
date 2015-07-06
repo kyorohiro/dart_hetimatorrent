@@ -36,7 +36,6 @@ class TorrenAIEmpty extends TorrentAI {
 }
 
 class TorrentAIBasic extends TorrentAI {
-  bool _isStart = false;
   int _maxUnchoke = 8;
   int _maxConnect = 20;
 
@@ -75,9 +74,10 @@ class TorrentAIBasic extends TorrentAI {
       //
       //
       // 2 peer change
+      int now = new DateTime.now().millisecondsSinceEpoch;
       unchokeInterestedPeer.shuffle();
       if(unchokeInterestedPeer.length < (_maxUnchoke-2)) {
-        ;
+        
       }
 
       //
@@ -113,6 +113,7 @@ class TorrentAIBasic extends TorrentAI {
       }      
     });
   }
+
 
   Future onReceive(TorrentClient client, TorrentClientPeerInfo info, TorrentMessage message) {
     return new Future(() {
