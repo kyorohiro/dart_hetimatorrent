@@ -148,7 +148,7 @@ class TorrentAIBasic extends TorrentAI {
     //
     // 2 peer change
     unchokeInterestedPeer.shuffle();
-    if(unchokeInterestedPeer.length < (_maxUnchoke-2)) {
+    if(unchokeInterestedPeer.length > (_maxUnchoke-2)) {
       unchokeInterestedPeer.sort((TorrentClientPeerInfo x, TorrentClientPeerInfo  y){
         return x.front.uploadSpeedFromUnchokeFromMe - y.front.uploadSpeedFromUnchokeFromMe;
       });
