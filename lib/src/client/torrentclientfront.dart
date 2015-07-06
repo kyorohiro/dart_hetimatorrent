@@ -10,6 +10,9 @@ import 'torrentclientpeerinfo.dart';
 import '../util/bitfield.dart';
 
 class TorrentClientFront {
+  static const int STATE_NONE = 0;
+  static const int STATE_ON = 1;
+  static const int STATE_OFF = 2;
   List<int> _peerId = [];
   List<int> _infoHash = [];
 
@@ -20,10 +23,10 @@ class TorrentClientFront {
   String _peerIp = "";
   int _peerPort = 0;
   int speed = 0; //per sec bytes
-  int downloadedBytesFromMe = 0; // Me is Hetima
-  int uploadedBytesToMe = 0; // Me is Hetima
-  int chokedFromMe = 0; // Me is Hetima
-  int chokedToMe = 0; // Me is Hetima
+  int downloadedBytesFromMe = STATE_NONE; // Me is Hetima
+  int uploadedBytesToMe = STATE_NONE; // Me is Hetima
+  int chokedFromMe = STATE_NONE; // Me is Hetima
+  int chokedToMe = STATE_NONE; // Me is Hetima
 
   bool _handshakedToMe = false;
   bool _handshakedFromMe = false;
@@ -325,16 +328,16 @@ class TorrentClientFrontSignal {
         _signalHandshake(front);
         break;
       case ACT_CHOKE_SEND:
-        front._handshakedFromMe = true;
+        front.chokedFromMe = TorrentClientFront.STATE_ON;
         break;
       case ACT_UNCHOKE_SEND:
-        front._handshakedFromMe = false;
+        front.chokedFromMe = TorrentClientFront.STATE_OFF;
         break;
       case ACT_CHOKE_RECEIVE:
-        front._handshakedToMe = true;
+        front.chokedToMe = TorrentClientFront.STATE_ON;
         break;
       case ACT_UNCHOKE_RECEIVE:
-        front._handshakedToMe = false;
+        front.chokedToMe = TorrentClientFront.STATE_OFF;
         break;       
       case ACT_INTERESTED_SEND:
         front._interestedFromMe = true;

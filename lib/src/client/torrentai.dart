@@ -10,31 +10,29 @@ import 'torrentclientpeerinfo.dart';
 import 'torrentclientmessage.dart';
 
 abstract class TorrentAI {
-  Future onReceive(
-      TorrentClient client, TorrentClientPeerInfo info, TorrentMessage message);
-  Future onSignal(TorrentClient client, TorrentClientPeerInfo info,
-      TorrentClientSignal message);
+  Future onReceive(TorrentClient client, TorrentClientPeerInfo info, TorrentMessage message);
+  Future onSignal(TorrentClient client, TorrentClientPeerInfo info, TorrentClientSignal message);
 }
 
 class TorrenAIEmpty extends TorrentAI {
   Future onReceive(TorrentClient client, TorrentClientPeerInfo info, TorrentMessage message) {
-    return new Future((){
+    return new Future(() {
       print("Empty AI receive : ${message.id}");
     });
   }
   Future onSignal(TorrentClient client, TorrentClientPeerInfo info, TorrentClientSignal message) {
-    return new Future((){
+    return new Future(() {
       print("Empty AI signal : ${message.id}");
     });
   }
 }
 
 class TorrentAIBasic extends TorrentAI {
-
   int _maxUnchoke = 8;
   int _maxConnect = 20;
+  int _tickTime = 5;
 
-  TorrentAIBasic({maxUnchoke:8,maxConnect:20}) {
+  TorrentAIBasic({maxUnchoke: 8, maxConnect: 20, tickTime: 5}) {
     _maxUnchoke = maxUnchoke;
     _maxConnect = maxConnect;
   }
@@ -54,26 +52,30 @@ class TorrentAIBasic extends TorrentAI {
           break;
         case TorrentMessage.SIGN_REQUEST:
           {
+            if (info.front.chokedFromMe == true) {
+              print("wearn ; already choked ${info.id}");
+              break;
+            }
+
             MessageRequest requestMessage = message;
             int index = requestMessage.index;
             int begin = requestMessage.begin;
             int len = requestMessage.length;
+
             if (false == client.targetBlock.have(index)) {
               //
-              // 
+              //
               front.close();
               return null;
             } else {
               return client.targetBlock.readBlock(index).then((ReadResult result) {
-                int end = begin+len;
+                int end = begin + len;
                 List cont = new List.filled(len, 0);
-                if(len > result.buffer.length) {
+                if (len > result.buffer.length) {
                   end = result.buffer.length;
                 }
                 cont.setRange(begin, end, result.buffer);
-                return front
-                    .sendPiece(index, begin, cont)
-                    .then((_) {
+                return front.sendPiece(index, begin, cont).then((_) {
                   ;
                 });
               });
@@ -81,15 +83,14 @@ class TorrentAIBasic extends TorrentAI {
           }
           break;
         case TorrentMessage.SIGN_BITFIELD:
-        {
-          break;
-        }
+          {
+            break;
+          }
       }
     });
   }
 
-  Future onSignal(TorrentClient client, TorrentClientPeerInfo info,
-      TorrentClientSignal signal) {
+  Future onSignal(TorrentClient client, TorrentClientPeerInfo info, TorrentClientSignal signal) {
     return new Future(() {
       if (signal.id == TorrentClientFrontSignal.ID_HANDSHAKED) {
         info.front.sendBitfield(client.targetBlock.bitfield);
