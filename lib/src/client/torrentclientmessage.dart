@@ -25,12 +25,12 @@ class TorrentClientMessage {
 }
 
 class TorrentClientSignal {
-  static int ID_CONNECTED = 1001;
-  static int ID_ACCEPT = 1002;
-  static int ID_SET_PIECE = 1003;
-  static int ID_SET_PIECE_ALL = 1004;
-  static int ID_STARTED_CLIENT = 1005;
-  static int ID_STOPPED_CLIENT = 1006;
+  static const int ID_CONNECTED = 1001;
+  static const int ID_ACCEPT = 1002;
+  static const int ID_SET_PIECE = 1003;
+  static const int ID_SET_PIECE_ALL = 1004;
+  static const int ID_STARTED_CLIENT = 1005;
+  static const int ID_STOPPED_CLIENT = 1006;
   int _id = 0;
   int _reason = 0;
   int get id => _id;

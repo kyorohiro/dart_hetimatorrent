@@ -12,6 +12,8 @@ import 'torrentclientmessage.dart';
 abstract class TorrentAI {
   Future onReceive(TorrentClient client, TorrentClientPeerInfo info, TorrentMessage message);
   Future onSignal(TorrentClient client, TorrentClientPeerInfo info, TorrentClientSignal message);
+  Future start();
+  Future stop();
 }
 
 class TorrenAIEmpty extends TorrentAI {
@@ -25,9 +27,16 @@ class TorrenAIEmpty extends TorrentAI {
       print("Empty AI signal : ${message.id}");
     });
   }
+  Future start() {
+    return new Future(() {});
+  }
+  Future stop() {
+    return new Future(() {});
+  }
 }
 
 class TorrentAIBasic extends TorrentAI {
+  bool _isStart = false;
   int _maxUnchoke = 8;
   int _maxConnect = 20;
   int _tickTime = 5;
@@ -35,6 +44,35 @@ class TorrentAIBasic extends TorrentAI {
   TorrentAIBasic({maxUnchoke: 8, maxConnect: 20, tickTime: 5}) {
     _maxUnchoke = maxUnchoke;
     _maxConnect = maxConnect;
+  }
+
+  Future start() {
+    t() {
+      return new Future.delayed(new Duration(seconds: _tickTime)).then((_) {
+        onTick();
+        if (_isStart == true) {
+          t();
+        }
+      });
+    }
+    return new Future(() {
+      if (_isStart != true) {
+        _isStart = true;
+        t();
+      }
+    });
+  }
+
+  Future stop() {
+    return new Future(() {
+      _isStart = false;
+    });
+  }
+
+  Future onTick() {
+    return new Future(() {
+      _isStart = false;
+    });
   }
 
   Future onReceive(TorrentClient client, TorrentClientPeerInfo info, TorrentMessage message) {
@@ -92,8 +130,13 @@ class TorrentAIBasic extends TorrentAI {
 
   Future onSignal(TorrentClient client, TorrentClientPeerInfo info, TorrentClientSignal signal) {
     return new Future(() {
-      if (signal.id == TorrentClientFrontSignal.ID_HANDSHAKED) {
-        info.front.sendBitfield(client.targetBlock.bitfield);
+      switch(signal.id) {
+        case TorrentClientFrontSignal.ID_HANDSHAKED:
+          info.front.sendBitfield(client.targetBlock.bitfield);
+          break;
+        case TorrentClientSignal.ID_ACCEPT:
+        case TorrentClientSignal.ID_CONNECTED:
+          break;
       }
     });
   }
