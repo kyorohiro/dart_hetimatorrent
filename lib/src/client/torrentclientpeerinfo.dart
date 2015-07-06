@@ -38,6 +38,17 @@ class TorrentClientPeerInfoList {
     }
     return null;
   }
+
+  List<TorrentClientPeerInfo> getPeerInfo(Function filter) {
+    List<TorrentClientPeerInfo> ret = [];
+    for (int i = 0; i < peerInfos.length; i++) {
+      TorrentClientPeerInfo info = peerInfos.getSequential(i);
+      if(filter(info) == true) {
+        ret.add(info);
+      }
+    }
+    return ret;
+  }
 }
 
 class TorrentClientPeerInfo {

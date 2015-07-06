@@ -16,7 +16,6 @@ import '../util/bitfield.dart';
 import '../message/message.dart';
 
 import '../file/torrentfile.dart';
-import '../tracker/trackerclient.dart';
 
 class TorrentClient {
   HetiServerSocket _server = null;
@@ -73,12 +72,12 @@ class TorrentClient {
     return _peerInfos.putFormTrackerPeerInfo(ip, port, peerId: peerId);
   }
 
-  Future start(String localAddress, int localPort,[String  globalIp=null, int globalPort=null]) {
+  Future start(String localAddress, int localPort, [String globalIp = null, int globalPort = null]) {
     this._localAddress = localAddress;
     this._localPort = localPort;
     this.globalPort = globalPort;
     this.globalIp = globalIp;
-    if(this.globalPort == null) {
+    if (this.globalPort == null) {
       this.globalPort = localPort;
     }
     return _builder.startServer(localAddress, localPort).then((HetiServerSocket serverSocket) {
@@ -103,17 +102,20 @@ class TorrentClient {
   }
 
   Future stop() {
+    List<Future> w = [];
+    Future f = null;
     for (TorrentClientPeerInfo s in this.peerInfos) {
-      new Future(() {
+      f = new Future(() {
         if (s.front != null && s.front.isClose != false) {
           return s.front.close();
         }
       }).catchError((e) {
         ;
       });
+      w.add(f);
     }
 
-    new Future(() {
+    f = new Future(() {
       _isStart = false;
       _signalStream.add(new TorrentClientSignal(TorrentClientSignal.ID_STOPPED_CLIENT, 0, "stopped client"));
       return _server.close();
@@ -121,9 +123,8 @@ class TorrentClient {
       ;
     });
 
-    return new Future(() {
-      return new Future(() {});
-    });
+    w.add(f);
+    return Future.wait(w);
   }
 
   List<TorrentClientPeerInfo> getPeerInfoFromXx(Function filter) {
