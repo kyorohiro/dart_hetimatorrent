@@ -33,6 +33,11 @@ class TorrentClient {
   List<int> get peerId => new List.from(_peerId);
   List<int> get infoHash => new List.from(_infoHash);
 
+  int _downloaded = 0;
+  int _uploaded = 0;
+  
+  int get downloaded => _downloaded;
+  int get uploaded => _uploaded;
   TorrentClientPeerInfoList _peerInfos;
   List<TorrentClientPeerInfo> get peerInfos => _peerInfos.peerInfos.sequential;
 
@@ -163,6 +168,14 @@ class TorrentClient {
       _ai.onReceive(this, info, message);
     });
     front.onReceiveSignal.listen((TorrentClientFrontSignal signal) {
+      switch(signal.id) {
+        case TorrentClientFrontSignal.ID_PIECE_RECEIVE:
+          this._downloaded = signal.v;
+          break;
+        case TorrentClientFrontSignal.ID_PIECE_SEND:
+          this._uploaded = signal.v;
+          break;
+      }
       TorrentClientSignal sig = new TorrentClientSignalWithPeerInfo(info, signal.id, signal.reason, signal.toString());
       _signalStream.add(sig);
       _ai.onSignal(this, info, sig);

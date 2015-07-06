@@ -7,7 +7,6 @@ import 'package:hetimacore/hetimacore.dart';
 import 'torrentclient.dart';
 import 'torrentclientfront.dart';
 import 'torrentclientpeerinfo.dart';
-import '../tracker/trackerclient.dart';
 import 'torrentclientmessage.dart';
 
 abstract class TorrentAI {
