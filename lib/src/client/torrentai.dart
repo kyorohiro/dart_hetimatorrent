@@ -31,6 +31,14 @@ class TorrenAIEmpty extends TorrentAI {
 
 class TorrentAIBasic extends TorrentAI {
 
+  int _maxUnchoke = 8;
+  int _maxConnect = 20;
+
+  TorrentAIBasic({maxUnchoke:8,maxConnect:20}) {
+    _maxUnchoke = maxUnchoke;
+    _maxConnect = maxConnect;
+  }
+
   Future onReceive(TorrentClient client, TorrentClientPeerInfo info, TorrentMessage message) {
     return new Future(() {
       TorrentClientFront front = info.front;
