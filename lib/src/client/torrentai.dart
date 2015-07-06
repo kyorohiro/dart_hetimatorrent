@@ -47,9 +47,28 @@ class TorrentAIBasic extends TorrentAI {
 
   Future onTick(TorrentClient client) {
     return new Future(() {
-      List<TorrentClientPeerInfo> livingPeer =  client.rawPeerInfos.getPeerInfo((TorrentClientPeerInfo info) {
+      List<TorrentClientPeerInfo> unchokeInterestedPeer = client.rawPeerInfos.getPeerInfo((TorrentClientPeerInfo info) {
+        if (info.front != null && info.front.isClose == false && info.front.interestedToMe == TorrentClientFront.STATE_ON && info.front.chokedFromMe == TorrentClientFront.STATE_ON) {
+          return true;
+        }
         return false;
       });
+
+      List<TorrentClientPeerInfo> newPeer = client.rawPeerInfos.getPeerInfo((TorrentClientPeerInfo info) {
+        if (info.front != null && info.front.isClose == false && info.front.chokedFromMe == TorrentClientFront.STATE_NONE) {
+          return true;
+        }
+        return false;
+      });
+
+      List<TorrentClientPeerInfo> chokedInterestPeer = client.rawPeerInfos.getPeerInfo((TorrentClientPeerInfo info) {
+        if (info.front != null && info.front.isClose == false && info.front.chokedFromMe == TorrentClientFront.STATE_OFF) {
+          return true;
+        }
+        return false;
+      });
+      
+      
     });
   }
 
@@ -108,7 +127,7 @@ class TorrentAIBasic extends TorrentAI {
 
   Future onSignal(TorrentClient client, TorrentClientPeerInfo info, TorrentClientSignal signal) {
     return new Future(() {
-      switch(signal.id) {
+      switch (signal.id) {
         case TorrentClientFrontSignal.ID_HANDSHAKED:
           info.front.sendBitfield(client.targetBlock.bitfield);
           break;
