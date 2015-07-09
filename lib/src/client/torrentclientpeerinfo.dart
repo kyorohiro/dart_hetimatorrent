@@ -33,6 +33,23 @@ class TorrentClientPeerInfoList {
     print("putFormTrackerPeerInfo ${ip} ${port} --B ${peerInfos.length}");
     return info;
   }
+
+  TorrentClientPeerInfo putPeerInfoFormAccept(String ip, int port) {
+    for (int i = 0; i < peerInfos.length; i++) {
+      TorrentClientPeerInfo info = peerInfos.getSequential(i);
+      if (info.ip == ip && info.portCurrent == port) {
+        // alredy added in peerinfo
+        print("putFormTrackerPeerInfo ${ip} ${port} --A");
+        return info;
+      }
+    }
+    TorrentClientPeerInfo info = new TorrentClientPeerInfo.fromTracker(ip, port);
+    peerInfos.addLast(info);
+    // alredy added in peerinfo
+    print("putFormTrackerPeerInfo ${ip} ${port} --B ${peerInfos.length}");
+    return info;
+  }
+
   
   TorrentClientPeerInfo getPeerInfoFromId(int id) {
     for (int i = 0; i < peerInfos.length; i++) {
@@ -62,6 +79,7 @@ class TorrentClientPeerInfo {
 
   String ip = "";
   int portAcceptable = 0;
+  int portCurrent = 0;
   List<int> peerId = [];
   TorrentClientFront front = null;
 
@@ -72,9 +90,10 @@ class TorrentClientPeerInfo {
     this.portAcceptable = port;
   }
 
-  TorrentClientPeerInfo.fromAccept(String ip, List<int> peerId) {
+  TorrentClientPeerInfo.fromAccept(String ip, int portCurrent, List<int> peerId) {
     this.id = ++nid;
     this.ip = ip;
+    this.portCurrent = portCurrent;
     this.peerId.addAll(peerId);
   }
 
