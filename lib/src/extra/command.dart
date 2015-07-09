@@ -36,6 +36,30 @@ class StartTorrentClientCommand extends TorrentEngineCommand {
   }
 }
 
+class GoTorrentAICommand extends TorrentEngineCommand {
+
+  bool usePortMap = false;
+  GoTorrentAICommand(bool usePortMap) {
+    this.usePortMap = usePortMap;
+  }
+
+  static String get help => "${name} [true/false:usePortMap]: go ai";
+  static get name => "goTorrentAI";
+
+  static TorrentEngineCommandBuilder builder() {
+    TorrentEngineCommand builder(List<String> list) {
+      return new GoTorrentAICommand("true" == list[0]);
+    }
+    return new TorrentEngineCommandBuilder(builder, help);
+  }
+
+  Future<CommandResult> execute(TorrentEngine engine, {List<String> args: null}) {
+    return new Future(() {
+      return engine.go(usePortMap:usePortMap);
+    });
+  }
+}
+
 class StopTorrentClientCommand extends TorrentEngineCommand {
 
   StopTorrentClientCommand() {
@@ -197,7 +221,7 @@ class RequestCommand extends TorrentEngineCommand {
     return new Future(() {
       TorrentClientPeerInfo info = engine.torrentClient.getPeerInfoFromId(_id);
       return info.front.sendRequest(_index, _begin, _length).then((_) {
-        return new CommandResult("sended bitfield");
+        return new CommandResult("sended request");
       });
     });
   }
