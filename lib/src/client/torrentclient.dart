@@ -190,6 +190,10 @@ class TorrentClient {
       messageStream.add(new TorrentClientMessage(info, message));
       if (message is MessagePiece) {
         _onPieceMessage(message);
+      } 
+      else if(message is MessageHandshake) {
+        //
+        //
       }
       _ai.onReceive(this, info, message);
     });

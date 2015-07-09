@@ -80,7 +80,6 @@ class TorrentClientPeerInfo {
   String ip = "";
   int portAcceptable = 0;
   int portCurrent = 0;
-  List<int> peerId = [];
   TorrentClientFront front = null;
 
 
@@ -90,11 +89,19 @@ class TorrentClientPeerInfo {
     this.portAcceptable = port;
   }
 
-  TorrentClientPeerInfo.fromAccept(String ip, int portCurrent, List<int> peerId) {
+  TorrentClientPeerInfo.fromAccept(String ip, int portCurrent) {
     this.id = ++nid;
     this.ip = ip;
     this.portCurrent = portCurrent;
     this.peerId.addAll(peerId);
+  }
+
+  List<int> get peerId {
+    if (front == null) {
+      return [];
+    } else {
+      return front.targetPeerId;
+    }
   }
 
   /// per sec bytes

@@ -13,9 +13,12 @@ class TorrentClientFront {
   static const int STATE_NONE = 0;
   static const int STATE_ON = 1;
   static const int STATE_OFF = 2;
-  List<int> _peerId = [];
+  List<int> _myPeerId = [];
+  List<int> _targetPeerId = [];
+  List<int> get targetPeerId => new List.from(_targetPeerId);
   List<int> _infoHash = [];
-
+  List<int> _targetProtocolId = [];
+  
   EasyParser _parser = null;
   HetiSocket _socket = null;
   bool handshaked = false;
@@ -70,9 +73,9 @@ class TorrentClientFront {
 
   TorrentClientFront(HetiSocket socket, String peerIp, int peerPort, HetimaReader reader, int bitfieldSize, List<int> infoHash, List<int> peerId) {
     if (peerId == null) {
-      _peerId.addAll(PeerIdCreator.createPeerid("heti69"));
+      _myPeerId.addAll(PeerIdCreator.createPeerid("heti69"));
     } else {
-      _peerId.addAll(peerId);
+      _myPeerId.addAll(peerId);
     }
     _peerIp = peerIp;
     _peerPort = peerPort;
@@ -143,7 +146,7 @@ class TorrentClientFront {
   }
 
   Future sendHandshake() {
-    MessageHandshake message = new MessageHandshake(MessageHandshake.ProtocolId, [0, 0, 0, 0, 0, 0, 0, 0], _infoHash, _peerId);
+    MessageHandshake message = new MessageHandshake(MessageHandshake.ProtocolId, [0, 0, 0, 0, 0, 0, 0, 0], _infoHash, _myPeerId);
     return message.encode().then((List<int> v) {
       return _socket.send(v).then((HetiSendInfo info) {
         TorrentClientFrontSignal.doEvent(this, TorrentClientFrontSignal.ACT_HANDSHAKE_SEND, []);
@@ -326,6 +329,9 @@ class TorrentClientFrontSignal {
     switch (act) {
       case ACT_HANDSHAKE_RECEIVE:
         front._handshakedToMe = true;
+        front._targetPeerId.clear();
+        front._targetPeerId.addAll((args[0] as MessageHandshake).peerId);
+        front._targetProtocolId.addAll((args[0] as MessageHandshake).protocolId);
         _signalHandshake(front);
         _signalHandshakeOwnConnectCheck(front, args[0]);
         break;
@@ -395,7 +401,7 @@ class TorrentClientFrontSignal {
       return;
     }
     MessageHandshake handshakeMessage = message;
-    if (handshakeMessage.peerId == front._peerId) {
+    if (handshakeMessage.peerId == front._myPeerId) {
       front._amI = true;
       TorrentClientFrontSignal frontSignal = new TorrentClientFrontSignal()
         ..id = TorrentClientFrontSignal.ID_CLOSE
