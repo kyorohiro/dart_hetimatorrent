@@ -52,6 +52,7 @@ class TorrentMessage {
       return MessageHandshake.decode(parser);
     }).catchError((e) {
       parser.back();
+      throw e;
     }).whenComplete(() {
       parser.pop();
     });    
@@ -94,6 +95,7 @@ class TorrentMessage {
       });
     }).catchError((e) {
       parser.back();
+      throw e;
     }).whenComplete(() {
       parser.buffer.clearInnerBuffer(parser.getInedx());
       parser.pop();

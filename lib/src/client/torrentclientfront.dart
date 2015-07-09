@@ -140,6 +140,7 @@ class TorrentClientFront {
         });
       }).catchError((e) {
         stream.addError(e);
+        close();
       });
     }
     a();

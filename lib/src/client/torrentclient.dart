@@ -77,11 +77,19 @@ class TorrentClient {
   }
 
   TorrentClientPeerInfo putTorrentPeerInfoFromTracker(String ip, int port) {
-    return _peerInfos.putPeerInfoFormTracker(ip, port);
+    TorrentClientPeerInfo ret = _peerInfos.putPeerInfoFormTracker(ip, port);
+    TorrentClientSignal sig = new TorrentClientSignalWithPeerInfo(
+        ret, TorrentClientSignal.ID_ADD_PEERINFO, 0, "add peer info");
+    _sendSignal(this, ret, sig);
+    return ret;
   }
 
   TorrentClientPeerInfo _putTorrentPeerInfoFromAccept(String ip, int port) {
-    return _peerInfos.putPeerInfoFormAccept(ip, port);
+    TorrentClientPeerInfo ret = _peerInfos.putPeerInfoFormAccept(ip, port);
+    TorrentClientSignal sig = new TorrentClientSignalWithPeerInfo(
+        ret, TorrentClientSignal.ID_ADD_PEERINFO, 0, "add peer info");
+    _sendSignal(this, ret, sig);
+    return ret;
   }
 
   Future start(String localAddress, int localPort, [String globalIp = null, int globalPort = null]) {
@@ -102,13 +110,15 @@ class TorrentClient {
             _internalOnReceive(info.front, info);
             info.front.startReceive();
             _isStart = true;
-            _signalStream.add(new TorrentClientSignalWithPeerInfo(info, TorrentClientSignal.ID_ACCEPT, 0, "accepted"));
+            TorrentClientSignal sig = new TorrentClientSignalWithPeerInfo(info, TorrentClientSignal.ID_ACCEPT, 0, "accepted");
+            _sendSignal(this, info, sig);
           });
         }).catchError((e) {
           socket.close();
         });
       });
-      _signalStream.add(new TorrentClientSignal(TorrentClientSignal.ID_STARTED_CLIENT, 0, "started client"));
+      TorrentClientSignal sig = new TorrentClientSignal(TorrentClientSignal.ID_STARTED_CLIENT, 0, "started client");
+      _sendSignal(this, null, sig);
       return new Future((){_tick();return {};});
     });
   }
@@ -148,7 +158,8 @@ class TorrentClient {
 
     f = new Future(() {
       _isStart = false;
-      _signalStream.add(new TorrentClientSignal(TorrentClientSignal.ID_STOPPED_CLIENT, 0, "stopped client"));
+      TorrentClientSignal sig = new TorrentClientSignal(TorrentClientSignal.ID_STOPPED_CLIENT, 0, "stopped client");
+      _sendSignal(this, null, sig);
       return _server.close();
     }).catchError((e) {
       ;
@@ -179,10 +190,15 @@ class TorrentClient {
         info.front = front;
         _internalOnReceive(front, info);
         front.startReceive();
-        _signalStream.add(new TorrentClientSignalWithPeerInfo(info, TorrentClientSignal.ID_CONNECTED, 0, "connected"));
+        _sendSignal(this, info, new TorrentClientSignalWithPeerInfo(info, TorrentClientSignal.ID_CONNECTED, 0, "connected"));
         return front;
       });
     });
+  }
+
+  void _sendSignal(TorrentClient client, TorrentClientPeerInfo info, TorrentClientSignal sig) {
+    _signalStream.add(sig);
+    _ai.onSignal(this, info, sig);
   }
 
   void _internalOnReceive(TorrentClientFront front, TorrentClientPeerInfo info) {
@@ -207,18 +223,19 @@ class TorrentClient {
           break;
       }
       TorrentClientSignal sig = new TorrentClientSignalWithPeerInfo(info, signal.id, signal.reason, signal.toString());
-      _signalStream.add(sig);
-      _ai.onSignal(this, info, sig);
+      _sendSignal(this, info, sig);
+
     });
   }
 
   void _onPieceMessage(MessagePiece piece) {
     _targetBlock.writePartBlock(piece.content, piece.index, piece.begin, piece.content.length).then((WriteResult w) {
       if (_targetBlock.have(piece.index)) {
-        _signalStream.add(new TorrentClientSignal(TorrentClientSignal.ID_SET_PIECE, piece.index, "set piece : index:${piece.index}"));
+        _sendSignal(this, null, new TorrentClientSignal(TorrentClientSignal.ID_SET_PIECE, piece.index, "set piece : index:${piece.index}"));
+
       }
       if (_targetBlock.haveAll()) {
-        _signalStream.add(new TorrentClientSignal(TorrentClientSignal.ID_SET_PIECE_ALL, piece.index, "set piece all"));
+        _sendSignal(this, null, new TorrentClientSignal(TorrentClientSignal.ID_SET_PIECE_ALL, piece.index, "set piece all"));
       }
     });
   }

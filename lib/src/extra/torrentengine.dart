@@ -61,9 +61,7 @@ class TorrentEngine {
       TorrentEngine engine = new TorrentEngine._empty();
       return TrackerClient.createTrackerClient(builder, torrentfile).then((TrackerClient trackerClient) {
         engine._builder = builder;
-        engine._trackerClient = trackerClient;
-        engine._torrentClient = new TorrentClient(builder, trackerClient.peerId, trackerClient.infoHash, torrentfile.info.pieces, torrentfile.info.piece_length, torrentfile.info.files.dataSize, cash,
-            ai: engine.ai, haveAllData: haveAllData);        
+        engine._trackerClient = trackerClient;      
         //
         engine._upnpPortMapClient = new UpnpPortMapHelper(builder, appid);
         engine.ai = new TorrentEngineAI(engine._torrentClient, engine._trackerClient, engine._upnpPortMapClient);
@@ -73,6 +71,9 @@ class TorrentEngine {
         engine.ai.baseNumOfRetry = retryNum;
         engine.ai.usePortMap = useUpnp;
         engine.ai.baseGlobalIp = globalIp;
+        //
+        engine._torrentClient = new TorrentClient(builder, trackerClient.peerId, trackerClient.infoHash, torrentfile.info.pieces, torrentfile.info.piece_length, torrentfile.info.files.dataSize, cash,
+            ai: engine.ai, haveAllData: haveAllData);  
         return engine;
       });
     });
