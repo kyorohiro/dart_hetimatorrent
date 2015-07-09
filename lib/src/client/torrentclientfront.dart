@@ -62,8 +62,8 @@ class TorrentClientFront {
   static Future<TorrentClientFront> connect(HetiSocketBuilder _builder, TorrentClientPeerInfo info, int bitfieldSize, List<int> infoHash, [List<int> peerId = null]) {
     return new Future(() {
       HetiSocket socket = _builder.createClient();
-      return socket.connect(info.ip, info.port).then((HetiSocket socket) {
-        return new TorrentClientFront(socket, info.ip, info.port, socket.buffer, bitfieldSize, infoHash, peerId);
+      return socket.connect(info.ip, info.portAcceptable).then((HetiSocket socket) {
+        return new TorrentClientFront(socket, info.ip, info.portAcceptable, socket.buffer, bitfieldSize, infoHash, peerId);
       });
     });
   }

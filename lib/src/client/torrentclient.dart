@@ -76,8 +76,8 @@ class TorrentClient {
     }
   }
 
-  TorrentClientPeerInfo putTorrentPeerInfo(String ip, int port, {peerId: ""}) {
-    return _peerInfos.putFormTrackerPeerInfo(ip, port, peerId: peerId);
+  TorrentClientPeerInfo putTorrentPeerInfoFromTracker(String ip, int port, {peerId: ""}) {
+    return _peerInfos.putPeerInfoFormTracker(ip, port, peerId: peerId);
   }
 
   Future start(String localAddress, int localPort, [String globalIp = null, int globalPort = null]) {
@@ -93,7 +93,7 @@ class TorrentClient {
       _server.onAccept().listen((HetiSocket socket) {
         new Future(() {
           return socket.getSocketInfo().then((HetiSocketInfo socketInfo) {
-            TorrentClientPeerInfo info = putTorrentPeerInfo(socketInfo.peerAddress, socketInfo.peerPort);
+            TorrentClientPeerInfo info = putTorrentPeerInfoFromTracker(socketInfo.peerAddress, socketInfo.peerPort);
             info.front = new TorrentClientFront(socket, socketInfo.peerAddress, socketInfo.peerPort, socket.buffer, this._targetBlock.bitSize, _infoHash, _peerId);
             _internalOnReceive(info.front, info);
             info.front.startReceive();

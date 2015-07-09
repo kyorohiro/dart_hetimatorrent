@@ -13,16 +13,21 @@ class TorrentClientPeerInfoList {
     peerInfos = new ShuffleLinkedList();
   }
 
-  TorrentClientPeerInfo putFormTrackerPeerInfo(String ip, int port, {peerId: ""}) {
+  
+  //
+  // tracker --> ip , port
+  // handshake --> ip, peerid,
+  //
+  TorrentClientPeerInfo putPeerInfoFormTracker(String ip, int port, {peerId: ""}) {
     for (int i = 0; i < peerInfos.length; i++) {
       TorrentClientPeerInfo info = peerInfos.getSequential(i);
-      if (info.ip == ip && info.port == port) {
+      if (info.ip == ip && info.portAcceptable == port) {
         // alredy added in peerinfo
         print("putFormTrackerPeerInfo ${ip} ${port} --A");
         return info;
       }
     }
-    TorrentClientPeerInfo info = new TorrentClientPeerInfo(ip, port, peerId: peerId);
+    TorrentClientPeerInfo info = new TorrentClientPeerInfo.fromTracker(ip, port);
     peerInfos.addLast(info);
     // alredy added in peerinfo
     print("putFormTrackerPeerInfo ${ip} ${port} --B ${peerInfos.length}");
@@ -54,15 +59,23 @@ class TorrentClientPeerInfoList {
 class TorrentClientPeerInfo {
   static int nid = 0;
   int id = 0;
+
   String ip = "";
-  int port = 0;
+  int portAcceptable = 0;
+  List<int> peerId = [];
   TorrentClientFront front = null;
 
 
-  TorrentClientPeerInfo(String ip, int port, {peerId: ""}) {
-    this.ip = ip;
-    this.port = port;
+  TorrentClientPeerInfo.fromTracker(String ip, int port) {
     this.id = ++nid;
+    this.ip = ip;
+    this.portAcceptable = port;
+  }
+
+  TorrentClientPeerInfo.fromAccept(String ip, List<int> peerId) {
+    this.id = ++nid;
+    this.ip = ip;
+    this.peerId.addAll(peerId);
   }
 
   /// per sec bytes

@@ -88,8 +88,8 @@ class TestCaseCreator2Client1Tracker {
         return trackerClientTmp.request();
       }).then((TrackerRequestResult result) {
         for (TrackerPeerInfo info in result.response.peers) {
-          clientA.putTorrentPeerInfo(info.ipAsString, info.port);
-          clientB.putTorrentPeerInfo(info.ipAsString, info.port);
+          clientA.putTorrentPeerInfoFromTracker(info.ipAsString, info.port);
+          clientB.putTorrentPeerInfoFromTracker(info.ipAsString, info.port);
         }
         return {};
       });

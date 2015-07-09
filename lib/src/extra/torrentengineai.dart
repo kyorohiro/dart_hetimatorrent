@@ -147,7 +147,7 @@ class TorrentEngineAI extends TorrentAI {
       }
       return _tracker.request().then((TrackerRequestResult r) {
         for (TrackerPeerInfo info in r.response.peers) {
-          _torrent.putTorrentPeerInfo(info.ipAsString, info.port);
+          _torrent.putTorrentPeerInfoFromTracker(info.ipAsString, info.port);
         }
         _startTracker(r.response.interval);
       });

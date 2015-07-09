@@ -84,7 +84,7 @@ class GetPeerInfoCommand extends TorrentEngineCommand {
       StringBuffer buffer = new StringBuffer();
       for (TorrentClientPeerInfo info in engine.torrentClient.peerInfos) {
         buffer
-            .writeln("${info.id},ip:${info.ip},port:${info.port},speed:${info.speed},ubm:${info.uploadedBytesToMe},dfm:${info.downloadedBytesFromMe},ctm:${info.chokedToMe},cfm:${info.chokedFromMe}");
+            .writeln("${info.id},ip:${info.ip},port:${info.portAcceptable},speed:${info.speed},ubm:${info.uploadedBytesToMe},dfm:${info.downloadedBytesFromMe},ctm:${info.chokedToMe},cfm:${info.chokedFromMe}");
       }
       return new CommandResult("${buffer.toString()}");
     });
