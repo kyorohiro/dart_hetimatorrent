@@ -59,6 +59,7 @@ class TorrentMessage {
 
   static  Future<TorrentMessage> parseBasic(EasyParser parser, [int maxOfMessageSize = 256 * 1024]) {
     parser.push();
+        
     return new Future(() {
       return MessageNull.decode(parser).then((MessageNull nullMessage) {
         parser.back();
@@ -94,6 +95,7 @@ class TorrentMessage {
     }).catchError((e) {
       parser.back();
     }).whenComplete(() {
+      parser.buffer.clearInnerBuffer(parser.getInedx());
       parser.pop();
     });
   }
