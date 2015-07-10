@@ -24,10 +24,34 @@
      <div id="com-clone" style="width:100%; height:32;">
        <object type="image/svg+xml" data="loader_a.svg" width="32" height="32"></object>
      </div>
-     <h3>[Target Torrent File]</h3>
      <div>
        <input type="file" id="fileinput">
+       drug and drop torrent file
      </div>
+     <div style="display:block;height:15%">
+       <button id="startserver" style="display:block;width:25%;height:100%">Start</button>
+       <button id="stopserver" style="display:none;width:25%;height:100%">Stop</button>     
+       <object id="loaderserver" type="image/svg+xml" data="loader_b.svg" width="32" height="32" style="display: none;width:25%;height:100%"></object>
+     </div>
+     <div>
+       <div>
+         <label>local address:</label>   
+         <span id="localaddress">...</span>
+       </div>
+       <div>
+         <label>local port:</label>   
+         <span id="localport">...</span>
+       </div>
+       <div> 
+         <label>global address:</label>   
+         <span id="globaladdress">...</span>
+       </div>    
+       <div>    
+         <label>global port:</label>   
+         <span id="globalport">...</span>
+       </div>    
+     </div>
+     <h2>[[Setting]]</h2>
      <h3>[UPnP Support]</h3>    
      <div>
        <input type="radio" name="upnpon" value="Use"> Use
@@ -49,29 +73,6 @@
        <td><input type="text" id="input-globalport" value="6969"></td>
        </tr>
        </table>
-       <button id="startserver" style="display:block">Start</button>
-       <button id="stopserver" style="display:none">Stop</button>     
-       <object id="loaderserver" type="image/svg+xml" data="loader_b.svg" width="32" height="32" style="display: none"></object>
-     </div>
-
-     <h3>[Information]</h3>
-     <div>
-       <div>
-         <label>local address:</label>   
-         <span id="localaddress">...</span>
-       </div>
-       <div>
-         <label>local port:</label>   
-         <span id="localport">...</span>
-       </div>
-       <div> 
-         <label>global address:</label>   
-         <span id="globaladdress">...</span>
-       </div>    
-       <div>    
-         <label>global port:</label>   
-         <span id="globalport">...</span>
-       </div>    
      </div>
      //
      //
