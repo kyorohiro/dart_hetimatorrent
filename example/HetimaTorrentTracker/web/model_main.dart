@@ -11,7 +11,7 @@ import 'ui_mainview.dart';
 //
 //
 void main() {
-  Tab tab = new Tab({"#m00_clone": "#com-clone"});
+  Tab tab = new Tab({"#m00_clone": "#com-clone", "#m00_setting":"#com-setting"});
   Dialog dialog = new Dialog();
 
   Map<String, TorrentFile> managedTorrentFile = {};
@@ -24,7 +24,7 @@ void main() {
   item = new HashItem();
   mainImte = new MainItem();
   item.init(model, managedTorrentFile, tab, dialog);
-  mainImte.init(model, managedTorrentFile, tab, dialog);
+  mainImte.init(model, managedTorrentFile, tab, dialog, item);
 
   tab.onShow.listen((TabInfo info) {
     print("=t= ${info.cont}");

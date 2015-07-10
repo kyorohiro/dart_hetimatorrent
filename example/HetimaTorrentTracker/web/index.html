@@ -3,14 +3,15 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>HetimaTorrentFile</title>
+    <title>HetimaTorrentFile #fffccf</title>
     <link rel="stylesheet" href="index.css">
   </head>
-  <body>
-   <div style="width:100%; height:50px; background-color:#ccf;">
+  <body style="background-color:#aaa99a;">
+    <div style="width:100%; height:50px; background-color:#eeecce;">
      <nav>
         <ul id="tabcont" class="menu">
-          <li id="m00_clone" style="background-color: #ff6666; font-weight: bold;" >( Tracker )</li>
+          <li id="m00_clone" style="background-color: #ff9999; font-weight: bold;" >( Tracker )</li>
+          <li id="m00_setting" style="background-color: #9999ff; font-weight: bold;" >( Setting )</li>
         </ul>
       </nav>
     </div>
@@ -19,38 +20,50 @@
     <!--
      [Content1] add
      -->
-    <div id="com-clone" style="width:100%; height:calc(100% - 70px);">
-     <div id="com-clone" style="width:100%; height:16;">
+    <div id="com-clone" style="width:45%; height:calc(100% - 70px);">
+     <div id="com-clone" style="width:45%; height:16;">
        <object type="image/svg+xml" data="loader_a.svg" width="32" height="16"></object>
      </div>
-     <div style="display:block;height:15%;">
-       <input type="file" id="fileinput" style="display:block;width:20%;height:80%;background-color: #ffcccc;">
-       <div id="fileprogress" style="width:20%;height:80%;background-color: #ffcccc; display:none;"></div>
-       <div>drug and drop torrent file</div>
+
+     <div style="display:block;height:180px;width:180px;position:absolute; top:65px; left:15px;background-color: #ffcccc;">
+       <input type="file" id="fileinput" style="display:block;height:120px;width:150px;">
+       <div id="fileprogress" style="width:150px;height:120px;background-color: #ffcccc; display:none;"></div>
+       <div style="font-size:medium;color: #333773;">drug and drop torrent file or a file.</div>
      </div>
-     <div style="display:block;height:10%">
-       <button id="startserver" style="display:block;width:17%;height:100%;">Start</button>
-       <button id="stopserver" style="display:none;width:17%;height:100%">Stop</button>     
-       <object id="loaderserver" type="image/svg+xml" data="loader_b.svg" width="32" height="32" style="display: none;width:17%;height:100%"></object>
+     <div style="display:block;height:180px;width:180px;position:absolute; top:65px; left:205px">
+       <button id="startserver" style="display:block;height:150px;width:150px;">Start Button</button>
+       <button id="stopserver" style="display:none;height:150px;width:150px;"">Stop Button</button>     
+       <object id="loaderserver" type="image/svg+xml" data="loader_b.svg" width="32" height="32" style="display: none;width:150px;height:150px"></object>
      </div>
-     <div>
+
+
+     <div style="display:block;height:180px;width:335px;position:absolute; top:255px; left:15px; background-color: #aacccc;">
        <div>
-         <label>local address:</label>   
-         <span id="localaddress">...</span>
+         <label style="font-size:large;color: #333773;">local address:</label>   
+         <span id="localaddress" style="font-size:large;color: #333773;">...</span>
        </div>
        <div>
-         <label>local port:</label>   
-         <span id="localport">...</span>
+         <label style="font-size:large;color: #333773;">local port:</label>   
+         <span id="localport" style="font-size:large;color: #333773;">...</span>
        </div>
        <div> 
-         <label>global address:</label>   
-         <span id="globaladdress">...</span>
+         <label style="font-size:large;color: #333773;">global address:</label>   
+         <span id="globaladdress" style="font-size:large;color: #333773;">...</span>
        </div>    
        <div>    
-         <label>global port:</label>   
-         <span id="globalport">...</span>
+         <label style="font-size:large;color: #333773;">global port:</label>   
+         <span id="globalport" style="font-size:large;color: #333773;">...</span>
        </div>    
      </div>
+     //
+     //
+   </div>
+
+
+    <!--
+     [Content2] setting
+     -->
+    <div id="com-setting" style="width:100%; height:calc(100% - 70px);">
      <h2>[[Setting]]</h2>
      <h3>[UPnP Support]</h3>    
      <div>
@@ -79,10 +92,6 @@
    </div>
 
 
-
-
-
-
     <!--
      [Content3] now
      -->
@@ -108,8 +117,8 @@
           <tr>
       　　　 <td>upnp support</td>
       　　　 <td>
-              <input type="radio" name="torrent-upnpon" value="Use"> Use 
-              <input type="radio" name="torrent-upnpon" value="Unuse" checked> Unuse
+              <input type="radio" id="torrent-upnpon-use" name="torrent-upnpon" value="Use"> Use 
+              <input type="radio" id="torrent-upnpon-unuse" name="torrent-upnpon" value="Unuse" checked> Unuse
             </td>
      　　  </tr>
        　　<tr>
@@ -118,7 +127,7 @@
      　　  </tr>
       　　 <tr>       
      　　　  <td>local port</td>
-     　　　  <td><input type="text" id="torrent-input-localport" value="6969" style="display: none"></td>
+     　　　  <td><input type="text" id="torrent-input-localport" value="16969" style="display: none"></td>
       　　 </tr>
            <tr>
       　　　 <td>global address</td>
@@ -126,7 +135,7 @@
      　　  </tr>
        　　<tr>
        　　　<td>global port</td>
-       　　　<td><input type="text" id="torrent-input-globalport" value="6969" style="display: none"></td>
+       　　　<td><input type="text" id="torrent-input-globalport" value="16969" style="display: none"></td>
        　　</tr>
           </table>
           <button id="torrent-startserver" style="display:none">Start</button>

@@ -6,6 +6,7 @@ import 'package:hetimacore/hetimacore_cl.dart';
 import 'package:hetimanet/hetimanet.dart';
 import 'package:hetimatorrent/hetimatorrent.dart';
 import 'ui_dialog.dart';
+import 'ui_hashitem.dart';
 import 'model_tracker.dart';
 import 'model_create.dart';
 
@@ -29,7 +30,7 @@ class MainItem {
   html.DivElement outputFileProgress = html.querySelector("#fileprogress");
 
   
-  void init(TrackerModel model, Map<String, TorrentFile> managedTorrentFile, Tab tab, Dialog dialog) {
+  void init(TrackerModel model, Map<String, TorrentFile> managedTorrentFile, Tab tab, Dialog dialog, HashItem hitem) {
     fileInput.onChange.listen((html.Event e) {
       print("==");
       if (fileInput.files != null && fileInput.files.length > 0) {
@@ -37,7 +38,7 @@ class MainItem {
         fileInput.style.display = "none";
 
         html.File n = fileInput.files[0];
-        cre(HetimaData d) {
+        cre(HetimaData d,[html.File b=null]) {
           TorrentFile.createTorrentFileFromTorrentFile(new HetimaFileToBuilder(d)).then((TorrentFile f) {
             return f.createInfoSha1().then((List<int> infoHash) {
               String key = PercentEncode.encode(infoHash);
@@ -46,6 +47,10 @@ class MainItem {
               model.addInfoHashFromTracker(f);
               outputFileProgress.style.display = "none";
               fileInput.style.display = "block";
+              CreateFileModel fm;
+              if(b != null) {
+                hitem.seedRawFiles[key] = b;
+              }
             });
           }).catchError((e) {
             dialog.show("Failed to parse torrent");
@@ -68,7 +73,7 @@ class MainItem {
              //
              outputFileProgress.innerHtml = "${v}/${n.size}";
            }).then((_){
-             cre(new HetimaDataBlob(fm.rawFile));
+             cre(new HetimaDataBlob(fm.rawFile), n);
            }).catchError((e){
              dialog.show("Failed to create torrent file");
              outputFileProgress.style.display = "none";
