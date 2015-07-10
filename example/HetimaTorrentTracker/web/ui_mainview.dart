@@ -28,11 +28,8 @@ class MainItem {
   void init(TrackerModel model, Map<String, TorrentFile> managedTorrentFile, Tab tab, Dialog dialog) {
     fileInput.onChange.listen((html.Event e) {
       print("==");
-      List<html.File> s = [];
-      s.addAll(fileInput.files);
-      while (s.length > 0) {
-        html.File n = s.removeAt(0);
-        print("#${n.name} ${e}");
+      if (fileInput.files != null && fileInput.files.length > 0) {
+        html.File n = fileInput.files[0];
         TorrentFile.createTorrentFileFromTorrentFile(new HetimaFileToBuilder(new HetimaDataBlob(n))).then((TorrentFile f) {
           return f.createInfoSha1().then((List<int> infoHash) {
             String key = PercentEncode.encode(infoHash);
