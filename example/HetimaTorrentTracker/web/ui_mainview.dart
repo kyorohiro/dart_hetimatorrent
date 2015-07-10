@@ -53,7 +53,13 @@ class MainItem {
             fileInput.style.display = "block";
           });
         }
-        if (n.name.endsWith(".torrent")) {
+ 
+        if (n.size == 0) {
+          dialog.show("Failed: file size zero");
+          outputFileProgress.style.display = "none";
+          fileInput.style.display = "block";
+          return;
+        } else if (n.name.endsWith(".torrent")) {
           cre(new HetimaDataBlob(n));
         } else {
           int pieceLength = TorrentFile.getRecommendPieceLength(n.size);
