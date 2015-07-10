@@ -25,6 +25,13 @@ class TorrentClientMessage {
 }
 
 class TorrentClientSignal {
+  //
+  static const ID_HANDSHAKED = 1;
+  static const ID_CLOSE = 2;
+  static const ID_PIECE_SEND = 3;
+  static const ID_PIECE_RECEIVE = 4;
+  static const REASON_OWN_CONNECTION = 2001;
+  //
   static const int ID_CONNECTED = 1001;
   static const int ID_ACCEPT = 1002;
   static const int ID_SET_PIECE = 1003;
@@ -48,6 +55,20 @@ class TorrentClientSignal {
     return "${_message}";
   }
 }
+
+class TorrentClientSignalWithFront extends TorrentClientSignal {
+  TorrentClientFront _front;
+  TorrentClientFront get front=> _front;
+  int _v = 0;
+  int get v => _v;
+
+  TorrentClientSignalWithFront(TorrentClientFront front, int id, int reason,String message,[int v=0]) : super(id, reason, message) {
+    this._front = front;
+    this._v = v;
+  }
+
+}
+
 
 class TorrentClientSignalWithPeerInfo extends TorrentClientSignal {
   TorrentClientPeerInfo _info;

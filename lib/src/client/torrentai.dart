@@ -106,7 +106,7 @@ class TorrentAIBasic extends TorrentAI {
   Future onSignal(TorrentClient client, TorrentClientPeerInfo info, TorrentClientSignal signal) {
     return new Future(() {
       switch (signal.id) {
-        case TorrentClientFrontSignal.ID_HANDSHAKED:
+        case TorrentClientSignal.ID_HANDSHAKED:
           info.front.sendBitfield(client.targetBlock.bitfield);
           break;
         case TorrentClientSignal.ID_ACCEPT:

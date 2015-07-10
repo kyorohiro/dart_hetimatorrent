@@ -213,12 +213,12 @@ class TorrentClient {
       }
       _ai.onReceive(this, info, message);
     });
-    front.onReceiveSignal.listen((TorrentClientFrontSignal signal) {
+    front.onReceiveSignal.listen((TorrentClientSignalWithFront signal) {
       switch(signal.id) {
-        case TorrentClientFrontSignal.ID_PIECE_RECEIVE:
+        case TorrentClientSignal.ID_PIECE_RECEIVE:
           this._downloaded += signal.v;
           break;
-        case TorrentClientFrontSignal.ID_PIECE_SEND:
+        case TorrentClientSignal.ID_PIECE_SEND:
           this._uploaded += signal.v;
           break;
       }

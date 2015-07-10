@@ -8,6 +8,7 @@ import '../util/peeridcreator.dart';
 import '../message/message.dart';
 import 'torrentclientpeerinfo.dart';
 import '../util/bitfield.dart';
+import 'torrentclientmessage.dart';
 
 class TorrentClientFront {
   static const int STATE_NONE = 0;
@@ -59,8 +60,8 @@ class TorrentClientFront {
   StreamController<TorrentMessage> stream = new StreamController();
   Stream<TorrentMessage> get onReceiveEvent => stream.stream;
 
-  StreamController<TorrentClientFrontSignal> _streamSignal = new StreamController.broadcast();
-  Stream<TorrentClientFrontSignal> get onReceiveSignal => _streamSignal.stream;
+  StreamController<TorrentClientSignal> _streamSignal = new StreamController.broadcast();
+  Stream<TorrentClientSignal> get onReceiveSignal => _streamSignal.stream;
 
   static Future<TorrentClientFront> connect(HetiSocketBuilder _builder, TorrentClientPeerInfo info, int bitfieldSize, List<int> infoHash, [List<int> peerId = null]) {
     return new Future(() {
@@ -87,7 +88,7 @@ class TorrentClientFront {
     _bitfieldToMe = new Bitfield(bitfieldSize, clearIsOne: false);
     _bitfieldFromMe = new Bitfield(bitfieldSize, clearIsOne: false);
     _socket.onClose().listen((HetiCloseInfo info) {
-      _streamSignal.add(new TorrentClientFrontSignal()..id = TorrentClientFrontSignal.ID_CLOSE);
+      TorrentClientFrontSignal.doClose(this, 0);
     });
   }
 
@@ -106,14 +107,8 @@ class TorrentClientFront {
     a() {
       new Future(() {
         parse().then((TorrentMessage message) {
-          //
-          // signal
-
           TorrentClientFrontSignal.doReceiveMessage(this, message);
-          //
-          // event
           stream.add(message);
-
           a();
         });
       }).catchError((e) {
@@ -190,6 +185,7 @@ class TorrentClientFront {
 
   void close() {
     _socket.close();
+    TorrentClientFrontSignal.doClose(this, 0);
   }
 }
 
@@ -197,26 +193,6 @@ class TorrentClientFront {
 //
 //
 class TorrentClientFrontSignal {
-  static const REASON_OWN_CONNECTION = 2001;
- 
-  static const int ACT_HANDSHAKE_SEND = 5000 + TorrentMessage.DUMMY_SIGN_SHAKEHAND;
-  static const int ACT_HANDSHAKE_RECEIVE = 6000 + TorrentMessage.DUMMY_SIGN_SHAKEHAND;
-  static const int ACT_CHOKE_SEND = 5000 + TorrentMessage.SIGN_CHOKE;
-  static const int ACT_CHOKE_RECEIVE = 6000 + TorrentMessage.SIGN_CHOKE;
-  static const int ACT_UNCHOKE_SEND = 5000 + TorrentMessage.SIGN_UNCHOKE;
-  static const int ACT_UNCHOKE_RECEIVE = 6000 + TorrentMessage.SIGN_UNCHOKE;
-  static const int ACT_INTERESTED_SEND = 5000 + TorrentMessage.SIGN_INTERESTED;
-  static const int ACT_INTERESTED_RECEIVE = 6000 + TorrentMessage.SIGN_INTERESTED;
-  static const int ACT_NOTINTERESTED_SEND = 5000 + TorrentMessage.SIGN_NOTINTERESTED;
-  static const int ACT_NOTINTERESTED_RECEIVE = 6000 + TorrentMessage.SIGN_NOTINTERESTED;
-  static const int ACT_BITFIELD_SEND = 5000 + TorrentMessage.SIGN_BITFIELD;
-  static const int ACT_BITFIELD_RECEIVE = 6000 + TorrentMessage.SIGN_BITFIELD;
-  static const int ACT_PIECE_SEND = 5000 + TorrentMessage.SIGN_PIECE;
-  static const int ACT_PIECE_RECEIVE = 6000 + TorrentMessage.SIGN_PIECE;
-  static const ID_HANDSHAKED = 1;
-  static const ID_CLOSE = 2;
-  static const ID_PIECE_SEND = ACT_PIECE_SEND;
-  static const ID_PIECE_RECEIVE = ACT_PIECE_RECEIVE;
 
   int id = 0;
   int reason = 0;
@@ -254,10 +230,8 @@ class TorrentClientFrontSignal {
         break;
       case TorrentMessage.SIGN_PIECE:
         front.downloadedBytesFromMe += (message as MessagePiece).content.length;
-        front._streamSignal.add(new TorrentClientFrontSignal()
-          ..id = TorrentClientFrontSignal.ID_PIECE_RECEIVE
-          ..reason = 0
-          ..v = (message as MessagePiece).content.length);
+        //
+        front._streamSignal.add(new TorrentClientSignalWithFront(front, TorrentClientSignal.ID_PIECE_RECEIVE, 0, "", (message as MessagePiece).content.length));
         break;
     }
   }
@@ -289,17 +263,14 @@ class TorrentClientFrontSignal {
       case TorrentMessage.SIGN_PIECE:
         front.uploadedBytesToMe += (message as MessagePiece).content.length;
         front._uploadedBytesFromUnchokedStartTime += (message as MessagePiece).content.length;
-        front._streamSignal.add(new TorrentClientFrontSignal()
-          ..id = TorrentClientFrontSignal.ID_PIECE_SEND
-          ..reason = 0
-          ..v = (message as MessagePiece).content.length);
+        front._streamSignal.add(new TorrentClientSignalWithFront(front, TorrentClientSignal.ID_PIECE_SEND, 0, "", (message as MessagePiece).content.length));
         break;
     }
   }
 
   static void _signalHandshake(TorrentClientFront front) {
     if (front._handshakedFromMe == true && front._handshakedToMe == true) {
-      front._streamSignal.add(new TorrentClientFrontSignal()..id = TorrentClientFrontSignal.ID_HANDSHAKED);
+      front._streamSignal.add(new TorrentClientSignalWithFront(front, TorrentClientSignal.ID_HANDSHAKED, 0, ""));
     }
   }
 
@@ -310,10 +281,11 @@ class TorrentClientFrontSignal {
     MessageHandshake handshakeMessage = message;
     if (handshakeMessage.peerId == front._myPeerId) {
       front._amI = true;
-      TorrentClientFrontSignal frontSignal = new TorrentClientFrontSignal()
-        ..id = TorrentClientFrontSignal.ID_CLOSE
-        ..reason = TorrentClientFrontSignal.REASON_OWN_CONNECTION;
-      front._streamSignal.add(frontSignal);
+      doClose(front, TorrentClientSignal.REASON_OWN_CONNECTION);
     }
+  }
+  
+  static void doClose(TorrentClientFront front, int reason) {
+    front._streamSignal.add(new TorrentClientSignalWithFront(front, TorrentClientSignal.ID_CLOSE, reason, ""));
   }
 }
