@@ -46,6 +46,12 @@ class TorrentMessage {
     _id = id;
   }
 
+  Future<List<int>> encode() {
+    return new Future((){
+      return [0];
+    });
+  }
+
   static Future<TorrentMessage> parseHandshake(EasyParser parser, [int maxOfMessageSize = 256 * 1024]) {
     parser.push();
     return new Future(() {
