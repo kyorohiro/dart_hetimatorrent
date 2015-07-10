@@ -205,7 +205,16 @@ class TorrentClient {
     front.onReceiveEvent.listen((TorrentMessage message) {
       messageStream.add(new TorrentClientMessage(info, message));
       if (message is MessagePiece) {
-        _onPieceMessage(message);
+        MessagePiece piece = message;
+        _targetBlock.writePartBlock(piece.content, piece.index, piece.begin, piece.content.length).then((WriteResult w) {
+          if (_targetBlock.have(piece.index)) {
+            _sendSignal(this, null, new TorrentClientSignal(TorrentClientSignal.ID_SET_PIECE, piece.index, "set piece : index:${piece.index}"));
+
+          }
+          if (_targetBlock.haveAll()) {
+            _sendSignal(this, null, new TorrentClientSignal(TorrentClientSignal.ID_SET_PIECE_ALL, piece.index, "set piece all"));
+          }
+        });
       } 
       else if(message is MessageHandshake) {
         //
@@ -225,18 +234,6 @@ class TorrentClient {
       TorrentClientSignal sig = new TorrentClientSignalWithPeerInfo(info, signal.id, signal.reason, signal.toString());
       _sendSignal(this, info, sig);
 
-    });
-  }
-
-  void _onPieceMessage(MessagePiece piece) {
-    _targetBlock.writePartBlock(piece.content, piece.index, piece.begin, piece.content.length).then((WriteResult w) {
-      if (_targetBlock.have(piece.index)) {
-        _sendSignal(this, null, new TorrentClientSignal(TorrentClientSignal.ID_SET_PIECE, piece.index, "set piece : index:${piece.index}"));
-
-      }
-      if (_targetBlock.haveAll()) {
-        _sendSignal(this, null, new TorrentClientSignal(TorrentClientSignal.ID_SET_PIECE_ALL, piece.index, "set piece all"));
-      }
     });
   }
 
