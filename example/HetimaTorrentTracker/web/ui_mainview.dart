@@ -30,16 +30,20 @@ class MainItem {
       print("==");
       if (fileInput.files != null && fileInput.files.length > 0) {
         html.File n = fileInput.files[0];
-        TorrentFile.createTorrentFileFromTorrentFile(new HetimaFileToBuilder(new HetimaDataBlob(n))).then((TorrentFile f) {
-          return f.createInfoSha1().then((List<int> infoHash) {
-            String key = PercentEncode.encode(infoHash);
-            managedTorrentFile[key] = f;
-            tab.add("${key}", "con-now");
-            model.addInfoHashFromTracker(f);
+        if (n.name.endsWith(".torrent")) {
+          TorrentFile.createTorrentFileFromTorrentFile(new HetimaFileToBuilder(new HetimaDataBlob(n))).then((TorrentFile f) {
+            return f.createInfoSha1().then((List<int> infoHash) {
+              String key = PercentEncode.encode(infoHash);
+              managedTorrentFile[key] = f;
+              tab.add("${key}", "con-now");
+              model.addInfoHashFromTracker(f);
+            });
+          }).catchError((e) {
+            dialog.show("Failed to parse torrent");
           });
-        }).catchError((e) {
-          dialog.show("Failed to parse torrent");
-        });
+        } else {
+          ;
+        }
       }
     });
 
