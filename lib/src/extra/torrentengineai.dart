@@ -156,6 +156,10 @@ class TorrentEngineAI extends TorrentAI {
           _torrent.putTorrentPeerInfoFromTracker(info.ipAsString, info.port);
         }
         _startTracker(r.response.interval);
+      }).catchError((e){
+        //
+        // todo
+        
       });
     });
   }
