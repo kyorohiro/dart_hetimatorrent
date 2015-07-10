@@ -64,7 +64,7 @@ class TorrentEngine {
         engine._trackerClient = trackerClient;      
         //
         engine._upnpPortMapClient = new UpnpPortMapHelper(builder, appid);
-        engine.ai = new TorrentEngineAI(engine._torrentClient, engine._trackerClient, engine._upnpPortMapClient);
+        engine.ai = new TorrentEngineAI(engine._trackerClient, engine._upnpPortMapClient);
         engine.ai.baseLocalAddress = localIp;
         engine.ai.baseLocalPort = localPort;
         engine.ai.baseGlobalPort = globalPort;

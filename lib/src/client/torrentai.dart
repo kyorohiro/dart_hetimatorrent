@@ -13,6 +13,7 @@ abstract class TorrentAI {
   Future onReceive(TorrentClient client, TorrentClientPeerInfo info, TorrentMessage message);
   Future onSignal(TorrentClient client, TorrentClientPeerInfo info, TorrentClientSignal message);
   Future onTick(TorrentClient client);
+  Future onRegistAI(TorrentClient client);
 }
 
 class TorrenAIEmpty extends TorrentAI {
@@ -33,6 +34,11 @@ class TorrenAIEmpty extends TorrentAI {
       print("Empty AI signal : ${client.peerId}");
     });
   }
+  Future onRegistAI(TorrentClient client) {
+    return new Future(() {
+      print("Empty AI regist : ${client.peerId}");
+    });
+  }
 }
 
 class TorrentAIBasic extends TorrentAI {
@@ -42,6 +48,12 @@ class TorrentAIBasic extends TorrentAI {
   TorrentAIBasic({maxUnchoke: 8, maxConnect: 20}) {
     _maxUnchoke = maxUnchoke;
     _maxConnect = maxConnect;
+  }
+
+  Future onRegistAI(TorrentClient client) {
+    return new Future(() {
+      print("Basic AI regist : ${client.peerId}");
+    });
   }
 
   Future onTick(TorrentClient client) {

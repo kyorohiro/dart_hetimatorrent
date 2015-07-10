@@ -12,9 +12,7 @@ import 'torrentclientmessage.dart';
 
 import '../util/blockdata.dart';
 import '../util/bitfield.dart';
-
 import '../message/message.dart';
-
 import '../file/torrentfile.dart';
 
 class TorrentClient {
@@ -35,7 +33,7 @@ class TorrentClient {
 
   int _downloaded = 0;
   int _uploaded = 0;
-  
+
   int get downloaded => _downloaded;
   int get uploaded => _uploaded;
   TorrentClientPeerInfoList _peerInfos;
@@ -74,20 +72,19 @@ class TorrentClient {
     } else {
       this.ai = ai;
     }
+    this.ai.onRegistAI(this);
   }
 
   TorrentClientPeerInfo putTorrentPeerInfoFromTracker(String ip, int port) {
     TorrentClientPeerInfo ret = _peerInfos.putPeerInfoFormTracker(ip, port);
-    TorrentClientSignal sig = new TorrentClientSignalWithPeerInfo(
-        ret, TorrentClientSignal.ID_ADD_PEERINFO, 0, "add peer info");
+    TorrentClientSignal sig = new TorrentClientSignalWithPeerInfo(ret, TorrentClientSignal.ID_ADD_PEERINFO, 0, "add peer info");
     _sendSignal(this, ret, sig);
     return ret;
   }
 
   TorrentClientPeerInfo _putTorrentPeerInfoFromAccept(String ip, int port) {
     TorrentClientPeerInfo ret = _peerInfos.putPeerInfoFormAccept(ip, port);
-    TorrentClientSignal sig = new TorrentClientSignalWithPeerInfo(
-        ret, TorrentClientSignal.ID_ADD_PEERINFO, 0, "add peer info");
+    TorrentClientSignal sig = new TorrentClientSignalWithPeerInfo(ret, TorrentClientSignal.ID_ADD_PEERINFO, 0, "add peer info");
     _sendSignal(this, ret, sig);
     return ret;
   }
@@ -109,7 +106,6 @@ class TorrentClient {
             info.front = new TorrentClientFront(socket, socketInfo.peerAddress, socketInfo.peerPort, socket.buffer, this._targetBlock.bitSize, _infoHash, _peerId);
             _internalOnReceive(info.front, info);
             info.front.startReceive();
-            _isStart = true;
             TorrentClientSignal sig = new TorrentClientSignalWithPeerInfo(info, TorrentClientSignal.ID_ACCEPT, 0, "accepted");
             _sendSignal(this, info, sig);
           });
@@ -119,26 +115,23 @@ class TorrentClient {
       });
       TorrentClientSignal sig = new TorrentClientSignal(TorrentClientSignal.ID_STARTED_CLIENT, 0, "started client");
       _sendSignal(this, null, sig);
-      return new Future((){_tick();return {};});
+      return new Future(() {
+        _isStart = true;
+        _tick();
+        return {};
+      });
     });
   }
 
   Future _tick() {
-    t() {
-      return new Future.delayed(new Duration(seconds: tickSec)).then((_) {
-        if(_ai != null) {
-          _ai.onTick(this);
-        }
-        if (_isStart == true) {
-          t();
-        }
-      });
-    }
-    return new Future(() {
+    return new Future.delayed(new Duration(seconds: tickSec)).then((_) {
       if (_isStart != true) {
-        _isStart = true;
-        t();
+        return {};
       }
+      if (_ai != null) {
+        _ai.onTick(this);
+      }
+      _tick();
     });
   }
 
@@ -209,21 +202,19 @@ class TorrentClient {
         _targetBlock.writePartBlock(piece.content, piece.index, piece.begin, piece.content.length).then((WriteResult w) {
           if (_targetBlock.have(piece.index)) {
             _sendSignal(this, null, new TorrentClientSignal(TorrentClientSignal.ID_SET_PIECE, piece.index, "set piece : index:${piece.index}"));
-
           }
           if (_targetBlock.haveAll()) {
             _sendSignal(this, null, new TorrentClientSignal(TorrentClientSignal.ID_SET_PIECE_ALL, piece.index, "set piece all"));
           }
         });
-      } 
-      else if(message is MessageHandshake) {
+      } else if (message is MessageHandshake) {
         //
         //
       }
       _ai.onReceive(this, info, message);
     });
     front.onReceiveSignal.listen((TorrentClientSignalWithFront signal) {
-      switch(signal.id) {
+      switch (signal.id) {
         case TorrentClientSignal.ID_PIECE_RECEIVE:
           this._downloaded += signal.v;
           break;
@@ -233,7 +224,6 @@ class TorrentClient {
       }
       TorrentClientSignal sig = new TorrentClientSignalWithPeerInfo(info, signal.id, signal.reason, signal.toString());
       _sendSignal(this, info, sig);
-
     });
   }
 

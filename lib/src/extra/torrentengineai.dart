@@ -23,10 +23,16 @@ class TorrentEngineAI extends TorrentAI {
   TrackerClient _tracker = null;
   UpnpPortMapHelper _upnpPortMapClient = null;
 
-  TorrentEngineAI(TorrentClient torrent, TrackerClient tracker, UpnpPortMapHelper upnpPortMapClient) {
-    this._torrent = torrent;
+  TorrentEngineAI(TrackerClient tracker, UpnpPortMapHelper upnpPortMapClient) {
     this._tracker = tracker;
     this._upnpPortMapClient = upnpPortMapClient;
+  }
+
+  Future onRegistAI(TorrentClient client) {
+    this._torrent = client;
+    return new Future(() {
+      
+    });
   }
 
   @override
