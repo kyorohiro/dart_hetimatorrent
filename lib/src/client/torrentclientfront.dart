@@ -88,7 +88,7 @@ class TorrentClientFront {
     _bitfieldToMe = new Bitfield(bitfieldSize, clearIsOne: false);
     _bitfieldFromMe = new Bitfield(bitfieldSize, clearIsOne: false);
     _socket.onClose().listen((HetiCloseInfo info) {
-      TorrentClientFrontSignal.doClose(this, 0);
+      TorrentClientFrontNerve.doClose(this, 0);
     });
   }
 
@@ -107,7 +107,7 @@ class TorrentClientFront {
     a() {
       new Future(() {
         parse().then((TorrentMessage message) {
-          TorrentClientFrontSignal.doReceiveMessage(this, message);
+          TorrentClientFrontNerve.doReceiveMessage(this, message);
           stream.add(message);
           a();
         });
@@ -177,7 +177,7 @@ class TorrentClientFront {
   Future sendMessage(TorrentMessage message) {
     return message.encode().then((List<int> data) {
       return _socket.send(data).then((HetiSendInfo info) {
-        TorrentClientFrontSignal.doSendMessage(this, message);
+        TorrentClientFrontNerve.doSendMessage(this, message);
         return {};
       });
     });
@@ -185,14 +185,14 @@ class TorrentClientFront {
 
   void close() {
     _socket.close();
-    TorrentClientFrontSignal.doClose(this, 0);
+    TorrentClientFrontNerve.doClose(this, 0);
   }
 }
 
 //
 //
 //
-class TorrentClientFrontSignal {
+class TorrentClientFrontNerve {
 
   int id = 0;
   int reason = 0;
@@ -230,7 +230,6 @@ class TorrentClientFrontSignal {
         break;
       case TorrentMessage.SIGN_PIECE:
         front.downloadedBytesFromMe += (message as MessagePiece).content.length;
-        //
         front._streamSignal.add(new TorrentClientSignalWithFront(front, TorrentClientSignal.ID_PIECE_RECEIVE, 0, "", (message as MessagePiece).content.length));
         break;
     }
