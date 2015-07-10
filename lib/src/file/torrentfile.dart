@@ -31,8 +31,8 @@ class TorrentFile {
 
   static int getRecommendPieceLength(int fileSize) {
     int pieceSize = fileSize ~/ 1024 + 1;
-    int size = PIECE_LENGTH_16;
-    for (int i = 0; i < 6; i++) {
+    int size = PIECE_LENGTH_128;
+    for (int i = 0; i < 4; i++) {
       if (pieceSize <= size * 2) {
         return size;
       }
