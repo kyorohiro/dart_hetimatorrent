@@ -7,6 +7,7 @@ import 'package:hetimanet/hetimanet.dart';
 import 'package:hetimatorrent/hetimatorrent.dart';
 import 'ui_dialog.dart';
 import 'model_tracker.dart';
+import 'model_create.dart';
 
 class MainItem {
   html.InputElement fileInput = html.querySelector("#fileinput");
@@ -25,24 +26,48 @@ class MainItem {
   html.InputElement inputLocalPort = html.querySelector("#input-localport");
   html.InputElement inputGlobalPort = html.querySelector("#input-globalport");
 
+  html.DivElement outputFileProgress = html.querySelector("#fileprogress");
+
+  
   void init(TrackerModel model, Map<String, TorrentFile> managedTorrentFile, Tab tab, Dialog dialog) {
     fileInput.onChange.listen((html.Event e) {
       print("==");
       if (fileInput.files != null && fileInput.files.length > 0) {
+        outputFileProgress.style.display = "block";
+        fileInput.style.display = "none";
+
         html.File n = fileInput.files[0];
-        if (n.name.endsWith(".torrent")) {
-          TorrentFile.createTorrentFileFromTorrentFile(new HetimaFileToBuilder(new HetimaDataBlob(n))).then((TorrentFile f) {
+        cre(HetimaData d) {
+          TorrentFile.createTorrentFileFromTorrentFile(new HetimaFileToBuilder(d)).then((TorrentFile f) {
             return f.createInfoSha1().then((List<int> infoHash) {
               String key = PercentEncode.encode(infoHash);
               managedTorrentFile[key] = f;
               tab.add("${key}", "con-now");
               model.addInfoHashFromTracker(f);
+              outputFileProgress.style.display = "none";
+              fileInput.style.display = "block";
             });
           }).catchError((e) {
             dialog.show("Failed to parse torrent");
+            outputFileProgress.style.display = "none";
+            fileInput.style.display = "block";
           });
+        }
+        if (n.name.endsWith(".torrent")) {
+          cre(new HetimaDataBlob(n));
         } else {
-          ;
+          int pieceLength = TorrentFile.getRecommendPieceLength(n.size);
+           CreateFileModel fm = new CreateFileModel();
+           fm.createFile(n, "http://0.0.0.0/announce", pieceLength, 0, 3, n.name, "a.torrent", (int v){
+             //
+             outputFileProgress.innerHtml = "${v}/${n.size}";
+           }).then((_){
+             cre(new HetimaDataBlob(fm.rawFile));
+           }).catchError((e){
+             dialog.show("Failed to create torrent file");
+             outputFileProgress.style.display = "none";
+             fileInput.style.display = "block";
+           });
         }
       }
     });
