@@ -99,7 +99,8 @@ class TorrentAIBasic extends TorrentAI {
                 if (len > result.buffer.length) {
                   end = result.buffer.length;
                 }
-                cont.setRange(begin, end, result.buffer);
+//                cont.setRange(begin, end, result.buffer);
+                cont.setRange(0, len, result.buffer,begin);
                 return front.sendPiece(index, begin, cont).then((_) {
                   ;
                 });
@@ -200,7 +201,7 @@ class TorrentAIBasic extends TorrentAI {
     // first intersted peer
     for (int i = 0; i < unchokeNum && 0 < nextUnchoke.length; i++) {
       TorrentClientPeerInfo info = nextUnchoke.removeLast();
-      if (info.front.interestedToMe == true) {
+      if (info.front.interestedToMe == TorrentClientFront.STATE_ON || info.front.interestedToMe == TorrentClientFront.STATE_NONE) {
         info.front.sendUnchoke();
         numOfSendedUnchoke++;
       }
@@ -209,7 +210,7 @@ class TorrentAIBasic extends TorrentAI {
     // secound notinterested peer
     for (int i = 0; i < (_maxUnchoke - numOfSendedUnchoke) && 0 < nextUnchoke.length; i++) {
       TorrentClientPeerInfo info = nextUnchoke.removeLast();
-      if (info.front.interestedToMe == false) {
+      if (info.front.amI == false && info.front.interestedToMe == TorrentClientFront.STATE_OFF) {
         info.front.sendUnchoke();
       }
     }

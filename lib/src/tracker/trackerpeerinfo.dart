@@ -49,7 +49,13 @@ class TrackerPeerInfo {
     }
   }
 
-  String get peerIdAsString => PercentEncode.encode(peerId);
+  String get peerIdAsString {
+    if(peerId == null) {
+      return "";
+    } else {
+      return PercentEncode.encode(peerId);
+    }
+  }
   String get portdAsString => port.toString();
   String get ipAsString {
     return "" + ip[0].toString() + "." + ip[1].toString() + "." + ip[2].toString() + "." + ip[3].toString();

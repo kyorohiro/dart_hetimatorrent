@@ -63,6 +63,10 @@ class HashItem {
     });
     
     startServerBtn.onClick.listen((html.MouseEvent e) {
+      if(trackerModel.trackerServer.isStart==false) {
+        dialog.show("Failed to start: you must to start tracker server.");
+        return;
+      }
       String key = trackerModel.selectKey;
       loadServerBtn.style.display = "block";
       stopServerBtn.style.display = "none";
@@ -73,6 +77,7 @@ class HashItem {
       seedModels[key].localPort = int.parse(localport.value);
       seedModels[key].localIp = localAddress.value;
       seedModels[key].globalIp = globalAddress.value;
+      torrentFile.announce = "http://${trackerModel.trackerServer.address}:${trackerModel.trackerServer.port}/announce";
       seedModels[key].startEngine(torrentFile, new HetimaDataBlob(seedRawFiles[trackerModel.selectKey]), true).then((SeederModelStartResult ret) {
         seedState[key] = 2;//stop
         localAddress.value = ret.localIp;

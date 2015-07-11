@@ -203,6 +203,7 @@ class TorrentClientFrontNerve {
   }
 
   static void doReceiveMessage(TorrentClientFront front, TorrentMessage message) {
+    print("###[${front._peerIp}:${front._peerPort}] receive ${message.toString()}");
     switch (message.id) {
       case TorrentMessage.DUMMY_SIGN_SHAKEHAND:
         front._handshakedToMe = true;
@@ -236,6 +237,7 @@ class TorrentClientFrontNerve {
   }
 
   static void doSendMessage(TorrentClientFront front, TorrentMessage message) {
+    print("###[${front._peerIp}:${front._peerPort}] send ${message.toString()}");
     switch (message.id) {
       case TorrentMessage.DUMMY_SIGN_SHAKEHAND:
         front._handshakedFromMe = true;

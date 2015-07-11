@@ -21,6 +21,9 @@ class TrackerServer {
   List<TrackerPeerManager> _peerManagerList = new List();
 
   String trackerAnnounceAddressForTorrentFile = "";
+  
+  bool _isStart = false;
+  bool get isStart => _isStart;
 
   TrackerServer(HetiSocketBuilder socketBuilder) {
     _server = new HetiHttpServerHelper(socketBuilder);
@@ -92,8 +95,10 @@ class TrackerServer {
     _server.numOfRetry = 0;
 
     _server.startServer().then((HetiHttpStartServerResult re) {
+      _isStart = true;
       c.complete(new StartResult());
     }).catchError((e) {
+      _isStart = false;
       c.completeError(e);
     });
     if (res == null) {
@@ -109,6 +114,7 @@ class TrackerServer {
     }
     async.Completer<StopResult> c = new async.Completer();
     _server.stopServer();
+    _isStart = false;
     c.complete(new StopResult());
     return c.future;
   }
@@ -117,6 +123,7 @@ class TrackerServer {
     new async.Future(() {
       String qurey = item.option.replaceFirst(new RegExp(r"^\?"), "");
       Map<String, String> parameter = HttpUrlDecoder.queryMap(qurey);
+      print("${qurey}");
       String infoHashAsString = parameter[TrackerUrl.KEY_INFO_HASH];
 
       if (infoHashAsString == null && (item.path == "/" || item.path == "/index.html")) {
