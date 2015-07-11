@@ -45,50 +45,41 @@
            <td><span id="torrent-hash">...</span></td>
          </tr>
          <tr>
-           <td>[Peer Num]</td>
-           <td><span id="torrent-num-of-peer">...</span></td>
-         </tr>
-         <tr>
            <td>[Remove Tab]</td>
            <td><button id="torrent-remove-btn">REMOVE</button></td>
          </tr>
          </table>
         <hr>
       <div style="position:relative;">
-           [Select seed file]<br>
-           <div style="display:block;height:180px;width:180px;position:absolute; top:15px; left:15px;background-color: #ffcccc;">
-      　　  　<input type="file" id="torrent-seedfile" tyle="display:block;height:120px;width:150px;background-color: #99cc00"><br>   
-             <div style="font-size:medium;color: #333773;">drug and drop a file.</div>
-           </div>                 
-           <div style="display:block;height:180px;width:180px;position:absolute; top:15px; left:205px">
-             <button id="torrent-startserver" style="display:none;height:150px;width:150px;">Start Seeder Button</button>
+           <div style="display:block;height:180px;width:180px;position:absolute; top:15px; left:15px">
+             <button id="torrent-startserver" style="display:none;height:150px;width:150px;display:block;">Start Seeder Button</button>
              <button id="torrent-stopserver" style="display:none;height:150px;width:150px;"">Stop Seeder Button</button>     
              <object id="torrent-loaderserver" type="image/svg+xml" data="loader_b.svg" width="32" height="32" style="display: none;width:150px;height:150px"></object>
            </div>
-           <div style="display:block;height:180px;width:320px;position:absolute; top:205px; left:15px">
+           <div style="display:block;height:180px;width:320px;position:absolute; top:195px; left:15px;background-color: #ccccff;">
                <table>    
                 <tr>
-      　　　       <td>upnp support</td>
-      　　　       <td>
+      　　　       <td style="color: #333773;">upnp support</td>
+      　　　       <td style="color: #333773;">
                   <input type="radio" id="torrent-upnpon-use" name="torrent-upnpon" value="Use"> Use 
                   <input type="radio" id="torrent-upnpon-unuse" name="torrent-upnpon" value="Unuse" checked> Unuse
                   </td>
      　　        </tr>
        　　      <tr>
-      　　　       <td>local address</td>
-      　　　       <td><input type="text" id="torrent-input-localaddress" value="0.0.0.0" style="display: none"></td>
+      　　　       <td style="color: #333773;">local address</td>
+      　　　       <td style="color: #333773;"><input type="text" id="torrent-input-localaddress" value="0.0.0.0" style="display: none"></td>
            　　  </tr>
             　　 <tr>       
-     　　　        <td>local port</td>
-     　　　        <td><input type="text" id="torrent-input-localport" value="16969" style="display: none"></td>
+     　　　        <td style="color: #333773;">local port</td>
+     　　　        <td style="color: #333773;"><input type="text" id="torrent-input-localport" value="16969" style="display: none"></td>
             　　 </tr>
                 <tr>
-      　      　　 <td>global address</td>
-      　　　       <td><input type="text" id="torrent-input-globaladdress" value="0.0.0.0" style="display: none"></td>
+      　      　　 <td style="color: #333773;">global address</td>
+      　　　       <td style="color: #333773;"><input type="text" id="torrent-input-globaladdress" value="0.0.0.0" style="display: none"></td>
            　　  </tr>
               　　<tr>
-       　　      　<td>global port</td>
-       　　　      <td><input type="text" id="torrent-input-globalport" value="16969" style="display: none"></td>
+       　　      　<td style="color: #333773;">global port</td>
+       　　　      <td style="color: #333773;"><input type="text" id="torrent-input-globalport" value="16969" style="display: none"></td>
              　　</tr>
                </table>
          </div>
