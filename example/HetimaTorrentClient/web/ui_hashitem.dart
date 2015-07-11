@@ -25,7 +25,6 @@ class HashItem {
   html.InputElement upnpUse = html.querySelector("#torrent-upnpon-use");
   html.InputElement upnpUnuse = html.querySelector("#torrent-upnpon-unuse");
 
-  Map<String, html.File> seedRawFiles = {};
   Map<String, int> seedState = {};
   Map<String, SeederModel> seedModels = {};
 //  html.File seedRawFile = null;
@@ -51,7 +50,7 @@ class HashItem {
       seedModels[key].localPort = int.parse(localport.value);
       seedModels[key].localIp = localAddress.value;
       seedModels[key].globalIp = globalAddress.value;
-      seedModels[key].startEngine(torrentFile, new HetimaDataBlob(seedRawFiles[trackerModel.selectKey]), true).then((SeederModelStartResult ret) {
+      seedModels[key].startEngine(torrentFile,  new HetimaDataFS("${key}.cont", erace:false), true).then((SeederModelStartResult ret) {
         seedState[key] = 2; //stop
         localAddress.value = ret.localIp;
         localport.value = "${ret.localPort}";

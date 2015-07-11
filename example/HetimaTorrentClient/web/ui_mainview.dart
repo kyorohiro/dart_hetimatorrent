@@ -31,9 +31,6 @@ class MainItem {
               managedTorrentFile[key] = f;
               tab.add("${key}", "con-now");
               fileInput.style.display = "block";
-              if(b != null) {
-                hitem.seedRawFiles[key] = b;
-              }
             });
           }).catchError((e) {
             dialog.show("Failed to parse torrent");
