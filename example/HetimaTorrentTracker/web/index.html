@@ -72,7 +72,7 @@
     <!--
      [Content2] setting
      -->
-    <div id="com-setting" style="width:100%; height:calc(100% - 70px);">
+   <div id="com-setting" style="width:100%; height:calc(100% - 70px);display:none;">
      <h2>[[Setting]]</h2>
      <h3>[UPnP Support]</h3>    
      <div>
@@ -104,7 +104,7 @@
     <!--
      [Content3] now
      -->
-    <div id="con-now" style="width:100%; height:calc(100% - 70px); display:none;">
+    <div id="con-now" style="width:100%; height:calc(100% - 70px); display:none;position:relative;">
          <table>
          <tr>
            <td>[Hash]</td>
@@ -120,36 +120,50 @@
          </tr>
          </table>
         <hr>
+      <div style="position:relative;">
            [Select seed file]<br>
-      　　　<input type="file" id="torrent-seedfile" style="width:25%; height:25%; background-color: #99cc00"><br>    
-      　　 <table>    
-          <tr>
-      　　　 <td>upnp support</td>
-      　　　 <td>
-              <input type="radio" id="torrent-upnpon-use" name="torrent-upnpon" value="Use"> Use 
-              <input type="radio" id="torrent-upnpon-unuse" name="torrent-upnpon" value="Unuse" checked> Unuse
-            </td>
-     　　  </tr>
-       　　<tr>
-      　　　 <td>local address</td>
-      　　　 <td><input type="text" id="torrent-input-localaddress" value="0.0.0.0" style="display: none"></td>
-     　　  </tr>
-      　　 <tr>       
-     　　　  <td>local port</td>
-     　　　  <td><input type="text" id="torrent-input-localport" value="16969" style="display: none"></td>
-      　　 </tr>
-           <tr>
-      　　　 <td>global address</td>
-      　　　 <td><input type="text" id="torrent-input-globaladdress" value="0.0.0.0" style="display: none"></td>
-     　　  </tr>
-       　　<tr>
-       　　　<td>global port</td>
-       　　　<td><input type="text" id="torrent-input-globalport" value="16969" style="display: none"></td>
-       　　</tr>
-          </table>
-          <button id="torrent-startserver" style="display:none">Start</button>
-          <button id="torrent-stopserver" style="display:none" >Stop</button>     
-          <object id="torrent-loaderserver" type="image/svg+xml" data="loader_b.svg" width="32" height="32" style="display: none"></object>
+           <div style="display:block;height:180px;width:180px;position:absolute; top:15px; left:15px;background-color: #ffcccc;">
+      　　  　<input type="file" id="torrent-seedfile" tyle="display:block;height:120px;width:150px;background-color: #99cc00"><br>   
+             <div style="font-size:medium;color: #333773;">drug and drop a file.</div>
+           </div>                 
+           <div style="display:block;height:180px;width:180px;position:absolute; top:15px; left:205px">
+             <button id="torrent-startserver" style="display:none;height:150px;width:150px;">Start Seeder Button</button>
+             <button id="torrent-stopserver" style="display:none;height:150px;width:150px;"">Stop Seeder Button</button>     
+             <object id="torrent-loaderserver" type="image/svg+xml" data="loader_b.svg" width="32" height="32" style="display: none;width:150px;height:150px"></object>
+           </div>
+           <div style="display:block;height:180px;width:320px;position:absolute; top:205px; left:15px">
+               <table>    
+                <tr>
+      　　　       <td>upnp support</td>
+      　　　       <td>
+                  <input type="radio" id="torrent-upnpon-use" name="torrent-upnpon" value="Use"> Use 
+                  <input type="radio" id="torrent-upnpon-unuse" name="torrent-upnpon" value="Unuse" checked> Unuse
+                  </td>
+     　　        </tr>
+       　　      <tr>
+      　　　       <td>local address</td>
+      　　　       <td><input type="text" id="torrent-input-localaddress" value="0.0.0.0" style="display: none"></td>
+           　　  </tr>
+            　　 <tr>       
+     　　　        <td>local port</td>
+     　　　        <td><input type="text" id="torrent-input-localport" value="16969" style="display: none"></td>
+            　　 </tr>
+                <tr>
+      　      　　 <td>global address</td>
+      　　　       <td><input type="text" id="torrent-input-globaladdress" value="0.0.0.0" style="display: none"></td>
+           　　  </tr>
+              　　<tr>
+       　　      　<td>global port</td>
+       　　　      <td><input type="text" id="torrent-input-globalport" value="16969" style="display: none"></td>
+             　　</tr>
+               </table>
+         </div>
+     </div>
+           //
+           //
+           
+
+ 
     </div> 
 
     <!--

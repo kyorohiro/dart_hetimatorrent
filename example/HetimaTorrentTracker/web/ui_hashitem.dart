@@ -162,7 +162,11 @@ class HashItem {
       }
       
       if(seedState.containsKey(key) == false || seedState[key] == 1) { //start
-        startServerBtn.style.display  = "block";
+        if(seedRawFiles.containsKey(key)) {
+          startServerBtn.style.display  = "block";
+        } else {
+          startServerBtn.style.display  = "none";          
+        }
         stopServerBtn.style.display  = "none";
         loadServerBtn.style.display  = "none";
       } else if(seedState[key] == 2){ //stop

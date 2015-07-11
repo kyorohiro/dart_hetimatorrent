@@ -93,7 +93,7 @@ class MainItem {
       model.startTracker(inputLocalAddress.value, int.parse(inputLocalPort.value), int.parse(inputGlobalPort.value)).then((List<String> v) {
         outputLocalPortSpn.innerHtml = v[1];
         outputLocalAddressSpn.innerHtml = v[0];
-        outputGlobalStageSpn.setInnerHtml("http://${outputLocalAddressSpn.innerHtml}:${outputLocalPortSpn.innerHtml}");
+        outputLocalStageSpn.setInnerHtml("http://${outputLocalAddressSpn.innerHtml}:${outputLocalPortSpn.innerHtml}");
         stopServerBtn.style.display = "block";
         startServerBtn.style.display = "none";
         loadServerBtn.style.display = "none";
