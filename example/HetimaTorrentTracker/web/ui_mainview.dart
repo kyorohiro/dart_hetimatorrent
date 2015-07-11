@@ -28,8 +28,10 @@ class MainItem {
   html.InputElement inputGlobalPort = html.querySelector("#input-globalport");
 
   html.DivElement outputFileProgress = html.querySelector("#fileprogress");
+ 
+  html.SpanElement outputLocalStageSpn = html.querySelector("#localstage");
+  html.SpanElement outputGlobalStageSpn = html.querySelector("#globalstage");
 
-  
   void init(TrackerModel model, Map<String, TorrentFile> managedTorrentFile, Tab tab, Dialog dialog, HashItem hitem) {
     fileInput.onChange.listen((html.Event e) {
       print("==");
@@ -91,6 +93,7 @@ class MainItem {
       model.startTracker(inputLocalAddress.value, int.parse(inputLocalPort.value), int.parse(inputGlobalPort.value)).then((List<String> v) {
         outputLocalPortSpn.innerHtml = v[1];
         outputLocalAddressSpn.innerHtml = v[0];
+        outputGlobalStageSpn.setInnerHtml("http://${outputLocalAddressSpn.innerHtml}:${outputLocalPortSpn.innerHtml}");
         stopServerBtn.style.display = "block";
         startServerBtn.style.display = "none";
         loadServerBtn.style.display = "none";
@@ -134,10 +137,12 @@ class MainItem {
 
     model.portMapHelder.onUpdateGlobalIp.listen((String globalIP) {
       outputGlobalAddressSpn.setInnerHtml(globalIP);
+      outputGlobalStageSpn.setInnerHtml("http://${model.portMapHelder.externalIp}:${model.portMapHelder.externalPort}");
     });
 
     model.portMapHelder.onUpdateGlobalPort.listen((String globalPort) {
       outputGlobalPortSpn.setInnerHtml(globalPort);
+      outputGlobalStageSpn.setInnerHtml("http://${model.portMapHelder.externalIp}:${model.portMapHelder.externalPort}");
     });
 
     model.portMapHelder.startGetLocalIp().then((StartGetLocalIPResult result) {
