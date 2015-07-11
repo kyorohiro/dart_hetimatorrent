@@ -4,9 +4,13 @@ import 'package:hetimatorrent/hetimatorrent.dart';
 import 'ui_dialog.dart';
 import 'ui_hashitem.dart';
 import 'ui_mainview.dart';
+import 'dart:async';
+import 'dart:html';
+import 'package:chrome/chrome_app.dart' as chrome;
+import 'package:hetimacore/hetimacore.dart';
+import 'package:hetimacore/hetimacore_cl.dart';
 
-
-class TrackerModel {
+class AppModel {
     String selectKey = "";
 }
 
@@ -18,7 +22,7 @@ void main() {
   Dialog dialog = new Dialog();
 
   Map<String, TorrentFile> managedTorrentFile = {};
-  TrackerModel model = new TrackerModel();
+  AppModel model = new AppModel();
   HashItem item = null;
   MainItem mainImte = null;
   print("hello world");
@@ -35,4 +39,16 @@ void main() {
   });
 }
 
-
+Future saveFile(File _rawFile) {
+  return chrome.fileSystem.chooseEntry(new chrome.ChooseEntryOptions(type: chrome.ChooseEntryType.SAVE_FILE, suggestedName: "a.torrent")).then((chrome.ChooseEntryResult chooseEntryResult) {
+    return chrome.fileSystem.getWritableEntry(chooseEntryResult.entry).then((chrome.ChromeFileEntry copyTo) {
+      HetimaDataBlob copyFrom = new HetimaDataBlob(_rawFile);
+      return copyFrom.getLength().then((int length) {
+        return copyFrom.read(0, length).then((ReadResult readResult) {
+          chrome.ArrayBuffer buffer = new chrome.ArrayBuffer.fromBytes(readResult.buffer.toList());
+          return copyTo.writeBytes(buffer);
+        });
+      });
+    });
+  });
+}

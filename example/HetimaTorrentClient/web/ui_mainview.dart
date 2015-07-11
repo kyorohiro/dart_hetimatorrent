@@ -7,7 +7,6 @@ import 'package:hetimanet/hetimanet.dart';
 import 'package:hetimatorrent/hetimatorrent.dart';
 import 'ui_dialog.dart';
 import 'ui_hashitem.dart';
-import 'model_create.dart';
 import 'model_main.dart';
 
 class MainItem {
@@ -18,7 +17,7 @@ class MainItem {
   html.InputElement inputLocalPort = html.querySelector("#input-localport");
   html.InputElement inputGlobalPort = html.querySelector("#input-globalport");
 
-  void init(TrackerModel model, Map<String, TorrentFile> managedTorrentFile, Tab tab, Dialog dialog, HashItem hitem) {
+  void init(AppModel model, Map<String, TorrentFile> managedTorrentFile, Tab tab, Dialog dialog, HashItem hitem) {
     fileInput.onChange.listen((html.Event e) {
       print("==");
       if (fileInput.files != null && fileInput.files.length > 0) {
@@ -32,7 +31,6 @@ class MainItem {
               managedTorrentFile[key] = f;
               tab.add("${key}", "con-now");
               fileInput.style.display = "block";
-              CreateFileModel fm;
               if(b != null) {
                 hitem.seedRawFiles[key] = b;
               }

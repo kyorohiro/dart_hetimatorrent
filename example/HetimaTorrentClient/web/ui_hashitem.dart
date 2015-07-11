@@ -29,7 +29,7 @@ class HashItem {
   Map<String, int> seedState = {};
   Map<String, SeederModel> seedModels = {};
 //  html.File seedRawFile = null;
-  init(TrackerModel trackerModel, Map<String, TorrentFile> managedTorrentFile, Tab tab, Dialog dialog) {
+  init(AppModel trackerModel, Map<String, TorrentFile> managedTorrentFile, Tab tab, Dialog dialog) {
     //   SeederModel model = new SeederModel();
 
     torrentRemoveBtn.onClick.listen((html.MouseEvent e) {
@@ -117,7 +117,7 @@ class HashItem {
     });
   }
 
-  void contain(TrackerModel model, Map<String, TorrentFile> managedTorrentFile, String key) {
+  void contain(AppModel model, Map<String, TorrentFile> managedTorrentFile, String key) {
     if (managedTorrentFile.containsKey(key)) {
       if (false == seedModels.containsKey(key)) {
         seedModels[key] = new SeederModel();
