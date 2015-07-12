@@ -21,9 +21,11 @@ class TorrentAIBasic extends TorrentAI {
   TorrentAIBasic({maxUnchoke: 8, maxConnect: 20}) {
     _maxUnchoke = maxUnchoke;
     _maxConnect = maxConnect;
+
   }
 
   Future onRegistAI(TorrentClient client) {
+    _pieceTest = new PieceTest(client);
     return new Future(() {
       print("Basic AI regist : ${client.peerId}");
     });

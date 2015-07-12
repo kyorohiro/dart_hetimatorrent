@@ -50,7 +50,7 @@ class HashItem {
       seedModels[key].localPort = int.parse(localport.value);
       seedModels[key].localIp = localAddress.value;
       seedModels[key].globalIp = globalAddress.value;
-      seedModels[key].startEngine(torrentFile,  new HetimaDataFS("${key}.cont", erace:false), true).then((SeederModelStartResult ret) {
+      seedModels[key].startEngine(torrentFile,  new HetimaDataFS("${key}.cont", erace:false)).then((SeederModelStartResult ret) {
         seedState[key] = 2; //stop
         localAddress.value = ret.localIp;
         localport.value = "${ret.localPort}";

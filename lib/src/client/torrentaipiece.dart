@@ -20,6 +20,9 @@ class PieceTest {
   }
   
   void pieceTest(TorrentClient client, TorrentClientFront front) {
+    if(client.targetBlock.haveAll()) {
+      return;
+    }
     //
     // interest or notinterest
     Bitfield field = client.targetBlock.isNotThrere(front.bitfieldToMe);

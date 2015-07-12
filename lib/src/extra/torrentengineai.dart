@@ -31,6 +31,7 @@ class TorrentEngineAI extends TorrentAI {
 
   Future onRegistAI(TorrentClient client) {
     this._torrent = client;
+    basic.onRegistAI(client);
     return new Future(() {
       
     });
