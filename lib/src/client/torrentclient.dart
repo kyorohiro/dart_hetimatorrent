@@ -8,6 +8,7 @@ import 'package:hetimanet/hetimanet.dart';
 import 'torrentclientfront.dart';
 import 'torrentclientpeerinfo.dart';
 import 'torrentai.dart';
+import 'torrentaibasic.dart';
 import 'torrentclientmessage.dart';
 
 import '../util/blockdata.dart';
