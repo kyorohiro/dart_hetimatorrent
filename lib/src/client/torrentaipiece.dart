@@ -16,9 +16,9 @@ class PieceTest {
   }
   
   void pieceTest(TorrentClient client, TorrentClientFront front) {
+
     //
     // think interest or notinterest
-    //
     Bitfield field = client.targetBlock.isNotThrere(front.bitfieldToMe);
     if(field.isAllOff()) {
       if(front.interestedFromMe != TorrentClientFront.STATE_OFF) {
@@ -32,11 +32,13 @@ class PieceTest {
     }
 
     //
-    //
-    //
+    // if choke, then end 
     if(front.chokedToMe == true) {
       return;
     }
+
+    //
+    //
     
   }
 }
