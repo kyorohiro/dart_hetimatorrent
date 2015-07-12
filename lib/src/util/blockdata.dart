@@ -19,7 +19,7 @@ class BlockData {
   List<int> get bitfield => _head.value;
   int get bitSize => _head.lengthPerBit();
   Map<int,PieceInfoList> _writePartData = {};
-
+  Bitfield get rawBitfield => _head;
   BlockData(HetimaData data, Bitfield head, int blockSize, int dataSize) {
     if (dataSize == null) {
       _dataSize = head.lengthPerBit() * blockSize;
@@ -28,11 +28,18 @@ class BlockData {
     }
     _data = data;
     _head = head;
+    _cache = new Bitfield(head.lengthPerBit());
     _blockSize = blockSize;
   }
 
   HetimaData getData() {
     return _data;
+  }
+
+  Bitfield _cache = null;
+  BitfieldInter isNotThrere(BitfieldInter ina)  {
+    Bitfield.relative(ina, _head, _cache);
+    return _cache;
   }
 
   Future<WriteResult> writeBlock(List<int> data, int blockNum) {
