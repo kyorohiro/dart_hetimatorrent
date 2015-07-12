@@ -35,23 +35,25 @@ class TorrentAIBasic extends TorrentAI {
       {
         bool haveAll = client.targetBlock.haveAll();
         List<TorrentClientPeerInfo> infos = client.rawPeerInfos.getPeerInfo((TorrentClientPeerInfo info) {
-          if(info.amI) {
+          if (info.front == null || info.front.isClose) {
+            return false;
+          }
+          if (info.amI) {
             return true;
           }
-          if(haveAll == true && info.front.bitfieldToMe.isAllOn()) {
+          if (haveAll == true && info.front.bitfieldToMe.isAllOn()) {
             return true;
           }
           return false;
         });
         //
-        // close 
+        // close
         //
-        for(TorrentClientPeerInfo info in infos) {
+        for (TorrentClientPeerInfo info in infos) {
           info.front.close();
         }
       }
       _chokeTest.chokeTest(client, _maxUnchoke);
-
     });
   }
 
@@ -121,21 +123,27 @@ class TorrentAIBasic extends TorrentAI {
           if (info.front == null || info.front.isClose == true) {
             List<TorrentClientPeerInfo> connects = client.rawPeerInfos.getPeerInfo((TorrentClientPeerInfo info) {
               if (info.front == null || info.front.isClose == true) {
+                return false;
+              } else {
                 return true;
               }
             });
             if (connects.length < _maxConnect && (info.front == null || info.front.amI == false)) {
-              return client.connect(info).then((TorrentClientFront f) {
-                return f.sendHandshake();
-              }).catchError((e) {
-                try {
-                  if (info.front != null) {
-                    info.front.close();
+              
+              
+              if (!(info.front != null && client.targetBlock.haveAll() == true && info.front.bitfieldToMe.isAllOn())) {
+                return client.connect(info).then((TorrentClientFront f) {
+                  return f.sendHandshake();
+                }).catchError((e) {
+                  try {
+                    if (info.front != null) {
+                      info.front.close();
+                    }
+                  } catch (e) {
+                    ;
                   }
-                } catch (e) {
-                  ;
-                }
-              });
+                });
+              }
             }
           }
           break;
