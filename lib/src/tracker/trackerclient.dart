@@ -73,7 +73,7 @@ class TrackerClient {
     if(header == null) {
       header = this.header;
     }
-    return request(host, port).then((TrackerRequestResult r) {
+    return request(host, port, path, header).then((TrackerRequestResult r) {
       HetiHttpResponseHeaderField locationField = r.httpResponse.message.find("Location");
       if (r.code == TrackerRequestResult.OK || redirectMax <= 0) {
         return r;
@@ -115,6 +115,9 @@ class TrackerClient {
       return currentClient.get(path + header, {"Connection": "close"});
     }).then((HetiHttpClientResponse response) {
       httpResponse = response;
+      if(response.message.line.statusCode != 200) {
+        throw {};
+      }
       return TrackerResponse.createFromContent(response.body);
     }).then((TrackerResponse trackerResponse) {
       completer.complete(new TrackerRequestResult(trackerResponse, TrackerRequestResult.OK, httpResponse));

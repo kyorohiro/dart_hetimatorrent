@@ -24,11 +24,13 @@ class TrackerServer {
   
   bool _isStart = false;
   bool get isStart => _isStart;
+  bool _isTorrentfile = true;
 
-  TrackerServer(HetiSocketBuilder socketBuilder) {
+  TrackerServer(HetiSocketBuilder socketBuilder,[bool isTorrentfile=true]) {
     _server = new HetiHttpServerHelper(socketBuilder);
     address = "0.0.0.0";
     port = 6969;
+    _isTorrentfile = isTorrentfile;
   }
 
   List<List<int>> getManagedHash() {
@@ -126,7 +128,7 @@ class TrackerServer {
       print("${qurey}");
       String infoHashAsString = parameter[TrackerUrl.KEY_INFO_HASH];
 
-      if (infoHashAsString == null && (item.path == "/" || item.path == "/index.html")) {
+      if (infoHashAsString == null && (item.path == "/" || item.path == "/index.html") && _isTorrentfile) {
         StringBuffer cont = new StringBuffer();
         for (TrackerPeerManager manager in _peerManagerList) {
           cont.writeln("""<div>[${PercentEncode.encode(manager.managedInfoHash)}]</div>""");
@@ -135,7 +137,7 @@ class TrackerServer {
         }
         _server.response(item.req, new HetimaBuilderToFile(new ArrayBuilder.fromList(UTF8.encode("<html><head></head><body><div>[managed hash]</div>${cont}</body></html>"))),
             contentType: "text/html");
-      } else if (item.path == "/your.torrent") {
+      } else if (item.path == "/your.torrent" &&  _isTorrentfile) {
         for (TrackerPeerManager manager in _peerManagerList) {
           if (PercentEncode.encode(manager.managedInfoHash) == parameter["infohash"]) {
             String addr = trackerAnnounceAddressForTorrentFile;
@@ -148,6 +150,8 @@ class TrackerServer {
           }
         }
         item.socket.close();
+      } else if (item.path == "/redirect"&&_isTorrentfile) {
+        _server.response(item.req, new HetimaDataMemory([]),statusCode:301,headerList:{"Location":"/announce?${qurey}"});
       } else if (infoHashAsString != null) {
         return item.socket.getSocketInfo().then((HetiSocketInfo info) {
           if (outputLog) {
