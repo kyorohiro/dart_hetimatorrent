@@ -194,7 +194,6 @@ class TorrentClientFront {
 //
 //
 class TorrentClientFrontNerve {
-
   int id = 0;
   int reason = 0;
   int v = 0;
@@ -233,20 +232,18 @@ class TorrentClientFrontNerve {
       case TorrentMessage.SIGN_PIECE:
         front.downloadedBytesFromMe += (message as MessagePiece).content.length;
         front._streamSignal.add(new TorrentClientSignalWithFront(front, TorrentClientSignal.ID_PIECE_RECEIVE, 0, "", (message as MessagePiece).content.length));
-        break;
-      case TorrentMessage.SIGN_REQUEST:
-      {
-        MessageRequest req = message;
-        List<MessageRequest> removeTarge = [];
-        for(MessageRequest mes in front.currentRequesting) {
-          if(mes.begin == req.begin && mes.index == req.index && mes.length == req.length ) {
-            removeTarge.add(mes);
+        {
+          MessagePiece req = message;
+          List<MessageRequest> removeTarge = [];
+          for (MessageRequest mes in front.currentRequesting) {
+            if (mes.begin == req.begin && mes.index == req.index && mes.length == req.content.length) {
+              removeTarge.add(mes);
+            }
+          }
+          for (MessageRequest rm in removeTarge) {
+            front.currentRequesting.remove(rm);
           }
         }
-        for(MessageRequest rm in removeTarge) {
-          front.currentRequesting.remove(rm);
-        }
-      }
         break;
     }
   }
@@ -303,7 +300,7 @@ class TorrentClientFrontNerve {
       doClose(front, TorrentClientSignal.REASON_OWN_CONNECTION);
     }
   }
-  
+
   static void doClose(TorrentClientFront front, int reason) {
     front._streamSignal.add(new TorrentClientSignalWithFront(front, TorrentClientSignal.ID_CLOSE, reason, ""));
   }
