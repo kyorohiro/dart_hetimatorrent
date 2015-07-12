@@ -129,21 +129,23 @@ class TorrentAIBasic extends TorrentAI {
               }
             });
             if (connects.length < _maxConnect && (info.front == null || info.front.amI == false)) {
-              
-              
-              if (!(info.front != null && client.targetBlock.haveAll() == true && info.front.bitfieldToMe.isAllOn())) {
-                return client.connect(info).then((TorrentClientFront f) {
-                  return f.sendHandshake();
-                }).catchError((e) {
-                  try {
-                    if (info.front != null) {
-                      info.front.close();
-                    }
-                  } catch (e) {
-                    ;
-                  }
-                });
+              if ((info.front != null && client.targetBlock.haveAll() == true && info.front.bitfieldToMe.isAllOn())) {
+                break;
               }
+              if (info.front != null && info.front.isClose == false) {
+                break;
+              }
+              return client.connect(info).then((TorrentClientFront f) {
+                return f.sendHandshake();
+              }).catchError((e) {
+                try {
+                  if (info.front != null) {
+                    info.front.close();
+                  }
+                } catch (e) {
+                  ;
+                }
+              });
             }
           }
           break;
