@@ -21,7 +21,6 @@ class TorrentAIBasic extends TorrentAI {
   TorrentAIBasic({maxUnchoke: 8, maxConnect: 20}) {
     _maxUnchoke = maxUnchoke;
     _maxConnect = maxConnect;
-
   }
 
   Future onRegistAI(TorrentClient client) {
@@ -33,7 +32,26 @@ class TorrentAIBasic extends TorrentAI {
 
   Future onTick(TorrentClient client) {
     return new Future(() {
+      {
+        bool haveAll = client.targetBlock.haveAll();
+        List<TorrentClientPeerInfo> infos = client.rawPeerInfos.getPeerInfo((TorrentClientPeerInfo info) {
+          if(info.amI) {
+            return true;
+          }
+          if(haveAll == true && info.front.bitfieldToMe.isAllOn()) {
+            return true;
+          }
+          return false;
+        });
+        //
+        // close 
+        //
+        for(TorrentClientPeerInfo info in infos) {
+          info.front.close();
+        }
+      }
       _chokeTest.chokeTest(client, _maxUnchoke);
+
     });
   }
 
@@ -73,7 +91,7 @@ class TorrentAIBasic extends TorrentAI {
                 if (len > result.buffer.length) {
                   len = result.buffer.length;
                 }
-                cont.setRange(0, len, result.buffer,begin);
+                cont.setRange(0, len, result.buffer, begin);
                 return front.sendPiece(index, begin, cont).then((_) {
                   ;
                 });
@@ -85,7 +103,7 @@ class TorrentAIBasic extends TorrentAI {
         case TorrentMessage.SIGN_PIECE:
         case TorrentMessage.SIGN_UNCHOKE:
           _pieceTest.pieceTest(client, front);
-           break;          
+          break;
       }
     });
   }
@@ -111,7 +129,7 @@ class TorrentAIBasic extends TorrentAI {
                 return f.sendHandshake();
               }).catchError((e) {
                 try {
-                  if(info.front != null) {
+                  if (info.front != null) {
                     info.front.close();
                   }
                 } catch (e) {
@@ -124,5 +142,4 @@ class TorrentAIBasic extends TorrentAI {
       }
     });
   }
-
 }
