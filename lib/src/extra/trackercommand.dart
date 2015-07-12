@@ -29,7 +29,7 @@ class TrackerCommand extends TorrentEngineCommand {
     return new Future(() {
       engine.trackerClient.event = event;
       engine.trackerClient.peerport = port;
-      return engine.trackerClient.request().then((TrackerRequestResult result) {
+      return engine.trackerClient.requestWithSupportRedirect().then((TrackerRequestResult result) {
         StringBuffer buffer = new StringBuffer();
         buffer.writeln("interval:${result.response.interval}");
         for (TrackerPeerInfo info in result.response.peers) {

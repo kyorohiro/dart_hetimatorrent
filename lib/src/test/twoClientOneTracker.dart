@@ -79,13 +79,13 @@ class TestCaseCreator2Client1Tracker {
       }).then((TrackerClient client) {
         trackerClientTmp = client;
         trackerClientTmp.peerport = clientAPort;
-        return client.request();
+        return client.requestWithSupportRedirect();
       }).then((TrackerRequestResult result) {
         return TrackerClient.createTrackerClient(new HetiSocketBuilderChrome(), torrentFile);
       }).then((TrackerClient client) {
         trackerClientTmp = client;
         trackerClientTmp.peerport = clientBPort;
-        return trackerClientTmp.request();
+        return trackerClientTmp.requestWithSupportRedirect();
       }).then((TrackerRequestResult result) {
         for (TrackerPeerInfo info in result.response.peers) {
           clientA.putTorrentPeerInfoFromTracker(info.ipAsString, info.port);

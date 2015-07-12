@@ -153,7 +153,7 @@ class TorrentEngineAI extends TorrentAI {
       } else {
         _tracker.optIp = _torrent.globalIp;
       }
-      return _tracker.request().then((TrackerRequestResult r) {
+      return _tracker.requestWithSupportRedirect().then((TrackerRequestResult r) {
         for (TrackerPeerInfo info in r.response.peers) {
           _torrent.putTorrentPeerInfoFromTracker(info.ipAsString, info.port);
         }
