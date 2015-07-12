@@ -19,6 +19,9 @@ class DDBitfield extends BitfieldInter {
     }
   }
 
+  void change(Bitfield base) {
+    innerField = base;
+  }
   int getOffPieceAtRandomPerByte(int numPerByte) {
     return getPieceAtRandomPerByte(numPerByte, true);
   }

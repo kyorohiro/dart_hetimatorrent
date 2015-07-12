@@ -9,17 +9,23 @@ import 'torrentclientfront.dart';
 import 'torrentclientpeerinfo.dart';
 import 'torrentclientmessage.dart';
 import '../util/bitfield.dart';
-
+import '../util/ddbitfield.dart';
 class PieceTest {
 
+  DDBitfield rand = null;
+  List<int> requestedBit = [];
+
   PieceTest(TorrentClient client) {
+    rand = new DDBitfield(client.targetBlock.rawBitfield);
   }
   
   void pieceTest(TorrentClient client, TorrentClientFront front) {
-
     //
-    // think interest or notinterest
+    // interest or notinterest
     Bitfield field = client.targetBlock.isNotThrere(front.bitfieldToMe);
+    for(int v in requestedBit) {
+      field.setIsOn(v, false);
+    }
     if(field.isAllOff()) {
       if(front.interestedFromMe != TorrentClientFront.STATE_OFF) {
         front.sendNotInterested();
@@ -39,6 +45,8 @@ class PieceTest {
 
     //
     //
-    
+    rand.change(field);
+    int targetBit = rand.getOnPieceAtRandom();
+    front.sendRequest(targetBit, 0, client.targetBlock.blockSize);
   }
 }

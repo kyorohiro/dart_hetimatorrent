@@ -57,6 +57,7 @@ class TorrentClientFront {
   Bitfield get bitfieldFromMe => _bitfieldFromMe;
   Map<String, Object> tmpForAI = {};
 
+  List<MessageRequest> currentRequesting = [];
   StreamController<TorrentMessage> stream = new StreamController();
   Stream<TorrentMessage> get onReceiveEvent => stream.stream;
 
@@ -233,6 +234,20 @@ class TorrentClientFrontNerve {
         front.downloadedBytesFromMe += (message as MessagePiece).content.length;
         front._streamSignal.add(new TorrentClientSignalWithFront(front, TorrentClientSignal.ID_PIECE_RECEIVE, 0, "", (message as MessagePiece).content.length));
         break;
+      case TorrentMessage.SIGN_REQUEST:
+      {
+        MessageRequest req = message;
+        List<MessageRequest> removeTarge = [];
+        for(MessageRequest mes in front.currentRequesting) {
+          if(mes.begin == req.begin && mes.index == req.index && mes.length == req.length ) {
+            removeTarge.add(mes);
+          }
+        }
+        for(MessageRequest rm in removeTarge) {
+          front.currentRequesting.remove(rm);
+        }
+      }
+        break;
     }
   }
 
@@ -265,6 +280,9 @@ class TorrentClientFrontNerve {
         front.uploadedBytesToMe += (message as MessagePiece).content.length;
         front._uploadedBytesFromUnchokedStartTime += (message as MessagePiece).content.length;
         front._streamSignal.add(new TorrentClientSignalWithFront(front, TorrentClientSignal.ID_PIECE_SEND, 0, "", (message as MessagePiece).content.length));
+        break;
+      case TorrentMessage.SIGN_REQUEST:
+        front.currentRequesting.add(message);
         break;
     }
   }
