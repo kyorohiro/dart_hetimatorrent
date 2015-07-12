@@ -13,11 +13,15 @@ class SeederModel {
   int localPort = 18080;
   int globalPort = 18080;
   bool useUpnp = false;
-
+  HetimaData _seed = null;
+  HetimaData get seed => _seed;
+  
   Future<SeederModelStartResult> startEngine(TorrentFile torrentFile, HetimaData seed) {
+    _seed = seed;
     return TorrentEngine.createTorrentEngine(
         new HetiSocketBuilderChrome(), torrentFile, seed
-        ,globalPort:globalPort,localPort:localPort,localIp:localIp,globalIp:globalIp, useUpnp:useUpnp,appid: "hetimatorrentclient").then((TorrentEngine engine) {
+        ,globalPort:globalPort, localPort:localPort, localIp:localIp
+        ,globalIp:globalIp, useUpnp:useUpnp,appid: "hetimatorrentclient").then((TorrentEngine engine) {
       _engine = engine;
       return _engine.go(usePortMap:useUpnp).then((_){
         this.localIp = _engine.localIp;

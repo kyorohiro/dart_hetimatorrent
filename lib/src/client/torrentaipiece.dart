@@ -20,7 +20,13 @@ class PieceTest {
   }
   
   void pieceTest(TorrentClient client, TorrentClientFront front) {
+    if(front.amI == true) {
+      return;
+    }
     if(client.targetBlock.haveAll()) {
+      if(front.interestedFromMe == TorrentClientFront.STATE_ON) {
+        front.sendNotInterested();
+      }
       return;
     }
     //
@@ -30,7 +36,7 @@ class PieceTest {
       field.setIsOn(v, false);
     }
     if(field.isAllOff()) {
-      if(front.interestedFromMe != TorrentClientFront.STATE_OFF) {
+      if(front.interestedFromMe != TorrentClientFront.STATE_OFF && front.currentRequesting.length == 0) {
         front.sendNotInterested();
       }
       return;

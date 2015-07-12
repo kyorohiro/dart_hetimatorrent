@@ -60,7 +60,7 @@ class ChokeTest {
     // first intersted peer
     for (int i = 0; i < unchokeNum && 0 < nextUnchoke.length; i++) {
       TorrentClientPeerInfo info = nextUnchoke.removeLast();
-      if (info.front.interestedToMe == TorrentClientFront.STATE_ON || info.front.interestedToMe == TorrentClientFront.STATE_NONE) {
+      if (info.front.amI == false &&info.front.interestedToMe == TorrentClientFront.STATE_ON || info.front.interestedToMe == TorrentClientFront.STATE_NONE) {
         info.front.sendUnchoke();
         numOfSendedUnchoke++;
       }

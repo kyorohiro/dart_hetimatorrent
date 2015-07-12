@@ -7,7 +7,7 @@ import 'package:hetimatorrent/hetimatorrent.dart';
 import 'ui_dialog.dart';
 import 'model_seeder.dart';
 import 'model_main.dart';
-
+import 'package:chrome/chrome_app.dart' as chrome;
 //
 //
 class HashItem {
@@ -25,6 +25,8 @@ class HashItem {
   html.InputElement upnpUse = html.querySelector("#torrent-upnpon-use");
   html.InputElement upnpUnuse = html.querySelector("#torrent-upnpon-unuse");
 
+
+  html.AnchorElement torrentOutput = html.querySelector("#torrent-output");
   Map<String, int> seedState = {};
   Map<String, SeederModel> seedModels = {};
 //  html.File seedRawFile = null;
@@ -114,6 +116,12 @@ class HashItem {
         }
       });
     });
+    
+    torrentOutput.onClick.listen((_) {
+      print("click");
+      String key = trackerModel.selectKey;
+      saveFile(seedModels[key].seed);
+    });
   }
 
   void contain(AppModel model, Map<String, TorrentFile> managedTorrentFile, String key) {
@@ -157,5 +165,18 @@ class HashItem {
         upnpUnuse.checked = true;
       }
     }
+  }
+
+  void saveFile(HetimaData copyFrom) {
+      chrome.fileSystem.chooseEntry(new chrome.ChooseEntryOptions(type: chrome.ChooseEntryType.SAVE_FILE, suggestedName: "rawdata")).then((chrome.ChooseEntryResult chooseEntryResult) {        
+        chrome.fileSystem.getWritableEntry(chooseEntryResult.entry).then((chrome.ChromeFileEntry copyTo) {
+          copyFrom.getLength().then((int length) {
+            copyFrom.read(0, length).then((ReadResult readResult) {
+              chrome.ArrayBuffer buffer = new chrome.ArrayBuffer.fromBytes(readResult.buffer.toList());
+              copyTo.writeBytes(buffer);
+            });
+          });
+        });
+      });
   }
 }
