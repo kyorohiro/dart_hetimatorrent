@@ -9,10 +9,12 @@ import 'torrentclientfront.dart';
 import 'torrentclientpeerinfo.dart';
 import 'torrentclientmessage.dart';
 import 'torrentaichoke.dart';
+import 'torrentaipiece.dart';
 import 'torrentai.dart';
 
 class TorrentAIBasic extends TorrentAI {
   ChokeTest _chokeTest = new ChokeTest();
+  PieceTest _pieceTest = null;
   int _maxUnchoke = 8;
   int _maxConnect = 20;
 
@@ -80,9 +82,10 @@ class TorrentAIBasic extends TorrentAI {
           }
           break;
         case TorrentMessage.SIGN_BITFIELD:
-          {
-            break;
-          }
+        case TorrentMessage.SIGN_PIECE:
+        case TorrentMessage.SIGN_UNCHOKE:
+          _pieceTest.pieceTest(client, front);
+           break;          
       }
     });
   }

@@ -43,6 +43,10 @@ class PieceTest {
       return;
     }
 
+    if(0 < front.currentRequesting.length) {
+      return;
+    }
+
     //
     //
     rand.change(field);
