@@ -90,7 +90,7 @@ class TorrentEngineAI extends TorrentAI {
   Future _startTorrent() {
     int retry = 0;
     a() {
-      return this._torrent.start(baseLocalAddress, baseLocalPort + retry, baseGlobalIp, baseGlobalPort).then((_) {
+      return this._torrent.start(baseLocalAddress, baseLocalPort + retry, baseGlobalIp, baseGlobalPort+ retry).then((_) {
         if (usePortMap == true) {
           return _startPortMap().then((_) {
             _torrent.globalPort = _upnpPortMapClient.externalPort;
