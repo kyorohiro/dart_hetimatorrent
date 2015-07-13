@@ -10,13 +10,19 @@ import 'torrentclientpeerinfo.dart';
 import 'torrentclientmessage.dart';
 import '../util/bitfield.dart';
 import '../util/ddbitfield.dart';
+import '../util/pieceinfo.dart';
+
 class PieceTest {
 
   DDBitfield rand = null;
   List<int> requestedBit = [];
+  int downloadPieceLength=16*1024;
 
   PieceTest(TorrentClient client) {
     rand = new DDBitfield(client.targetBlock.rawBitfield);
+    if(downloadPieceLength > client.targetBlock.blockSize) {
+      downloadPieceLength =  client.targetBlock.blockSize;
+    }
   }
   
   void pieceTest(TorrentClient client, TorrentClientFront front) {
@@ -48,7 +54,7 @@ class PieceTest {
 
     //
     // if choke, then end 
-    if(front.chokedToMe == true) {
+    if(front.chokedToMe != TorrentClientFront.STATE_OFF) {
       return;
     }
 
@@ -60,6 +66,15 @@ class PieceTest {
     //
     rand.change(field);
     int targetBit = rand.getOnPieceAtRandom();
-    front.sendRequest(targetBit, 0, client.targetBlock.blockSize);
+    PieceInfoList pieceInfo = client.targetBlock.getPieceInfo(targetBit);
+    if(pieceInfo == null) {
+      front.sendRequest(targetBit, 0, downloadPieceLength);
+    } else {
+      List<int> bl = pieceInfo.getFreeSpace(downloadPieceLength);
+      if(bl[1]>downloadPieceLength) {
+        bl[1] = downloadPieceLength;
+      front.sendRequest(targetBit, bl[0], bl[1]);
+      }
+    }
   }
 }
