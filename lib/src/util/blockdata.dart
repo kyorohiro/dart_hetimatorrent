@@ -128,6 +128,24 @@ class BlockData {
     });
   }
 
+  List<int> getNextBlockPart(int targetBit, int downloadPieceLength) {
+    PieceInfoList pieceInfo = getPieceInfo(targetBit);    
+    int begin = 0;
+    int end = 0;
+    if(pieceInfo == null) {
+      begin = 0;
+      end = downloadPieceLength;
+    } else {
+      List<int> bl = pieceInfo.getFreeSpace(downloadPieceLength);
+      begin = bl[0];
+      end = bl[1];
+    }
+    if(_dataSize<targetBit*_blockSize+end) {
+      end = (targetBit*_blockSize+end) -_dataSize;
+    }
+    return [begin, end];
+  }
+
   Future<ReadResult> readBlock(int blockNum) {
     return new Future(() {
       int length = _blockSize;

@@ -17,7 +17,7 @@ class PieceInfoList {
   List<int> getFreeSpace(int size) {
     int begin = 0;
     for(PieceInfo info in mInfo) {
-      if(info.start > begin) {
+      if(info.start > begin && begin != info.start) {
         return [begin, info.start];
       } else {
         begin = info.end;

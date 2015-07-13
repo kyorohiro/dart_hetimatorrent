@@ -63,18 +63,17 @@ class PieceTest {
     }
 
     //
-    //
-    rand.change(field);
-    int targetBit = rand.getOnPieceAtRandom();
-    PieceInfoList pieceInfo = client.targetBlock.getPieceInfo(targetBit);
-    if(pieceInfo == null) {
-      front.sendRequest(targetBit, 0, downloadPieceLength);
+    // select piece & request
+    int targetBit = 0;
+    if(front.lastRequestIndex != null && client.targetBlock.have(front.lastRequestIndex)) {
+      targetBit = front.lastRequestIndex;
     } else {
-      List<int> bl = pieceInfo.getFreeSpace(downloadPieceLength);
-      if(bl[1]>downloadPieceLength) {
-        bl[1] = downloadPieceLength;
-      front.sendRequest(targetBit, bl[0], bl[1]);
-      }
+      rand.change(field);
+      targetBit = rand.getOnPieceAtRandom();
+    }
+    List<int> bl =client.targetBlock.getNextBlockPart(targetBit, downloadPieceLength);
+    if(bl != null) {
+      front.sendRequest(targetBit, bl[0], bl[1]-bl[0]);
     }
   }
 }

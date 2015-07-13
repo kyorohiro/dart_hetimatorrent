@@ -64,6 +64,9 @@ class TorrentClientFront {
   StreamController<TorrentClientSignal> _streamSignal = new StreamController.broadcast();
   Stream<TorrentClientSignal> get onReceiveSignal => _streamSignal.stream;
 
+  int _lastRequestIndex = null;
+  int get lastRequestIndex => _lastRequestIndex;
+  
   static Future<TorrentClientFront> connect(HetiSocketBuilder _builder, TorrentClientPeerInfo info, int bitfieldSize, List<int> infoHash, [List<int> peerId = null]) {
     return new Future(() {
       HetiSocket socket = _builder.createClient();
@@ -283,7 +286,9 @@ class TorrentClientFrontNerve {
         front._streamSignal.add(new TorrentClientSignalWithFront(front, TorrentClientSignal.ID_PIECE_SEND, 0, "", (message as MessagePiece).content.length));
         break;
       case TorrentMessage.SIGN_REQUEST:
+        MessageRequest resestMessage = message;
         front.currentRequesting.add(message);
+        front._lastRequestIndex = resestMessage.index;
         break;
     }
   }
