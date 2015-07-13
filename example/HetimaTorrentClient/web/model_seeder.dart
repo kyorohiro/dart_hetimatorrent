@@ -16,13 +16,16 @@ class SeederModel {
   HetimaData _seed = null;
   HetimaData get seed => _seed;
   
-  Future<SeederModelStartResult> startEngine(TorrentFile torrentFile, HetimaData seed) {
+  Future<SeederModelStartResult> startEngine(TorrentFile torrentFile, HetimaData seed, Function onProgress) {
     _seed = seed;
     return TorrentEngine.createTorrentEngine(
         new HetiSocketBuilderChrome(), torrentFile, seed
         ,globalPort:globalPort, localPort:localPort, localIp:localIp
         ,globalIp:globalIp, useUpnp:useUpnp,appid: "hetimatorrentclient").then((TorrentEngine engine) {
       _engine = engine;
+      _engine.onProgress.listen((TorrentEngineAIProgress info) {
+        onProgress(info.downloadSize,info.fileSize);
+      });
       return _engine.go(usePortMap:useUpnp).then((_){
         this.localIp = _engine.localIp;
         this.globalPort = _engine.globalPort;
@@ -30,7 +33,7 @@ class SeederModel {
         this.globalIp = _engine.globalIp;
         return new SeederModelStartResult()..localIp=localIp..localPort=localPort..globalPort=globalPort..globalIp=globalIp;
       });
-    });
+    });    
   }
 
   Future stopEngine() {

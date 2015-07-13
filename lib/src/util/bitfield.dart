@@ -92,6 +92,17 @@ class Bitfield extends BitfieldInter {
     }
   }
 
+  int numOfOn(bool isOn) {
+    int ret = 0;
+    int len = lengthPerBit();
+    for(int i=0;i<len;i++) {
+      if(getIsOn(i) == isOn) {
+        ret++;
+      }
+    }
+    return ret;
+  }
+
   int lengthPerBit() {
     return _bitSize;
   }

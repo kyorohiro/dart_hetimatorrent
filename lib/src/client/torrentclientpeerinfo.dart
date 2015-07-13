@@ -13,7 +13,10 @@ class TorrentClientPeerInfoList {
     peerInfos = new ShuffleLinkedList();
   }
 
-  
+  int numOfPeerInfo() {
+    return peerInfos.length;
+  }
+
   //
   // tracker --> ip , port
   // handshake --> ip, peerid,

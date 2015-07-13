@@ -25,6 +25,8 @@ class HashItem {
   html.InputElement upnpUse = html.querySelector("#torrent-upnpon-use");
   html.InputElement upnpUnuse = html.querySelector("#torrent-upnpon-unuse");
 
+  html.SpanElement torrentProgressSpan = html.querySelector("#torrent-progress");
+  
 
   html.AnchorElement torrentOutput = html.querySelector("#torrent-output");
   Map<String, int> seedState = {};
@@ -41,6 +43,9 @@ class HashItem {
       }
     });
 
+    onProgress(int x, int a) {
+      torrentProgressSpan.setInnerHtml("${x}/${a} : ${100*x~/a}");
+    }
     startServerBtn.onClick.listen((html.MouseEvent e) {
       String key = trackerModel.selectKey;
       loadServerBtn.style.display = "block";
@@ -52,7 +57,7 @@ class HashItem {
       seedModels[key].localPort = int.parse(localport.value);
       seedModels[key].localIp = localAddress.value;
       seedModels[key].globalIp = globalAddress.value;
-      seedModels[key].startEngine(torrentFile,  new HetimaDataFS("${key}.cont", erace:false)).then((SeederModelStartResult ret) {
+      seedModels[key].startEngine(torrentFile,  new HetimaDataFS("${key}.cont", erace:false), onProgress).then((SeederModelStartResult ret) {
         seedState[key] = 2; //stop
         localAddress.value = ret.localIp;
         localport.value = "${ret.localPort}";

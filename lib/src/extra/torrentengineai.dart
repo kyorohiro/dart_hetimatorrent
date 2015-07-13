@@ -24,6 +24,10 @@ class TorrentEngineAI extends TorrentAI {
   TrackerClient _tracker = null;
   UpnpPortMapHelper _upnpPortMapClient = null;
 
+  StreamController<TorrentEngineAIProgress> _progressStream = new StreamController.broadcast();
+  Stream<TorrentEngineAIProgress> get onProgress => _progressStream.stream;
+  TorrentEngineAIProgress _progressCash = new TorrentEngineAIProgress();
+
   TorrentEngineAI(TrackerClient tracker, UpnpPortMapHelper upnpPortMapClient) {
     this._tracker = tracker;
     this._upnpPortMapClient = upnpPortMapClient;
@@ -61,6 +65,8 @@ class TorrentEngineAI extends TorrentAI {
 
   @override
   Future onTick(TorrentClient client) {
+    _progressCash._update(_tracker,_torrent);
+    _progressStream.add(_progressCash);
     if (isGo != true) {
       return new Future(() {
         print("Empty AI tick : ${client.peerId}");
@@ -166,4 +172,18 @@ class TorrentEngineAI extends TorrentAI {
     });
   }
 
+}
+
+class TorrentEngineAIProgress {
+  int _downloadSize = 0;
+  int _fileSize = 0;
+  int _numOfPeer = 0;
+  int get downloadSize => _downloadSize;
+  int get fileSize => _fileSize;
+  int get numOfPeer => _numOfPeer;
+ void  _update(TrackerClient tracker, TorrentClient torrent) {
+    _downloadSize = torrent.targetBlock.rawBitfield.numOfOn(true) * torrent.targetBlock.blockSize;
+    _fileSize = torrent.targetBlock.dataSize;
+    _numOfPeer = torrent.rawPeerInfos.numOfPeerInfo();
+  }
 }

@@ -50,7 +50,8 @@ class TorrentEngine {
   TorrentEngine._empty() {
     ;
   }
-
+  Stream<TorrentEngineAIProgress> get onProgress => ai.onProgress;
+  
   static Future<TorrentEngine> createTorrentEngine(HetiSocketBuilder builder, TorrentFile torrentfile, HetimaData cash, 
       {appid: "hetima_torrent_engine",
       haveAllData: false, 

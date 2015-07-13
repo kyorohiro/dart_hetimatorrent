@@ -40,7 +40,7 @@ class TorrentClient {
   TorrentClientPeerInfoList _peerInfos;
   List<TorrentClientPeerInfo> get peerInfos => _peerInfos.peerInfos.sequential;
 
-  StreamController<TorrentClientMessage> messageStream = new StreamController();
+  StreamController<TorrentClientMessage> messageStream = new StreamController.broadcast();
   Stream<TorrentClientMessage> get onReceiveEvent => messageStream.stream;
 
   StreamController<TorrentClientSignal> _signalStream = new StreamController.broadcast();
