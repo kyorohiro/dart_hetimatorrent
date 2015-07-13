@@ -229,6 +229,10 @@ class TorrentClientFrontNerve {
         MessageBitfield messageBitfile = message;
         front._bitfieldToMe.writeByte(messageBitfile.bitfield);
         break;
+      case TorrentMessage.SIGN_HAVE:
+        MessageHave messageHave = message;
+        front._bitfieldToMe.setIsOn(messageHave.index, true);
+        break;
       case TorrentMessage.SIGN_PIECE:
         front.downloadedBytesFromMe += (message as MessagePiece).content.length;
         front._streamSignal.add(new TorrentClientSignalWithFront(front, TorrentClientSignal.ID_PIECE_RECEIVE, 0, "", (message as MessagePiece).content.length));

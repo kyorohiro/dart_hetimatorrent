@@ -61,7 +61,9 @@ class ChokeTest {
     for (int i = 0; i < unchokeNum && 0 < nextUnchoke.length; i++) {
       TorrentClientPeerInfo info = nextUnchoke.removeLast();
       if (info.front.amI == false &&info.front.interestedToMe == TorrentClientFront.STATE_ON || info.front.interestedToMe == TorrentClientFront.STATE_NONE) {
-        info.front.sendUnchoke();
+        if(info.front.chokedFromMe != TorrentClientFront.STATE_OFF) {
+          info.front.sendUnchoke();
+        }
         numOfSendedUnchoke++;
       }
     }
@@ -70,14 +72,16 @@ class ChokeTest {
     for (int i = 0; i < (_maxUnchoke - numOfSendedUnchoke) && 0 < nextUnchoke.length; i++) {
       TorrentClientPeerInfo info = nextUnchoke.removeLast();
       if (info.front.amI == false && info.front.interestedToMe == TorrentClientFront.STATE_OFF) {
-        info.front.sendUnchoke();
+        if(info.front.chokedFromMe != TorrentClientFront.STATE_OFF) {
+          info.front.sendUnchoke();
+        }
       }
     }
 
     //
     // send unchoke
     for (TorrentClientPeerInfo info in nextUnchoke) {
-      if (info.chokedFromMe == false) {
+      if (info.chokedFromMe != TorrentClientFront.STATE_ON) {
         info.front.sendChoke();
       }
     }

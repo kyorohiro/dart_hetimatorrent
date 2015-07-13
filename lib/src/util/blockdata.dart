@@ -6,6 +6,7 @@ import 'dart:async';
 import 'package:hetimacore/hetimacore.dart';
 import 'bitfield.dart';
 import 'pieceinfo.dart';
+import 'shufflelinkedlist.dart';
 
 class BlockData {
   Bitfield _head;
@@ -20,6 +21,9 @@ class BlockData {
   int get bitSize => _head.lengthPerBit();
   Map<int,PieceInfoList> _writePartData = {};
   Bitfield get rawBitfield => _head;
+  Bitfield _cacheHead = null;
+//  ShuffleLinkedList<BlockDataCache> _cacheData = new ShuffleLinkedList();
+
   BlockData(HetimaData data, Bitfield head, int blockSize, int dataSize) {
     if (dataSize == null) {
       _dataSize = head.lengthPerBit() * blockSize;
@@ -28,7 +32,7 @@ class BlockData {
     }
     _data = data;
     _head = head;
-    _cache = new Bitfield(head.lengthPerBit());
+    _cacheHead = new Bitfield(head.lengthPerBit());
     _blockSize = blockSize;
   }
 
@@ -36,10 +40,10 @@ class BlockData {
     return _data;
   }
 
-  Bitfield _cache = null;
+
   BitfieldInter isNotThrere(BitfieldInter ina)  {
-    Bitfield.relative(ina, _head, _cache);
-    return _cache;
+    Bitfield.relative(ina, _head, _cacheHead);
+    return _cacheHead;
   }
 
   Future<WriteResult> writeBlock(List<int> data, int blockNum) {
@@ -152,3 +156,13 @@ class BlockData {
     return _head.isAllOn();
   }
 }
+
+/*
+class BlockDataCache {
+  int index = 0;
+  List<int> cont = [];
+  operator == (BlockDataCache v) {
+    return (index == v.index);
+  }
+}
+*/

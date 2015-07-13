@@ -78,7 +78,9 @@ class HashItem {
       seedModels[key].localIp = localAddress.value;
       seedModels[key].globalIp = globalAddress.value;
       torrentFile.announce = "http://${trackerModel.trackerServer.address}:${trackerModel.trackerServer.port}/announce";
-      seedModels[key].startEngine(torrentFile, new HetimaDataBlob(seedRawFiles[trackerModel.selectKey]), true).then((SeederModelStartResult ret) {
+      
+      HetimaData seedData = new HetimaDataCache(new HetimaDataBlob(seedRawFiles[trackerModel.selectKey]),cacheSize:torrentFile.info.piece_length,cacheNum:6);
+      seedModels[key].startEngine(torrentFile, seedData, true).then((SeederModelStartResult ret) {
         seedState[key] = 2;//stop
         localAddress.value = ret.localIp;
         localport.value = "${ret.localPort}";
