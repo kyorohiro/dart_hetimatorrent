@@ -65,7 +65,7 @@ class PieceTest {
     //
     // select piece & request
     int targetBit = 0;
-    if(front.lastRequestIndex != null && client.targetBlock.have(front.lastRequestIndex)) {
+    if(front.lastRequestIndex != null && !client.targetBlock.have(front.lastRequestIndex)) {
       targetBit = front.lastRequestIndex;
     } else {
       rand.change(field);

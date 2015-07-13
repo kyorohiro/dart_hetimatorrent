@@ -141,7 +141,7 @@ class BlockData {
       end = bl[1];
     }
     if(_dataSize<targetBit*_blockSize+end) {
-      end = (targetBit*_blockSize+end) -_dataSize;
+      end = end - ((targetBit*_blockSize+end) -_dataSize);
     }
     return [begin, end];
   }
