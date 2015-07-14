@@ -62,12 +62,14 @@ class MainItem {
        String key = f.replaceAll(".cont", "");
        fileList.children.clear();
        html.DivElement c = new html.Element.html("<div id=\"${key}\"></div>");
-       html.InputElement b = new html.Element.html("<input type=\"button\" value=\"X\">");
-       c.children.add(b);
+       html.InputElement startButton = new html.Element.html("<input type=\"button\" value=\"Start\">");
+       html.InputElement removeButton = new html.Element.html("<input type=\"button\" value=\"X\">");
+       c.children.add(startButton);
+       c.children.add(removeButton);
        c.children.add(new html.Element.html("<span>${key}</span>"));
        c.children.add(new html.Element.html("<br>"));
        fileList.children.add(c);
-       b.onClick.listen((_){
+       removeButton.onClick.listen((_){
          HetimaDataFS.removeFile("${key}.cont").catchError((e){;});
          fileList.children.remove(c);
        });
