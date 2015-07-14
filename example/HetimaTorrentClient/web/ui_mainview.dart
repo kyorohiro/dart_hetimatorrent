@@ -53,13 +53,24 @@ class MainItem {
         }
       }
     });
-
     
     HetimaDataFS.getFiles().then((List<String> files) {
      for(String f in files) {
-       print("==== ${f} ====");
+       if(!f.endsWith(".cont")) {
+         continue;
+       }
+       String key = f.replaceAll(".cont", "");
        fileList.children.clear();
-       fileList.children.add(new html.Element.html("<div>${f}</div>"));
+       html.DivElement c = new html.Element.html("<div id=\"${key}\"></div>");
+       html.InputElement b = new html.Element.html("<input type=\"button\" value=\"X\">");
+       c.children.add(b);
+       c.children.add(new html.Element.html("<span>${key}</span>"));
+       c.children.add(new html.Element.html("<br>"));
+       fileList.children.add(c);
+       b.onClick.listen((_){
+         HetimaDataFS.removeFile("${key}.cont").catchError((e){;});
+         fileList.children.remove(c);
+       });
      }
     });
   }
