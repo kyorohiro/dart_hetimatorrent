@@ -177,7 +177,7 @@ class HashItem {
       torrentOutputs.children.clear();
       TorrentFile torrentFile = managedTorrentFile[key];
       for(TorrentFileFile file in torrentFile.info.files.files) { 
-        html.AnchorElement elm = new html.Element.html("<a href=\"dummy\">${file.pathAsString} :${file.fileSize}byte/a>");
+        html.AnchorElement elm = new html.Element.html("<a href=\"dummy\">${file.pathAsString} :${file.fileSize}byte</a>");
         torrentOutputs.children.add(elm);
         
         TorrentFileFile f = file;
@@ -186,14 +186,15 @@ class HashItem {
           String key = model.selectKey;
           saveFile(seedModels[key].seed,
               f.index,
-              f.index+f.fileSize);
+              f.index+f.fileSize,
+              f.path.last);
         });
       }
     }
   }
 
-  void saveFile(HetimaData copyFrom,[int begin=0, int end]) {
-      chrome.fileSystem.chooseEntry(new chrome.ChooseEntryOptions(type: chrome.ChooseEntryType.SAVE_FILE, suggestedName: "rawdata")).then((chrome.ChooseEntryResult chooseEntryResult) {        
+  void saveFile(HetimaData copyFrom,[int begin=0, int end=null, String name="rawdata"]) {
+      chrome.fileSystem.chooseEntry(new chrome.ChooseEntryOptions(type: chrome.ChooseEntryType.SAVE_FILE, suggestedName:name)).then((chrome.ChooseEntryResult chooseEntryResult) {        
         chrome.fileSystem.getWritableEntry(chooseEntryResult.entry).then((chrome.ChromeFileEntry copyTo) {
           copyFrom.getLength().then((int length) {
             if(end == null) {
