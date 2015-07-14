@@ -10,9 +10,14 @@ import 'ui_hashitem.dart';
 import 'model_main.dart';
 
 class MainItem {
+  // main view
   html.InputElement fileInput = html.querySelector("#fileinput");
-  html.InputElement managedfile = html.querySelector("#managedfile");
+  html.DivElement fileList = html.querySelector("#com-files");
 
+  
+ // html.InputElement managedfile = html.querySelector("#managedfile");
+
+  // setting view
   html.InputElement inputLocalAddress = html.querySelector("#input-localaddress");
   html.InputElement inputLocalPort = html.querySelector("#input-localport");
   html.InputElement inputGlobalPort = html.querySelector("#input-globalport");
@@ -49,10 +54,13 @@ class MainItem {
       }
     });
 
-  HetimaDataFS.getFiles().then((List<String> files) {
-    for(String f in files) {
-      print("==== ${f} ====");
-    }
-  });
+    
+    HetimaDataFS.getFiles().then((List<String> files) {
+     for(String f in files) {
+       print("==== ${f} ====");
+       fileList.children.clear();
+       fileList.children.add(new html.Element.html("<div>${f}</div>"));
+     }
+    });
   }
 }
