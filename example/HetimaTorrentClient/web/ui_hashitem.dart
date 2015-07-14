@@ -207,8 +207,9 @@ class HashItem {
               copyFrom.read(b, e-b).then((ReadResult readResult) {
                 chrome.ArrayBuffer buffer = new chrome.ArrayBuffer.fromBytes(readResult.buffer.toList());
                 copyTo.writeBytes(buffer);
+                int t = b;
                 b=e;
-                e=b+d;
+                e=t+d;
                 if(e>end) {
                   e=end;
                 }
