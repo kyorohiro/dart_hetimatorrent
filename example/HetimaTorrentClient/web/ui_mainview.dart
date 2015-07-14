@@ -22,6 +22,20 @@ class MainItem {
   html.InputElement inputLocalPort = html.querySelector("#input-localport");
   html.InputElement inputGlobalPort = html.querySelector("#input-globalport");
 
+  cre(HetimaData d, Map<String, TorrentFile> managedTorrentFile, Tab tab, Dialog dialog, [html.File b=null]) {
+    TorrentFile.createTorrentFileFromTorrentFile(new HetimaFileToBuilder(d)).then((TorrentFile f) {
+      return f.createInfoSha1().then((List<int> infoHash) {
+        String key = PercentEncode.encode(infoHash);
+        managedTorrentFile[key] = f;
+        tab.add("${key}", "con-now");
+        fileInput.style.display = "block";
+      });
+    }).catchError((e) {
+      dialog.show("Failed to parse torrent");
+      fileInput.style.display = "block";
+    });
+  }
+
   void init(AppModel model, Map<String, TorrentFile> managedTorrentFile, Tab tab, Dialog dialog, HashItem hitem) {
     fileInput.onChange.listen((html.Event e) {
       print("==");
@@ -29,27 +43,13 @@ class MainItem {
         fileInput.style.display = "none";
 
         html.File n = fileInput.files[0];
-        cre(HetimaData d,[html.File b=null]) {
-          TorrentFile.createTorrentFileFromTorrentFile(new HetimaFileToBuilder(d)).then((TorrentFile f) {
-            return f.createInfoSha1().then((List<int> infoHash) {
-              String key = PercentEncode.encode(infoHash);
-              managedTorrentFile[key] = f;
-              tab.add("${key}", "con-now");
-              fileInput.style.display = "block";
-            });
-          }).catchError((e) {
-            dialog.show("Failed to parse torrent");
-
-            fileInput.style.display = "block";
-          });
-        }
  
         if (n.size == 0) {
           dialog.show("Failed: file size zero");
           fileInput.style.display = "block";
           return;
         } else {
-          cre(new HetimaDataBlob(n));
+          cre(new HetimaDataBlob(n), managedTorrentFile,  tab, dialog);
         }
       }
     });
@@ -74,6 +74,9 @@ class MainItem {
          HetimaDataFS.removeFile("${key}.cont").catchError((e){;});
          HetimaDataFS.removeFile("${key}.torrent").catchError((e){;});
          fileList.children.remove(c);
+       });
+       startButton.onClick.listen((_){
+         cre(new HetimaDataFS("${key}.torrent",persistent:false), managedTorrentFile,  tab, dialog);
        });
      }
     });
