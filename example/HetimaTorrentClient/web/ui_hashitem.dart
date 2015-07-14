@@ -176,7 +176,7 @@ class HashItem {
       //
       torrentOutputs.children.clear();
       TorrentFile torrentFile = managedTorrentFile[key];
-      for(TorrentFileFile file in torrentFile.info.files.path) {
+      for(TorrentFileFile file in torrentFile.info.files.files) {
         torrentOutputs.children.add(new html.Element.html("<div>${file.pathAsString} :${file.fileSize}</div>"));
       }
     }

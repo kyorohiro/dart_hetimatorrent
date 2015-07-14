@@ -17,9 +17,9 @@ void main() {
         hetima.TorrentFile f = new hetima.TorrentFile.loadTorrentFileBuffer(result.buffer);
         unit.expect("http://127.0.0.1:6969/announce", f.announce);
         unit.expect("1k.txt", f.info.name);
-        unit.expect(1, f.info.files.path.length);
-        unit.expect("1k.txt", f.info.files.path[0].pathAsString);
-        unit.expect(1024, f.info.files.path[0].fileSize);
+        unit.expect(1, f.info.files.files.length);
+        unit.expect("1k.txt", f.info.files.files[0].pathAsString);
+        unit.expect(1024, f.info.files.files[0].fileSize);
       });
     });
 
@@ -31,11 +31,11 @@ void main() {
         hetima.TorrentFile f = new hetima.TorrentFile.loadTorrentFileBuffer(result.buffer);
         unit.expect("http://127.0.0.1:6969/announce", f.announce);
         unit.expect("1kb", f.info.name);
-        unit.expect(2, f.info.files.path.length);
-        unit.expect("1k_b.txt", f.info.files.path[0].pathAsString);
-        unit.expect(1024, f.info.files.path[0].fileSize);
-        unit.expect("1k.txt", f.info.files.path[1].pathAsString);
-        unit.expect(1024, f.info.files.path[1].fileSize);
+        unit.expect(2, f.info.files.files.length);
+        unit.expect("1k_b.txt", f.info.files.files[0].pathAsString);
+        unit.expect(1024, f.info.files.files[0].fileSize);
+        unit.expect("1k.txt", f.info.files.files[1].pathAsString);
+        unit.expect(1024, f.info.files.files[1].fileSize);
       });
     });
 
@@ -83,8 +83,8 @@ void main() {
         unit.expect(16 * 1024, e.torrentFile.info.piece_length);
         unit.expect("http://www.example.com/tracker:6969", e.torrentFile.announce);
         unit.expect(1, e.torrentFile.info.files.numOfFiles);
-        unit.expect(1024, e.torrentFile.info.files.path[0].fileSize);
-        unit.expect("1k.txt", e.torrentFile.info.files.path[0].pathAsString);
+        unit.expect(1024, e.torrentFile.info.files.files[0].fileSize);
+        unit.expect("1k.txt", e.torrentFile.info.files.files[0].pathAsString);
       });
     });
   });

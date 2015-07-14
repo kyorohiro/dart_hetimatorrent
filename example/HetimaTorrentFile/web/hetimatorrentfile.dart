@@ -89,7 +89,7 @@ void loadTorrentFile(FileSelectResult r) {
       }
       // file list
       int j = 0;
-      for (hetima.TorrentFileFile ff in f.info.files.path) {
+      for (hetima.TorrentFileFile ff in f.info.files.files) {
         buffer.write("file[${j}] = ${ff.pathAsString} , ${ff.fileSize} <br>");
         j++;
       }

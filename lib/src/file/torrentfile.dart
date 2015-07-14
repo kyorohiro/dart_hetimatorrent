@@ -125,14 +125,14 @@ class TorrentFileInfo {
 }
 
 class TorrentFileFiles {
-  TorrentFileInfo mInfo = null;
+  TorrentFileInfo _info = null;
   TorrentFileFiles(TorrentFileInfo info) {
-    mInfo = info;
+    _info = info;
   }
 
   int get dataSize {
     int ret = 0;
-    List<TorrentFileFile> p = path;
+    List<TorrentFileFile> p = files;
     for (TorrentFileFile f in p) {
       ret += f.fileSize;
     }
@@ -140,23 +140,25 @@ class TorrentFileFiles {
   }
 
   int get numOfFiles {
-    if (mInfo.mInfo.containsKey(TorrentFile.KEY_FILES)) {
-      return (mInfo.mInfo[TorrentFile.KEY_FILES] as List).length;
+    if (_info.mInfo.containsKey(TorrentFile.KEY_FILES)) {
+      return (_info.mInfo[TorrentFile.KEY_FILES] as List).length;
     }
     return 1;
   }
 
-  List<TorrentFileFile> get path {
+  List<TorrentFileFile> get files {
     if (1 == this.numOfFiles) {
-      mInfo.name;
+      _info.name;
       List<TorrentFileFile> ret = new List();
-      ret.add(new TorrentFileFile([mInfo.name], mInfo.mInfo[TorrentFile.KEY_LENGTH]));
+      ret.add(new TorrentFileFile([_info.name], _info.mInfo[TorrentFile.KEY_LENGTH], 0));
       return ret;
     } else {
       List<TorrentFileFile> ret = new List();
-      List<Map> files = mInfo.mInfo[TorrentFile.KEY_FILES];
+      List<Map> files = _info.mInfo[TorrentFile.KEY_FILES];
+      int index = 0;
       for (Map f in files) {
-        ret.add(new TorrentFileFile(f[TorrentFile.KEY_PATH], f[TorrentFile.KEY_LENGTH]));
+        ret.add(new TorrentFileFile(f[TorrentFile.KEY_PATH], f[TorrentFile.KEY_LENGTH], index));
+        index += f[TorrentFile.KEY_LENGTH];
       }
       return ret;
     }
@@ -165,12 +167,16 @@ class TorrentFileFiles {
 
 class TorrentFileFile {
   List<String> path = new List();
-  int fileSize = 0;
-  TorrentFileFile(List p, int l) {
-    fileSize = l;
+  int _index = 0;
+  int get index => _index;
+  int _fileSize = 0;
+  int get fileSize => _fileSize;
+  TorrentFileFile(List p, int l, int index) {
+    _fileSize = l;
     for (Object o in p) {
       path.add(objectToString(o));
     }
+    _index = index;
   }
   String get pathAsString {
     StringBuffer buffer = new StringBuffer();
