@@ -134,7 +134,7 @@ class TorrentFileFiles {
     int ret = 0;
     List<TorrentFileFile> p = path;
     for (TorrentFileFile f in p) {
-      ret += f.length;
+      ret += f.fileSize;
     }
     return ret;
   }
@@ -165,9 +165,9 @@ class TorrentFileFiles {
 
 class TorrentFileFile {
   List<String> path = new List();
-  int length = 0;
+  int fileSize = 0;
   TorrentFileFile(List p, int l) {
-    length = l;
+    fileSize = l;
     for (Object o in p) {
       path.add(objectToString(o));
     }
