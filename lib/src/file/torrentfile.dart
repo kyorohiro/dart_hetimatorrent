@@ -94,25 +94,25 @@ class TorrentFile {
 }
 
 class TorrentFileInfo {
-  Map mInfo = {};
+  Map _mInfo = {};
   String get name {
-    if (mInfo.containsKey(TorrentFile.KEY_NAME)) {
-      return objectToString(mInfo[TorrentFile.KEY_NAME]);
+    if (_mInfo.containsKey(TorrentFile.KEY_NAME)) {
+      return objectToString(_mInfo[TorrentFile.KEY_NAME]);
     } else {
       return "";
     }
   }
 
   void set name(String v) {
-    mInfo[TorrentFile.KEY_NAME] = v;
+    _mInfo[TorrentFile.KEY_NAME] = v;
   }
 
   int get piece_length {
-    return mInfo[TorrentFile.KEY_PIECE_LENGTH];
+    return _mInfo[TorrentFile.KEY_PIECE_LENGTH];
   }
 
   data.Uint8List get pieces {
-    return mInfo[TorrentFile.KEY_PIECES];
+    return _mInfo[TorrentFile.KEY_PIECES];
   }
 
   TorrentFileFiles get files {
@@ -120,7 +120,7 @@ class TorrentFileInfo {
   }
 
   TorrentFileInfo(Map metadata) {
-    mInfo = metadata[TorrentFile.KEY_INFO];
+    _mInfo = metadata[TorrentFile.KEY_INFO];
   }
 }
 
@@ -140,8 +140,8 @@ class TorrentFileFiles {
   }
 
   int get numOfFiles {
-    if (_info.mInfo.containsKey(TorrentFile.KEY_FILES)) {
-      return (_info.mInfo[TorrentFile.KEY_FILES] as List).length;
+    if (_info._mInfo.containsKey(TorrentFile.KEY_FILES)) {
+      return (_info._mInfo[TorrentFile.KEY_FILES] as List).length;
     }
     return 1;
   }
@@ -150,11 +150,11 @@ class TorrentFileFiles {
     if (1 == this.numOfFiles) {
       _info.name;
       List<TorrentFileFile> ret = new List();
-      ret.add(new TorrentFileFile([_info.name], _info.mInfo[TorrentFile.KEY_LENGTH], 0));
+      ret.add(new TorrentFileFile([_info.name], _info._mInfo[TorrentFile.KEY_LENGTH], 0));
       return ret;
     } else {
       List<TorrentFileFile> ret = new List();
-      List<Map> files = _info.mInfo[TorrentFile.KEY_FILES];
+      List<Map> files = _info._mInfo[TorrentFile.KEY_FILES];
       int index = 0;
       for (Map f in files) {
         ret.add(new TorrentFileFile(f[TorrentFile.KEY_PATH], f[TorrentFile.KEY_LENGTH], index));
