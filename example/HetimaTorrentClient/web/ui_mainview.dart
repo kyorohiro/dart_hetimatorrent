@@ -49,6 +49,10 @@ class MainItem {
       }
     });
 
-
+  HetimaDataFS.getFiles().then((List<String> files) {
+    for(String f in files) {
+      print("==== ${f} ====");
+    }
+  });
   }
 }
