@@ -176,20 +176,47 @@ class HashItem {
       //
       torrentOutputs.children.clear();
       TorrentFile torrentFile = managedTorrentFile[key];
-      for(TorrentFileFile file in torrentFile.info.files.files) {
-        torrentOutputs.children.add(new html.Element.html("<div>${file.pathAsString} :${file.fileSize}</div>"));
+      for(TorrentFileFile file in torrentFile.info.files.files) { 
+        html.AnchorElement elm = new html.Element.html("<a href=\"dummy\">${file.pathAsString} :${file.fileSize}byte/a>");
+        torrentOutputs.children.add(elm);
+        
+        TorrentFileFile f = file;
+        elm.onClick.listen((_) {
+          print("click");
+          String key = model.selectKey;
+          saveFile(seedModels[key].seed,
+              f.index,
+              f.index+f.fileSize);
+        });
       }
     }
   }
 
-  void saveFile(HetimaData copyFrom) {
+  void saveFile(HetimaData copyFrom,[int begin=0, int end]) {
       chrome.fileSystem.chooseEntry(new chrome.ChooseEntryOptions(type: chrome.ChooseEntryType.SAVE_FILE, suggestedName: "rawdata")).then((chrome.ChooseEntryResult chooseEntryResult) {        
         chrome.fileSystem.getWritableEntry(chooseEntryResult.entry).then((chrome.ChromeFileEntry copyTo) {
           copyFrom.getLength().then((int length) {
-            copyFrom.read(0, length).then((ReadResult readResult) {
-              chrome.ArrayBuffer buffer = new chrome.ArrayBuffer.fromBytes(readResult.buffer.toList());
-              copyTo.writeBytes(buffer);
-            });
+            if(end == null) {
+              end == length;
+            }
+            int b = begin;
+            int e = end;
+            int d = 16*1024;
+            a() {
+              copyFrom.read(b, e-b).then((ReadResult readResult) {
+                chrome.ArrayBuffer buffer = new chrome.ArrayBuffer.fromBytes(readResult.buffer.toList());
+                copyTo.writeBytes(buffer);
+                b=e;
+                e=b+d;
+                if(e>end) {
+                  e=end;
+                }
+                if(b<end) {
+                  a();
+                }
+              });
+            }
+            a();
           });
         });
       });
