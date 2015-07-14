@@ -237,8 +237,6 @@ class TorrentClientFrontNerve {
         front._bitfieldToMe.setIsOn(messageHave.index, true);
         break;
       case TorrentMessage.SIGN_PIECE:
-        front.downloadedBytesFromMe += (message as MessagePiece).content.length;
-        front._streamSignal.add(new TorrentClientSignalWithFront(front, TorrentClientSignal.ID_PIECE_RECEIVE, 0, "", (message as MessagePiece).content.length));
         {
           MessagePiece req = message;
           List<MessageRequest> removeTarge = [];
@@ -251,6 +249,8 @@ class TorrentClientFrontNerve {
             front.currentRequesting.remove(rm);
           }
         }
+        front.downloadedBytesFromMe += (message as MessagePiece).content.length;
+        front._streamSignal.add(new TorrentClientSignalWithFront(front, TorrentClientSignal.ID_PIECE_RECEIVE, 0, "", (message as MessagePiece).content.length));
         break;
     }
   }

@@ -102,7 +102,9 @@ class TorrentAIBasic extends TorrentAI {
           }
           break;
         case TorrentMessage.SIGN_BITFIELD:
-        case TorrentMessage.SIGN_PIECE:
+       //
+       // targetBlock 'does not reflect. check ID_SET_PIECE_A_PART;
+       // case TorrentMessage.SIGN_PIECE:
         case TorrentMessage.SIGN_UNCHOKE:
           _pieceTest.pieceTest(client, front);
           break;
@@ -149,7 +151,12 @@ class TorrentAIBasic extends TorrentAI {
             }
           }
           break;
+        case TorrentClientSignal.ID_SET_PIECE_A_PART:
+        case TorrentClientSignal.ID_SET_PIECE:
+          _pieceTest.pieceTest(client, info.front);
+          break;
       }
+
     });
   }
 }

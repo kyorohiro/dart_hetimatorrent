@@ -200,9 +200,9 @@ class HashItem {
             if(end == null) {
               end == length;
             }
-            int b = begin;
-            int e = end;
             int d = 16*1024;
+            int b = begin;
+            int e = b+d;
             a() {
               copyFrom.read(b, e-b).then((ReadResult readResult) {
                 chrome.ArrayBuffer buffer = new chrome.ArrayBuffer.fromBytes(readResult.buffer.toList());

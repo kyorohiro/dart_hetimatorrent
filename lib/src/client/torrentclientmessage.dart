@@ -35,10 +35,11 @@ class TorrentClientSignal {
   static const int ID_CONNECTED = 1001;
   static const int ID_ACCEPT = 1002;
   static const int ID_SET_PIECE = 1003;
-  static const int ID_SET_PIECE_ALL = 1004;
-  static const int ID_STARTED_CLIENT = 1005;
-  static const int ID_STOPPED_CLIENT = 1006;
-  static const int ID_ADD_PEERINFO = 1007;
+  static const int ID_SET_PIECE_A_PART = 1004;
+  static const int ID_SET_PIECE_ALL = 1005;
+  static const int ID_STARTED_CLIENT = 1006;
+  static const int ID_STOPPED_CLIENT = 1007;
+  static const int ID_ADD_PEERINFO = 1008;
   
   int _id = 0;
   int _reason = 0;

@@ -202,7 +202,9 @@ class TorrentClient {
         MessagePiece piece = message;
         _targetBlock.writePartBlock(piece.content, piece.index, piece.begin, piece.content.length).then((WriteResult w) {
           if (_targetBlock.have(piece.index)) {
-            _sendSignal(this, null, new TorrentClientSignal(TorrentClientSignal.ID_SET_PIECE, piece.index, "set piece : index:${piece.index}"));
+            _sendSignal(this, info, new TorrentClientSignal(TorrentClientSignal.ID_SET_PIECE, piece.index, "set piece : index:${piece.index}"));
+          } else {
+            _sendSignal(this, info, new TorrentClientSignal(TorrentClientSignal.ID_SET_PIECE_A_PART, piece.index, "set piece : index:${piece.index}"));            
           }
           if (_targetBlock.haveAll()) {
             _sendSignal(this, null, new TorrentClientSignal(TorrentClientSignal.ID_SET_PIECE_ALL, piece.index, "set piece all"));
