@@ -7,7 +7,7 @@ import 'package:hetimacore/hetimacore_cl.dart';
 import 'package:hetimafile/hetimafile_cl.dart';
 import 'package:hetimatorrent/hetimatorrent.dart';
 import 'ui_dialog.dart';
-import 'model_seeder.dart';
+import 'model_client.dart';
 import 'model_main.dart';
 import 'package:chrome/chrome_app.dart' as chrome;
 
@@ -34,7 +34,7 @@ class HashItem {
   html.DivElement torrentOutputs = html.querySelector("#torrent-outputs");
 
   Map<String, int> seedState = {};
-  Map<String, SeederModel> seedModels = {};
+  Map<String, ClientModel> seedModels = {};
 //  html.File seedRawFile = null;
   init(AppModel trackerModel, Map<String, TorrentFile> managedTorrentFile, Tab tab, Dialog dialog) {
     //   SeederModel model = new SeederModel();
@@ -129,14 +129,14 @@ class HashItem {
     torrentOutput.onClick.listen((_) {
       print("click");
       String key = trackerModel.selectKey;
-      saveFile(seedModels[key].seed);
+      saveFile(seedModels[key].seedfile);
     });
   }
 
   void contain(AppModel model, Map<String, TorrentFile> managedTorrentFile, String key) {
     if (managedTorrentFile.containsKey(key)) {
       if (false == seedModels.containsKey(key)) {
-        seedModels[key] = new SeederModel(new HetimaDataFS("${key}.cont", erace: false));
+        seedModels[key] = new ClientModel(key, managedTorrentFile[key]);
       }
 
       torrentHashSpan.setInnerHtml("${key}");
@@ -186,7 +186,7 @@ class HashItem {
         elm.onClick.listen((_) {
           print("click");
           String key = model.selectKey;
-          saveFile(seedModels[key].seed, f.index, f.index + f.fileSize, f.path.last);
+          saveFile(seedModels[key].seedfile, f.index, f.index + f.fileSize, f.path.last);
         });
       }
     }
@@ -220,8 +220,6 @@ class HashItem {
                     a();
                   }
                 });
-                //copyTo.writeBytes(buffer)
-
               });
             }
             a();

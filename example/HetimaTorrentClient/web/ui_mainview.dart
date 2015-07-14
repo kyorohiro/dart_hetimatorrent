@@ -56,6 +56,7 @@ class MainItem {
     
     HetimaDataFS.getFiles().then((List<String> files) {
      for(String f in files) {
+       print("ifile : ${f}");
        if(!f.endsWith(".cont")) {
          continue;
        }
