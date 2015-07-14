@@ -29,6 +29,8 @@ class HashItem {
   
 
   html.AnchorElement torrentOutput = html.querySelector("#torrent-output");
+  html.DivElement torrentOutputs = html.querySelector("#torrent-outputs");
+  
   Map<String, int> seedState = {};
   Map<String, SeederModel> seedModels = {};
 //  html.File seedRawFile = null;
@@ -168,6 +170,14 @@ class HashItem {
         upnpUse.checked = true;
       } else {
         upnpUnuse.checked = true;
+      }
+      
+      //
+      //
+      torrentOutputs.children.clear();
+      TorrentFile torrentFile = managedTorrentFile[key];
+      for(TorrentFileFile file in torrentFile.info.files.path) {
+        torrentOutputs.children.add(new html.Element.html("<div>${file.pathAsString} :${file.length}</div>"));
       }
     }
   }
