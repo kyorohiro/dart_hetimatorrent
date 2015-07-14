@@ -200,7 +200,7 @@ class HashItem {
           if (end == null) {
             end = length;
           }
-          int d = 2*16 * 1024*1024;
+          int d = 16 *1024 * 1024;
           int b = begin;
           int e = b + d;
           DomJSHetiFile hetiCopyTo = new DomJSHetiFile.create(copyTo.jsProxy);
