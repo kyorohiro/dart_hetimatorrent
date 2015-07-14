@@ -15,8 +15,10 @@ class SeederModel {
   bool useUpnp = false;
   HetimaData _seed = null;
   HetimaData get seed => _seed;
-  
-  Future<SeederModelStartResult> startEngine(TorrentFile torrentFile, HetimaData seed, Function onProgress) {
+  SeederModel(HetimaData seed) {
+    this._seed = seed;
+  }
+  Future<SeederModelStartResult> startEngine(TorrentFile torrentFile, Function onProgress) {
     _seed = seed;
     return TorrentEngine.createTorrentEngine(
         new HetiSocketBuilderChrome(), torrentFile, seed

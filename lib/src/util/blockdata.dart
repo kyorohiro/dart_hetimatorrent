@@ -80,7 +80,10 @@ class BlockData {
 
   Future<WriteResult> writePartBlock(List<int> data, int blockNum, int begin, int length) {
     return new Future(() {
-      int lastLength = dataSize%blockSize;
+      int targetBlockData = blockSize;
+      if(blockNum == _head.lengthPerBit()-1) {
+        targetBlockData = dataSize%blockSize;
+      }
       if (begin+length > _blockSize || _head.lengthPerBit()-1 < blockNum ) {
           throw  {};
       }
@@ -98,7 +101,7 @@ class BlockData {
           infoList.append(begin, begin+length);
           //
           //
-          if(infoList.size() == 1 && infoList.getPieceInfo(0).start== 0 && infoList.getPieceInfo(0).end>=lastLength) {
+          if(infoList.size() == 1 && infoList.getPieceInfo(0).start== 0 && infoList.getPieceInfo(0).end>=targetBlockData) {
             _head.setIsOn(blockNum, true);            
             _writePartData.remove(blockNum);
           }

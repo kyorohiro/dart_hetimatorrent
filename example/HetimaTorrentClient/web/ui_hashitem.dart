@@ -1,13 +1,16 @@
 library app.mainview.hashitem;
 
 import 'dart:html' as html;
+import 'dart:typed_data';
 import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimacore/hetimacore_cl.dart';
+import 'package:hetimafile/hetimafile_cl.dart';
 import 'package:hetimatorrent/hetimatorrent.dart';
 import 'ui_dialog.dart';
 import 'model_seeder.dart';
 import 'model_main.dart';
 import 'package:chrome/chrome_app.dart' as chrome;
+
 //
 //
 class HashItem {
@@ -26,11 +29,10 @@ class HashItem {
   html.InputElement upnpUnuse = html.querySelector("#torrent-upnpon-unuse");
 
   html.SpanElement torrentProgressSpan = html.querySelector("#torrent-progress");
-  
 
   html.AnchorElement torrentOutput = html.querySelector("#torrent-output");
   html.DivElement torrentOutputs = html.querySelector("#torrent-outputs");
-  
+
   Map<String, int> seedState = {};
   Map<String, SeederModel> seedModels = {};
 //  html.File seedRawFile = null;
@@ -59,7 +61,7 @@ class HashItem {
       seedModels[key].localPort = int.parse(localport.value);
       seedModels[key].localIp = localAddress.value;
       seedModels[key].globalIp = globalAddress.value;
-      seedModels[key].startEngine(torrentFile,  new HetimaDataFS("${key}.cont", erace:false), onProgress).then((SeederModelStartResult ret) {
+      seedModels[key].startEngine(torrentFile, onProgress).then((SeederModelStartResult ret) {
         seedState[key] = 2; //stop
         localAddress.value = ret.localIp;
         localport.value = "${ret.localPort}";
@@ -123,7 +125,7 @@ class HashItem {
         }
       });
     });
-    
+
     torrentOutput.onClick.listen((_) {
       print("click");
       String key = trackerModel.selectKey;
@@ -134,7 +136,7 @@ class HashItem {
   void contain(AppModel model, Map<String, TorrentFile> managedTorrentFile, String key) {
     if (managedTorrentFile.containsKey(key)) {
       if (false == seedModels.containsKey(key)) {
-        seedModels[key] = new SeederModel();
+        seedModels[key] = new SeederModel(new HetimaDataFS("${key}.cont", erace: false));
       }
 
       torrentHashSpan.setInnerHtml("${key}");
@@ -171,56 +173,61 @@ class HashItem {
       } else {
         upnpUnuse.checked = true;
       }
-      
+
       //
       //
       torrentOutputs.children.clear();
       TorrentFile torrentFile = managedTorrentFile[key];
-      for(TorrentFileFile file in torrentFile.info.files.files) { 
+      for (TorrentFileFile file in torrentFile.info.files.files) {
         html.AnchorElement elm = new html.Element.html("<a href=\"dummy\">${file.pathAsString} :${file.fileSize}byte</a>");
         torrentOutputs.children.add(elm);
-        
+
         TorrentFileFile f = file;
         elm.onClick.listen((_) {
           print("click");
           String key = model.selectKey;
-          saveFile(seedModels[key].seed,
-              f.index,
-              f.index+f.fileSize,
-              f.path.last);
+          saveFile(seedModels[key].seed, f.index, f.index + f.fileSize, f.path.last);
         });
       }
     }
   }
 
-  void saveFile(HetimaData copyFrom,[int begin=0, int end=null, String name="rawdata"]) {
-      chrome.fileSystem.chooseEntry(new chrome.ChooseEntryOptions(type: chrome.ChooseEntryType.SAVE_FILE, suggestedName:name)).then((chrome.ChooseEntryResult chooseEntryResult) {        
-        chrome.fileSystem.getWritableEntry(chooseEntryResult.entry).then((chrome.ChromeFileEntry copyTo) {
-          copyFrom.getLength().then((int length) {
-            if(end == null) {
-              end == length;
-            }
-            int d = 16*1024;
-            int b = begin;
-            int e = b+d;
+
+  void saveFile(HetimaData copyFrom, [int begin = 0, int end = null, String name = "rawdata"]) {
+    chrome.fileSystem.chooseEntry(new chrome.ChooseEntryOptions(type: chrome.ChooseEntryType.SAVE_FILE, suggestedName: name)).then((chrome.ChooseEntryResult chooseEntryResult) {
+      chrome.fileSystem.getWritableEntry(chooseEntryResult.entry).then((chrome.ChromeFileEntry copyTo) {
+        copyFrom.getLength().then((int length) {
+          if (end == null) {
+            end = length;
+          }
+          int d = 2*16 * 1024*1024;
+          int b = begin;
+          int e = b + d;
+          DomJSHetiFile hetiCopyTo = new DomJSHetiFile.create(copyTo.jsProxy);
+          hetiCopyTo.getHetimaFile().then((HetimaData data) {
             a() {
-              copyFrom.read(b, e-b).then((ReadResult readResult) {
-                chrome.ArrayBuffer buffer = new chrome.ArrayBuffer.fromBytes(readResult.buffer.toList());
-                copyTo.writeBytes(buffer);
-                int t = b;
-                b=e;
-                e=t+d;
-                if(e>end) {
-                  e=end;
-                }
-                if(b<end) {
-                  a();
-                }
+              copyFrom.read(b, e - b).then((ReadResult readResult) {
+                print("${b} ${e} ${readResult.buffer.length}");
+                //chrome.ArrayBuffer buffer = new chrome.ArrayBuffer.fromBytes(readResult.buffer.toList());
+                //print("${buffer.getBytes().length}");
+                data.write(readResult.buffer, b).then((WriteResult w) {
+                  b = e;
+                  e = b + d;
+                  if (e > end) {
+                    e = end;
+                  }
+                  if (b < end) {
+                    a();
+                  }
+                });
+                //copyTo.writeBytes(buffer)
+
               });
             }
             a();
           });
         });
       });
+    });
   }
 }
