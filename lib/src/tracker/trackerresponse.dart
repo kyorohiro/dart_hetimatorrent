@@ -14,6 +14,7 @@ class TrackerResponse {
   static final String KEY_INTERVAL = "interval";
   static final String KEY_PEERS = "peers";
   static final String KEY_PEER_ID = "peer_id";
+  static final String KEY_PEER_ID2 = "peer_id";
   static final String KEY_IP = "ip";
   static final String KEY_PORT = "port";
   static final String KEY_FAILURE_REASON = "failure reason";
@@ -62,8 +63,17 @@ class TrackerResponse {
           ip = convert.UTF8.decode(wpeer[KEY_IP]);
         }
         data.Uint8List peeerid = wpeer[KEY_PEER_ID];
+        if (peeerid == null) {
+          peeerid = wpeer[KEY_PEER_ID2];
+        }
         int port = wpeer[KEY_PORT];
-        peers.add(new TrackerPeerInfo(peeerid.toList(), "", HetiIP.toRawIP(ip), port));
+        {
+          List<int> _peerId = [];
+          if (peeerid != null) {
+            _peerId = peeerid.toList();
+          }
+          peers.add(new TrackerPeerInfo(_peerId, "", HetiIP.toRawIP(ip), port));
+        }
       }
     }
   }
@@ -109,5 +119,4 @@ class TrackerResponse {
     }
     return ret;
   }
-
 }

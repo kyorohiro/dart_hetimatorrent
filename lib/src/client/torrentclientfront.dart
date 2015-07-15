@@ -66,7 +66,7 @@ class TorrentClientFront {
 
   int _lastRequestIndex = null;
   int get lastRequestIndex => _lastRequestIndex;
-  
+
   static Future<TorrentClientFront> connect(HetiSocketBuilder _builder, TorrentClientPeerInfo info, int bitfieldSize, List<int> infoHash, [List<int> peerId = null]) {
     return new Future(() {
       HetiSocket socket = _builder.createClient();
@@ -215,6 +215,7 @@ class TorrentClientFrontNerve {
         front._targetProtocolId.addAll((message as MessageHandshake).protocolId);
         _signalHandshake(front);
         _signalHandshakeOwnConnectCheck(front, message);
+        _signalHandshakeInfoHashCheck(front, message);
         break;
       case TorrentMessage.SIGN_CHOKE:
         front.chokedToMe = TorrentClientFront.STATE_ON;
@@ -290,6 +291,16 @@ class TorrentClientFrontNerve {
         front.currentRequesting.add(message);
         front._lastRequestIndex = resestMessage.index;
         break;
+    }
+  }
+
+  static void _signalHandshakeInfoHashCheck(TorrentClientFront front, TorrentMessage message) {
+    if (message.id != TorrentMessage.DUMMY_SIGN_SHAKEHAND) {
+      return;
+    }
+    MessageHandshake handshakeMessage = message;
+    if (handshakeMessage.infoHash != front._infoHash) {
+      doClose(front, TorrentClientSignal.REASON_UNMANAGED_INFOHASH);
     }
   }
 
