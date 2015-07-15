@@ -167,7 +167,7 @@ class TorrentEngineAI extends TorrentAI {
       }).catchError((e){
         //
         // todo
-        _startTracker(60);
+        _startTracker(30*5);
       });
     });
   }
