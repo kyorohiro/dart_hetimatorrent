@@ -26,9 +26,15 @@ class MainItem {
     TorrentFile.createTorrentFileFromTorrentFile(new HetimaFileToBuilder(d)).then((TorrentFile f) {
       return f.createInfoSha1().then((List<int> infoHash) {
         String key = PercentEncode.encode(infoHash);
-        managedTorrentFile[key] = f;
-        tab.add("${key}", "con-now");
-        fileInput.style.display = "block";
+        if(managedTorrentFile.containsKey(key)) {
+          dialog.show("Failed to start : already start");
+          fileInput.style.display = "block";
+          return;
+        } else {
+          managedTorrentFile[key] = f;
+          tab.add("${key}", "con-now");
+          fileInput.style.display = "block";
+        }
       });
     }).catchError((e) {
       dialog.show("Failed to parse torrent");

@@ -1,9 +1,7 @@
 library app.mainview.hashitem;
 
 import 'dart:html' as html;
-import 'dart:typed_data';
 import 'package:hetimacore/hetimacore.dart';
-import 'package:hetimacore/hetimacore_cl.dart';
 import 'package:hetimafile/hetimafile_cl.dart';
 import 'package:hetimatorrent/hetimatorrent.dart';
 import 'ui_dialog.dart';
@@ -42,16 +40,28 @@ class HashItem {
   init(AppModel trackerModel, Map<String, TorrentFile> managedTorrentFile, Tab tab, Dialog dialog) {
     //   SeederModel model = new SeederModel();
 
-    torrentRemoveBtn.onClick.listen((html.MouseEvent e) {
-      if (trackerModel.selectKey != null) {
-        tab.remove(trackerModel.selectKey);
-        managedTorrentFile.remove(trackerModel.selectKey);
-        trackerModel.selectKey = null;
-      }
-    });
 
+    void stop() {
+      String key = trackerModel.selectKey;
+      loadServerBtn.style.display = "block";
+      stopServerBtn.style.display = "none";
+      startServerBtn.style.display = "none";
+      seedState[key] = 3; //loading
+      seedModels[key].stopEngine().then((StopResult r) {
+        seedState[key] = 1; //start
+        startServerBtn.style.display = "block";
+        stopServerBtn.style.display = "none";
+        loadServerBtn.style.display = "none";
+      }).catchError((e) {
+        seedState[key] = 2; //stop
+        startServerBtn.style.display = "none";
+        stopServerBtn.style.display = "block";
+        loadServerBtn.style.display = "none";
+        dialog.show("Failed to stop torrent");
+      });
+    }
 
-    startServerBtn.onClick.listen((html.MouseEvent e) {
+    void start() {
       String key = trackerModel.selectKey;
       loadServerBtn.style.display = "block";
       stopServerBtn.style.display = "none";
@@ -78,26 +88,24 @@ class HashItem {
         loadServerBtn.style.display = "none";
         dialog.show("Failed to start torrent");
       });
+    }
+    torrentRemoveBtn.onClick.listen((html.MouseEvent e) {
+      if (trackerModel.selectKey != null) {
+        stop();
+        tab.remove(trackerModel.selectKey);
+        managedTorrentFile.remove(trackerModel.selectKey);
+        trackerModel.selectKey = null;
+      }
     });
 
+
+    startServerBtn.onClick.listen((html.MouseEvent e) {
+      start();
+    });
+
+
     stopServerBtn.onClick.listen((html.MouseEvent e) {
-      String key = trackerModel.selectKey;
-      loadServerBtn.style.display = "block";
-      stopServerBtn.style.display = "none";
-      startServerBtn.style.display = "none";
-      seedState[key] = 3; //loading
-      seedModels[key].stopEngine().then((StopResult r) {
-        seedState[key] = 1; //start
-        startServerBtn.style.display = "block";
-        stopServerBtn.style.display = "none";
-        loadServerBtn.style.display = "none";
-      }).catchError((e) {
-        seedState[key] = 2; //stop
-        startServerBtn.style.display = "none";
-        stopServerBtn.style.display = "block";
-        loadServerBtn.style.display = "none";
-        dialog.show("Failed to stop torrent");
-      });
+      stop();
     });
 
     // Adds a click event for each radio button in the group with name "gender"
