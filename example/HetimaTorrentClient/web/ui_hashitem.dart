@@ -146,7 +146,7 @@ class HashItem {
 //    });
   }
 
-  void contain(AppModel model, Map<String, TorrentFile> managedTorrentFile, String key) {
+  void contain(AppModel model, Map<String, TorrentFile> managedTorrentFile, String key, Dialog dialog) {
     if (managedTorrentFile.containsKey(key)) {
       if (false == seedModels.containsKey(key)) {
         seedModels[key] = new ClientModel(key, managedTorrentFile[key]);
@@ -217,6 +217,8 @@ class HashItem {
         int a = torrentFile.info.files.dataSize;
         int x = progress;
         onProgress(x, a);
+      }).catchError((e){
+        dialog.show("Failed to load torrent file . please restart app");
       });
     }
   }

@@ -35,7 +35,7 @@ void main() {
 
   tab.onShow.listen((TabInfo info) {
     print("=t= ${info.cont}");
-    item.contain(model, managedTorrentFile, info.key);
+    item.contain(model, managedTorrentFile, info.key, dialog);
   });
 }
 
