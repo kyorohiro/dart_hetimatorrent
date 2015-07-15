@@ -25,6 +25,7 @@ class ClientModel {
   TorrentFile _metadata = null;
   TorrentFile get metadata => _metadata;
 
+  static int clientModeId = 0;
   ClientModel(String key, TorrentFile metadata) {
     this._seedfile = new HetimaDataFS("${key}.cont", erace: false);
     this._torrentfile = new HetimaDataFS("${key}.torrent", erace: true);
@@ -54,7 +55,7 @@ class ClientModel {
           return _bitfieldfile.read(0, len).then((ReadResult result) {
             Bitfield b = new Bitfield(Bitfield.calcbitSize(_metadata.info.pieces.length), clearIsOne: false);
             b.writeBytes(result.buffer);
-            return b.numOfOn(true);
+            return b.numOfOn(true)*_metadata.info.files.dataSize;
           });
         });
       }
@@ -66,7 +67,8 @@ class ClientModel {
     }).then((ReadResult re) {
       return TorrentEngine
           .createTorrentEngine(new HetiSocketBuilderChrome(), torrentFile, seedfile,
-              globalPort: globalPort, localPort: localPort, localIp: localIp, globalIp: globalIp, useUpnp: useUpnp, appid: "hetimatorrentclient")
+              globalPort: globalPort, localPort: localPort, localIp: localIp,
+              globalIp: globalIp, useUpnp: useUpnp, appid: "hetimatorrentclient${clientModeId++}",bitfield:re.buffer)
           .then((TorrentEngine engine) {
         _engine = engine;
         _engine.onProgress.listen((TorrentEngineAIProgress info) {
