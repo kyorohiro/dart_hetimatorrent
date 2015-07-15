@@ -137,6 +137,9 @@ class TorrentAIBasic extends TorrentAI {
               if (info.front != null && info.front.isClose == false) {
                 break;
               }
+              if(false == client.isStart) {
+                break;
+              }
               return client.connect(info).then((TorrentClientFront f) {
                 return f.sendHandshake();
               }).catchError((e) {

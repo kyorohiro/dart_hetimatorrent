@@ -190,10 +190,10 @@ class TorrentClient {
       //
       // cuurent implements duprecate connection do not permit
       if(info.front != null && info.front.isClose == false) {
-        return null;
+        throw {};
       }
       if(false == _isStart) {
-        return null;
+        throw {};
       }
       return TorrentClientFront.connect(_builder, info, this._targetBlock.bitSize, infoHash, peerId).then((TorrentClientFront front) {
         info.front = front;
