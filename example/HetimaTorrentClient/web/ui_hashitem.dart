@@ -1,6 +1,7 @@
 library app.mainview.hashitem;
 
 import 'dart:html' as html;
+import 'dart:async' ;
 import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimafile/hetimafile_cl.dart';
 import 'package:hetimatorrent/hetimatorrent.dart';
@@ -31,7 +32,9 @@ class HashItem {
 //  html.AnchorElement torrentOutput = html.querySelector("#torrent-output");
 //
   html.DivElement torrentOutputs = html.querySelector("#torrent-outputs");
-
+  html.DivElement torrentOutputsLoading = html.querySelector("#torrent-outputs-loading");
+  
+  
   Map<String, int> seedState = {};
   Map<String, ClientModel> seedModels = {};
 //  html.File seedRawFile = null;
@@ -196,7 +199,17 @@ class HashItem {
         elm.onClick.listen((_) {
           print("click");
           String key = model.selectKey;
-          saveFile(seedModels[key].seedfile, f.index, f.index + f.fileSize, f.path.last);
+          torrentOutputs.style.display = "none";
+          torrentOutputsLoading.style.display = "block";
+          saveFile(seedModels[key].seedfile, f.index, f.index + f.fileSize, f.path.last)
+          .then((e){
+            torrentOutputs.style.display = "block";
+            torrentOutputsLoading.style.display = "none";
+          })
+          .catchError((e){
+            torrentOutputs.style.display = "block";
+            torrentOutputsLoading.style.display = "none";
+          });
         });
       }
       
@@ -209,14 +222,17 @@ class HashItem {
   }
 
 
-  void saveFile(HetimaData copyFrom, [int begin = 0, int end = null, String name = "rawdata"]) {
+  Future saveFile(HetimaData copyFrom, [int begin = 0, int end = null, String name = "rawdata"]) {
+    Completer c = new Completer();
     chrome.fileSystem.chooseEntry(new chrome.ChooseEntryOptions(type: chrome.ChooseEntryType.SAVE_FILE, suggestedName: name)).then((chrome.ChooseEntryResult chooseEntryResult) {
       chrome.fileSystem.getWritableEntry(chooseEntryResult.entry).then((chrome.ChromeFileEntry copyTo) {
+        ///
         copyFrom.getLength().then((int length) {
+          //
           if (end == null) {
             end = length;
           }
-          int d = 16 *1024 * 1024;
+          int d = 32 *1024 * 1024;
           int b = begin;
           int e = b + d;
           DomJSHetiFile hetiCopyTo = new DomJSHetiFile.create(copyTo.jsProxy);
@@ -224,8 +240,6 @@ class HashItem {
             a() {
               copyFrom.read(b, e - b).then((ReadResult readResult) {
                 print("${b} ${e} ${readResult.buffer.length}");
-                //chrome.ArrayBuffer buffer = new chrome.ArrayBuffer.fromBytes(readResult.buffer.toList());
-                //print("${buffer.getBytes().length}");
                 data.write(readResult.buffer, b).then((WriteResult w) {
                   b = e;
                   e = b + d;
@@ -234,14 +248,21 @@ class HashItem {
                   }
                   if (b < end) {
                     a();
+                  } else {
+                    c.complete({});
                   }
-                });
-              });
+                }).catchError(c.completeError);
+              }).catchError(c.completeError);
             }
             a();
-          });
-        });
-      });
-    });
+          }).catchError(c.completeError);
+          
+          // copyFrom.getLength().then((int length) {
+        }).catchError(c.completeError);
+        ///
+      }).catchError(c.completeError);
+    }).catchError(c.completeError);
+    
+    return c.future;
   }
 }
