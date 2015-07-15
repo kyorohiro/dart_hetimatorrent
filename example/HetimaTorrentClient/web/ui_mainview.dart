@@ -77,6 +77,11 @@ class MainItem {
        c.children.add(new html.Element.html("<br>"));
        fileList.children.add(c);
        removeButton.onClick.listen((_){
+         if(managedTorrentFile.containsKey(key)) {
+           dialog.show("Failed to remove : you must to close tab");
+           return;
+         }
+           
          HetimaDataFS.removeFile("${key}.cont").catchError((e){;});
          HetimaDataFS.removeFile("${key}.torrent").catchError((e){;});
          HetimaDataFS.removeFile("${key}.bitfield").catchError((e){;});
