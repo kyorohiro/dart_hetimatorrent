@@ -36,9 +36,7 @@ class TorrentEngineAI extends TorrentAI {
   Future onRegistAI(TorrentClient client) {
     this._torrent = client;
     basic.onRegistAI(client);
-    return new Future(() {
-      
-    });
+    return new Future(() {});
   }
 
   @override
@@ -65,7 +63,7 @@ class TorrentEngineAI extends TorrentAI {
 
   @override
   Future onTick(TorrentClient client) {
-    _progressCash._update(_tracker,_torrent);
+    _progressCash._update(_tracker, _torrent);
     _progressStream.add(_progressCash);
     if (isGo != true) {
       return new Future(() {
@@ -87,16 +85,18 @@ class TorrentEngineAI extends TorrentAI {
     return this._torrent.stop().then((_) {
       if (usePortMap == true) {
         return _upnpPortMapClient.deletePortMapFromAppIdDesc().catchError((e) {});
+      } else {
+        isGo = false;
       }
-    }).whenComplete(() {
-      isGo = false;
+    }).then((_) {
+      return _startTracker(0).catchError((e){});
     });
   }
 
   Future _startTorrent() {
     int retry = 0;
     a() {
-      return this._torrent.start(baseLocalAddress, baseLocalPort + retry, baseGlobalIp, baseGlobalPort+ retry).then((_) {
+      return this._torrent.start(baseLocalAddress, baseLocalPort + retry, baseGlobalIp, baseGlobalPort + retry).then((_) {
         if (usePortMap == true) {
           return _startPortMap().then((_) {
             _torrent.globalPort = _upnpPortMapClient.externalPort;
@@ -116,8 +116,8 @@ class TorrentEngineAI extends TorrentAI {
       }).catchError((e) {
         if (retry < baseNumOfRetry) {
           retry++;
-          if(_torrent.isStart) {
-            return _torrent.stop().then((_){
+          if (_torrent.isStart) {
+            return _torrent.stop().then((_) {
               return a();
             });
           } else {
@@ -149,10 +149,14 @@ class TorrentEngineAI extends TorrentAI {
 
   Future _startTracker(int intervalSec) {
     return new Future.delayed(new Duration(seconds: intervalSec)).then((_) {
-      if (isGo == false) {
-        return null;
+      if (false == isGo) {
+        _tracker.event = TrackerClient.EVENT_STOPPED;
+      } else if (_torrent.targetBlock.haveAll()) {
+        _tracker.event = TrackerClient.EVENT_COMPLETED;
+      } else {
+        _tracker.event = TrackerClient.EVENT_STARTED;
       }
-      _tracker.event = TrackerClient.EVENT_STARTED;
+
       _tracker.peerport = _torrent.globalPort;
       if (localNetworkIp(_torrent.globalIp)) {
         _tracker.optIp = null;
@@ -163,15 +167,18 @@ class TorrentEngineAI extends TorrentAI {
         for (TrackerPeerInfo info in r.response.peers) {
           _torrent.putTorrentPeerInfoFromTracker(info.ipAsString, info.port);
         }
-        _startTracker(r.response.interval);
-      }).catchError((e){
+        if (isGo == true) {
+          _startTracker(r.response.interval);
+        }
+      }).catchError((e) {
         //
         // todo
-        _startTracker(30*5);
+        if (isGo == true) {
+          _startTracker(30 * 5);
+        }
       });
     });
   }
-
 }
 
 class TorrentEngineAIProgress {
@@ -181,7 +188,7 @@ class TorrentEngineAIProgress {
   int get downloadSize => _downloadSize;
   int get fileSize => _fileSize;
   int get numOfPeer => _numOfPeer;
- void  _update(TrackerClient tracker, TorrentClient torrent) {
+  void _update(TrackerClient tracker, TorrentClient torrent) {
     _downloadSize = torrent.targetBlock.rawHead.numOfOn(true) * torrent.targetBlock.blockSize;
     _fileSize = torrent.targetBlock.dataSize;
     _numOfPeer = torrent.rawPeerInfos.numOfPeerInfo();
