@@ -27,8 +27,9 @@ class HashItem {
   html.InputElement upnpUnuse = html.querySelector("#torrent-upnpon-unuse");
 
   html.SpanElement torrentProgressSpan = html.querySelector("#torrent-progress");
-
-  html.AnchorElement torrentOutput = html.querySelector("#torrent-output");
+//
+//  html.AnchorElement torrentOutput = html.querySelector("#torrent-output");
+//
   html.DivElement torrentOutputs = html.querySelector("#torrent-outputs");
 
   Map<String, int> seedState = {};
@@ -135,11 +136,11 @@ class HashItem {
       });
     });
 
-    torrentOutput.onClick.listen((_) {
-      print("click");
-      String key = trackerModel.selectKey;
-      saveFile(seedModels[key].seedfile);
-    });
+//    torrentOutput.onClick.listen((_) {
+//      print("click");
+//      String key = trackerModel.selectKey;
+//      saveFile(seedModels[key].seedfile);
+//    });
   }
 
   void contain(AppModel model, Map<String, TorrentFile> managedTorrentFile, String key) {
