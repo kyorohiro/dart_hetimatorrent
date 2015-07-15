@@ -19,7 +19,7 @@ class PieceTest {
   int downloadPieceLength=16*1024;
 
   PieceTest(TorrentClient client) {
-    rand = new DDBitfield(client.targetBlock.rawBitfield);
+    rand = new DDBitfield(client.targetBlock.rawHead);
     if(downloadPieceLength > client.targetBlock.blockSize) {
       downloadPieceLength =  client.targetBlock.blockSize;
     }

@@ -57,7 +57,7 @@ class TorrentEngine {
       haveAllData: false, 
       int localPort: 18085,int globalPort: 18085,
       String globalIp:"0.0.0.0",String localIp:"0.0.0.0",
-      int retryNum:10, bool useUpnp:false}) {
+      int retryNum:10, bool useUpnp:false,List<int>bitfield:null}) {
     return new Future(() {
       TorrentEngine engine = new TorrentEngine._empty();
       return TrackerClient.createTrackerClient(builder, torrentfile).then((TrackerClient trackerClient) {
@@ -74,18 +74,28 @@ class TorrentEngine {
         engine.ai.baseGlobalIp = globalIp;
         //
         engine._torrentClient = new TorrentClient(builder, trackerClient.peerId, trackerClient.infoHash, torrentfile.info.pieces, torrentfile.info.piece_length, torrentfile.info.files.dataSize, cash,
-            ai: engine.ai, haveAllData: haveAllData);  
+            ai: engine.ai, haveAllData: haveAllData,bitfield:bitfield);  
         return engine;
       });
     });
   }
 
+  bool _isGO = false;
+  bool get isGo => _isGO;
+
   Future go({usePortMap: false}) {
     ai.usePortMap = usePortMap;
-    return ai.go();
+    return ai.go().then((v){
+      _isGO = true;
+      return v;
+    }).catchError((e){
+      throw e;
+    });
   }
 
   Future stop() {
-    return ai.stop();
+    return ai.stop().whenComplete((){
+    _isGO= false;
+    });
   }
 }

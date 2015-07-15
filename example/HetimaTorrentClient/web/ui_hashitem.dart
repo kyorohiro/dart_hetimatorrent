@@ -189,6 +189,12 @@ class HashItem {
           saveFile(seedModels[key].seedfile, f.index, f.index + f.fileSize, f.path.last);
         });
       }
+      
+      seedModels[key].getCurrentProgress().then((int progress) {
+        int a = torrentFile.info.files.dataSize;
+        int x = progress;
+        torrentProgressSpan.setInnerHtml("${x}/${a} : ${100*x~/a}");
+      });
     }
   }
 

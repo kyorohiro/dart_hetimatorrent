@@ -20,7 +20,7 @@ class BlockData {
   List<int> get bitfield => _head.value;
   int get bitSize => _head.lengthPerBit();
   Map<int,PieceInfoList> _writePartData = {};
-  Bitfield get rawBitfield => _head;
+  Bitfield get rawHead => _head;
   Bitfield _cacheHead = null;
 //  ShuffleLinkedList<BlockDataCache> _cacheData = new ShuffleLinkedList();
 

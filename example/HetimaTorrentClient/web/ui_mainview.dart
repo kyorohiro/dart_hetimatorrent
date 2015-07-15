@@ -73,6 +73,8 @@ class MainItem {
        removeButton.onClick.listen((_){
          HetimaDataFS.removeFile("${key}.cont").catchError((e){;});
          HetimaDataFS.removeFile("${key}.torrent").catchError((e){;});
+         HetimaDataFS.removeFile("${key}.bitfield").catchError((e){;});
+
          fileList.children.remove(c);
        });
        startButton.onClick.listen((_){

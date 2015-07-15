@@ -7,7 +7,7 @@ abstract class BitfieldInter {
   static final List<int> BIT = [0xFF, 0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC, 0xFE];
   List<int> get value;
   List<int> get rawValue;
-  void writeByte(List<int> bytes);
+  void writeBytes(List<int> bytes);
   void oneClear() ;
   void zeroClear();
   int lengthPerBit();
@@ -30,6 +30,16 @@ class Bitfield extends BitfieldInter {
 
   List<int> get value => new List.from(_bitfieldData);
   List<int> get rawValue => _bitfieldData;
+  
+  static int calcbitSize(int pieceSize, {pieceLength:20}) {
+    int ret = pieceSize~/pieceLength;
+    if(pieceSize % pieceLength != 0) {
+      print("wearning todo: --break bitfield");
+      ret + 1;
+    }
+    return ret;
+  }
+
   Bitfield(int bitSize, {bool clearIsOne: true, seed: null}) {
 
 
@@ -68,7 +78,7 @@ class Bitfield extends BitfieldInter {
 
   //
   // todo addtest
-  void writeByte(List<int> bytes) {
+  void writeBytes(List<int> bytes) {
    _bitfieldData.setRange(0, bytes.length, bytes); 
   }
 

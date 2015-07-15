@@ -230,7 +230,7 @@ class TorrentClientFrontNerve {
         break;
       case TorrentMessage.SIGN_BITFIELD:
         MessageBitfield messageBitfile = message;
-        front._bitfieldToMe.writeByte(messageBitfile.bitfield);
+        front._bitfieldToMe.writeBytes(messageBitfile.bitfield);
         break;
       case TorrentMessage.SIGN_HAVE:
         MessageHave messageHave = message;
@@ -278,7 +278,7 @@ class TorrentClientFrontNerve {
         break;
       case TorrentMessage.SIGN_BITFIELD:
         MessageBitfield messageBitfile = message;
-        front._bitfieldFromMe.writeByte(messageBitfile.bitfield);
+        front._bitfieldFromMe.writeBytes(messageBitfile.bitfield);
         break;
       case TorrentMessage.SIGN_PIECE:
         front.uploadedBytesToMe += (message as MessagePiece).content.length;

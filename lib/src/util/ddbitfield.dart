@@ -182,8 +182,8 @@ class DDBitfield extends BitfieldInter {
   List<int> get value => innerField.value;
 
   @override
-  void writeByte(List<int> bytes) {
-    innerField.writeByte(bytes);
+  void writeBytes(List<int> bytes) {
+    innerField.writeBytes(bytes);
   }
 
   @override

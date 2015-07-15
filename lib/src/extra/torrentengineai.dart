@@ -182,7 +182,7 @@ class TorrentEngineAIProgress {
   int get fileSize => _fileSize;
   int get numOfPeer => _numOfPeer;
  void  _update(TrackerClient tracker, TorrentClient torrent) {
-    _downloadSize = torrent.targetBlock.rawBitfield.numOfOn(true) * torrent.targetBlock.blockSize;
+    _downloadSize = torrent.targetBlock.rawHead.numOfOn(true) * torrent.targetBlock.blockSize;
     _fileSize = torrent.targetBlock.dataSize;
     _numOfPeer = torrent.rawPeerInfos.numOfPeerInfo();
   }
