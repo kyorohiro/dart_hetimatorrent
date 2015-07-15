@@ -106,7 +106,11 @@ class TorrentClient {
       _server = serverSocket;
       _server.onAccept().listen((HetiSocket socket) {
         new Future(() {
+          if(false == _isStart) {
+            return null;
+          }
           return socket.getSocketInfo().then((HetiSocketInfo socketInfo) {
+            print("accept: ${socketInfo.peerAddress}, ${socketInfo.peerPort}");
             TorrentClientPeerInfo info = _putTorrentPeerInfoFromAccept(socketInfo.peerAddress, socketInfo.peerPort);
             info.front = new TorrentClientFront(socket, socketInfo.peerAddress, socketInfo.peerPort, socket.buffer, this._targetBlock.bitSize, _infoHash, _peerId);
             _internalOnReceive(info.front, info);
@@ -145,7 +149,7 @@ class TorrentClient {
     Future f = null;
     for (TorrentClientPeerInfo s in this.peerInfos) {
       f = new Future(() {
-        if (s.front != null && s.front.isClose != false) {
+        if (s.front != null && s.front.isClose == false) {
           return s.front.close();
         }
       }).catchError((e) {
@@ -155,14 +159,13 @@ class TorrentClient {
     }
 
     f = new Future(() {
-      _isStart = false;
       TorrentClientSignal sig = new TorrentClientSignal(TorrentClientSignal.ID_STOPPED_CLIENT, 0, "stopped client");
       _sendSignal(this, null, sig);
       return _server.close();
     }).catchError((e) {
       ;
     });
-
+    _isStart = false;
     w.add(f);
     return Future.wait(w);
   }
@@ -184,6 +187,14 @@ class TorrentClient {
   Future<TorrentClientFront> connect(TorrentClientPeerInfo info) {
     //, List<int> infoHash, [List<int> peerId = null]) {
     return new Future(() {
+      //
+      // cuurent implements duprecate connection do not permit
+      if(info.front != null && info.front.isClose == false) {
+        return null;
+      }
+      if(false == _isStart) {
+        return null;
+      }
       return TorrentClientFront.connect(_builder, info, this._targetBlock.bitSize, infoHash, peerId).then((TorrentClientFront front) {
         info.front = front;
         _internalOnReceive(front, info);

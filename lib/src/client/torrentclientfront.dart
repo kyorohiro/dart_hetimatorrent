@@ -67,6 +67,8 @@ class TorrentClientFront {
   int _lastRequestIndex = null;
   int get lastRequestIndex => _lastRequestIndex;
 
+  static int debugIdSeed = 0;
+  int _debugId = 0; 
   static Future<TorrentClientFront> connect(HetiSocketBuilder _builder, TorrentClientPeerInfo info, int bitfieldSize, List<int> infoHash, [List<int> peerId = null]) {
     return new Future(() {
       HetiSocket socket = _builder.createClient();
@@ -82,6 +84,7 @@ class TorrentClientFront {
     } else {
       _myPeerId.addAll(peerId);
     }
+    _debugId = debugIdSeed++;
     _peerIp = peerIp;
     _peerPort = peerPort;
     _infoHash.addAll(infoHash);
@@ -188,6 +191,7 @@ class TorrentClientFront {
   }
 
   void close() {
+    print("###[${_debugId}][${_peerIp}:${_peerPort}] close");
     _socket.close();
     TorrentClientFrontNerve.doClose(this, 0);
   }
@@ -206,7 +210,7 @@ class TorrentClientFrontNerve {
   }
 
   static void doReceiveMessage(TorrentClientFront front, TorrentMessage message) {
-    print("###[${front._peerIp}:${front._peerPort}] receive ${message.toString()}");
+    print("###[${front._debugId} ${front._peerIp}:${front._peerPort}] receive ${message.toString()}");
     switch (message.id) {
       case TorrentMessage.DUMMY_SIGN_SHAKEHAND:
         front._handshakedToMe = true;
@@ -257,7 +261,7 @@ class TorrentClientFrontNerve {
   }
 
   static void doSendMessage(TorrentClientFront front, TorrentMessage message) {
-    print("###[${front._peerIp}:${front._peerPort}] send ${message.toString()}");
+    print("###[${front._peerIp}:${front._peerPort} ${front.isClose}] send ${message.toString()}");
     switch (message.id) {
       case TorrentMessage.DUMMY_SIGN_SHAKEHAND:
         front._handshakedFromMe = true;

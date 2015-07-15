@@ -42,14 +42,14 @@ class TorrentClientPeerInfoList {
       TorrentClientPeerInfo info = peerInfos.getSequential(i);
       if (info.ip == ip && info.portCurrent == port) {
         // alredy added in peerinfo
-        print("putFormTrackerPeerInfo ${ip} ${port} --A");
+        print("putFormAcceptPeerInfo ${ip} ${port} --A");
         return info;
       }
     }
     TorrentClientPeerInfo info = new TorrentClientPeerInfo.fromTracker(ip, port);
     peerInfos.addLast(info);
     // alredy added in peerinfo
-    print("putFormTrackerPeerInfo ${ip} ${port} --B ${peerInfos.length}");
+    print("putFormAcceptPeerInfo ${ip} ${port} --B ${peerInfos.length}");
     return info;
   }
 
