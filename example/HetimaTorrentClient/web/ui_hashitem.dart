@@ -36,6 +36,9 @@ class HashItem {
   Map<String, int> seedState = {};
   Map<String, ClientModel> seedModels = {};
 //  html.File seedRawFile = null;
+  onProgress(int x, int a) {
+    torrentProgressSpan.setInnerHtml("${x}/${a} : ${100*x~/a}");
+  }
   init(AppModel trackerModel, Map<String, TorrentFile> managedTorrentFile, Tab tab, Dialog dialog) {
     //   SeederModel model = new SeederModel();
 
@@ -47,9 +50,7 @@ class HashItem {
       }
     });
 
-    onProgress(int x, int a) {
-      torrentProgressSpan.setInnerHtml("${x}/${a} : ${100*x~/a}");
-    }
+
     startServerBtn.onClick.listen((html.MouseEvent e) {
       String key = trackerModel.selectKey;
       loadServerBtn.style.display = "block";
@@ -193,7 +194,7 @@ class HashItem {
       seedModels[key].getCurrentProgress().then((int progress) {
         int a = torrentFile.info.files.dataSize;
         int x = progress;
-        torrentProgressSpan.setInnerHtml("${x}/${a} : ${100*x~/a}");
+        onProgress(x, a);
       });
     }
   }
