@@ -19,9 +19,11 @@ class TrackerResponse {
   static final String KEY_PORT = "port";
   static final String KEY_FAILURE_REASON = "failure reason";
 
+  bool get isOK => failureReason.length != 0;
   int interval = 10;
   List<TrackerPeerInfo> peers = [];
   TrackerResponse() {}
+  String failureReason = "";
 
   TrackerResponse.bencode(data.Uint8List contents) {
     Map<String, Object> c = Bencode.decode(contents);
@@ -46,11 +48,12 @@ class TrackerResponse {
     interval = c[KEY_INTERVAL];
     Object obj = c[KEY_PEERS];
 
+    failureReason = "";
     if (obj == null) {
       if(c[KEY_FAILURE_REASON] != null) {
-        print("${convert.UTF8.decode(c[KEY_FAILURE_REASON],allowMalformed:true)}");
+        failureReason = "FailureReason:${convert.UTF8.decode(c[KEY_FAILURE_REASON],allowMalformed:true)}";
       } else {
-        print("error response");
+        failureReason = "FailureReason:none";
       }
     } else if (obj is data.Uint8List) {
       data.Uint8List wpeers = c[KEY_PEERS];

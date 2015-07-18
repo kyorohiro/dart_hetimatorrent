@@ -131,7 +131,11 @@ class TrackerClient {
       }
       return TrackerResponse.createFromContent(response.body);
     }).then((TrackerResponse trackerResponse) {
-      completer.complete(new TrackerRequestResult(trackerResponse, TrackerRequestResult.OK, httpResponse));
+      if(trackerResponse.isOK) {
+        completer.complete(new TrackerRequestResult(trackerResponse, TrackerRequestResult.OK, httpResponse));
+      } else {
+        completer.complete(new TrackerRequestResult(trackerResponse, TrackerRequestResult.FAILED, httpResponse));        
+      }
     }).catchError((e) {
       completer.complete(new TrackerRequestResult(null, TrackerRequestResult.ERROR, httpResponse));
       print("##er end");
@@ -146,7 +150,8 @@ class TrackerClient {
 class TrackerRequestResult {
   int code = 0;
   static final int OK = 0;
-  static final int ERROR = -1;
+  static final int FAILED = -1;
+  static final int ERROR = -2;
   TrackerResponse response = null;
   HetiHttpClientResponse httpResponse = null;
   TrackerRequestResult(TrackerResponse _respose, int _code, HetiHttpClientResponse _httpResponse) {
