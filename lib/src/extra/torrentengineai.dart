@@ -163,6 +163,8 @@ class TorrentEngineAI extends TorrentAI {
       } else {
         _tracker.optIp = _torrent.globalIp;
       }
+      _tracker.downloaded = _torrent.downloaded;
+      _tracker.uploaded = _torrent.uploaded;
       return _tracker.requestWithSupportRedirect().then((TrackerRequestResult r) {
         for (TrackerPeerInfo info in r.response.peers) {
           _torrent.putTorrentPeerInfoFromTracker(info.ipAsString, info.port);

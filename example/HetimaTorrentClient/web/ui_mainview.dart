@@ -30,7 +30,13 @@ class MainItem {
           dialog.show("Failed to start : already start");
           fileInput.style.display = "block";
           return;
-        } else {
+        }
+        else if(f.announce.contains("https://") || f.announce.contains("udp://")) {
+          dialog.show("Failed to start : not soupprt https and udp tracker. ${f.announce}");
+          fileInput.style.display = "block";
+          return;
+        }
+        else {
           managedTorrentFile[key] = f;
           tab.add("${key}", "con-now");
           fileInput.style.display = "block";

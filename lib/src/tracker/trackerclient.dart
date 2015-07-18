@@ -41,6 +41,7 @@ class TrackerClient {
 
   String get path => trackerUrl.path;
   String get event => trackerUrl.event;
+
   void set event(String event) {
     trackerUrl.event = event;
   }
@@ -49,6 +50,17 @@ class TrackerClient {
     trackerUrl.ip = ip;
   }
 
+  void set downloaded(int v) {
+    trackerUrl.downloaded = v;
+  }
+
+  int get downloaded => trackerUrl.downloaded;
+
+  void set uploaded(int v) {
+    trackerUrl.uploaded = v;
+  }
+
+  int get uploaded => trackerUrl.uploaded;
   String get optIp => trackerUrl.ip;
 
   String get infoHashAsPercentEncoding => trackerUrl.infoHashValue;
@@ -58,19 +70,18 @@ class TrackerClient {
   List<int> get infoHash => PercentEncode.decode(trackerUrl.infoHashValue);
 
   // todo support redirect
-  async.Future<TrackerRequestResult> requestWithSupportRedirect(
-      [int redirectMax=5, String host = null, int port = null,String path=null, String header=null]) {
+  async.Future<TrackerRequestResult> requestWithSupportRedirect([int redirectMax = 5, String host = null, int port = null, String path = null, String header = null]) {
     List<int> REDIRECT_STATUSCODE = [301, 302, 303, 307];
     if (host == null) {
       host = trackerHost;
     }
-    if ( port== null) {
+    if (port == null) {
       port = trackerPort;
     }
-    if(path == null) {
+    if (path == null) {
       path = this.path;
     }
-    if(header == null) {
+    if (header == null) {
       header = this.header;
     }
     return request(host, port, path, header).then((TrackerRequestResult r) {
@@ -79,10 +90,10 @@ class TrackerClient {
         return r;
       } else if (REDIRECT_STATUSCODE.contains(r.httpResponse.message.line.statusCode) && locationField != null) {
         HttpUrl hurl = HttpUrlDecoder.decodeUrl(locationField.fieldValue, "http://${host}:${port}");
-        if(hurl.query == null || hurl.query.length <= 3) {
-          return requestWithSupportRedirect(redirectMax-1, hurl.host, hurl.port,hurl.path, this.header);          
+        if (hurl.query == null || hurl.query.length <= 3) {
+          return requestWithSupportRedirect(redirectMax - 1, hurl.host, hurl.port, hurl.path, this.header);
         } else {
-          return requestWithSupportRedirect(redirectMax-1, hurl.host, hurl.port,hurl.path,"?${hurl.query}");
+          return requestWithSupportRedirect(redirectMax - 1, hurl.host, hurl.port, hurl.path, "?${hurl.query}");
         }
       } else {
         return r;
@@ -90,7 +101,7 @@ class TrackerClient {
     });
   }
 
-  async.Future<TrackerRequestResult> request([String host=null, int port=null, String path=null, String header=null]) {
+  async.Future<TrackerRequestResult> request([String host = null, int port = null, String path = null, String header = null]) {
     async.Completer<TrackerRequestResult> completer = new async.Completer();
 
     HetiHttpClient currentClient = new HetiHttpClient(_socketBuilder);
@@ -98,14 +109,14 @@ class TrackerClient {
     if (host == null) {
       host = trackerHost;
     }
-    if (port== null) {
+    if (port == null) {
       port = trackerPort;
     }
-    
-    if(path == null) {
+
+    if (path == null) {
       path = this.path;
     }
-    if(header == null) {
+    if (header == null) {
       header = this.header;
     }
 
@@ -115,7 +126,7 @@ class TrackerClient {
       return currentClient.get(path + header, {"Connection": "close"});
     }).then((HetiHttpClientResponse response) {
       httpResponse = response;
-      if(response.message.line.statusCode != 200) {
+      if (response.message.line.statusCode != 200) {
         throw {};
       }
       return TrackerResponse.createFromContent(response.body);
