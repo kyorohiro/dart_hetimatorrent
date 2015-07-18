@@ -187,12 +187,17 @@ class TorrentEngineAIProgress {
   int _downloadSize = 0;
   int _fileSize = 0;
   int _numOfPeer = 0;
+  String _failureReason = "";
   int get downloadSize => _downloadSize;
   int get fileSize => _fileSize;
   int get numOfPeer => _numOfPeer;
+  String get trackerFailureReason => _failureReason;
+  bool get trackerIsOk => _failureReason.length == 0;
+
   void _update(TrackerClient tracker, TorrentClient torrent) {
     _downloadSize = torrent.targetBlock.rawHead.numOfOn(true) * torrent.targetBlock.blockSize;
     _fileSize = torrent.targetBlock.dataSize;
     _numOfPeer = torrent.rawPeerInfos.numOfPeerInfo();
+    _failureReason = tracker.failedReason;
   }
 }

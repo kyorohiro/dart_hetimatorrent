@@ -16,6 +16,11 @@ class TrackerClient {
 
   TrackerUrl trackerUrl;
   HetiSocketBuilder _socketBuilder = null;
+
+  String _failedReason = "";
+  String get failedReason => _failedReason;
+  bool get isOK => _failedReason.length != 0;
+
   TrackerClient._a(HetiSocketBuilder builder, TrackerUrl trackerUrl) {
     this.trackerUrl = trackerUrl;
     _socketBuilder = builder;
@@ -132,11 +137,14 @@ class TrackerClient {
       return TrackerResponse.createFromContent(response.body);
     }).then((TrackerResponse trackerResponse) {
       if(trackerResponse.isOK) {
+        _failedReason = "";
         completer.complete(new TrackerRequestResult(trackerResponse, TrackerRequestResult.OK, httpResponse));
       } else {
+        _failedReason = trackerResponse.failureReason;
         completer.complete(new TrackerRequestResult(trackerResponse, TrackerRequestResult.FAILED, httpResponse));        
       }
     }).catchError((e) {
+      _failedReason = "ERROR";
       completer.complete(new TrackerRequestResult(null, TrackerRequestResult.ERROR, httpResponse));
       print("##er end");
     }).whenComplete(() {

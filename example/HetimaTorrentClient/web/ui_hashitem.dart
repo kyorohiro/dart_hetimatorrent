@@ -33,13 +33,20 @@ class HashItem {
 //
   html.DivElement torrentOutputs = html.querySelector("#torrent-outputs");
   html.DivElement torrentOutputsLoading = html.querySelector("#torrent-outputs-loading");
-  
+  html.DivElement torrentOutputFailreReason = html.querySelector("#torrent-tracker-failurereason");
   
   Map<String, int> seedState = {};
   Map<String, ClientModel> seedModels = {};
 //  html.File seedRawFile = null;
-  onProgress(int x, int a) {
+  onProgress(int x, int a, TorrentEngineAIProgress info) {
     torrentProgressSpan.setInnerHtml("${x}/${a} : ${100*x~/a}");
+    if(info != null) {
+      if(info.trackerIsOk == true) {
+        torrentOutputFailreReason.setInnerHtml("Tracker status is good");
+      } else {
+        torrentOutputFailreReason.setInnerHtml("Tracker status is worng : ${info.trackerFailureReason}");        
+      }
+    }
   }
   init(AppModel trackerModel, Map<String, TorrentFile> managedTorrentFile, Tab tab, Dialog dialog) {
     //   SeederModel model = new SeederModel();
@@ -216,7 +223,7 @@ class HashItem {
       seedModels[key].getCurrentProgress().then((int progress) {
         int a = torrentFile.info.files.dataSize;
         int x = progress;
-        onProgress(x, a);
+        onProgress(x, a, null);
       }).catchError((e){
         dialog.show("Failed to load torrent file . please restart app");
       });

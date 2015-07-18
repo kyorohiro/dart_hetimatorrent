@@ -75,7 +75,7 @@ class ClientModel {
           _bitfieldfile.write(_engine.torrentClient.targetBlock.rawHead.getBinary(), 0).catchError((e) {
             ;
           });
-          onProgress(info.downloadSize, info.fileSize);
+          onProgress(info.downloadSize, info.fileSize, info);
         });
         return _engine.go(usePortMap: useUpnp).then((_) {
           this.localIp = _engine.localIp;
