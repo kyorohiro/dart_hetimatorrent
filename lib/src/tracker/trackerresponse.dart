@@ -46,7 +46,13 @@ class TrackerResponse {
     interval = c[KEY_INTERVAL];
     Object obj = c[KEY_PEERS];
 
-    if (obj is data.Uint8List) {
+    if (obj == null) {
+      if(c[KEY_FAILURE_REASON] != null) {
+        print("${convert.UTF8.decode(c[KEY_FAILURE_REASON],allowMalformed:true)}");
+      } else {
+        print("error response");
+      }
+    } else if (obj is data.Uint8List) {
       data.Uint8List wpeers = c[KEY_PEERS];
       for (int i = 0; i < wpeers.length; i += 6) {
         List<int> wpeer = [wpeers[i + 0], wpeers[i + 1], wpeers[i + 2], wpeers[i + 3]];

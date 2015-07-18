@@ -217,6 +217,7 @@ class Bencoder {
     for (var key in keys) {
       encodeString(key);
       encodeObject(obj[key]);
+   //   print("##-> ${key} : ${obj[key]}");//kiyo kiyo
     }
     builder.appendString("e");
   }

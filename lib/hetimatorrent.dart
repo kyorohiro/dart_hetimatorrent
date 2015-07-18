@@ -12,6 +12,7 @@ export 'src/util/pieceinfo.dart';
 export 'src/file/torrentfile.dart';
 export 'src/file/torrentfilehelper.dart';
 export 'src/file/sha1Isolate.dart';
+export 'src/file/torrentpiecehashcreator.dart';
 
 export 'src/tracker/trackerurl.dart';
 export 'src/tracker/trackerrequest.dart';
