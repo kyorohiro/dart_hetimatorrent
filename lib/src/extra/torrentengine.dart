@@ -52,7 +52,7 @@ class TorrentEngine {
   }
   Stream<TorrentEngineAIProgress> get onProgress => ai.onProgress;
   
-  static Future<TorrentEngine> createTorrentEngine(HetiSocketBuilder builder, TorrentFile torrentfile, HetimaData cash, 
+  static Future<TorrentEngine> createTorrentEngine(HetiSocketBuilder builder, TorrentFile torrentfile, HetimaData downloadedData, 
       {appid: "hetima_torrent_engine",
       haveAllData: false, 
       int localPort: 18085,int globalPort: 18085,
@@ -73,7 +73,7 @@ class TorrentEngine {
         engine.ai.usePortMap = useUpnp;
         engine.ai.baseGlobalIp = globalIp;
         //
-        engine._torrentClient = new TorrentClient(builder, trackerClient.peerId, trackerClient.infoHash, torrentfile.info.pieces, torrentfile.info.piece_length, torrentfile.info.files.dataSize, cash,
+        engine._torrentClient = new TorrentClient(builder, trackerClient.peerId, trackerClient.infoHash, torrentfile.info.pieces, torrentfile.info.piece_length, torrentfile.info.files.dataSize, downloadedData,
             ai: engine.ai, haveAllData: haveAllData,bitfield:bitfield);  
         return engine;
       });
