@@ -95,7 +95,7 @@ void main() {
       hetima_cl.HetimaDataGet file = new hetima_cl.HetimaDataGet("testdata/1k.txt.torrent");
       return file.getLength().then((int length) {
         return file.read(0, length).then((hetima.ReadResult r) {
-          return hetima.TorrentFile.createTorrentFileFromTorrentFile(new hetima.ArrayBuilder.fromList(r.buffer));
+          return hetima.TorrentFile.createFromTorrentFile(new hetima.ArrayBuilder.fromList(r.buffer));
         }).then((hetima.TorrentFile f) {
           hetima.TorrentInfoHashCreator creator = new hetima.TorrentInfoHashCreator();
           return creator.createInfoHash(f);

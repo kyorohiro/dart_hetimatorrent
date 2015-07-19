@@ -41,7 +41,7 @@ class MainItem {
 
         html.File n = fileInput.files[0];
         cre(HetimaData d,[html.File b=null]) {
-          TorrentFile.createTorrentFileFromTorrentFile(new HetimaFileToBuilder(d)).then((TorrentFile f) {
+          TorrentFile.createFromTorrentFile(new HetimaFileToBuilder(d)).then((TorrentFile f) {
             return f.createInfoSha1().then((List<int> infoHash) {
               String key = PercentEncode.encode(infoHash);
               managedTorrentFile[key] = f;

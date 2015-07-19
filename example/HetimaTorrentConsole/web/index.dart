@@ -81,7 +81,7 @@ void main() {
     while (s.length > 0) {
       html.File n = s.removeAt(0);
       print("#${n.name} ${e}");
-      TorrentFile.createTorrentFileFromTorrentFile(new HetimaFileToBuilder(new HetimaDataBlob(n))).then((TorrentFile f) {
+      TorrentFile.createFromTorrentFile(new HetimaFileToBuilder(new HetimaDataBlob(n))).then((TorrentFile f) {
         return f.createInfoSha1().then((List<int> infoHash) {
           String key = PercentEncode.encode(infoHash);
           tab.add("${key}", "con-termi");

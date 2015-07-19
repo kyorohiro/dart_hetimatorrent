@@ -57,7 +57,7 @@ class TorrentFile {
     mMetadata = map;
   }
 
-  static async.Future<TorrentFile> createTorrentFileFromTorrentFile(hetima.HetimaReader builder) {
+  static async.Future<TorrentFile> createFromTorrentFile(hetima.HetimaReader builder) {
     async.Completer<TorrentFile> completer = new async.Completer();
     HetiBencode.decode(new hetima.EasyParser(builder)).then((Object o) {
       completer.complete(new TorrentFile.torentmap(o));

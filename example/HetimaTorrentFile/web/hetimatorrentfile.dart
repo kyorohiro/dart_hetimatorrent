@@ -67,7 +67,7 @@ void createTorrentFile(FileSelectResult r) {
 
 void loadTorrentFile(FileSelectResult r) {
   hetima.HetimaReader builder = new hetima.HetimaFileToBuilder(r.file);
-  hetima.TorrentFile.createTorrentFileFromTorrentFile(builder).then((hetima.TorrentFile f) {
+  hetima.TorrentFile.createFromTorrentFile(builder).then((hetima.TorrentFile f) {
     f.createInfoSha1().then((List<int> sha1hash) {
       StringBuffer buffer = new StringBuffer();
       buffer.write("announce = ${f.announce} <br>");

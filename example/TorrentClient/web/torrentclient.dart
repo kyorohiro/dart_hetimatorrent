@@ -16,7 +16,7 @@ Future startDownload(MouseEvent event) {
   List<File> selectedFile = (querySelector("#inputFile") as InputElement).files;
 
   bool isStop = false;
-  return TorrentFile.createTorrentFileFromTorrentFile(new HetimaFileToBuilder(new HetimaDataBlob(selectedFile[0]))).then((TorrentFile torrentFile) {
+  return TorrentFile.createFromTorrentFile(new HetimaFileToBuilder(new HetimaDataBlob(selectedFile[0]))).then((TorrentFile torrentFile) {
     return TorrentEngine.createTorrentEngine(new HetiSocketBuilderChrome(), torrentFile, new HetimaDataFS("save.dat")).then((TorrentEngine engine) {
       engine.start(usePortMap: true);
       engine.onProgress.listen((TorrentEngineAIProgress progress) {
