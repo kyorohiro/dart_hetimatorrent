@@ -15,7 +15,16 @@ class KrpcId {
   KrpcId(List<int> id) {
     this._id.addAll(id);
   }
+
+  KrpcId xor(KrpcId b) {
+    List<int> ret = [];
+    for (int i = 0; i < b._id.length; i++) {
+      ret.add(this._id[i] ^ b._id[i]);
+    }
+    return new KrpcId(ret);
+  }
 }
+
 class NodeId {
   KrpcId _id = null;
   List<int> get id => _id.id;
