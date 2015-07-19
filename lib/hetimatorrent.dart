@@ -33,3 +33,5 @@ export 'src/client/torrentai_choke.dart';
 export 'src/extra/terminal.dart';
 
 export 'src/message/message.dart';
+
+export 'src/dht/krpcmessage.dart';
