@@ -7,7 +7,6 @@ import 'package:hetimanet/hetimanet_chrome.dart';
 import 'package:hetimacore/hetimacore_cl.dart';
 import 'package:hetimacore/hetimacore.dart';
 
-
 void main() {
   querySelector("#inputFile").onClick.listen(startDownload);
 }
@@ -21,6 +20,11 @@ Future startDownload(MouseEvent event) {
       engine.start(usePortMap: true);
       engine.onProgress.listen((TorrentEngineAIProgress progress) {
         print("${progress.toString()}");
+        if (progress.downloadSize >= progress.fileSize) {
+          new Future.delayed(new Duration(minutes: 5)).then((_) {
+            engine.stop().catchError((e) {});
+          });
+        }
       });
     });
   });
