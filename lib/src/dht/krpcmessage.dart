@@ -57,7 +57,11 @@ class KrpcId {
   }
 
   bool operator <(KrpcId b) {
-    return !(this > b);
+    if (this == b) {
+      return false;
+    } else {
+      return !(this > b);
+    }
   }
 
   bool operator <=(KrpcId b) {
