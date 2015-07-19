@@ -42,8 +42,10 @@ class HashItem {
     torrentProgressSpan.setInnerHtml("${x}/${a} : ${100*x~/a}");
     if(info != null) {
       if(info.trackerIsOk == true) {
+        torrentOutputFailreReason.style.color  = "#0000FF";
         torrentOutputFailreReason.setInnerHtml("Tracker status is good");
       } else {
+        torrentOutputFailreReason.style.color  = "#FF0000";
         torrentOutputFailreReason.setInnerHtml("Tracker status is worng : ${info.trackerFailureReason}");        
       }
     }
