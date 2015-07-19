@@ -19,7 +19,7 @@ class SeederModel {
         new HetiSocketBuilderChrome(), torrentFile, seed, haveAllData: haveAllData
         ,globalPort:globalPort,localPort:localPort,localIp:localIp,globalIp:globalIp, useUpnp:useUpnp).then((TorrentEngine engine) {
       _engine = engine;
-      return _engine.go(usePortMap:useUpnp).then((_){
+      return _engine.start(usePortMap:useUpnp).then((_){
         this.localIp = _engine.localIp;
         this.globalPort = _engine.globalPort;
         this.localPort = _engine.localPort;

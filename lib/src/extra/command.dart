@@ -1,7 +1,6 @@
 library hetimatorrent.extra.command;
 
 import 'dart:async';
-import '../client/torrentclient.dart';
 import '../client/torrentclientfront.dart';
 
 import 'torrentengine.dart';
@@ -55,7 +54,7 @@ class GoTorrentAICommand extends TorrentEngineCommand {
 
   Future<CommandResult> execute(TorrentEngine engine, {List<String> args: null}) {
     return new Future(() {
-      return engine.go(usePortMap:usePortMap);
+      return engine.start(usePortMap:usePortMap);
     });
   }
 }

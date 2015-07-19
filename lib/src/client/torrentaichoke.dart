@@ -1,13 +1,9 @@
 library hetimatorrent.torrent.ai.choke;
 
 import 'dart:core';
-import 'dart:async';
-import '../message/message.dart';
-import 'package:hetimacore/hetimacore.dart';
 import 'torrentclient.dart';
 import 'torrentclientfront.dart';
 import 'torrentclientpeerinfo.dart';
-import 'torrentclientmessage.dart';
 
 class ChokeTest {
   void chokeTest(TorrentClient client, int _maxUnchoke) {

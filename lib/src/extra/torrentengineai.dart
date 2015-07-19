@@ -9,6 +9,7 @@ import '../client/torrentclient.dart';
 import '../tracker/trackerclient.dart';
 //import 'torrentengineai.dart';
 
+
 class TorrentEngineAI extends TorrentAI {
   TorrentAIBasic basic = new TorrentAIBasic();
   bool usePortMap = false;
@@ -33,6 +34,7 @@ class TorrentEngineAI extends TorrentAI {
     this._upnpPortMapClient = upnpPortMapClient;
   }
 
+  @override
   Future onRegistAI(TorrentClient client) {
     this._torrent = client;
     basic.onRegistAI(client);
@@ -199,5 +201,9 @@ class TorrentEngineAIProgress {
     _fileSize = torrent.targetBlock.dataSize;
     _numOfPeer = torrent.rawPeerInfos.numOfPeerInfo();
     _failureReason = tracker.failedReason;
+  }
+  
+  String toString() {
+    return "progress:${100*downloadSize/fileSize}, numOfPeer:${numOfPeer}, tracker:${trackerFailureReason}";
   }
 }

@@ -83,7 +83,7 @@ class TorrentEngine {
   bool _isGO = false;
   bool get isGo => _isGO;
 
-  Future go({usePortMap: false}) {
+  Future start({usePortMap: false}) {
     ai.usePortMap = usePortMap;
     return ai.go().then((v){
       _isGO = true;

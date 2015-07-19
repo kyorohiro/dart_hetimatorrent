@@ -77,7 +77,7 @@ class ClientModel {
           });
           onProgress(info.downloadSize, info.fileSize, info);
         });
-        return _engine.go(usePortMap: useUpnp).then((_) {
+        return _engine.start(usePortMap: useUpnp).then((_) {
           this.localIp = _engine.localIp;
           this.globalPort = _engine.globalPort;
           this.localPort = _engine.localPort;

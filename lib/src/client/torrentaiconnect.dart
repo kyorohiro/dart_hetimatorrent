@@ -1,4 +1,4 @@
-library hetimatorrent.torrent.ai.basic;
+library hetimatorrent.torrent.ai.connect;
 
 import 'dart:core';
 import 'dart:async';
