@@ -11,14 +11,6 @@ A Torrent library for Dart developers.
 - dht tracker (bep5)
   - now creating (starting)
 
-[Now creating]
- - tracker server for local pc 
-   alpha level
- - torrent client for seeder 
-   alpha level 
- - torrent client for seeder 
-   prealpha level 
-   
 
 [mini sample]
  - torrent client
