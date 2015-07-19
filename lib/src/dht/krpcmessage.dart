@@ -5,9 +5,25 @@ import 'dart:async';
 import 'dart:math';
 import 'krpcid.dart';
 
-class KrpcMessage {}
+class KrpcMessage {
+  
+  
+}
 
-class Node {}
+class KrpcQuery extends KrpcMessage {
+  
+}
+
+
+class KrpcResponse extends KrpcMessage {
+  
+}
+
+class KrpcError extends KrpcMessage {
+  
+}
+
+
 
 
 class NodeId {
