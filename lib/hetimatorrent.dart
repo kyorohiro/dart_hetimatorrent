@@ -35,3 +35,4 @@ export 'src/extra/terminal.dart';
 export 'src/message/message.dart';
 
 export 'src/dht/krpcmessage.dart';
+export 'src/dht/krpcid.dart';
