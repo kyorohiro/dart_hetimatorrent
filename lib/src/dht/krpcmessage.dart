@@ -6,16 +6,22 @@ import 'dart:math';
 
 class KrpcMessage {}
 
-class Node {
-  
-}
+class Node {}
 
-class NodeId {
+class KrpcId {
   List<int> _id = [];
   List<int> get id => new List.from(_id);
 
-  NodeId(List<int> id) {
+  KrpcId(List<int> id) {
     this._id.addAll(id);
+  }
+}
+class NodeId {
+  KrpcId _id = null;
+  List<int> get id => _id.id;
+
+  NodeId(List<int> id) {
+    this._id = new KrpcId(id);
   }
 
   static Future<NodeId> createIDAtRandom([List<int> op = null]) {
