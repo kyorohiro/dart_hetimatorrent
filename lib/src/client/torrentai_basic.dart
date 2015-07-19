@@ -8,10 +8,10 @@ import 'torrentclient.dart';
 import 'torrentclientfront.dart';
 import 'torrentclientpeerinfo.dart';
 import 'torrentclientmessage.dart';
-import 'torrentaichoke.dart';
-import 'torrentaipiece.dart';
+import 'torrentai_choke.dart';
+import 'torrentai_piece.dart';
 import 'torrentai.dart';
-import 'torrentaiconnect.dart';
+import 'torrentai_connect.dart';
 
 class TorrentAIBasic extends TorrentAI {
   ChokeTest _chokeTest = new ChokeTest();

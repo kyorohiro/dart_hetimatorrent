@@ -8,8 +8,8 @@ import 'torrentclient.dart';
 import 'torrentclientfront.dart';
 import 'torrentclientpeerinfo.dart';
 import 'torrentclientmessage.dart';
-import 'torrentaichoke.dart';
-import 'torrentaipiece.dart';
+import 'torrentai_choke.dart';
+import 'torrentai_piece.dart';
 import 'torrentai.dart';
 
 class ConnectTest {

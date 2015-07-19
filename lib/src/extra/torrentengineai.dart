@@ -4,7 +4,7 @@ import 'dart:async';
 import 'package:hetimanet/hetimanet.dart';
 import 'package:hetimatorrent/hetimatorrent.dart';
 import '../client/torrentai.dart';
-import '../client/torrentaibasic.dart';
+import '../client/torrentai_basic.dart';
 import '../client/torrentclient.dart';
 import '../tracker/trackerclient.dart';
 //import 'torrentengineai.dart';
