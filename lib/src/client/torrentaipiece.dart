@@ -1,16 +1,10 @@
 library hetimatorrent.torrent.ai.piece;
 
 import 'dart:core';
-import 'dart:async';
-import '../message/message.dart';
-import 'package:hetimacore/hetimacore.dart';
 import 'torrentclient.dart';
 import 'torrentclientfront.dart';
-import 'torrentclientpeerinfo.dart';
-import 'torrentclientmessage.dart';
 import '../util/bitfield.dart';
 import '../util/ddbitfield.dart';
-import '../util/pieceinfo.dart';
 
 class PieceTest {
 

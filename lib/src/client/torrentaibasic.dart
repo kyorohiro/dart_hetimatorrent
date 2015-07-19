@@ -11,10 +11,12 @@ import 'torrentclientmessage.dart';
 import 'torrentaichoke.dart';
 import 'torrentaipiece.dart';
 import 'torrentai.dart';
+import 'torrentaiconnect.dart';
 
 class TorrentAIBasic extends TorrentAI {
   ChokeTest _chokeTest = new ChokeTest();
   PieceTest _pieceTest = null;
+  ConnectTest _connectTest = new ConnectTest();
   int _maxUnchoke = 8;
   int _maxConnect = 20;
 
@@ -122,37 +124,7 @@ class TorrentAIBasic extends TorrentAI {
         case TorrentClientSignal.ID_CONNECTED:
           break;
         case TorrentClientSignal.ID_ADD_PEERINFO:
-          if (info.front == null || info.front.isClose == true) {
-            List<TorrentClientPeerInfo> connects = client.rawPeerInfos.getPeerInfo((TorrentClientPeerInfo info) {
-              if (info.front == null || info.front.isClose == true) {
-                return false;
-              } else {
-                return true;
-              }
-            });
-            if (connects.length < _maxConnect && (info.front == null || info.front.amI == false)) {
-              if ((info.front != null && client.targetBlock.haveAll() == true && info.front.bitfieldToMe.isAllOn())) {
-                break;
-              }
-              if (info.front != null && info.front.isClose == false) {
-                break;
-              }
-              if(false == client.isStart) {
-                break;
-              }
-              return client.connect(info).then((TorrentClientFront f) {
-                return f.sendHandshake();
-              }).catchError((e) {
-                try {
-                  if (info.front != null) {
-                    info.front.close();
-                  }
-                } catch (e) {
-                  ;
-                }
-              });
-            }
-          }
+          _connectTest.connectTest(info, client, _maxConnect);
           break;
         case TorrentClientSignal.ID_SET_PIECE_A_PART:
         case TorrentClientSignal.ID_SET_PIECE:

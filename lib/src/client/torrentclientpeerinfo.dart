@@ -84,6 +84,7 @@ class TorrentClientPeerInfo {
   int portAcceptable = 0;
   int portCurrent = 0;
   TorrentClientFront front = null;
+  bool get isAcceptable => portAcceptable != 0;
 
 
   TorrentClientPeerInfo.fromTracker(String ip, int port) {

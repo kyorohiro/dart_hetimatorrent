@@ -3,12 +3,9 @@ library hetimatorrent.torrent.ai;
 import 'dart:core';
 import 'dart:async';
 import '../message/message.dart';
-import 'package:hetimacore/hetimacore.dart';
 import 'torrentclient.dart';
-import 'torrentclientfront.dart';
 import 'torrentclientpeerinfo.dart';
 import 'torrentclientmessage.dart';
-import 'torrentaichoke.dart';
 
 abstract class TorrentAI {
   Future onReceive(TorrentClient client, TorrentClientPeerInfo info, TorrentMessage message);
