@@ -3,11 +3,13 @@
 A Torrent library for Dart developers. 
 
 - tracker server library
-  - http only 
+  - http only (Alpha level)
 - tracker client library
-  - http only
+  - http only (Alpha level)
 - torrent client library
-  - now creating 
+  - now creating (bep3 pre-Alpha level)
+- dht tracker (bep5)
+  - now creating (starting)
 
 [Now creating]
  - tracker server for local pc 
@@ -16,6 +18,7 @@ A Torrent library for Dart developers.
    alpha level 
  - torrent client for seeder 
    prealpha level 
+   
 
 [mini sample]
  - torrent client
