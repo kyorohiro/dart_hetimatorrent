@@ -14,13 +14,13 @@ A Torrent library for Dart developers.
 
 [mini sample]
  - torrent client
-  ./example/TorrentClient
+  - ./example/TorrentClient
  - torrent file creator
-  ./example/TorrentFileCreator
+  - ./example/TorrentFileCreator
  - tracker url creator
-  ./example/TrackerUrlCreator
+  - ./example/TrackerUrlCreator
  - torrent file parser
-  ./example/TorrentFileParser
+  - ./example/TorrentFileParser
 
 [sample app (large sample)]
  - hetima torrent client
