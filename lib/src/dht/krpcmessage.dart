@@ -23,6 +23,52 @@ class KrpcId {
     }
     return new KrpcId(ret);
   }
+
+  bool operator >(KrpcId b) {
+    for (int i = 0; i < b._id.length; i++) {
+      if (this._id[i] == b._id[i]) {
+        continue;
+      } else if (this._id[i] > b._id[i]) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    return false;
+  }
+
+  bool operator ==(KrpcId b) {
+    for (int i = 0; i < b._id.length; i++) {
+      if (this._id[i] != b._id[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  bool operator >=(KrpcId b) {
+    if (this == b) {
+      return true;
+    } else if (this > b) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool operator <(KrpcId b) {
+    return !(this > b);
+  }
+
+  bool operator <=(KrpcId b) {
+    if (this == b) {
+      return true;
+    } else if (this > b) {
+      return false;
+    } else {
+      return true;
+    }
+  }
 }
 
 class NodeId {
