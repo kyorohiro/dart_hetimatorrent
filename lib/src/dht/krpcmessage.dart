@@ -20,7 +20,10 @@ class KrpcResponse extends KrpcMessage {
 }
 
 class KrpcError extends KrpcMessage {
-  
+  static const int GENERIC_ERROR = 201;
+  static const int SERVER_ERROR = 202;
+  static const int PROTOCOL_ERROR = 203;
+  static const int METHOD_ERROR = 204;
 }
 
 
