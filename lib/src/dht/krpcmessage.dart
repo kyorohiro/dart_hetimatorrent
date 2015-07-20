@@ -4,30 +4,30 @@ import 'dart:core';
 import 'dart:async';
 import 'dart:math';
 import 'krpcid.dart';
+import '../util/bencode.dart';
 
-class KrpcMessage {
-  
-  
-}
+class KrpcMessage {}
 
-class KrpcQuery extends KrpcMessage {
-  
-}
+class KrpcQuery extends KrpcMessage {}
 
-
-class KrpcResponse extends KrpcMessage {
-  
-}
+class KrpcResponse extends KrpcMessage {}
 
 class KrpcError extends KrpcMessage {
   static const int GENERIC_ERROR = 201;
   static const int SERVER_ERROR = 202;
   static const int PROTOCOL_ERROR = 203;
   static const int METHOD_ERROR = 204;
+
+  //  {"t":"aa", "y":"e", "e":[201, "A Generic Error Ocurred"]}
+  //
+  Map<String, Object> _messageAsMap = null;
+  Map<String, Object> get messageAsMap => new Map.from(_messageAsMap);
+  List<int> get messageAsBencode => Bencode.encode(_messageAsMap);
+
+  KrpcError(String transactionId, int errorCode, String errorMessage, [String messageType = "e"]) {
+    _messageAsMap = {"t": transactionId, "y": messageType, "e": [errorCode, errorMessage]};
+  }
 }
-
-
-
 
 class NodeId {
   KrpcId _id = null;
