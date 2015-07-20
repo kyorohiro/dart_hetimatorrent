@@ -19,7 +19,7 @@ class KrpcPingQuery extends KrpcQuery {
   //ping Query = {"t":"aa", "y":"q", "q":"ping", "a":{"id":"abcdefghij0123456789"}}
   //bencoded = d1:ad2:id20:abcdefghij0123456789e1:q4:ping1:t2:aa1:y1:qe
   KrpcPingQuery(String transactionId, String queryingNodesId) {
-    _messageAsMap = {"t": transactionId, "y": "q", "q": "ping", "a": {"id": queryingNodesId}};
+    _messageAsMap = {"a": {"id": queryingNodesId},"q": "ping", "t": transactionId, "y": "q"};
   }
 }
 
@@ -31,7 +31,7 @@ class KrpcPingResponse extends KrpcResponse {
   // Response = {"t":"aa", "y":"r", "r": {"id":"mnopqrstuvwxyz123456"}}
   // bencoded = d1:rd2:id20:mnopqrstuvwxyz123456e1:t2:aa1:y1:re
   KrpcPingResponse(String transactionId, String queryingNodesId) {
-    _messageAsMap = {"t": transactionId, "y": "r", "r": {"id": queryingNodesId}};
+    _messageAsMap = {"r": {"id": queryingNodesId}, "t": transactionId, "y": "r"};
   }
 }
 
