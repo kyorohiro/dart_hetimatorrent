@@ -23,15 +23,38 @@ class KrpcPingQuery extends KrpcQuery {
   }
 }
 
-class KrpcPingResponse extends KrpcQuery {
+class KrpcPingResponse extends KrpcResponse {
   Map<String, Object> _messageAsMap = null;
   Map<String, Object> get messageAsMap => new Map.from(_messageAsMap);
   List<int> get messageAsBencode => Bencode.encode(_messageAsMap);
 
   // Response = {"t":"aa", "y":"r", "r": {"id":"mnopqrstuvwxyz123456"}}
   // bencoded = d1:rd2:id20:mnopqrstuvwxyz123456e1:t2:aa1:y1:re
-  KrpcPingQuery(String transactionId, String queryingNodesId) {
+  KrpcPingResponse(String transactionId, String queryingNodesId) {
     _messageAsMap = {"t": transactionId, "y": "r", "r": {"id": queryingNodesId}};
+  }
+}
+
+class KrpcFindNodeQuery extends KrpcQuery {
+  Map<String, Object> _messageAsMap = null;
+  Map<String, Object> get messageAsMap => new Map.from(_messageAsMap);
+  List<int> get messageAsBencode => Bencode.encode(_messageAsMap);
+  //find_node Query = {"t":"aa", "y":"q", "q":"find_node", "a": {"id":"abcdefghij0123456789", "target":"mnopqrstuvwxyz123456"}}
+  //bencoded = d1:ad2:id20:abcdefghij01234567896:target20:mnopqrstuvwxyz123456e1:q9:find_node1:t2:aa1:y1:qe
+  KrpcFindNodeQuery(String transactionId, String queryingNodesId, String targetNodeId) {
+    _messageAsMap = {"t": transactionId, "y": "q", "q": "find_node", "a": {"id": queryingNodesId, "target": targetNodeId}};
+  }
+}
+
+class KrpcFindNodeResponse extends KrpcResponse {
+  Map<String, Object> _messageAsMap = null;
+  Map<String, Object> get messageAsMap => new Map.from(_messageAsMap);
+  List<int> get messageAsBencode => Bencode.encode(_messageAsMap);
+
+  // Response = {"t":"aa", "y":"r", "r": {"id":"mnopqrstuvwxyz123456"}}
+  // bencoded = d1:rd2:id20:mnopqrstuvwxyz123456e1:t2:aa1:y1:re
+  KrpcFindNodeResponse(String transactionId, String queryingNodesId, List<int> compactNodeInfo) {
+    _messageAsMap = {"t": transactionId, "y": "r", "r": {"id": queryingNodesId, "nodes": compactNodeInfo}};
   }
 }
 
