@@ -48,12 +48,41 @@ class KrpcGetPeersResponse extends KrpcResponse {
   // Response = {"t":"aa", "y":"r", "r": {"id":"mnopqrstuvwxyz123456"}}
   // bencoded = d1:rd2:id20:mnopqrstuvwxyz123456e1:t2:aa1:y1:re
   KrpcGetPeersResponse.withPeers(String transactionId, String queryingNodesId, String opaqueWriteToken, List<String> peerInfoStrings) {
-    _messageAsMap = {"t": transactionId, "y": "r", "r": {"id": queryingNodesId, "token": opaqueWriteToken, "values": peerInfoStrings}};
+    _messageAsMap = {"r": {"id": queryingNodesId, "token": opaqueWriteToken, "values": peerInfoStrings}, "t": transactionId, "y": "r" };
   }
   //Response with closest nodes = {"t":"aa", "y":"r", "r": {"id":"abcdefghij0123456789", "token":"aoeusnth", "nodes": "def456..."}}
   // bencoded = d1:rd2:id20:abcdefghij01234567895:nodes9:def456...5:token8:aoeusnthe1:t2:aa1:y1:re
   KrpcGetPeersResponse.withClosestNodes(String transactionId, String queryingNodesId, String opaqueWriteToken, List<int> compactNodeInfo) {
-    _messageAsMap = {"t": transactionId, "y": "r", "r": {"id": queryingNodesId, "token": opaqueWriteToken, "nodes": compactNodeInfo}};
+    _messageAsMap = {"r": {"id": queryingNodesId, "nodes": compactNodeInfo, "token": opaqueWriteToken}, "t": transactionId, "y": "r"};
+  }
+  
+  KrpcGetPeersResponse.withPeersFromMap(Map<String, Object> messageAsMap) {
+    if(!KrpcResponse.queryCheck(messageAsMap)){
+      throw {};
+    }
+    Map<String, Object> r = messageAsMap["r"];
+    _messageAsMap = {"r": {"id": r["id"], "token": r["token"], "values": r["values"]}, "t": messageAsMap["t"], "y": "r" };
+  }
+
+  KrpcGetPeersResponse.withClosestNodesFromMap(Map<String, Object> messageAsMap) {
+    if(!KrpcResponse.queryCheck(messageAsMap)){
+      throw {};
+    }
+    Map<String, Object> r = messageAsMap["r"];
+    _messageAsMap = {"r": {"id": r["id"], "nodes": r["nodes"], "token": r["token"]}, "t": messageAsMap["t"], "y": "r"};
+  }
+
+  static Future<KrpcGetPeersResponse> decode(EasyParser parser) {
+    return KrpcMessage.decodeTest(parser, (Object v) {
+      if(!KrpcResponse.queryCheck(v)){
+        throw {};
+      }
+      if(((v as Map)["r"] as Map).containsKey("values") == true) {
+        return new KrpcGetPeersResponse.withPeersFromMap(v);
+      } else {
+        return new KrpcGetPeersResponse.withClosestNodesFromMap(v);        
+      }
+    });
   }
 }
 
