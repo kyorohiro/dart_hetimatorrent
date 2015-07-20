@@ -2,6 +2,7 @@ library hetimatorrent.dht.krpcping;
 
 import 'dart:core';
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 import 'krpcid.dart';
 import '../util/bencode.dart';
@@ -13,10 +14,44 @@ class KrpcPingQuery extends KrpcQuery {
   Map<String, Object> _messageAsMap = null;
   Map<String, Object> get messageAsMap => new Map.from(_messageAsMap);
   List<int> get messageAsBencode => Bencode.encode(_messageAsMap);
+
   //ping Query = {"t":"aa", "y":"q", "q":"ping", "a":{"id":"abcdefghij0123456789"}}
   //bencoded = d1:ad2:id20:abcdefghij0123456789e1:q4:ping1:t2:aa1:y1:qe
   KrpcPingQuery(String transactionId, String queryingNodesId) {
     _messageAsMap = {"a": {"id": queryingNodesId}, "q": "ping", "t": transactionId, "y": "q"};
+  }
+
+  KrpcPingQuery.fromMap(Map<String, Object> messageAsMap) {
+    if (!messageAsMap.containsKey("a")) {
+      throw {};
+    }
+    Map<String, Object> a = messageAsMap["a"];
+    if (!(a is Map) || !a.containsKey("id") || !messageAsMap.containsKey("t") || !messageAsMap.containsKey("y")) {
+      throw {};
+    }
+    if(messageAsMap["q"] is List) {
+      if(UTF8.decode(messageAsMap["q"])!="ping") {
+        throw {};      
+      }
+    } else if(messageAsMap["q"] !="ping") {
+      throw {};
+    }
+    _messageAsMap = {"a": {"id": a["id"]}, "q": messageAsMap["q"], "t": messageAsMap["t"], "y": messageAsMap["y"]};
+  }
+  static Future<KrpcPingQuery> decode(EasyParser parser) {
+    parser.push();
+    return HetiBencode.decode(parser).then((Object v) {
+      if (!(v is Map)) {
+        throw {};
+      }
+      KrpcPingQuery ret = new KrpcPingQuery.fromMap(v);
+      parser.pop();
+      return ret;
+    }).catchError((e) {
+      parser.back();
+      parser.pop();
+      throw e;
+    });
   }
 }
 
