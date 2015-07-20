@@ -12,6 +12,29 @@ class KrpcQuery extends KrpcMessage {}
 
 class KrpcResponse extends KrpcMessage {}
 
+class KrpcPingQuery extends KrpcQuery {
+  Map<String, Object> _messageAsMap = null;
+  Map<String, Object> get messageAsMap => new Map.from(_messageAsMap);
+  List<int> get messageAsBencode => Bencode.encode(_messageAsMap);
+  //ping Query = {"t":"aa", "y":"q", "q":"ping", "a":{"id":"abcdefghij0123456789"}}
+  //bencoded = d1:ad2:id20:abcdefghij0123456789e1:q4:ping1:t2:aa1:y1:qe
+  KrpcPingQuery(String transactionId, String queryingNodesId) {
+    _messageAsMap = {"t": transactionId, "y": "q", "q": "ping", "a": {"id": queryingNodesId}};
+  }
+}
+
+class KrpcPingResponse extends KrpcQuery {
+  Map<String, Object> _messageAsMap = null;
+  Map<String, Object> get messageAsMap => new Map.from(_messageAsMap);
+  List<int> get messageAsBencode => Bencode.encode(_messageAsMap);
+
+  // Response = {"t":"aa", "y":"r", "r": {"id":"mnopqrstuvwxyz123456"}}
+  // bencoded = d1:rd2:id20:mnopqrstuvwxyz123456e1:t2:aa1:y1:re
+  KrpcPingQuery(String transactionId, String queryingNodesId) {
+    _messageAsMap = {"t": transactionId, "y": "r", "r": {"id": queryingNodesId}};
+  }
+}
+
 class KrpcError extends KrpcMessage {
   static const int GENERIC_ERROR = 201;
   static const int SERVER_ERROR = 202;
