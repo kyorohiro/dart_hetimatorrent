@@ -30,18 +30,8 @@ class KrpcPingQuery extends KrpcQuery {
   }
 
   static Future<KrpcPingQuery> decode(EasyParser parser) {
-    parser.push();
-    return HetiBencode.decode(parser).then((Object v) {
-      if (!(v is Map)) {
-        throw {};
-      }
-      KrpcPingQuery ret = new KrpcPingQuery.fromMap(v);
-      parser.pop();
-      return ret;
-    }).catchError((e) {
-      parser.back();
-      parser.pop();
-      throw e;
+    return KrpcMessage.decodeTest(parser, (Object v) {
+      return new KrpcPingQuery.fromMap(v);
     });
   }
 }
@@ -66,18 +56,8 @@ class KrpcPingResponse extends KrpcResponse {
   }
 
   static Future<KrpcPingResponse> decode(EasyParser parser) {
-    parser.push();
-    return HetiBencode.decode(parser).then((Object v) {
-      if (!(v is Map)) {
-        throw {};
-      }
-      KrpcPingResponse ret = new KrpcPingResponse.fromMap(v);
-      parser.pop();
-      return ret;
-    }).catchError((e) {
-      parser.back();
-      parser.pop();
-      throw e;
+    return KrpcMessage.decodeTest(parser, (Object v) {
+      return new KrpcPingResponse.fromMap(v);
     });
   }
 }

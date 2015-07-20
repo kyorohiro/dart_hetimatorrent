@@ -38,6 +38,22 @@ class KrpcMessage {
       throw e;
     });
   }
+  
+  static Future<KrpcMessage> decodeTest(EasyParser parser, Function a) {
+    parser.push();
+    return HetiBencode.decode(parser).then((Object v) {
+      if (!(v is Map)) {
+        throw {};
+      }
+      KrpcMessage ret = a(v);
+      parser.pop();
+      return ret;
+    }).catchError((e) {
+      parser.back();
+      parser.pop();
+      throw e;
+    });
+  }
 }
 
 class KrpcQuery extends KrpcMessage {
