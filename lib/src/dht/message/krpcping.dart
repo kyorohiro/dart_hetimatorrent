@@ -4,9 +4,9 @@ import 'dart:core';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
-import 'krpcid.dart';
-import '../util/bencode.dart';
-import '../util/hetibencode.dart';
+import '../krpcid.dart';
+import '../../util/bencode.dart';
+import '../../util/hetibencode.dart';
 import 'package:hetimacore/hetimacore.dart';
 import 'krpcmessage.dart';
 

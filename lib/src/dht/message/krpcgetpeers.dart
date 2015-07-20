@@ -2,7 +2,7 @@ library hetimatorrent.dht.krpgetpeers;
 
 import 'dart:core';
 import 'dart:async';
-import '../util/bencode.dart';
+import '../../util/bencode.dart';
 import 'package:hetimacore/hetimacore.dart';
 import 'krpcmessage.dart';
 

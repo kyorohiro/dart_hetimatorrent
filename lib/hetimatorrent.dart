@@ -34,12 +34,12 @@ export 'src/extra/terminal.dart';
 
 export 'src/message/message.dart';
 
-export 'src/dht/krpcmessage.dart';
-export 'src/dht/krpcping.dart';
+export 'src/dht/message/krpcmessage.dart';
+export 'src/dht/message/krpcping.dart';
 export 'src/dht/krpcid.dart';
-export 'src/dht/krpcfindnode.dart';
-export 'src/dht/krpcannounce.dart';
-export 'src/dht/krpcgetpeers.dart';
+export 'src/dht/message/krpcfindnode.dart';
+export 'src/dht/message/krpcannounce.dart';
+export 'src/dht/message/krpcgetpeers.dart';
 
 
 
