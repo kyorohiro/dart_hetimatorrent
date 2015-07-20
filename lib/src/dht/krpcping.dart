@@ -10,13 +10,13 @@ import '../util/hetibencode.dart';
 import 'package:hetimacore/hetimacore.dart';
 import 'krpcmessage.dart';
 
+//ping Query = {"t":"aa", "y":"q", "q":"ping", "a":{"id":"abcdefghij0123456789"}}
+//bencoded = d1:ad2:id20:abcdefghij0123456789e1:q4:ping1:t2:aa1:y1:qe
 class KrpcPingQuery extends KrpcQuery {
   Map<String, Object> _messageAsMap = null;
   Map<String, Object> get messageAsMap => new Map.from(_messageAsMap);
   List<int> get messageAsBencode => Bencode.encode(_messageAsMap);
 
-  //ping Query = {"t":"aa", "y":"q", "q":"ping", "a":{"id":"abcdefghij0123456789"}}
-  //bencoded = d1:ad2:id20:abcdefghij0123456789e1:q4:ping1:t2:aa1:y1:qe
   KrpcPingQuery(String transactionId, String queryingNodesId) {
     _messageAsMap = {"a": {"id": queryingNodesId}, "q": "ping", "t": transactionId, "y": "q"};
   }
@@ -36,13 +36,14 @@ class KrpcPingQuery extends KrpcQuery {
   }
 }
 
+// Response = {"t":"aa", "y":"r", "r": {"id":"mnopqrstuvwxyz123456"}}
+// bencoded = d1:rd2:id20:mnopqrstuvwxyz123456e1:t2:aa1:y1:re
 class KrpcPingResponse extends KrpcResponse {
   Map<String, Object> _messageAsMap = null;
   Map<String, Object> get messageAsMap => new Map.from(_messageAsMap);
   List<int> get messageAsBencode => Bencode.encode(_messageAsMap);
 
-  // Response = {"t":"aa", "y":"r", "r": {"id":"mnopqrstuvwxyz123456"}}
-  // bencoded = d1:rd2:id20:mnopqrstuvwxyz123456e1:t2:aa1:y1:re
+
   KrpcPingResponse(String transactionId, String queryingNodesId) {
     _messageAsMap = {"r": {"id": queryingNodesId}, "t": transactionId, "y": "r"};
   }
