@@ -49,7 +49,10 @@ class KrpcAnnouncePeerResponse extends KrpcResponse {
   // Response with peers = {"t":"aa", "y":"r", "r": {"id":"abcdefghij0123456789", "token":"aoeusnth", "values": ["axje.u", "idhtnm"]}}
   // bencoded = d1:rd2:id20:abcdefghij01234567895:token8:aoeusnth6:valuesl6:axje.u6:idhtnmee1:t2:aa1:y1:re
   KrpcAnnouncePeerResponse(String transactionId, String queryingNodesId) {
-    _messageAsMap = {"r": {"id": queryingNodesId}, "t": transactionId, "y": "r"};
+    _messageAsMap = {
+      "r": {"id": queryingNodesId}, 
+      "t": transactionId,
+      "y": "r"};
   }
 
   KrpcAnnouncePeerResponse.fromMap(Map<String, Object> messageAsMap) {
@@ -57,7 +60,10 @@ class KrpcAnnouncePeerResponse extends KrpcResponse {
       throw {};
     }
     Map<String, Object> r = messageAsMap["r"];
-    _messageAsMap = {"t": messageAsMap["t"], "y": "r", "r": {"id": r["id"]}};
+    _messageAsMap = {
+      "r": {"id": r["id"]},
+      "t": messageAsMap["t"],
+      "y": "r"};
   }
 
   static Future<KrpcAnnouncePeerResponse> decode(EasyParser parser) {
