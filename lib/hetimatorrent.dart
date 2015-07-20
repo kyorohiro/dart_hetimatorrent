@@ -39,4 +39,7 @@ export 'src/dht/krpcping.dart';
 export 'src/dht/krpcid.dart';
 export 'src/dht/krpcfindnode.dart';
 export 'src/dht/krpcannounce.dart';
+export 'src/dht/krpcgetpeers.dart';
+
+
 

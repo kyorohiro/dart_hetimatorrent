@@ -80,11 +80,25 @@ void main() {
         unit.expect("d1:rd2:id20:mnopqrstuvwxyz123456e1:t2:aa1:y1:re", convert.UTF8.decode(q.messageAsBencode));
       });
     });
+    
+    //
+    //
+    unit.test("'get peers request", () {
+      //get_peers Query = {"t":"aa", "y":"q", "q":"get_peers", "a": {"id":"abcdefghij0123456789", "info_hash":"mnopqrstuvwxyz123456"}}
+      //bencoded = d1:ad2:id20:abcdefghij01234567899:info_hash20:mnopqrstuvwxyz123456e1:q9:get_peers1:t2:aa1:y1:qe
+      KrpcGetPeersQuery query = 
+          new KrpcGetPeersQuery("aa", "abcdefghij0123456789", convert.UTF8.encode("mnopqrstuvwxyz123456"));
+      unit.expect(
+          "d1:ad2:id20:abcdefghij01234567899:info_hash20:mnopqrstuvwxyz123456e1:q9:get_peers1:t2:aa1:y1:qe",
+          convert.UTF8.decode(query.messageAsBencode));
+
+      EasyParser parser = new EasyParser(new HetimaFileToBuilder(new HetimaDataMemory(query.messageAsBencode)));
+      return KrpcGetPeersQuery.decode(parser).then((KrpcGetPeersQuery q) {
+        unit.expect(
+          "d1:ad2:id20:abcdefghij01234567899:info_hash20:mnopqrstuvwxyz123456e1:q9:get_peers1:t2:aa1:y1:qe", convert.UTF8.decode(q.messageAsBencode));
+      });
+    });
   });
   
 }
 
-//ping Query = {"t":"aa", "y":"q", "q":"ping", "a":{"id":"abcdefghij0123456789"}}
-//bencoded = d1:ad2:id20:abcdefghij0123456789e1:q4:ping1:t2:aa1:y1:qe
-//Response = {"t":"aa", "y":"r", "r": {"id":"mnopqrstuvwxyz123456"}}
-//bencoded = d1:rd2:id20:mnopqrstuvwxyz123456e1:t2:aa1:y1:re
