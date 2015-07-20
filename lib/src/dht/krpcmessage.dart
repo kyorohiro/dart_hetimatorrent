@@ -118,28 +118,7 @@ class KrpcGetPeersResponse extends KrpcResponse {
   }
 }
 
-class KrpcAnnouncePeerQuery extends KrpcQuery {
-  Map<String, Object> _messageAsMap = null;
-  Map<String, Object> get messageAsMap => new Map.from(_messageAsMap);
-  List<int> get messageAsBencode => Bencode.encode(_messageAsMap);
-  //find_node Query = {"t":"aa", "y":"q", "q":"find_node", "a": {"id":"abcdefghij0123456789", "target":"mnopqrstuvwxyz123456"}}
-  //bencoded = d1:ad2:id20:abcdefghij01234567896:target20:mnopqrstuvwxyz123456e1:q9:find_node1:t2:aa1:y1:qe
-  KrpcAnnouncePeerQuery(String transactionId, String queryingNodesId, int implied_port, List<int> infoHash, int port, String opaqueToken) {
-    _messageAsMap = {"t": transactionId, "y": "q", "q": "announce_peer", "a": {"id": queryingNodesId, "implied_port": implied_port, "info_hash": infoHash, "port": port, "token": opaqueToken}};
-  }
-}
 
-class KrpcAnnouncePeerResponse extends KrpcResponse {
-  Map<String, Object> _messageAsMap = null;
-  Map<String, Object> get messageAsMap => new Map.from(_messageAsMap);
-  List<int> get messageAsBencode => Bencode.encode(_messageAsMap);
-
-  // Response with peers = {"t":"aa", "y":"r", "r": {"id":"abcdefghij0123456789", "token":"aoeusnth", "values": ["axje.u", "idhtnm"]}}
-  // bencoded = d1:rd2:id20:abcdefghij01234567895:token8:aoeusnth6:valuesl6:axje.u6:idhtnmee1:t2:aa1:y1:re
-  KrpcAnnouncePeerResponse(String transactionId, String queryingNodesId) {
-    _messageAsMap = {"t": transactionId, "y": "r", "r": {"id": queryingNodesId}};
-  }
-}
 
 class KrpcError extends KrpcMessage {
   static const int GENERIC_ERROR = 201;
