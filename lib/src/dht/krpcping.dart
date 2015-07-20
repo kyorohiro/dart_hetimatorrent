@@ -22,22 +22,13 @@ class KrpcPingQuery extends KrpcQuery {
   }
 
   KrpcPingQuery.fromMap(Map<String, Object> messageAsMap) {
-    if (!messageAsMap.containsKey("a")) {
+    if(!KrpcQuery.queryCheck(messageAsMap, "ping")){
       throw {};
     }
     Map<String, Object> a = messageAsMap["a"];
-    if (!(a is Map) || !a.containsKey("id") || !messageAsMap.containsKey("t") || !messageAsMap.containsKey("y")) {
-      throw {};
-    }
-    if(messageAsMap["q"] is List) {
-      if(UTF8.decode(messageAsMap["q"])!="ping") {
-        throw {};      
-      }
-    } else if(messageAsMap["q"] !="ping") {
-      throw {};
-    }
     _messageAsMap = {"a": {"id": a["id"]}, "q": messageAsMap["q"], "t": messageAsMap["t"], "y": messageAsMap["y"]};
   }
+
   static Future<KrpcPingQuery> decode(EasyParser parser) {
     parser.push();
     return HetiBencode.decode(parser).then((Object v) {
@@ -67,13 +58,10 @@ class KrpcPingResponse extends KrpcResponse {
   }
 
   KrpcPingResponse.fromMap(Map<String, Object> messageAsMap) {
-    if (!messageAsMap.containsKey("r")) {
+    if(!KrpcResponse.queryCheck(messageAsMap)){
       throw {};
     }
     Map<String, Object> r = messageAsMap["r"];
-    if (!(r is Map) || !r.containsKey("id") || !messageAsMap.containsKey("t") || !messageAsMap.containsKey("y")) {
-      throw {};
-    }
     _messageAsMap = {"r": {"id": r["id"]}, "t": messageAsMap["t"], "y": messageAsMap["y"]};
   }
 
@@ -93,4 +81,3 @@ class KrpcPingResponse extends KrpcResponse {
     });
   }
 }
-

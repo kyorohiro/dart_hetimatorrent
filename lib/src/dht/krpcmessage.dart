@@ -7,13 +7,71 @@ import 'krpcid.dart';
 import '../util/bencode.dart';
 import '../util/hetibencode.dart';
 import 'package:hetimacore/hetimacore.dart';
+import 'krpcping.dart';
+import 'dart:convert';
 
-class KrpcMessage {}
+class KrpcMessage {
+  static Future<KrpcMessage> decode(EasyParser parser) {
+    parser.push();
+    return HetiBencode.decode(parser).then((Object v) {
+      if (!(v is Map)) {
+        throw {};
+      }
+      KrpcMessage ret = null;
+      Map<String, Object> messageAsMap = v;
+      if (!messageAsMap.containsKey("t") || !messageAsMap.containsKey("y")) {
+        throw {};
+      }
+      if (messageAsMap["y"] == "q") {
+        switch (messageAsMap["q"]) {
+          case "ping":
+            ret = new KrpcPingQuery.fromMap(v);
+            break;
+        }
+      } else if (messageAsMap["y"] == "r") {} else {}
 
-class KrpcQuery extends KrpcMessage {}
+      parser.pop();
+      return ret;
+    }).catchError((e) {
+      parser.back();
+      parser.pop();
+      throw e;
+    });
+  }
+}
 
-class KrpcResponse extends KrpcMessage {}
+class KrpcQuery extends KrpcMessage {
+  static bool queryCheck(Map<String, Object> messageAsMap, String action) {
+    if (!messageAsMap.containsKey("a")) {
+      return false;
+    }
+    Map<String, Object> a = messageAsMap["a"];
+    if (!(a is Map) || !a.containsKey("id") || !messageAsMap.containsKey("t") || !messageAsMap.containsKey("y")) {
+      return false;
+    }
+    if (messageAsMap["q"] is List) {
+      if (UTF8.decode(messageAsMap["q"]) != action) {
+        throw {};
+      }
+    } else if (messageAsMap["q"] != action) {
+      throw {};
+    }
+    return true;
+  }
+}
 
+class KrpcResponse extends KrpcMessage {
+  static bool queryCheck(Map<String, Object> messageAsMap) {
+    if (!messageAsMap.containsKey("r")) {
+      return false;
+    }
+    Map<String, Object> r = messageAsMap["r"];
+    if (!(r is Map) || !r.containsKey("id") || !messageAsMap.containsKey("t") || !messageAsMap.containsKey("y")) {
+      return false;
+    }
+    return true;
+  }
+}
 
 class KrpcFindNodeQuery extends KrpcQuery {
   Map<String, Object> _messageAsMap = null;
