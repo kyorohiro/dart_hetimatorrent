@@ -19,5 +19,12 @@ class KPeerInfo {
 }
 class RootingTable {
   List<KBucket> kBuckets = [];
+  Future update(KPeerInfo info) {
+    
+  }
+  
+  Future<List<KPeerInfo>> get(List<int> hash) {
+    
+  }
 }
 

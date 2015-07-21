@@ -3,7 +3,7 @@ library hetimatorrent.dht.krpcmessage;
 import 'dart:core';
 import 'dart:async';
 import 'dart:math';
-import '../krpcid.dart';
+import '../kadid.dart';
 import '../../util/bencode.dart';
 import '../../util/hetibencode.dart';
 import 'package:hetimacore/hetimacore.dart';
@@ -108,11 +108,11 @@ class KrpcError extends KrpcMessage {
 }
 
 class NodeId {
-  KrpcId _id = null;
+  KadId _id = null;
   List<int> get id => _id.id;
 
   NodeId(List<int> id) {
-    this._id = new KrpcId(id);
+    this._id = new KadId(id);
   }
 
   static Future<NodeId> createIDAtRandom([List<int> op = null]) {

@@ -4,23 +4,23 @@ import 'dart:core';
 import 'dart:async';
 import 'dart:math';
 
-class KrpcId {
+class KadId {
   List<int> _id = [];
   List<int> get id => new List.from(_id);
 
-  KrpcId(List<int> id) {
+  KadId(List<int> id) {
     this._id.addAll(id);
   }
 
-  KrpcId xor(KrpcId b) {
+  KadId xor(KadId b) {
     List<int> ret = [];
     for (int i = 0; i < b._id.length; i++) {
       ret.add(this._id[i] ^ b._id[i]);
     }
-    return new KrpcId(ret);
+    return new KadId(ret);
   }
 
-  bool operator >(KrpcId b) {
+  bool operator >(KadId b) {
     for (int i = 0; i < b._id.length; i++) {
       if (this._id[i] == b._id[i]) {
         continue;
@@ -33,7 +33,7 @@ class KrpcId {
     return false;
   }
 
-  bool operator ==(KrpcId b) {
+  bool operator ==(KadId b) {
     for (int i = 0; i < b._id.length; i++) {
       if (this._id[i] != b._id[i]) {
         return false;
@@ -42,7 +42,7 @@ class KrpcId {
     return true;
   }
 
-  bool operator >=(KrpcId b) {
+  bool operator >=(KadId b) {
     if (this == b) {
       return true;
     } else if (this > b) {
@@ -52,7 +52,7 @@ class KrpcId {
     }
   }
 
-  bool operator <(KrpcId b) {
+  bool operator <(KadId b) {
     if (this == b) {
       return false;
     } else {
@@ -60,7 +60,7 @@ class KrpcId {
     }
   }
 
-  bool operator <=(KrpcId b) {
+  bool operator <=(KadId b) {
     if (this == b) {
       return true;
     } else if (this > b) {

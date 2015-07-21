@@ -9,8 +9,8 @@ import 'dart:convert' as convert;
 void main() {
   unit.group('A group of tests', () {
     unit.test("> >= < <=", () {
-      KrpcId idA = new KrpcId(new List.filled(20, 0));
-      KrpcId idB = new KrpcId(new List.filled(20, 1));
+      KadId idA = new KadId(new List.filled(20, 0));
+      KadId idB = new KadId(new List.filled(20, 1));
       unit.expect(true, idB > idA);
       unit.expect(true, idB >= idA);
       unit.expect(false, idB < idA);
@@ -23,9 +23,9 @@ void main() {
     });
     
     unit.test("xor", () {
-      KrpcId idA = new KrpcId(new List.filled(20, 255));
-      KrpcId idB = new KrpcId(new List.filled(20, 1));
-      KrpcId idC = new KrpcId(new List.filled(20, 254));
+      KadId idA = new KadId(new List.filled(20, 255));
+      KadId idB = new KadId(new List.filled(20, 1));
+      KadId idC = new KadId(new List.filled(20, 254));
 
       unit.expect(true, idC == idB.xor(idA));
     });
