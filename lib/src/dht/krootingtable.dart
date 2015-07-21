@@ -8,11 +8,12 @@ import 'package:hetimanet/hetimanet.dart';
 import 'kpeerinfo.dart';
 
 class KBucket {
-  int k = 20;
+  int _k = 20;
+  int get k => _k;
 
   ShuffleLinkedList<KPeerInfo> peerInfos = null;
   KBucket(int k_bucketSize) {
-    this.k = k;
+    this._k = _k;
     this.peerInfos = new ShuffleLinkedList(k_bucketSize);
   }
 
@@ -36,8 +37,22 @@ class KBucket {
 }
 
 class RootingTable {
-  List<KBucket> kBuckets = [];
-  Future update(KPeerInfo info) {}
+  
+  List<KBucket> _kBuckets = [];
 
-  Future<List<KPeerInfo>> get(List<int> hash) {}
+  RootingTable(int k_bucketSize) {
+    _kBuckets.add(new KBucket(k_bucketSize));
+  }
+
+  Future update(KPeerInfo info) {
+    
+  }
+  
+  Future<List<KPeerInfo>> findNode() {
+    ;
+  }
+
+  Future<List<KPeerInfo>> get(List<int> hash) {
+    ;
+  }
 }
