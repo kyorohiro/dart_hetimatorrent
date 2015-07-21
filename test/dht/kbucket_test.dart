@@ -20,7 +20,7 @@ void main() {
       });
     });
     
-    unit.test("update", () {
+    unit.test("update remove auto", () {
       KBucket kbucket = new KBucket(3);
       KPeerInfo info1 = new KPeerInfo("127.0.0.1", 8081, new List.filled(20, 1));
       KPeerInfo info2 = new KPeerInfo("127.0.0.2", 8082, new List.filled(20, 2));
