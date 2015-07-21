@@ -9,6 +9,13 @@ class ShuffleLinkedList<X> {
 
   List<X> get sequential => new List.from(_sequential);
 
+  int _max = 0;
+  int get max => _max;
+
+  ShuffleLinkedList([int max=0]) {
+    _max = max;
+  }
+
   X addLast(X value) {
     // contain
     {
@@ -27,6 +34,9 @@ class ShuffleLinkedList<X> {
     }
     _sequential.add(value);
     _shuffled.add(value);
+    if(_max != 0 && length > _max) {
+      removeHead();
+    }
     return value;
   }
 
