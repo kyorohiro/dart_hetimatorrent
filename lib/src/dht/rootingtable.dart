@@ -54,11 +54,20 @@ class KPeerInfo {
     if(!(o is KPeerInfo)) {
       return false;
     }
-    if(this._id != (o as KPeerInfo)._id) {
-      return false;
+    KPeerInfo p = o;
+    if(this._id.length == p._id.length) {
+      for(int i=0;i<p._id.length;i++) {
+        if(this.id[i] != p._id[i]){
+          return false;
+        }
+      }
     }
-    if(this._ip != (o as KPeerInfo)._ip) {
-      return false;
+    if(this._ip.length == p._ip.length) {
+      for(int i=0;i<p._ip.length;i++) {
+        if(this._ip[i] != p._ip[i]){
+          return false;
+        }
+      }
     }
     if(this._port != (o as KPeerInfo)._port) {
       return false;

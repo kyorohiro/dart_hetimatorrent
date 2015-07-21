@@ -53,7 +53,7 @@ void main() {
 
       kbucket.update(info1);
       kbucket.update(info2);
-      kbucket.update(info1);
+      kbucket.update(new KPeerInfo("127.0.0.1", 8081, new List.filled(20, 1)));
 
       return kbucket.length().then((int length) {
         unit.expect(length, 2);
