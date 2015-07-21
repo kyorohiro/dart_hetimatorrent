@@ -11,6 +11,12 @@ class KadId {
   KadId(List<int> id) {
     this._id.addAll(id);
   }
+  
+  KadId.create0_2xx160(int id) {
+    final List<int> t = [0x01,0x02,0x04,0x08,0x10,0x20,0x40,0x80];
+    List<int> p = new List.filled(20, 0);
+    id~/8;
+  }
 
   KadId xor(KadId b) {
     List<int> ret = [];
