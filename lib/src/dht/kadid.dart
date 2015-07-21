@@ -11,11 +11,13 @@ class KadId {
   KadId(List<int> id) {
     this._id.addAll(id);
   }
-  
+
   KadId.create0_2xx160(int id) {
-    final List<int> t = [0x01,0x02,0x04,0x08,0x10,0x20,0x40,0x80];
     List<int> p = new List.filled(20, 0);
-    id~/8;
+    int index = id ~/ 8;
+    int input = 0x01 << (id % 8);
+    p[index] = input;
+    this._id.addAll(p);
   }
 
   KadId xor(KadId b) {
@@ -75,7 +77,7 @@ class KadId {
       return true;
     }
   }
-  
+
   static Future<KadId> createIDAtRandom([List<int> op = null]) {
     return new Future(() {
       List<int> ret = [];
@@ -92,4 +94,3 @@ class KadId {
     });
   }
 }
-
