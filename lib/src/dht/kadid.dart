@@ -18,23 +18,24 @@ class KadId {
     List<int> p = new List.filled(20, 0);
     int indexPerByte = tableIndex ~/ 8;
     int inputPerByte = 0x01 << (tableIndex % 8);
-    p[19-indexPerByte] = inputPerByte;
+    p[19 - indexPerByte] = inputPerByte;
     this._id.addAll(p);
   }
 
- /*
-  int get2xxX() {
-    int i = 0;
-    for (i = 0; i < 20; i++) {
+  int getRootingTabkeIndex() {
+    int ret = 0;
+    for (int i = 19; i >= 0; i--, ret++) {
       if (_id[i] != 0) {
-        for(int j=0;j<8j++) {
-          
+        for (int j = 0; j < 8; j++) {
+          if (_id[i] < (0x1 << j)) {
+            return (ret * 8) + j;
+          }
         }
         return i;
       }
     }
-    return 159;
-  }*/
+    return 0;
+  }
 
   KadId xor(KadId b) {
     List<int> ret = [];
@@ -110,5 +111,3 @@ class KadId {
     });
   }
 }
-
-
