@@ -15,19 +15,33 @@ void main() {
       unit.expect(true, idB >= idA);
       unit.expect(false, idB < idA);
       unit.expect(false, idB <= idA);
-     //
+      //
       unit.expect(false, idB > idB);
       unit.expect(true, idB >= idB);
       unit.expect(false, idB < idB);
       unit.expect(true, idB <= idB);
     });
-    
+
     unit.test("xor", () {
       KadId idA = new KadId(new List.filled(20, 255));
       KadId idB = new KadId(new List.filled(20, 1));
       KadId idC = new KadId(new List.filled(20, 254));
 
       unit.expect(true, idC == idB.xor(idA));
+    });
+
+    unit.test("rooting table index", () {
+      unit.expect(new KadId.createFromRootingTabkeIndex(0).id, new List.filled(20, 0)..[19]= 0x01);
+      unit.expect(new KadId.createFromRootingTabkeIndex(1).id, new List.filled(20, 0)..[19]= 0x02);
+      unit.expect(new KadId.createFromRootingTabkeIndex(2).id, new List.filled(20, 0)..[19]= 0x04);
+      unit.expect(new KadId.createFromRootingTabkeIndex(3).id, new List.filled(20, 0)..[19]= 0x08);
+      unit.expect(new KadId.createFromRootingTabkeIndex(4).id, new List.filled(20, 0)..[19]= 0x10);
+      unit.expect(new KadId.createFromRootingTabkeIndex(5).id, new List.filled(20, 0)..[19]= 0x20);
+      unit.expect(new KadId.createFromRootingTabkeIndex(6).id, new List.filled(20, 0)..[19]= 0x40);
+      unit.expect(new KadId.createFromRootingTabkeIndex(7).id, new List.filled(20, 0)..[19]= 0x80);
+      unit.expect(new KadId.createFromRootingTabkeIndex(8).id, new List.filled(20, 0)..[18]= 0x01);
+      unit.expect(new KadId.createFromRootingTabkeIndex(159).id, new List.filled(20, 0)..[0]= 0x80);
+
     });
   });
 }

@@ -12,13 +12,29 @@ class KadId {
     this._id.addAll(id);
   }
 
-  KadId.create0_2xx160(int id) {
+  /// 159 is long distance
+  /// 0 is short distance
+  KadId.createFromRootingTabkeIndex(int tableIndex) {
     List<int> p = new List.filled(20, 0);
-    int index = id ~/ 8;
-    int input = 0x01 << (id % 8);
-    p[index] = input;
+    int indexPerByte = tableIndex ~/ 8;
+    int inputPerByte = 0x01 << (tableIndex % 8);
+    p[19-indexPerByte] = inputPerByte;
     this._id.addAll(p);
   }
+
+ /*
+  int get2xxX() {
+    int i = 0;
+    for (i = 0; i < 20; i++) {
+      if (_id[i] != 0) {
+        for(int j=0;j<8j++) {
+          
+        }
+        return i;
+      }
+    }
+    return 159;
+  }*/
 
   KadId xor(KadId b) {
     List<int> ret = [];
