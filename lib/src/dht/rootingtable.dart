@@ -9,9 +9,10 @@ import 'package:hetimanet/hetimanet.dart';
 class KBucket {
   int k = 20;
 
-  ShuffleLinkedList<KPeerInfo> peerInfos = new ShuffleLinkedList();
+  ShuffleLinkedList<KPeerInfo> peerInfos = null;
   KBucket(int k_bucketSize) {
     this.k = k;
+    this.peerInfos = new ShuffleLinkedList(k_bucketSize);
   }
 
   Future update(KPeerInfo peerInfo) {

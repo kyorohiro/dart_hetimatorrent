@@ -69,5 +69,21 @@ class KadId {
       return true;
     }
   }
+  
+  static Future<KadId> createIDAtRandom([List<int> op = null]) {
+    return new Future(() {
+      List<int> ret = [];
+
+      Random r = new Random(new DateTime.now().millisecondsSinceEpoch);
+      for (int i = 0; i < 20; i++) {
+        int v = 0xff;
+        if (op != null && i < op.length) {
+          v = op[i];
+        }
+        ret.add(r.nextInt(0xff) & v);
+      }
+      return new KadId(ret);
+    });
+  }
 }
 
