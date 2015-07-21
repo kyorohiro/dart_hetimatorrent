@@ -1,4 +1,4 @@
-library hetimatorrent.dht.rootingtable;
+library hetimatorrent.dht.kpeerinfo;
 
 import 'dart:core';
 import 'dart:async';
