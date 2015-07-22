@@ -36,7 +36,7 @@ export 'src/message/message.dart';
 
 export 'src/dht/message/krpcmessage.dart';
 export 'src/dht/message/krpcping.dart';
-export 'src/dht/kadid.dart';
+export 'src/dht/kid.dart';
 export 'src/dht/message/krpcfindnode.dart';
 export 'src/dht/message/krpcannounce.dart';
 export 'src/dht/message/krpcgetpeers.dart';

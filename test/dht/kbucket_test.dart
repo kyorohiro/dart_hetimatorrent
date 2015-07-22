@@ -10,7 +10,7 @@ void main() {
   unit.group('kbucket', () {
     unit.test("update", () {
       KBucket kbucket = new KBucket(4);
-      KPeerInfo info = new KPeerInfo("127.0.0.1", 8080, new KadId(new List.filled(20, 1)));
+      KPeerInfo info = new KPeerInfo("127.0.0.1", 8080, new KId(new List.filled(20, 1)));
       kbucket.update(info);
       return kbucket.length().then((int length) {
         unit.expect(length, 1);
@@ -22,10 +22,10 @@ void main() {
     
     unit.test("update remove auto", () {
       KBucket kbucket = new KBucket(3);
-      KPeerInfo info1 = new KPeerInfo("127.0.0.1", 8081, new KadId(new List.filled(20, 1)));
-      KPeerInfo info2 = new KPeerInfo("127.0.0.2", 8082, new KadId(new List.filled(20, 2)));
-      KPeerInfo info3 = new KPeerInfo("127.0.0.3", 8083, new KadId(new List.filled(20, 3)));
-      KPeerInfo info4 = new KPeerInfo("127.0.0.4", 8084, new KadId(new List.filled(20, 4)));
+      KPeerInfo info1 = new KPeerInfo("127.0.0.1", 8081, new KId(new List.filled(20, 1)));
+      KPeerInfo info2 = new KPeerInfo("127.0.0.2", 8082, new KId(new List.filled(20, 2)));
+      KPeerInfo info3 = new KPeerInfo("127.0.0.3", 8083, new KId(new List.filled(20, 3)));
+      KPeerInfo info4 = new KPeerInfo("127.0.0.4", 8084, new KId(new List.filled(20, 4)));
 
       kbucket.update(info1);
       kbucket.update(info2);
@@ -48,12 +48,12 @@ void main() {
     
     unit.test("update same info", () {
       KBucket kbucket = new KBucket(3);
-      KPeerInfo info1 = new KPeerInfo("127.0.0.1", 8081, new KadId(new List.filled(20, 1)));
-      KPeerInfo info2 = new KPeerInfo("127.0.0.2", 8082, new KadId(new List.filled(20, 2)));
+      KPeerInfo info1 = new KPeerInfo("127.0.0.1", 8081, new KId(new List.filled(20, 1)));
+      KPeerInfo info2 = new KPeerInfo("127.0.0.2", 8082, new KId(new List.filled(20, 2)));
 
       kbucket.update(info1);
       kbucket.update(info2);
-      kbucket.update(new KPeerInfo("127.0.0.1", 8081, new KadId(new List.filled(20, 1))));
+      kbucket.update(new KPeerInfo("127.0.0.1", 8081, new KId(new List.filled(20, 1))));
 
       return kbucket.length().then((int length) {
         unit.expect(length, 2);

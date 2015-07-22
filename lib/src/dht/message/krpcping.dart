@@ -4,7 +4,7 @@ import 'dart:core';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
-import '../kadid.dart';
+import '../kid.dart';
 import '../../util/bencode.dart';
 import '../../util/hetibencode.dart';
 import 'package:hetimacore/hetimacore.dart';

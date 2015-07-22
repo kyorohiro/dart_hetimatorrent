@@ -4,17 +4,17 @@ import 'dart:core';
 import 'dart:async';
 import 'dart:math';
 
-class KadId {
+class KId {
   List<int> _id = [];
   List<int> get id => new List.from(_id);
 
-  KadId(List<int> id) {
+  KId(List<int> id) {
     this._id.addAll(id);
   }
 
   /// 159 is long distance
   /// 0 is short distance
-  KadId.createFromRootingTabkeIndex(int tableIndex) {
+  KId.createFromRootingTabkeIndex(int tableIndex) {
     List<int> p = new List.filled(20, 0);
     int indexPerByte = tableIndex ~/ 8;
     int inputPerByte = 0x01 << (tableIndex % 8);
@@ -37,15 +37,15 @@ class KadId {
     return 0;
   }
 
-  KadId xor(KadId b) {
+  KId xor(KId b) {
     List<int> ret = [];
     for (int i = 0; i < b._id.length; i++) {
       ret.add(this._id[i] ^ b._id[i]);
     }
-    return new KadId(ret);
+    return new KId(ret);
   }
 
-  bool operator >(KadId b) {
+  bool operator >(KId b) {
     for (int i = 0; i < b._id.length; i++) {
       if (this._id[i] == b._id[i]) {
         continue;
@@ -58,7 +58,7 @@ class KadId {
     return false;
   }
 
-  bool operator ==(KadId b) {
+  bool operator ==(KId b) {
     for (int i = 0; i < b._id.length; i++) {
       if (this._id[i] != b._id[i]) {
         return false;
@@ -67,7 +67,7 @@ class KadId {
     return true;
   }
 
-  bool operator >=(KadId b) {
+  bool operator >=(KId b) {
     if (this == b) {
       return true;
     } else if (this > b) {
@@ -77,7 +77,7 @@ class KadId {
     }
   }
 
-  bool operator <(KadId b) {
+  bool operator <(KId b) {
     if (this == b) {
       return false;
     } else {
@@ -85,7 +85,7 @@ class KadId {
     }
   }
 
-  bool operator <=(KadId b) {
+  bool operator <=(KId b) {
     if (this == b) {
       return true;
     } else if (this > b) {
@@ -95,7 +95,7 @@ class KadId {
     }
   }
 
-  static Future<KadId> createIDAtRandom([List<int> op = null]) {
+  static Future<KId> createIDAtRandom([List<int> op = null]) {
     return new Future(() {
       List<int> ret = [];
 
@@ -107,7 +107,7 @@ class KadId {
         }
         ret.add(r.nextInt(0xff) & v);
       }
-      return new KadId(ret);
+      return new KId(ret);
     });
   }
 }

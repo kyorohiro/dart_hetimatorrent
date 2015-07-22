@@ -5,7 +5,7 @@ import 'dart:async';
 import 'dart:math';
 import '../util/shufflelinkedlist.dart';
 import 'package:hetimanet/hetimanet.dart';
-import 'kadid.dart';
+import 'kid.dart';
 
 class KPeerInfo {
   int _port = 0;
@@ -14,10 +14,10 @@ class KPeerInfo {
   List<int> _ip = [];
   List<int> get ipAsList => new List.from(_ip);
   String get ipAsString => HetiIP.toIPString(_ip);
-  KadId _id = null;
-  KadId get id => _id;
+  KId _id = null;
+  KId get id => _id;
 
-  KPeerInfo(String ip, int port, KadId id) {
+  KPeerInfo(String ip, int port, KId id) {
     _ip.addAll(HetiIP.toRawIP(ip));
     _port = port;
     _id = id;
