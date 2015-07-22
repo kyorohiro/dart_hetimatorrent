@@ -13,7 +13,14 @@ abstract class KNodeComm {
 }
 
 class KNodeCommReceive {
-  
+  String ip = "";
+  int port;
+  List<int> bytes = [];
+  KNodeCommReceive (String ip, int port, List<int> bytes) {
+    this.ip = ip;
+    this.port =port;
+    this.bytes.addAll(bytes);
+  }
 }
 
 class KNodeCommSimuMane {
@@ -64,7 +71,7 @@ class KNodeCommSimu extends KNodeComm {
 
   Future receive(List<int> bytes) {
     return new Future(() {
-      _receiveMessage.add(new KNodeCommReceive());      
+      _receiveMessage.add(new KNodeCommReceive(ip, port, bytes));      
     });
   }
 }
