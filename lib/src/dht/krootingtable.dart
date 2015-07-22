@@ -37,17 +37,18 @@ class KBucket {
   }
 }
 
+// 161 table 0<=t<=160
 class RootingTable {
   List<KBucket> _kBuckets = [];
 
   RootingTable(int k_bucketSize) {
-    for(int i=0;i<160;i++) {
+    for(int i=0;i<161;i++) {
       _kBuckets.add(new KBucket(k_bucketSize));
     }
   }
 
   Future update(KPeerInfo info) {
-    ;
+    
   }
   
   Future<List<KPeerInfo>> findNode(KadId id) {
