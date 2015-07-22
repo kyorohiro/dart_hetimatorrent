@@ -3,25 +3,8 @@ library hetimatorrent.dht.knode;
 import 'dart:core';
 import 'dart:async';
 import 'dart:math';
+import 'package:hetimanet/hetimanet.dart';
 
-
-abstract class KNodeComm {
-  Future start();
-  Future stop();
-  Future send(String ip, int port, List<int> bytes);
-  Stream<KNodeCommReceive> onReceive;
-}
-
-class KNodeCommReceive {
-  String ip = "";
-  int port;
-  List<int> bytes = [];
-  KNodeCommReceive (String ip, int port, List<int> bytes) {
-    this.ip = ip;
-    this.port =port;
-    this.bytes.addAll(bytes);
-  }
-}
 
 class KNodeCommSimuMane {
   KNodeCommSimuMane._em();
@@ -31,18 +14,16 @@ class KNodeCommSimuMane {
   Map<String, KNodeCommSimu> nodes = {};
 }
 
-class KNodeCommSimu extends KNodeComm {
+class KNodeCommSimu extends HetiUdpSocket {
   String _ip = "";
   int _port;
   
   String get ip => _ip;
   int get port => _port;
 
-  KNodeComm(String ip, int port) {
+  Future<int> bind(String address, int port) {
     this._ip = ip;
     this._port = port;
-  }
-  Future start() {
     return new Future(() {
       if (KNodeCommSimuMane.instance.nodes.containsKey("${ip}:${port}")) {
         throw {"":"already start"};
@@ -51,27 +32,29 @@ class KNodeCommSimu extends KNodeComm {
     });
   }
 
-  Future stop() {
+  Future<dynamic> close() {
     return new Future((){
       KNodeCommSimuMane.instance.nodes["${ip}:${port}"] = this;      
     });
   }
 
-  Future send(String ip, int port, List<int> bytes) {
+  Future<HetiUdpSendInfo> send(List<int> buffer, String address, int port) {
     return new Future((){
       if (KNodeCommSimuMane.instance.nodes.containsKey("${ip}:${port}")) {
         throw {"":"not found"};
       }
-      return KNodeCommSimuMane.instance.nodes["${ip}:${port}"].receive(bytes);
+      return KNodeCommSimuMane.instance.nodes["${ip}:${port}"].receive(buffer);
     });
   }
   
   StreamController _receiveMessage = new StreamController.broadcast();
-  Stream<KNodeCommReceive> get onReceive => _receiveMessage.stream;
+  Stream<HetiReceiveUdpInfo> onReceive() {
+    return _receiveMessage.stream;
+  }
 
   Future receive(List<int> bytes) {
     return new Future(() {
-      _receiveMessage.add(new KNodeCommReceive(ip, port, bytes));      
+      _receiveMessage.add(new HetiReceiveUdpInfo(bytes, ip, port));      
     });
   }
 }
