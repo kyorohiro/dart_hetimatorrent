@@ -11,8 +11,14 @@ class KNodeComm {
   Future read(List<int> bytes);
 }
 
-class KNodeCommSimulator {
-
+class KNodeCommSimuMane {
+  KNodeCommSimuMane._em();
+  static KNodeCommSimuMane _mane = new KNodeCommSimuMane._em();
+  static KNodeCommSimuMane get instance => _mane;
+  
+  Map<String, KNodeCommSimu> nodes = {};
+}
+class KNodeCommSimu {
   Future start(String ip, int port) {
     ;
   }
@@ -27,6 +33,4 @@ class KNodeCommSimulator {
   }
 }
 
-class KNode {
-  
-}
+class KNode {}
