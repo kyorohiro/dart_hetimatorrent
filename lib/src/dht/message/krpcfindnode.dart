@@ -14,14 +14,17 @@ import 'dart:typed_data';
 class KrpcFindNodeQuery extends KrpcQuery {
   //find_node Query = {"t":"aa", "y":"q", "q":"find_node", "a": {"id":"abcdefghij0123456789", "target":"mnopqrstuvwxyz123456"}}
   //bencoded = d1:ad2:id20:abcdefghij01234567896:target20:mnopqrstuvwxyz123456e1:q9:find_node1:t2:aa1:y1:qe
-  KrpcFindNodeQuery.fromString(String transactionIdAsString, String queryingNodesIdAsString, String targetNodeIdAsString) {
+  KrpcFindNodeQuery.fromString(String transactionIdAsString, String queryingNodesIdAsString, String targetNodeIdAsString) 
+  :super(KrpcMessage.FIND_NODE_QUERY) {
     List<int> transactionId = UTF8.encode(transactionIdAsString);
     List<int> queryingNodesId = UTF8.encode(queryingNodesIdAsString);
     List<int> targetNodeId = UTF8.encode(targetNodeIdAsString);
     _init(transactionId, queryingNodesId, targetNodeId);
   }
 
-  KrpcFindNodeQuery(List<int> transactionId, List<int> queryingNodesId, List<int> targetNodeId) {}
+  KrpcFindNodeQuery(List<int> transactionId, List<int> queryingNodesId, List<int> targetNodeId)
+  :super(KrpcMessage.FIND_NODE_QUERY) {}
+
   _init(List<int> transactionId, List<int> queryingNodesId, List<int> targetNodeId) {
     if (transactionId is Uint8List) {
       transactionId = new Uint8List.fromList(transactionId);
@@ -35,7 +38,8 @@ class KrpcFindNodeQuery extends KrpcQuery {
     rawMessageMap.addAll({"a": {"id": queryingNodesId, "target": targetNodeId}, "q": "find_node", "t": transactionId, "y": "q"});
   }
 
-  KrpcFindNodeQuery.fromMap(Map<String, Object> messageAsMap) {
+  KrpcFindNodeQuery.fromMap(Map<String, Object> messageAsMap) 
+  :super(KrpcMessage.FIND_NODE_QUERY) {
     if (!KrpcQuery.queryCheck(messageAsMap, "find_node")) {
       throw {};
     }
@@ -54,13 +58,15 @@ class KrpcFindNodeResponse extends KrpcResponse {
 
   // Response with peers = {"t":"aa", "y":"r", "r": {"id":"abcdefghij0123456789", "token":"aoeusnth", "values": ["axje.u", "idhtnm"]}}
   // bencoded = d1:rd2:id20:abcdefghij01234567895:token8:aoeusnth6:valuesl6:axje.u6:idhtnmee1:t2:aa1:y1:re
-  KrpcFindNodeResponse.fromString(String transactionIdAsString, String queryingNodesIdAsString, List<int> compactNodeInfo) {
+  KrpcFindNodeResponse.fromString(String transactionIdAsString, String queryingNodesIdAsString, List<int> compactNodeInfo) 
+  :super(KrpcMessage.FIND_NODE_RESPONSE) {
     List<int> transactionId = UTF8.encode(transactionIdAsString);
     List<int> queryingNodesId = UTF8.encode(queryingNodesIdAsString);
     _init(transactionId, queryingNodesId, compactNodeInfo);
   }
   
-  KrpcFindNodeResponse(List<int> transactionId, List<int> queryingNodesId, List<int> compactNodeInfo) {
+  KrpcFindNodeResponse(List<int> transactionId, List<int> queryingNodesId, List<int> compactNodeInfo) 
+  :super(KrpcMessage.FIND_NODE_RESPONSE) {
     if (!(transactionId is Uint8List)) {
       transactionId = new Uint8List.fromList(transactionId);
     }
@@ -77,7 +83,8 @@ class KrpcFindNodeResponse extends KrpcResponse {
     rawMessageMap.addAll({"r": {"id": queryingNodesId, "nodes": compactNodeInfo}, "t": transactionId, "y": "r"});
   }
 
-  KrpcFindNodeResponse.fromMap(Map<String, Object> messageAsMap) {
+  KrpcFindNodeResponse.fromMap(Map<String, Object> messageAsMap)
+  :super(KrpcMessage.FIND_NODE_RESPONSE) {
     if (!KrpcResponse.queryCheck(messageAsMap)) {
       throw {};
     }

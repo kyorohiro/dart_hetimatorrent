@@ -20,13 +20,15 @@ class KrpcPingQuery extends KrpcQuery {
  * ping Query = {"t":"aa", "y":"q", "q":"ping", "a":{"id":"abcdefghij0123456789"}}
  * bencoded = d1:ad2:id20:abcdefghij0123456789e1:q4:ping1:t2:aa1:y1:qe
  */
-  KrpcPingQuery.fromString(String transactionIdAsString, String queryingNodesIdAsString) {
+  KrpcPingQuery.fromString(String transactionIdAsString, String queryingNodesIdAsString)
+  :super(KrpcMessage.PING_QUERY) {
     List<int> transactionId = UTF8.encode(transactionIdAsString);
     List<int> queryingNodesId = UTF8.encode(queryingNodesIdAsString);
     _init(transactionId, queryingNodesId);
   }
 
-  KrpcPingQuery(List<int> transactionId, List<int> queryingNodesId) {
+  KrpcPingQuery(List<int> transactionId, List<int> queryingNodesId) 
+  :super(KrpcMessage.PING_QUERY){
     if(!(transactionId is Uint8List)) {
       transactionId = new Uint8List.fromList(transactionId);
     }
@@ -45,7 +47,8 @@ class KrpcPingQuery extends KrpcQuery {
     }
     rawMessageMap.addAll({"a": {"id": queryingNodesId}, "q": "ping", "t": transactionId, "y": "q"});
   }
-  KrpcPingQuery.fromMap(Map<String, Object> messageAsMap) {
+  KrpcPingQuery.fromMap(Map<String, Object> messageAsMap)
+  :super(KrpcMessage.PING_QUERY) {
     if (!KrpcQuery.queryCheck(messageAsMap, "ping")) {
       throw {};
     }
@@ -64,13 +67,15 @@ class KrpcPingQuery extends KrpcQuery {
 // bencoded = d1:rd2:id20:mnopqrstuvwxyz123456e1:t2:aa1:y1:re
 class KrpcPingResponse extends KrpcResponse {
 
-  KrpcPingResponse.fromString(String transactionIdAsString, String queryingNodesIdAsString) {
+  KrpcPingResponse.fromString(String transactionIdAsString, String queryingNodesIdAsString) 
+  :super(KrpcMessage.PING_RESPONSE) {
     List<int> transactionId = UTF8.encode(transactionIdAsString);
     List<int> queryingNodesId = UTF8.encode(queryingNodesIdAsString);
     rawMessageMap.addAll({"r": {"id": queryingNodesId}, "t": transactionId, "y": "r"});
   }
 
-  KrpcPingResponse(List<int> transactionId, List<int>  queryingNodesId) {
+  KrpcPingResponse(List<int> transactionId, List<int>  queryingNodesId)
+  :super(KrpcMessage.PING_RESPONSE) {
     if(transactionId is Uint8List) {
       transactionId = new Uint8List.fromList(transactionId);
     }
@@ -80,7 +85,8 @@ class KrpcPingResponse extends KrpcResponse {
     rawMessageMap.addAll({"r": {"id": queryingNodesId}, "t": transactionId, "y": "r"});
   }
 
-  KrpcPingResponse.fromMap(Map<String, Object> messageAsMap) {
+  KrpcPingResponse.fromMap(Map<String, Object> messageAsMap) 
+  :super(KrpcMessage.PING_RESPONSE) {
     if (!KrpcResponse.queryCheck(messageAsMap)) {
       throw {};
     }

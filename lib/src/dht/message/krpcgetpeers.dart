@@ -12,12 +12,14 @@ class KrpcGetPeersQuery extends KrpcQuery {
   //find_node Query = {"t":"aa", "y":"q", "q":"find_node", "a": {"id":"abcdefghij0123456789", "target":"mnopqrstuvwxyz123456"}}
   //bencoded = d1:ad2:id20:abcdefghij01234567896:target20:mnopqrstuvwxyz123456e1:q9:find_node1:t2:aa1:y1:qe
 
-  KrpcGetPeersQuery.fromString(String transactionIdAsString, String queryingNodesIdAsString, List<int> infoHash) {
+  KrpcGetPeersQuery.fromString(String transactionIdAsString, String queryingNodesIdAsString, List<int> infoHash)
+  :super(KrpcMessage.GET_PEERS_QUERY) {
     List<int> transactionId = UTF8.encode(transactionIdAsString);
     List<int> queryingNodesId = UTF8.encode(queryingNodesIdAsString);
     _init(transactionId, queryingNodesId, infoHash);
   }
-  KrpcGetPeersQuery(List<int> transactionId, List<int> queryingNodesId, List<int> infoHash) {
+  KrpcGetPeersQuery(List<int> transactionId, List<int> queryingNodesId, List<int> infoHash)
+  :super(KrpcMessage.GET_PEERS_QUERY){
     _init(transactionId, queryingNodesId, infoHash);
   }
 
@@ -33,7 +35,8 @@ class KrpcGetPeersQuery extends KrpcQuery {
     }
     rawMessageMap.addAll({"a": {"id": queryingNodesId, "info_hash": infoHash}, "q": "get_peers", "t": transactionId, "y": "q"});
   }
-  KrpcGetPeersQuery.fromMap(Map<String, Object> messageAsMap) {
+  KrpcGetPeersQuery.fromMap(Map<String, Object> messageAsMap)
+  :super(KrpcMessage.GET_PEERS_QUERY){
     if (!KrpcQuery.queryCheck(messageAsMap, "get_peers")) {
       throw {};
     }
@@ -51,7 +54,8 @@ class KrpcGetPeersQuery extends KrpcQuery {
 class KrpcGetPeersResponse extends KrpcResponse {
   // Response with peers = {"t":"aa", "y":"r", "r": {"id":"abcdefghij0123456789", "token":"aoeusnth", "values": ["axje.u", "idhtnm"]}}
   // bencoded = d1:rd2:id20:abcdefghij01234567895:token8:aoeusnth6:valuesl6:axje.u6:idhtnmee1:t2:aa1:y1:re
-  KrpcGetPeersResponse.withPeersFromString(String transactionIdAsString, String queryingNodesIdAsString, String opaqueWriteTokenAsString, List<String> peerInfoStringsAsString) {
+  KrpcGetPeersResponse.withPeersFromString(String transactionIdAsString, String queryingNodesIdAsString, String opaqueWriteTokenAsString, List<String> peerInfoStringsAsString) 
+  :super(KrpcMessage.GET_PEERS_RESPONSE){
     List<int> transactionId = UTF8.encode(transactionIdAsString);
     List<int> queryingNodesId = UTF8.encode(queryingNodesIdAsString);
     List<int> opaqueWriteToken = UTF8.encode(opaqueWriteTokenAsString);
@@ -62,7 +66,8 @@ class KrpcGetPeersResponse extends KrpcResponse {
     _initWithPeers(transactionId, queryingNodesId, opaqueWriteToken, peerInfoStrings);
   }
 
-  KrpcGetPeersResponse.withPeers(List<int> transactionId, List<int> queryingNodesId, List<int> opaqueWriteToken, List<List<int>> peerInfoStrings) {
+  KrpcGetPeersResponse.withPeers(List<int> transactionId, List<int> queryingNodesId, List<int> opaqueWriteToken, List<List<int>> peerInfoStrings) 
+  :super(KrpcMessage.GET_PEERS_RESPONSE){
     _initWithPeers(transactionId, queryingNodesId, opaqueWriteToken, peerInfoStrings);
   }
 
@@ -87,14 +92,16 @@ class KrpcGetPeersResponse extends KrpcResponse {
   // Response with closest nodes = {"t":"aa", "y":"r", "r": {"id":"abcdefghij0123456789", "token":"aoeusnth", "nodes": "def456..."}}
   // bencoded = d1:rd2:id20:abcdefghij01234567895:nodes9:def456...5:token8:aoeusnthe1:t2:aa1:y1:re
   KrpcGetPeersResponse.withClosestNodesFromString(String transactionIdAsString, String queryingNodesIdAsString, 
-      String opaqueWriteTokenAsString, List<int> compactNodeInfo) {
+      String opaqueWriteTokenAsString, List<int> compactNodeInfo) 
+    :super(KrpcMessage.GET_PEERS_RESPONSE) {
     List<int> transactionId = UTF8.encode(transactionIdAsString);
     List<int> queryingNodesId = UTF8.encode(queryingNodesIdAsString);
     List<int> opaqueWriteToken = UTF8.encode(opaqueWriteTokenAsString);
     _initWithClosestNodes(transactionId, queryingNodesId, opaqueWriteToken, compactNodeInfo);
   }
   
-  KrpcGetPeersResponse.withClosestNodes(List<int> transactionId, List<int> queryingNodesId, List<int> opaqueWriteToken, List<int> compactNodeInfo) {
+  KrpcGetPeersResponse.withClosestNodes(List<int> transactionId, List<int> queryingNodesId, List<int> opaqueWriteToken, List<int> compactNodeInfo)
+  :super(KrpcMessage.GET_PEERS_RESPONSE) {
     _initWithClosestNodes(transactionId, queryingNodesId, opaqueWriteToken, compactNodeInfo);
   }
   _initWithClosestNodes(List<int> transactionId, List<int> queryingNodesId, List<int> opaqueWriteToken, List<int> compactNodeInfo) {
@@ -113,7 +120,8 @@ class KrpcGetPeersResponse extends KrpcResponse {
     rawMessageMap.addAll({"r": {"id": queryingNodesId, "nodes": compactNodeInfo, "token": opaqueWriteToken}, "t": transactionId, "y": "r"});
   }
 
-  KrpcGetPeersResponse.FromMap(Map<String, Object> messageAsMap) {
+  KrpcGetPeersResponse.FromMap(Map<String, Object> messageAsMap) 
+  :super(KrpcMessage.GET_PEERS_RESPONSE) {
     if (((messageAsMap)["r"] as Map).containsKey("values") == true) {
       _initWithPeersFromMap(messageAsMap);
     } else {
@@ -121,7 +129,8 @@ class KrpcGetPeersResponse extends KrpcResponse {
     }
   }
 
-  KrpcGetPeersResponse.withPeersFromMap(Map<String, Object> messageAsMap) {
+  KrpcGetPeersResponse.withPeersFromMap(Map<String, Object> messageAsMap) 
+  :super(KrpcMessage.GET_PEERS_RESPONSE) {
     _initWithPeersFromMap(messageAsMap);
   }
 
@@ -133,7 +142,8 @@ class KrpcGetPeersResponse extends KrpcResponse {
     rawMessageMap.addAll({"r": {"id": r["id"], "token": r["token"], "values": r["values"]}, "t": messageAsMap["t"], "y": "r"});
   }
 
-  KrpcGetPeersResponse.withClosestNodesFromMap(Map<String, Object> messageAsMap) {
+  KrpcGetPeersResponse.withClosestNodesFromMap(Map<String, Object> messageAsMap)
+  :super(KrpcMessage.GET_PEERS_RESPONSE) {
     _initWithClosestNodesFromMap(messageAsMap);
   }
   _initWithClosestNodesFromMap(Map<String, Object> messageAsMap) {

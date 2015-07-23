@@ -17,16 +17,35 @@ abstract class KrpcResponseInfo {
 }
 
 class KrpcMessage {
+  static const int NONE_MESSAGE = 0;
+  static const int NONE_QUERY = 100;
+  static const int NONE_RESPONSE = 110;
+  static const int PING_QUERY = 101;
+  static const int PING_RESPONSE = 111;
+  static const int FIND_NODE_QUERY = 102;
+  static const int FIND_NODE_RESPONSE = 112;
+  static const int GET_PEERS_QUERY = 103;
+  static const int GET_PEERS_RESPONSE = 113;
+  static const int ANNOUNCE_QUERY = 104;
+  static const int ANNOUNCE_RESPONSE = 114;
+  static const int ERROR = 200;
+
   Map<String, Object> _messageAsMap = {};
   Map<String, Object> get messageAsMap => new Map.from(_messageAsMap);
   List<int> get messageAsBencode => Bencode.encode(_messageAsMap);
-  KrpcMessage() {}
+  
+  int _id = NONE_MESSAGE;
+  int get id => _id;
+  
+  KrpcMessage(int id) {
+    this._id = id;
+  }
   KrpcMessage.fromMap(Map map) {
     _messageAsMap = map;
   }
 
   Map<String, Object> get rawMessageMap => _messageAsMap;
-  
+
   static Future<KrpcMessage> decode(EasyParser parser, KrpcResponseInfo info) {
     parser.push();
     return HetiBencode.decode(parser).then((Object v) {
@@ -107,14 +126,14 @@ class KrpcMessage {
 }
 
 class KrpcQuery extends KrpcMessage {
-  KrpcQuery() {}
+  KrpcQuery(int id):super(id) {}
 
   KId get queryingNodesId {
     Map<String, Object> a = messageAsMap["a"];
     return new KId(a["id"] as List<int>);
   }
 
-  KrpcQuery.fromMap(Map map) {
+  KrpcQuery.fromMap(Map map):super(KrpcMessage.NONE_QUERY){
     _messageAsMap = map;
   }
   static bool queryCheck(Map<String, Object> messageAsMap, String action) {
@@ -141,9 +160,9 @@ class KrpcResponse extends KrpcMessage {
     Map<String, Object> r = messageAsMap["r"];
     return new KId(r["id"] as List<int>);
   }
-  
-  KrpcResponse() {}
-  KrpcResponse.fromMap(Map map) {
+
+  KrpcResponse(int id):super(id) {}
+  KrpcResponse.fromMap(Map map):super(KrpcMessage.NONE_RESPONSE) {
     _messageAsMap = map;
   }
   static bool queryCheck(Map<String, Object> messageAsMap) {
@@ -170,7 +189,7 @@ class KrpcError extends KrpcMessage {
   Map<String, Object> get messageAsMap => new Map.from(_messageAsMap);
   List<int> get messageAsBencode => Bencode.encode(_messageAsMap);
 
-  KrpcError(String transactionId, int errorCode, String errorMessage, [String messageType = "e"]) {
+  KrpcError(String transactionId, int errorCode, String errorMessage, [String messageType = "e"]):super(KrpcMessage.ERROR) {
     _messageAsMap = {"t": transactionId, "y": messageType, "e": [errorCode, errorMessage]};
   }
 }

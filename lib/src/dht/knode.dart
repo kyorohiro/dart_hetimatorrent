@@ -163,20 +163,25 @@ class KNode extends Object with KrpcResponseInfo {
 class KNodeAI {
   
   start(KNode node) {
-    
   }
   
   stop(KNode node) {
     
   }
-  
-  maintenance() {
-    
+
+  maintenance(KNode node) {
+    node._rootingtable.findNode(node._nodeId).then((List<KPeerInfo> infos) {
+      for(KPeerInfo info in infos) {
+        node.sendFindNode(info.ipAsString, info.port, node._nodeId.id);
+      }
+    });
   }
 
   onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcQuery query) {
     node._rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, query.queryingNodesId));
+    
   }
+
   onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcResponse response) {
     node._rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, response.queriedNodesId));
   }
