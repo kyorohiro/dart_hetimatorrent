@@ -10,35 +10,55 @@ import 'package:hetimacore/hetimacore.dart';
 import 'krpcping.dart';
 import 'dart:convert';
 
+abstract class KrpcResponseInfo {
+  String getQueryNameFromTransactionId(String transactionId);
+}
+
 class KrpcMessage {
-  static Future<KrpcMessage> decode(EasyParser parser) {
+  static Future<KrpcMessage> decode(EasyParser parser, KrpcResponseInfo info) {
     parser.push();
     return HetiBencode.decode(parser).then((Object v) {
       if (!(v is Map)) {
         throw {};
       }
-      KrpcMessage ret = null;
       Map<String, Object> messageAsMap = v;
-      if (!messageAsMap.containsKey("t") || !messageAsMap.containsKey("y")) {
-        throw {};
-      }
-      if (messageAsMap["y"] == "q") {
-        switch (messageAsMap["q"]) {
+      if (KrpcQuery.queryCheck(messageAsMap, null)) {
+        KrpcMessage ret = null; 
+        switch(messageAsMap["q"]) {
           case "ping":
-            ret = new KrpcPingQuery.fromMap(v);
             break;
-        }
-      } else if (messageAsMap["y"] == "r") {} else {}
-
-      parser.pop();
-      return ret;
+          case "find_node":
+            break;
+          case "get_peers":
+            break;
+          case "announce_peer":
+            break;
+          default:
+        } 
+      } else if (KrpcResponse.queryCheck(messageAsMap)) {
+        switch(info.getQueryNameFromTransactionId(messageAsMap["t"])) {
+          case "ping":
+            break;
+          case "find_node":
+            break;
+          case "get_peers":
+            break;
+          case "announce_peer":
+            break;
+          default:
+        } 
+      } else {
+        KrpcMessage ret = null;
+        parser.pop();
+        return ret;
+      }
     }).catchError((e) {
       parser.back();
       parser.pop();
       throw e;
     });
   }
-  
+
   static Future<KrpcMessage> decodeTest(EasyParser parser, Function a) {
     parser.push();
     return HetiBencode.decode(parser).then((Object v) {
@@ -69,7 +89,7 @@ class KrpcQuery extends KrpcMessage {
       if (UTF8.decode(messageAsMap["q"]) != action) {
         throw {};
       }
-    } else if (messageAsMap["q"] != action) {
+    } else if (action != null && messageAsMap["q"] != action) {
       throw {};
     }
     return true;
@@ -88,7 +108,6 @@ class KrpcResponse extends KrpcMessage {
     return true;
   }
 }
-
 
 class KrpcError extends KrpcMessage {
   static const int GENERIC_ERROR = 201;

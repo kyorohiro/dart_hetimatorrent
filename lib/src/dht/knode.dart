@@ -11,6 +11,7 @@ import 'message/krpcfindnode.dart';
 import 'message/krpcgetpeers.dart';
 import 'kid.dart';
 import 'dart:convert';
+import '../util/shufflelinkedlist.dart';
 
 class KNode {
   HetiSocketBuilder _socketBuilder = null;
@@ -19,6 +20,7 @@ class KNode {
   Map<String, EasyParser> buffers = {};
   KId _nodeId = null;
   KId get nodeId => _nodeId;
+  List<SendInfo> queryInfo = [];
 
   KNode(HetiSocketBuilder socketBuilder, {int kBucketSize: 8, List<int> nodeIdAsList: null}) {
     if (nodeIdAsList == null) {
@@ -42,14 +44,21 @@ class KNode {
             buffers["${info.remoteAddress}:${info.remotePort}"] = new EasyParser(new ArrayBuilder());
           }
           EasyParser parser = buffers["${info.remoteAddress}:${info.remotePort}"];
+          
         });
       });
     });
   }
 
   static int id = 0;
-  Future sendPing() {
-    KrpcPingQuery query = new KrpcPingQuery(UTF8.encode("p_${id}"), _nodeId.id);
+  Future sendPing(String ip, int port) {
+    Completer c;
+    new Future(() {
+      KrpcPingQuery query = new KrpcPingQuery(UTF8.encode("p_${id}"), _nodeId.id);
+      queryInfo.add(new SendInfo ("p_${id}", c));
+      return _udpSocket.send(query.messageAsBencode, ip, port);
+    }).catchError(c.completeError);
+    return c.future;
   }
 
   Future sendFindNode() {}
@@ -63,5 +72,20 @@ class KNode {
       }
       return _udpSocket.close();
     });
+  }
+}
+
+class SendInfo {
+  String _id = "";
+  String get id => _id;
+
+  int _time = 0;
+  int get time => _time;
+
+  Completer _c = null;
+  SendInfo(String id, Completer c) {
+    this._id = id;
+    this._c = c;
+    this._time = new DateTime.now().millisecondsSinceEpoch;
   }
 }
