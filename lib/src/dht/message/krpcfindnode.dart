@@ -59,12 +59,16 @@ class KrpcFindNodeResponse extends KrpcResponse {
     List<int> queryingNodesId = UTF8.encode(queryingNodesIdAsString);
     _init(transactionId, queryingNodesId, compactNodeInfo);
   }
+  
   KrpcFindNodeResponse(List<int> transactionId, List<int> queryingNodesId, List<int> compactNodeInfo) {
-    if (transactionId is Uint8List) {
+    if (!(transactionId is Uint8List)) {
       transactionId = new Uint8List.fromList(transactionId);
     }
-    if (queryingNodesId is Uint8List) {
+    if (!(queryingNodesId is Uint8List)) {
       queryingNodesId = new Uint8List.fromList(queryingNodesId);
+    }
+    if (!(compactNodeInfo is Uint8List)) {
+      compactNodeInfo = new Uint8List.fromList(compactNodeInfo);
     }
     _init(transactionId, queryingNodesId, compactNodeInfo);
   }

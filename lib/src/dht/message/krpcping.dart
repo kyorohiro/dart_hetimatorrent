@@ -23,19 +23,28 @@ class KrpcPingQuery extends KrpcQuery {
   KrpcPingQuery.fromString(String transactionIdAsString, String queryingNodesIdAsString) {
     List<int> transactionId = UTF8.encode(transactionIdAsString);
     List<int> queryingNodesId = UTF8.encode(queryingNodesIdAsString);
-    rawMessageMap.addAll({"a": {"id": queryingNodesId}, "q": "ping", "t": transactionId, "y": "q"});
+    _init(transactionId, queryingNodesId);
   }
 
   KrpcPingQuery(List<int> transactionId, List<int> queryingNodesId) {
-    if(transactionId is Uint8List) {
+    if(!(transactionId is Uint8List)) {
       transactionId = new Uint8List.fromList(transactionId);
     }
-    if(queryingNodesId is Uint8List) {
+    if(!(queryingNodesId is Uint8List)) {
+      queryingNodesId = new Uint8List.fromList(queryingNodesId);
+    }
+    _init(transactionId, queryingNodesId);
+  }
+
+  _init(List<int> transactionId, List<int> queryingNodesId) {
+    if(!(transactionId is Uint8List)) {
+      transactionId = new Uint8List.fromList(transactionId);
+    }
+    if(!(queryingNodesId is Uint8List)) {
       queryingNodesId = new Uint8List.fromList(queryingNodesId);
     }
     rawMessageMap.addAll({"a": {"id": queryingNodesId}, "q": "ping", "t": transactionId, "y": "q"});
   }
-
   KrpcPingQuery.fromMap(Map<String, Object> messageAsMap) {
     if (!KrpcQuery.queryCheck(messageAsMap, "ping")) {
       throw {};
