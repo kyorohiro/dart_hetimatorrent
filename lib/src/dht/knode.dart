@@ -114,9 +114,22 @@ class KNode extends Object with KrpcResponseInfo {
     return c.future;
   }
 
-  Future sendFindNode() {}
+  Future sendFindNode() {
+    /*
+    Completer c;
+    new Future(() {
+      KrpcFindNodeQuery query = new KrpcFindNodeQuery(transactionId, queryingNodesId, targetNodeId)
+      //(UTF8.encode("p_${id}"), _nodeId.id);
+      queryInfo.add(new SendInfo("p_${id}", "ping", c));
+      return _udpSocket.send(query.messageAsBencode, ip, port);
+    }).catchError(c.completeError);
+    return c.future;
+     */
+  }
 
-  Future sendGetPeers() {}
+  Future sendGetPeers() {
+    ;
+  }
 
   Future stop() {
     return new Future(() {
@@ -140,6 +153,11 @@ class KNodeAI {
   stop(KNode node) {
     
   }
+  
+  maintenance() {
+    
+  }
+
   onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {
     
   }
