@@ -95,19 +95,17 @@ class KId {
     }
   }
 
-  static Future<KId> createIDAtRandom([List<int> op = null]) {
-    return new Future(() {
-      List<int> ret = [];
+  static KId createIDAtRandom([List<int> op = null]) {
+    List<int> ret = [];
 
-      Random r = new Random(new DateTime.now().millisecondsSinceEpoch);
-      for (int i = 0; i < 20; i++) {
-        int v = 0xff;
-        if (op != null && i < op.length) {
-          v = op[i];
-        }
-        ret.add(r.nextInt(0xff) & v);
+    Random r = new Random(new DateTime.now().millisecondsSinceEpoch);
+    for (int i = 0; i < 20; i++) {
+      int v = 0xff;
+      if (op != null && i < op.length) {
+        v = op[i];
       }
-      return new KId(ret);
-    });
+      ret.add(r.nextInt(0xff) & v);
+    }
+    return new KId(ret);
   }
 }
