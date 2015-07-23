@@ -2,8 +2,6 @@ library hetimatorrent.dht.krpcmessage;
 
 import 'dart:core';
 import 'dart:async';
-import 'dart:math';
-import '../kid.dart';
 import '../../util/bencode.dart';
 import '../../util/hetibencode.dart';
 import 'package:hetimacore/hetimacore.dart';
@@ -18,6 +16,14 @@ abstract class KrpcResponseInfo {
 }
 
 class KrpcMessage {
+  Map<String, Object> _messageAsMap = null;
+  Map<String, Object> get messageAsMap => new Map.from(_messageAsMap);
+  List<int> get messageAsBencode => Bencode.encode(_messageAsMap);
+  KrpcMessage() {}
+  KrpcMessage.fromMap(Map map) {
+    _messageAsMap = map;
+  }
+
   static Future<KrpcMessage> decode(EasyParser parser, KrpcResponseInfo info) {
     parser.push();
     return HetiBencode.decode(parser).then((Object v) {
@@ -26,8 +32,8 @@ class KrpcMessage {
       }
       Map<String, Object> messageAsMap = v;
       if (KrpcQuery.queryCheck(messageAsMap, null)) {
-        KrpcMessage ret = null; 
-        switch(messageAsMap["q"]) {
+        KrpcMessage ret = null;
+        switch (messageAsMap["q"]) {
           case "ping":
             ret = new KrpcPingQuery.fromMap(messageAsMap);
             break;
@@ -41,13 +47,15 @@ class KrpcMessage {
             ret = new KrpcAnnouncePeerQuery.fromMap(messageAsMap);
             break;
           default:
+            ret = new KrpcQuery.fromMap(messageAsMap);
+            break;
         }
-        
+
         parser.pop();
         return ret;
       } else if (KrpcResponse.queryCheck(messageAsMap)) {
-        KrpcMessage ret = null; 
-        switch(info.getQueryNameFromTransactionId(messageAsMap["t"])) {
+        KrpcMessage ret = null;
+        switch (info.getQueryNameFromTransactionId(messageAsMap["t"])) {
           case "ping":
             ret = new KrpcPingResponse.fromMap(messageAsMap);
             break;
@@ -61,9 +69,11 @@ class KrpcMessage {
             ret = new KrpcAnnouncePeerResponse.fromMap(messageAsMap);
             break;
           default:
-        } 
+            ret = new KrpcResponse.fromMap(messageAsMap);
+            break;
+        }
       } else {
-        KrpcMessage ret = null;
+        KrpcMessage ret = new KrpcMessage.fromMap(messageAsMap);
         parser.pop();
         return ret;
       }
@@ -92,6 +102,11 @@ class KrpcMessage {
 }
 
 class KrpcQuery extends KrpcMessage {
+  KrpcQuery() {}
+
+  KrpcQuery.fromMap(Map map) {
+    _messageAsMap = map;
+  }
   static bool queryCheck(Map<String, Object> messageAsMap, String action) {
     if (!messageAsMap.containsKey("a")) {
       return false;
@@ -112,6 +127,10 @@ class KrpcQuery extends KrpcMessage {
 }
 
 class KrpcResponse extends KrpcMessage {
+  KrpcResponse() {}
+  KrpcResponse.fromMap(Map map) {
+    _messageAsMap = map;
+  }
   static bool queryCheck(Map<String, Object> messageAsMap) {
     if (!messageAsMap.containsKey("r")) {
       return false;
@@ -138,30 +157,5 @@ class KrpcError extends KrpcMessage {
 
   KrpcError(String transactionId, int errorCode, String errorMessage, [String messageType = "e"]) {
     _messageAsMap = {"t": transactionId, "y": messageType, "e": [errorCode, errorMessage]};
-  }
-}
-
-class NodeId {
-  KId _id = null;
-  List<int> get id => _id.id;
-
-  NodeId(List<int> id) {
-    this._id = new KId(id);
-  }
-
-  static Future<NodeId> createIDAtRandom([List<int> op = null]) {
-    return new Future(() {
-      List<int> ret = [];
-
-      Random r = new Random(new DateTime.now().millisecondsSinceEpoch);
-      for (int i = 0; i < 20; i++) {
-        int v = 0xff;
-        if (op != null && i < op.length) {
-          v = op[i];
-        }
-        ret.add(r.nextInt(0xff) & v);
-      }
-      return new NodeId(ret);
-    });
   }
 }
