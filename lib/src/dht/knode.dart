@@ -21,7 +21,7 @@ class KNodeCommSimu extends HetiUdpSocket {
   String get ip => _ip;
   int get port => _port;
 
-  Future<int> bind(String address, int port) {
+  Future<int> bind(String ip, int port) {
     this._ip = ip;
     this._port = port;
     return new Future(() {
@@ -38,12 +38,12 @@ class KNodeCommSimu extends HetiUdpSocket {
     });
   }
 
-  Future<HetiUdpSendInfo> send(List<int> buffer, String address, int port) {
+  Future<HetiUdpSendInfo> send(List<int> buffer, String ip, int port) {
     return new Future((){
-      if (KNodeCommSimuMane.instance.nodes.containsKey("${ip}:${port}")) {
+      if (!KNodeCommSimuMane.instance.nodes.containsKey("${ip}:${port}")) {
         throw {"":"not found"};
       }
-      return KNodeCommSimuMane.instance.nodes["${ip}:${port}"].receive(buffer);
+      return KNodeCommSimuMane.instance.nodes["${ip}:${port}"].receive(buffer, _ip, _port);
     });
   }
   
@@ -52,7 +52,7 @@ class KNodeCommSimu extends HetiUdpSocket {
     return _receiveMessage.stream;
   }
 
-  Future receive(List<int> bytes) {
+  Future receive(List<int> bytes, String ip, int port) {
     return new Future(() {
       _receiveMessage.add(new HetiReceiveUdpInfo(bytes, ip, port));      
     });
