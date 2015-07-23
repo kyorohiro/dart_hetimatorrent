@@ -16,7 +16,7 @@ abstract class KrpcResponseInfo {
 }
 
 class KrpcMessage {
-  Map<String, Object> _messageAsMap = null;
+  Map<String, Object> _messageAsMap = {};
   Map<String, Object> get messageAsMap => new Map.from(_messageAsMap);
   List<int> get messageAsBencode => Bencode.encode(_messageAsMap);
   KrpcMessage() {}
@@ -24,6 +24,8 @@ class KrpcMessage {
     _messageAsMap = map;
   }
 
+  Map<String, Object> get rawMessageMap => _messageAsMap;
+  
   static Future<KrpcMessage> decode(EasyParser parser, KrpcResponseInfo info) {
     parser.push();
     return HetiBencode.decode(parser).then((Object v) {

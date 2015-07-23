@@ -12,9 +12,6 @@ import 'krpcmessage.dart';
 import 'dart:typed_data';
 
 class KrpcPingQuery extends KrpcQuery {
-  Map<String, Object> _messageAsMap = null;
-  Map<String, Object> get messageAsMap => new Map.from(_messageAsMap);
-  List<int> get messageAsBencode => Bencode.encode(_messageAsMap);
 
 /**
  * 
@@ -26,7 +23,7 @@ class KrpcPingQuery extends KrpcQuery {
   KrpcPingQuery.fromString(String transactionIdAsString, String queryingNodesIdAsString) {
     List<int> transactionId = UTF8.encode(transactionIdAsString);
     List<int> queryingNodesId = UTF8.encode(queryingNodesIdAsString);
-    _messageAsMap = {"a": {"id": queryingNodesId}, "q": "ping", "t": transactionId, "y": "q"};
+    rawMessageMap.addAll({"a": {"id": queryingNodesId}, "q": "ping", "t": transactionId, "y": "q"});
   }
 
   KrpcPingQuery(List<int> transactionId, List<int> queryingNodesId) {
@@ -36,7 +33,7 @@ class KrpcPingQuery extends KrpcQuery {
     if(queryingNodesId is Uint8List) {
       queryingNodesId = new Uint8List.fromList(queryingNodesId);
     }
-    _messageAsMap = {"a": {"id": queryingNodesId}, "q": "ping", "t": transactionId, "y": "q"};
+    rawMessageMap.addAll({"a": {"id": queryingNodesId}, "q": "ping", "t": transactionId, "y": "q"});
   }
 
   KrpcPingQuery.fromMap(Map<String, Object> messageAsMap) {
@@ -44,7 +41,7 @@ class KrpcPingQuery extends KrpcQuery {
       throw {};
     }
     Map<String, Object> a = messageAsMap["a"];
-    _messageAsMap = {"a": {"id": a["id"]}, "q": messageAsMap["q"], "t": messageAsMap["t"], "y": messageAsMap["y"]};
+    rawMessageMap.addAll({"a": {"id": a["id"]}, "q": messageAsMap["q"], "t": messageAsMap["t"], "y": messageAsMap["y"]});
   }
 
   static Future<KrpcPingQuery> decode(EasyParser parser) {
@@ -57,14 +54,11 @@ class KrpcPingQuery extends KrpcQuery {
 // Response = {"t":"aa", "y":"r", "r": {"id":"mnopqrstuvwxyz123456"}}
 // bencoded = d1:rd2:id20:mnopqrstuvwxyz123456e1:t2:aa1:y1:re
 class KrpcPingResponse extends KrpcResponse {
-  Map<String, Object> _messageAsMap = null;
-  Map<String, Object> get messageAsMap => new Map.from(_messageAsMap);
-  List<int> get messageAsBencode => Bencode.encode(_messageAsMap);
 
   KrpcPingResponse.fromString(String transactionIdAsString, String queryingNodesIdAsString) {
     List<int> transactionId = UTF8.encode(transactionIdAsString);
     List<int> queryingNodesId = UTF8.encode(queryingNodesIdAsString);
-    _messageAsMap = {"r": {"id": queryingNodesId}, "t": transactionId, "y": "r"};
+    rawMessageMap.addAll({"r": {"id": queryingNodesId}, "t": transactionId, "y": "r"});
   }
 
   KrpcPingResponse(List<int> transactionId, List<int>  queryingNodesId) {
@@ -74,7 +68,7 @@ class KrpcPingResponse extends KrpcResponse {
     if(queryingNodesId is Uint8List) {
       queryingNodesId = new Uint8List.fromList(queryingNodesId);
     }
-    _messageAsMap = {"r": {"id": queryingNodesId}, "t": transactionId, "y": "r"};
+    rawMessageMap.addAll({"r": {"id": queryingNodesId}, "t": transactionId, "y": "r"});
   }
 
   KrpcPingResponse.fromMap(Map<String, Object> messageAsMap) {
@@ -82,7 +76,7 @@ class KrpcPingResponse extends KrpcResponse {
       throw {};
     }
     Map<String, Object> r = messageAsMap["r"];
-    _messageAsMap = {"r": {"id": r["id"]}, "t": messageAsMap["t"], "y": messageAsMap["y"]};
+    rawMessageMap.addAll({"r": {"id": r["id"]}, "t": messageAsMap["t"], "y": messageAsMap["y"]});
   }
 
   static Future<KrpcPingResponse> decode(EasyParser parser) {
