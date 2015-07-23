@@ -8,6 +8,9 @@ import '../../util/bencode.dart';
 import '../../util/hetibencode.dart';
 import 'package:hetimacore/hetimacore.dart';
 import 'krpcping.dart';
+import 'krpcfindnode.dart';
+import 'krpcgetpeers.dart';
+import 'krpcannounce.dart';
 import 'dart:convert';
 
 abstract class KrpcResponseInfo {
@@ -26,24 +29,36 @@ class KrpcMessage {
         KrpcMessage ret = null; 
         switch(messageAsMap["q"]) {
           case "ping":
+            ret = new KrpcPingQuery.fromMap(messageAsMap);
             break;
           case "find_node":
+            ret = new KrpcFindNodeQuery.fromMap(messageAsMap);
             break;
           case "get_peers":
+            ret = new KrpcGetPeersQuery.fromMap(messageAsMap);
             break;
           case "announce_peer":
+            ret = new KrpcAnnouncePeerQuery.fromMap(messageAsMap);
             break;
           default:
-        } 
+        }
+        
+        parser.pop();
+        return ret;
       } else if (KrpcResponse.queryCheck(messageAsMap)) {
+        KrpcMessage ret = null; 
         switch(info.getQueryNameFromTransactionId(messageAsMap["t"])) {
           case "ping":
+            ret = new KrpcPingResponse.fromMap(messageAsMap);
             break;
           case "find_node":
+            ret = new KrpcFindNodeResponse.fromMap(messageAsMap);
             break;
           case "get_peers":
+            ret = new KrpcGetPeersResponse.FromMap(messageAsMap);
             break;
           case "announce_peer":
+            ret = new KrpcAnnouncePeerResponse.fromMap(messageAsMap);
             break;
           default:
         } 

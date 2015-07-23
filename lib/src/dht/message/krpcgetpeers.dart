@@ -55,23 +55,37 @@ class KrpcGetPeersResponse extends KrpcResponse {
   KrpcGetPeersResponse.withClosestNodes(String transactionId, String queryingNodesId, String opaqueWriteToken, List<int> compactNodeInfo) {
     _messageAsMap = {"r": {"id": queryingNodesId, "nodes": compactNodeInfo, "token": opaqueWriteToken}, "t": transactionId, "y": "r"};
   }
-  
+
+  KrpcGetPeersResponse.FromMap(Map<String, Object> messageAsMap) {
+    if(((messageAsMap)["r"] as Map).containsKey("values") == true) {
+      _initWithPeersFromMap(messageAsMap);
+    } else {
+      _initWithClosestNodesFromMap(messageAsMap);       
+    }
+  }
+
   KrpcGetPeersResponse.withPeersFromMap(Map<String, Object> messageAsMap) {
+    _initWithPeersFromMap(messageAsMap);
+  }
+
+  _initWithPeersFromMap(Map<String, Object> messageAsMap) {
     if(!KrpcResponse.queryCheck(messageAsMap)){
       throw {};
     }
     Map<String, Object> r = messageAsMap["r"];
     _messageAsMap = {"r": {"id": r["id"], "token": r["token"], "values": r["values"]}, "t": messageAsMap["t"], "y": "r" };
   }
-
+  
   KrpcGetPeersResponse.withClosestNodesFromMap(Map<String, Object> messageAsMap) {
+    _initWithClosestNodesFromMap(messageAsMap);
+  }
+  _initWithClosestNodesFromMap(Map<String, Object> messageAsMap) {
     if(!KrpcResponse.queryCheck(messageAsMap)){
       throw {};
     }
     Map<String, Object> r = messageAsMap["r"];
     _messageAsMap = {"r": {"id": r["id"], "nodes": r["nodes"], "token": r["token"]}, "t": messageAsMap["t"], "y": "r"};
   }
-
   static Future<KrpcGetPeersResponse> decode(EasyParser parser) {
     return KrpcMessage.decodeTest(parser, (Object v) {
       if(!KrpcResponse.queryCheck(v)){
