@@ -61,7 +61,19 @@ class KrpcPingResponse extends KrpcResponse {
   Map<String, Object> get messageAsMap => new Map.from(_messageAsMap);
   List<int> get messageAsBencode => Bencode.encode(_messageAsMap);
 
-  KrpcPingResponse(String transactionId, String queryingNodesId) {
+  KrpcPingResponse.fromString(String transactionIdAsString, String queryingNodesIdAsString) {
+    List<int> transactionId = UTF8.encode(transactionIdAsString);
+    List<int> queryingNodesId = UTF8.encode(queryingNodesIdAsString);
+    _messageAsMap = {"r": {"id": queryingNodesId}, "t": transactionId, "y": "r"};
+  }
+
+  KrpcPingResponse(List<int> transactionId, List<int>  queryingNodesId) {
+    if(transactionId is Uint8List) {
+      transactionId = new Uint8List.fromList(transactionId);
+    }
+    if(queryingNodesId is Uint8List) {
+      queryingNodesId = new Uint8List.fromList(queryingNodesId);
+    }
     _messageAsMap = {"r": {"id": queryingNodesId}, "t": transactionId, "y": "r"};
   }
 

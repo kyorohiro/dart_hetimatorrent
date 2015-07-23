@@ -18,7 +18,7 @@ void main() {
       });
     });
     unit.test("ping response", () {
-      KrpcPingResponse query = new KrpcPingResponse("aa", "mnopqrstuvwxyz123456");
+      KrpcPingResponse query = new KrpcPingResponse.fromString("aa", "mnopqrstuvwxyz123456");
       unit.expect("d1:rd2:id20:mnopqrstuvwxyz123456e1:t2:aa1:y1:re", convert.UTF8.decode(query.messageAsBencode));
       
       EasyParser parser = new EasyParser(new HetimaFileToBuilder(new HetimaDataMemory(query.messageAsBencode)));
