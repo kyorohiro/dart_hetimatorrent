@@ -50,12 +50,33 @@ class KNode extends Object with KrpcResponseInfo {
             buffers["${info.remoteAddress}:${info.remotePort}"] = new EasyParser(new ArrayBuilder());
           }
           EasyParser parser = buffers["${info.remoteAddress}:${info.remotePort}"];
-          KrpcMessage.decode(parser, this);
+          KrpcMessage.decode(parser, this).then((KrpcMessage message) {
+            if(message is KrpcResponse) {
+              _onReceiveResponse(info, message);
+            } else if(message is KrpcQuery) {
+              _onReceiveQuery(info, message);              
+            } else {
+              _onReceiveUnknown(info, message);
+            }
+          }).catchError((e){
+            parser.last();
+          });
         });
       });
     });
   }
 
+  _onReceiveQuery(HetiReceiveUdpInfo info, KrpcMessage message) {
+    
+  }
+  _onReceiveResponse(HetiReceiveUdpInfo info, KrpcMessage message) {
+    
+  }
+
+  _onReceiveUnknown(HetiReceiveUdpInfo info, KrpcMessage message) {
+    
+  }
+  
   String getQueryNameFromTransactionId(String transactionId) {
     for(SendInfo si in queryInfo) {
       if(si._id == transactionId) {
