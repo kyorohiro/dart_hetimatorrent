@@ -58,7 +58,7 @@ void main() {
       // announce_peers Query = {"t":"aa", "y":"q", "q":"announce_peer", "a": {"id":"abcdefghij0123456789", "implied_port": 1, "info_hash":"mnopqrstuvwxyz123456", "port": 6881, "token": "aoeusnth"}}
       // bencoded = d1:ad2:id20:abcdefghij01234567899:info_hash20:mnopqrstuvwxyz1234564:porti6881e5:token8:aoeusnthe1:q13:announce_peer1:t2:aa1:y1:qe
       KrpcAnnouncePeerQuery query = 
-          new KrpcAnnouncePeerQuery("aa", "abcdefghij0123456789", 1, convert.UTF8.encode("mnopqrstuvwxyz123456"), 8080, "aoeusnth");
+          new KrpcAnnouncePeerQuery.fromString("aa", "abcdefghij0123456789", 1, convert.UTF8.encode("mnopqrstuvwxyz123456"), 8080, "aoeusnth");
       unit.expect("d1:ad2:id20:abcdefghij01234567899:info_hash20:mnopqrstuvwxyz12345612:implied_porti1e4:porti8080e5:token8:aoeusnthe1:q13:announce_peer1:t2:aa1:y1:qe",
           convert.UTF8.decode(query.messageAsBencode));
 
