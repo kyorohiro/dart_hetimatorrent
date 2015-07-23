@@ -55,7 +55,7 @@ class KrpcMessage {
         return ret;
       } else if (KrpcResponse.queryCheck(messageAsMap)) {
         KrpcMessage ret = null;
-        switch (info.getQueryNameFromTransactionId(messageAsMap["t"])) {
+        switch (info.getQueryNameFromTransactionId(UTF8.decode(messageAsMap["t"]))) {
           case "ping":
             ret = new KrpcPingResponse.fromMap(messageAsMap);
             break;
@@ -72,6 +72,8 @@ class KrpcMessage {
             ret = new KrpcResponse.fromMap(messageAsMap);
             break;
         }
+        parser.pop();
+        return ret;
       } else {
         KrpcMessage ret = new KrpcMessage.fromMap(messageAsMap);
         parser.pop();

@@ -13,7 +13,13 @@ import 'kid.dart';
 import 'dart:convert';
 import '../util/shufflelinkedlist.dart';
 
-class KNode {
+import 'message/krpcmessage.dart';
+import 'message/krpcping.dart';
+import 'message/krpcfindnode.dart';
+import 'message/krpcgetpeers.dart';
+import 'message/krpcannounce.dart';
+
+class KNode extends Object with KrpcResponseInfo {
   HetiSocketBuilder _socketBuilder = null;
   HetiUdpSocket _udpSocket = null;
   KRootingTable _rootingtable = null;
@@ -44,10 +50,19 @@ class KNode {
             buffers["${info.remoteAddress}:${info.remotePort}"] = new EasyParser(new ArrayBuilder());
           }
           EasyParser parser = buffers["${info.remoteAddress}:${info.remotePort}"];
-          
+          KrpcMessage.decode(parser, this);
         });
       });
     });
+  }
+
+  String getQueryNameFromTransactionId(String transactionId) {
+    for(SendInfo si in queryInfo) {
+      if(si._id == transactionId) {
+        return si._act;
+      }
+    }
+    return "";
   }
 
   static int id = 0;
@@ -55,7 +70,7 @@ class KNode {
     Completer c;
     new Future(() {
       KrpcPingQuery query = new KrpcPingQuery(UTF8.encode("p_${id}"), _nodeId.id);
-      queryInfo.add(new SendInfo ("p_${id}", c));
+      queryInfo.add(new SendInfo ("p_${id}", "ping", c));
       return _udpSocket.send(query.messageAsBencode, ip, port);
     }).catchError(c.completeError);
     return c.future;
@@ -78,14 +93,17 @@ class KNode {
 class SendInfo {
   String _id = "";
   String get id => _id;
+  String _act = "";
+  String get act => _act;
 
   int _time = 0;
   int get time => _time;
 
   Completer _c = null;
-  SendInfo(String id, Completer c) {
+  SendInfo(String id, String act, Completer c) {
     this._id = id;
     this._c = c;
+    this._act = act;
     this._time = new DateTime.now().millisecondsSinceEpoch;
   }
 }
