@@ -10,6 +10,7 @@ import 'krpcfindnode.dart';
 import 'krpcgetpeers.dart';
 import 'krpcannounce.dart';
 import 'dart:convert';
+import '../kid.dart';
 
 abstract class KrpcResponseInfo {
   String getQueryNameFromTransactionId(String transactionId);
@@ -108,6 +109,11 @@ class KrpcMessage {
 class KrpcQuery extends KrpcMessage {
   KrpcQuery() {}
 
+  KId get queryingNodesId {
+    Map<String, Object> a = messageAsMap["a"];
+    return new KId(a["id"] as List<int>);
+  }
+
   KrpcQuery.fromMap(Map map) {
     _messageAsMap = map;
   }
@@ -131,6 +137,11 @@ class KrpcQuery extends KrpcMessage {
 }
 
 class KrpcResponse extends KrpcMessage {
+  KId get queriedNodesId {
+    Map<String, Object> r = messageAsMap["r"];
+    return new KId(r["id"] as List<int>);
+  }
+  
   KrpcResponse() {}
   KrpcResponse.fromMap(Map map) {
     _messageAsMap = map;

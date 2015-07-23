@@ -18,6 +18,7 @@ import 'message/krpcping.dart';
 import 'message/krpcfindnode.dart';
 import 'message/krpcgetpeers.dart';
 import 'message/krpcannounce.dart';
+import 'kpeerinfo.dart';
 
 class KNode extends Object with KrpcResponseInfo {
   HetiSocketBuilder _socketBuilder = null;
@@ -173,11 +174,11 @@ class KNodeAI {
     
   }
 
-  onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {
-    
+  onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcQuery query) {
+    node._rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, query.queryingNodesId));
   }
-  onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {
-    
+  onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcResponse response) {
+    node._rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, response.queriedNodesId));
   }
   onReceiveUnknown(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {
     
