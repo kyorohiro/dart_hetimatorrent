@@ -9,7 +9,7 @@ import 'dart:convert' as convert;
 void main() {
   unit.group('A group of tests', () {
     unit.test("ping request", () {
-      KrpcPingQuery query = new KrpcPingQuery("aa", "abcdefghij0123456789");
+      KrpcPingQuery query = new KrpcPingQuery.fromString("aa", "abcdefghij0123456789");
       unit.expect("d1:ad2:id20:abcdefghij0123456789e1:q4:ping1:t2:aa1:y1:qe", convert.UTF8.decode(query.messageAsBencode));
 
       EasyParser parser = new EasyParser(new HetimaFileToBuilder(new HetimaDataMemory(query.messageAsBencode)));

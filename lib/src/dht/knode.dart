@@ -10,6 +10,7 @@ import 'message/krpcping.dart';
 import 'message/krpcfindnode.dart';
 import 'message/krpcgetpeers.dart';
 import 'kid.dart';
+import 'dart:convert';
 
 class KNode {
   HetiSocketBuilder _socketBuilder = null;
@@ -46,8 +47,9 @@ class KNode {
     });
   }
 
+  static int id = 0;
   Future sendPing() {
-    KrpcPingQuery query = new KrpcPingQuery(transactionId, queryingNodesId);
+    KrpcPingQuery query = new KrpcPingQuery(UTF8.encode("p_${id}"), _nodeId.id);
   }
 
   Future sendFindNode() {}
