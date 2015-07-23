@@ -4,6 +4,7 @@ import 'dart:core';
 import 'dart:async';
 import 'dart:math';
 import '../util/shufflelinkedlist.dart';
+import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimanet/hetimanet.dart';
 import 'kpeerinfo.dart';
 import 'kid.dart';
@@ -13,6 +14,7 @@ class KBucket {
   int get k => _k;
 
   ShuffleLinkedList<KPeerInfo> peerInfos = null;
+
   KBucket(int k_bucketSize) {
     this._k = _k;
     this.peerInfos = new ShuffleLinkedList(k_bucketSize);
