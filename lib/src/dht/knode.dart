@@ -27,8 +27,8 @@ class KNode extends Object with KrpcResponseInfo {
   KId _nodeId = null;
   KId get nodeId => _nodeId;
   List<SendInfo> queryInfo = [];
-
-  KNode(HetiSocketBuilder socketBuilder, {int kBucketSize: 8, List<int> nodeIdAsList: null}) {
+  KNodeAI _ai = null;
+  KNode(HetiSocketBuilder socketBuilder, {int kBucketSize: 8, List<int> nodeIdAsList: null,KNodeAI ai:null}) {
     if (nodeIdAsList == null) {
       _nodeId = KId.createIDAtRandom();
     } else {
@@ -36,6 +36,11 @@ class KNode extends Object with KrpcResponseInfo {
     }
     this._socketBuilder = socketBuilder;
     this._rootingtable = new KRootingTable(kBucketSize);
+    if(ai == null) {
+      this._ai = new KNodeAI();
+    } else {
+      this._ai = ai;
+    }
   }
 
   Future start({String ip: "0.0.0.0", int port: 28080}) {
@@ -50,48 +55,60 @@ class KNode extends Object with KrpcResponseInfo {
             buffers["${info.remoteAddress}:${info.remotePort}"] = new EasyParser(new ArrayBuilder());
           }
           EasyParser parser = buffers["${info.remoteAddress}:${info.remotePort}"];
+          
+          //
+          //
           KrpcMessage.decode(parser, this).then((KrpcMessage message) {
-            if(message is KrpcResponse) {
+            if (message is KrpcResponse) {
+              SendInfo rm = removeQueryNameFromTransactionId(UTF8.decode(message.rawMessageMap["t"]));
               _onReceiveResponse(info, message);
-            } else if(message is KrpcQuery) {
-              _onReceiveQuery(info, message);              
+              rm._c.complete(message);
+            } else if (message is KrpcQuery) {
+              _onReceiveQuery(info, message);
             } else {
               _onReceiveUnknown(info, message);
             }
-          }).catchError((e){
+          }).catchError((e) {
             parser.last();
           });
+          //
+          
+          _ai.start(this);
         });
       });
     });
   }
 
-  _onReceiveQuery(HetiReceiveUdpInfo info, KrpcMessage message) {
-    
-  }
-  _onReceiveResponse(HetiReceiveUdpInfo info, KrpcMessage message) {
-    
-  }
+  _onReceiveQuery(HetiReceiveUdpInfo info, KrpcMessage message) {}
+  _onReceiveResponse(HetiReceiveUdpInfo info, KrpcMessage message) {}
 
-  _onReceiveUnknown(HetiReceiveUdpInfo info, KrpcMessage message) {
-    
-  }
-  
+  _onReceiveUnknown(HetiReceiveUdpInfo info, KrpcMessage message) {}
+
   String getQueryNameFromTransactionId(String transactionId) {
-    for(SendInfo si in queryInfo) {
-      if(si._id == transactionId) {
+    for (SendInfo si in queryInfo) {
+      if (si._id == transactionId) {
         return si._act;
       }
     }
     return "";
   }
-
+  SendInfo removeQueryNameFromTransactionId(String transactionId) {
+    SendInfo re = null;
+    for (SendInfo si in queryInfo) {
+      if (si._id == transactionId) {
+        re = si;
+        break;
+      }
+    }
+    queryInfo.remove(re);
+    return re;
+  }
   static int id = 0;
   Future sendPing(String ip, int port) {
     Completer c;
     new Future(() {
       KrpcPingQuery query = new KrpcPingQuery(UTF8.encode("p_${id}"), _nodeId.id);
-      queryInfo.add(new SendInfo ("p_${id}", "ping", c));
+      queryInfo.add(new SendInfo("p_${id}", "ping", c));
       return _udpSocket.send(query.messageAsBencode, ip, port);
     }).catchError(c.completeError);
     return c.future;
@@ -105,9 +122,32 @@ class KNode extends Object with KrpcResponseInfo {
     return new Future(() {
       if (_udpSocket == null) {
         return null;
+      } else {
+        return _udpSocket.close();
       }
-      return _udpSocket.close();
+    }).whenComplete((){
+      _ai.stop(this);
     });
+  }
+}
+
+class KNodeAI {
+  
+  start(KNode node) {
+    
+  }
+  
+  stop(KNode node) {
+    
+  }
+  onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {
+    
+  }
+  onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {
+    
+  }
+  onReceiveUnknown(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {
+    
   }
 }
 
