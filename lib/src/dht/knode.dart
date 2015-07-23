@@ -66,6 +66,8 @@ class KNode extends Object with KrpcResponseInfo {
               rm._c.complete(message);
             } else if (message is KrpcQuery) {
               _onReceiveQuery(info, message);
+            } else if(message is KrpcError){
+              _onReceiveError(info, message);
             } else {
               _onReceiveUnknown(info, message);
             }
@@ -80,9 +82,9 @@ class KNode extends Object with KrpcResponseInfo {
     });
   }
 
-  _onReceiveQuery(HetiReceiveUdpInfo info, KrpcMessage message) {}
-  _onReceiveResponse(HetiReceiveUdpInfo info, KrpcMessage message) {}
-
+  _onReceiveQuery(HetiReceiveUdpInfo info, KrpcQuery message) {}
+  _onReceiveResponse(HetiReceiveUdpInfo info, KrpcResponse message) {}
+  _onReceiveError(HetiReceiveUdpInfo info, KrpcError message) {}
   _onReceiveUnknown(HetiReceiveUdpInfo info, KrpcMessage message) {}
 
   String getQueryNameFromTransactionId(String transactionId) {
@@ -182,9 +184,14 @@ class KNodeAI {
     
   }
 
+  onReceiveError(KNode node, HetiReceiveUdpInfo info, KrpcError message) {
+    
+  }
+
   onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcResponse response) {
     node._rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, response.queriedNodesId));
   }
+
   onReceiveUnknown(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {
     
   }
