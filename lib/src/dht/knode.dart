@@ -114,23 +114,38 @@ class KNode extends Object with KrpcResponseInfo {
     return c.future;
   }
 
-  Future sendFindNode() {
-    /*
+  Future sendFindNode(String ip, int port, List<int> targetNodeId) {
     Completer c;
     new Future(() {
-      KrpcFindNodeQuery query = new KrpcFindNodeQuery(transactionId, queryingNodesId, targetNodeId)
+      KrpcFindNodeQuery query = new KrpcFindNodeQuery(UTF8.encode("p_${id}"), _nodeId.id, targetNodeId);
       //(UTF8.encode("p_${id}"), _nodeId.id);
-      queryInfo.add(new SendInfo("p_${id}", "ping", c));
+      queryInfo.add(new SendInfo("p_${id}", "find_node", c));
       return _udpSocket.send(query.messageAsBencode, ip, port);
     }).catchError(c.completeError);
     return c.future;
-     */
   }
 
-  Future sendGetPeers() {
-    ;
+  Future sendGetPeers(String ip, int port, List<int> infoHash) {
+    Completer c;
+    new Future(() {
+      KrpcGetPeersQuery query = new KrpcGetPeersQuery(UTF8.encode("p_${id}"), _nodeId.id, infoHash);
+      //(UTF8.encode("p_${id}"), _nodeId.id);
+      queryInfo.add(new SendInfo("p_${id}", "get_peers", c));
+      return _udpSocket.send(query.messageAsBencode, ip, port);
+    }).catchError(c.completeError);
+    return c.future;
   }
 
+  Future sendAnnouncePeer(String ip, int port, int implied_port,List<int> infoHash, List<int> opaqueToken) {
+    Completer c;
+    new Future(() {
+      KrpcAnnouncePeerQuery query = new KrpcAnnouncePeerQuery(UTF8.encode("p_${id}"), _nodeId.id,
+          implied_port, infoHash, port, opaqueToken);
+      queryInfo.add(new SendInfo("p_${id}", "announce_peer", c));
+      return _udpSocket.send(query.messageAsBencode, ip, port);
+    }).catchError(c.completeError);
+    return c.future;
+  }
   Future stop() {
     return new Future(() {
       if (_udpSocket == null) {
