@@ -47,6 +47,7 @@ class KrpcAnnouncePeerQuery extends KrpcQuery {
         "y": "q"
         });
   }
+
   KrpcAnnouncePeerQuery.fromMap(Map<String, Object> messageAsMap) {
     if (!KrpcQuery.queryCheck(messageAsMap, "announce_peer")) {
       throw {};
@@ -71,13 +72,27 @@ class KrpcAnnouncePeerResponse extends KrpcResponse {
 
   // Response with peers = {"t":"aa", "y":"r", "r": {"id":"abcdefghij0123456789", "token":"aoeusnth", "values": ["axje.u", "idhtnm"]}}
   // bencoded = d1:rd2:id20:abcdefghij01234567895:token8:aoeusnth6:valuesl6:axje.u6:idhtnmee1:t2:aa1:y1:re
-  KrpcAnnouncePeerResponse(String transactionId, String queryingNodesId) {
+  KrpcAnnouncePeerResponse.fromString(String transactionIdAsString, String queryingNodesIdAsString) {
+    List<int> transactionId = UTF8.encode(transactionIdAsString);
+    List<int> queryingNodesId = UTF8.encode(queryingNodesIdAsString);
+    _init(transactionId, queryingNodesId);
+  }
+  KrpcAnnouncePeerResponse(List<int> transactionId, List<int> queryingNodesId) {
+    _init(transactionId, queryingNodesId);
+  }
+
+  _init(List<int> transactionId, List<int> queryingNodesId) {
+    if(!(transactionId is Uint8List)) {
+      transactionId = new Uint8List.fromList(transactionId);
+    }
+    if(!(queryingNodesId is Uint8List)) {
+      queryingNodesId = new Uint8List.fromList(queryingNodesId);
+    }
     rawMessageMap.addAll({
       "r": {"id": queryingNodesId}, 
       "t": transactionId,
       "y": "r"});
   }
-
   KrpcAnnouncePeerResponse.fromMap(Map<String, Object> messageAsMap) {
     if (!KrpcResponse.queryCheck(messageAsMap)) {
       throw {};

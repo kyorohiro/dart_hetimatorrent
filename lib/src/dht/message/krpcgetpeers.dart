@@ -84,7 +84,7 @@ class KrpcGetPeersResponse extends KrpcResponse {
     rawMessageMap.addAll({"r": {"id": queryingNodesId, "token": opaqueWriteToken, "values": peerInfoStrings}, "t": transactionId, "y": "r"});
   }
 
-  //Response with closest nodes = {"t":"aa", "y":"r", "r": {"id":"abcdefghij0123456789", "token":"aoeusnth", "nodes": "def456..."}}
+  // Response with closest nodes = {"t":"aa", "y":"r", "r": {"id":"abcdefghij0123456789", "token":"aoeusnth", "nodes": "def456..."}}
   // bencoded = d1:rd2:id20:abcdefghij01234567895:nodes9:def456...5:token8:aoeusnthe1:t2:aa1:y1:re
   KrpcGetPeersResponse.withClosestNodesFromString(String transactionIdAsString, String queryingNodesIdAsString, 
       String opaqueWriteTokenAsString, List<int> compactNodeInfo) {
