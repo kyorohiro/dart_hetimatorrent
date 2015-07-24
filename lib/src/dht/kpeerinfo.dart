@@ -9,6 +9,51 @@ import 'package:hetimacore/hetimacore.dart';
 import 'kid.dart';
 import 'dart:typed_data';
 
+class KAnnounceInfo {
+  int _impliedPort = 0;
+  List<int> _infoHash = [];
+  KPeerInfo _peerInfo = null;
+
+  int get impliedPort => _impliedPort;
+  List<int> get infoHash => new List.from(_infoHash);
+  KPeerInfo get peerInfo => _peerInfo;
+
+  KAnnounceInfo(KPeerInfo peerInfo, List<int> infoHash, int impliedPort) {
+    this._peerInfo = peerInfo;
+    this._infoHash.addAll(infoHash);
+    this._impliedPort = impliedPort;
+  }
+
+  int get hashCode {
+    int ret = _peerInfo.hashCode;
+    for (int i in _infoHash) {
+      ret ^= i;
+    }
+    ret ^= _impliedPort;
+    return ret;
+  }
+
+  bool operator ==(Object o) {
+    if (!(o is KAnnounceInfo)) {
+      return false;
+    }
+
+    KAnnounceInfo p = o;
+    if (this._peerInfo != p._peerInfo) {
+      return false;
+    }
+    for (int i = 0; i < p._infoHash.length; i++) {
+      if (this._infoHash[i] != p._infoHash[i]) {
+        return false;
+      }
+    }
+    if (this._impliedPort != p._impliedPort) {
+      return false;
+    }
+    return true;
+  }
+}
+
 class KPeerInfo {
   int _port = 0;
   int get port => _port;

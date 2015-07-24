@@ -33,6 +33,7 @@ class KNode extends Object with KrpcResponseInfo {
 
   KRootingTable get rootingtable => _rootingtable;
   KNodeAI get ai => _ai;
+  ShuffleLinkedList announcedPeer = null;
 
   KNode(HetiSocketBuilder socketBuilder, {int kBucketSize: 8, List<int> nodeIdAsList: null, KNodeAI ai: null}) {
     if (nodeIdAsList == null) {

@@ -26,10 +26,12 @@ class KNodeAIAnnounce {
   bool _isStart = false;
   ShuffleLinkedList<KPeerInfo> announceNodesInfo = new ShuffleLinkedList(20);
   KId _infoHashId = null;
+  KId _tokenFilter = null;
   bool get isStart => _isStart;
 
-  KNodeAIAnnounce (KId infoHashId) {
+  KNodeAIAnnounce (KId infoHashId,{KId tokenFilter:null}) {
     this._infoHashId = infoHashId;
+    this._tokenFilter = new KId(new List.filled(20, 0xff));
   }
 
   start(KNode node) {
@@ -64,16 +66,16 @@ class KNodeAIAnnounce {
     node.rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, query.queryingNodesId));
     switch (query.messageSignature) {
       case KrpcMessage.PING_QUERY:
-        return node.sendPingResponse(info.remoteAddress, info.remotePort, query.transactionId);
       case KrpcMessage.FIND_NODE_QUERY:
-        return node.rootingtable.findNode(query.queryingNodesId).then((List<KPeerInfo> infos) {
-          return node.sendFindNodeResponse(info.remoteAddress, info.remotePort, query.transactionId, KPeerInfo.toCompactNodeInfos(infos));
-        });
       case KrpcMessage.NONE_QUERY:
-        return node.sendErrorResponse(info.remoteAddress, info.remotePort, KrpcError.METHOD_ERROR, query.transactionId);
+        break;
       case KrpcMessage.ANNOUNCE_QUERY:
         break;
       case KrpcMessage.GET_PEERS_QUERY:
+        return node.rootingtable.findNode(query.queryingNodesId).then((List<KPeerInfo> infos) {
+          return node.sendFindNodeResponse(info.remoteAddress, info.remotePort, query.transactionId, KPeerInfo.toCompactNodeInfos(infos));
+        });
+
         break;
     }
   }
