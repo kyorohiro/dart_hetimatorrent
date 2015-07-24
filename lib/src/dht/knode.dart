@@ -137,24 +137,13 @@ class KNode extends Object with KrpcResponseInfo {
   }
 
   Future sendPingResponse(String ip, int port, List<int> transactionId) {
-    Completer c;
-    new Future(() {
-      id++;
-      KrpcPingResponse query = new KrpcPingResponse(transactionId, _nodeId.id);
-      return _udpSocket.send(query.messageAsBencode, ip, port);
-    }).catchError(c.completeError);
-    return c.future;
+    KrpcPingResponse query = new KrpcPingResponse(transactionId, _nodeId.id);
+    return _udpSocket.send(query.messageAsBencode, ip, port);
   }
 
-
   Future sendErrorResponse(String ip, int port, int errorCode, [String errorDescription = null]) {
-    Completer c;
-    new Future(() {
-      id++;
-      KrpcError query = new KrpcError.fromString("p_${id}", errorCode, errorDescription);
-      return _udpSocket.send(query.messageAsBencode, ip, port);
-    }).catchError(c.completeError);
-    return c.future;
+    KrpcError query = new KrpcError.fromString("p_${id}", errorCode, errorDescription);
+    return _udpSocket.send(query.messageAsBencode, ip, port);
   }
 
   Future stop() {
