@@ -219,11 +219,17 @@ class KNodeAI {
     node._rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, response.queriedNodesId));
     switch (response.messageSignature) {
       case KrpcMessage.PING_RESPONSE:
+        break;
       case KrpcMessage.FIND_NODE_RESPONSE:
+        break;
       case KrpcMessage.NONE_RESPONSE:
+        break;
       case KrpcMessage.ANNOUNCE_RESPONSE:
+        break;
       case KrpcMessage.GET_PEERS_RESPONSE:
+        break;
       default:
+        break;
     }
   }
 
