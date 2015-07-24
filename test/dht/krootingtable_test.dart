@@ -37,6 +37,18 @@ void main() {
         160        
         ]);
     });
+    unit.test("retrive list update", () {
+      KRootingTable table = new KRootingTable(8);
+      KPeerInfo info = new KPeerInfo("127.0.0.1", 8080, new KId(new List.filled(20, 1)));
+      return table.update(info).then((_){
+        return table.findNode(new KId(new List.filled(20, 0))).then((List<KPeerInfo> infos) {
+          unit.expect(infos.length, 1);
+          return table.toInfo().then((String s) {
+            print("##### ${s}");
+          });
+        });
+      });
+    });
     //retrievePath(int index)
   });
 }
