@@ -120,6 +120,14 @@ void main() {
       KId idA = new KId(new List.filled(20, 0));
       KId idB = new KId(new List.filled(20, 0xff));
       unit.expect(160, idA.xor(idB).getRootingTabkeIndex());
+      
+      KId idC = new KId(new List.filled(20, 0^0x3));
+      KId idD = new KId(new List.filled(20, 0xff^0x3));
+      unit.expect(160, idC.xor(idD).getRootingTabkeIndex());
+      
+      KId idE = new KId(new List.filled(20, 0^0xf3));
+      KId idF = new KId(new List.filled(20, 0xff^0xf3));
+      unit.expect(160, idE.xor(idF).getRootingTabkeIndex());
     });
     //retrievePath(int index)
   });
