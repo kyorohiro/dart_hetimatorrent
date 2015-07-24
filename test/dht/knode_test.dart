@@ -14,7 +14,7 @@ void main() {
       Completer c = new Completer();
       List<KNode> knodes = [];
       List<KPeerInfo> kpeerInfos = [];
-      int numOfNode = 10;
+      int numOfNode = 100;
       for (int i = 0; i < numOfNode; i++) {
         KNode a = new KNode(new HetiSocketBuilderSimu());
         knodes.add(a);
@@ -22,6 +22,7 @@ void main() {
         if (i != 0) {
           knodes[i].addKPeerInfo(kpeerInfos[i - 1]);
         }
+        knodes[i].addKPeerInfo(kpeerInfos[i]);
       }
 
       for (int i = 0; i < numOfNode; i++) {

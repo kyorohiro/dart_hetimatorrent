@@ -95,6 +95,18 @@ class KId {
     }
   }
 
+  String toString() {
+    StringBuffer buffer = new StringBuffer();
+    for(int i in _id) {
+      String a = i.toRadixString(16);
+      if(a.length ==1) {
+        buffer.write("0");
+      } 
+      buffer.write("${a}.");
+    }
+    return buffer.toString();
+  }
+
   static KId createIDAtRandom([List<int> op = null]) {
     List<int> ret = [];
 

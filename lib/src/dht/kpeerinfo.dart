@@ -31,6 +31,9 @@ class KPeerInfo {
     _port = ByteOrder.parseShort(buffer, 24 + index, ByteOrder.BYTEORDER_BIG_ENDIAN);
   }
 
+  String toString() {
+    return "${_id.toString()}:${ipAsString}:${port}";
+  }
   int get hashCode {
     int ret = _port;
     for (int i in _id) {

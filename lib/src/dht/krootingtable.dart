@@ -12,7 +12,6 @@ class KBucket {
   int get k => _k;
 
   ShuffleLinkedList<KPeerInfo> peerInfos = null;
-
   KBucket(int k_bucketSize) {
     this._k = _k;
     this.peerInfos = new ShuffleLinkedList(k_bucketSize);
@@ -41,24 +40,27 @@ class KBucket {
 class KRootingTable {
   List<KBucket> _kBuckets = [];
   int _kBucketSize = 0;
-
-  KRootingTable(int k_bucketSize) {
+  KId _amId = null;
+  KId get amId => _amId;
+  KRootingTable(int k_bucketSize, KId amId) {
     this._kBucketSize = k_bucketSize;
     for (int i = 0; i < 161; i++) {
       _kBuckets.add(new KBucket(k_bucketSize));
     }
+    this._amId = amId;
   }
 
   Future<String> toInfo() {
     List<Future> ll = [];
     List<Future> ls = [];
-    for (int i = 0; i < _kBuckets.length; i++) {
+    for (int j = 0; j < _kBuckets.length; j++) {
+        int i = j;
         ls.add(_kBuckets[i].length().then((int xx) {
          // print("${xx}");
           List<Future> l = [];
           for (int j = 0; j < xx; j++) {
             l.add(_kBuckets[i].getPeerInfo(j).then((KPeerInfo info) {
-              return "${info.ipAsString}:${info.port}";
+              return "${info}";
             }));
           }
           if(l.length != 0) {
@@ -68,7 +70,6 @@ class KRootingTable {
             for (String r in rr) {
               b.write("${r},");
             }
-            b.write("\n");
             return b.toString();
           }));
           }
@@ -87,7 +88,7 @@ class KRootingTable {
   }
   Future update(KPeerInfo info) {
     return new Future(() {
-      _kBuckets[info.id.getRootingTabkeIndex()].update(info);
+      _kBuckets[_amId.xor(info.id).getRootingTabkeIndex()].update(info);
     });
   }
 
