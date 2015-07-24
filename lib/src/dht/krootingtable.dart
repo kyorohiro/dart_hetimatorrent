@@ -53,9 +53,11 @@ class KRootingTable {
   Future<String> toInfo() {
     List<Future> ll = [];
     List<Future> ls = [];
+    int num =0;
     for (int j = 0; j < _kBuckets.length; j++) {
         int i = j;
         ls.add(_kBuckets[i].length().then((int xx) {
+          num += xx;
          // print("${xx}");
           List<Future> l = [];
           for (int j = 0; j < xx; j++) {
@@ -79,6 +81,7 @@ class KRootingTable {
     return Future.wait(ls).then((_) {
       return Future.wait(ll).then((List<String> e) {
         StringBuffer b = new StringBuffer();
+        b.write("::${num}::");
         for (String r in e) {
           b.write("${r},");
         }

@@ -32,8 +32,7 @@ class KNode extends Object with KrpcResponseInfo {
 
   KRootingTable get rootingtable => _rootingtable;
   KNodeAI get ai => _ai;
- 
-  
+
   KNode(HetiSocketBuilder socketBuilder, {int kBucketSize: 8, List<int> nodeIdAsList: null, KNodeAI ai: null}) {
     if (nodeIdAsList == null) {
       _nodeId = KId.createIDAtRandom();
@@ -93,6 +92,9 @@ class KNode extends Object with KrpcResponseInfo {
     });
   }
 
+  updatePeer() {
+    this._ai.maintenance(this);
+  }
   _onReceiveQuery(HetiReceiveUdpInfo info, KrpcQuery message) {
     this._ai.onReceiveQuery(this, info, message);
   }
@@ -208,14 +210,14 @@ class KNodeAI {
   }
 
   stop(KNode node) {
-    _isStart = false;    
+    _isStart = false;
   }
 
   maintenance(KNode node) {
     findNodesInfo.clearAll();
     node._rootingtable.findNode(node._nodeId).then((List<KPeerInfo> infos) {
-      if(_isStart == false) {
-        return ;
+      if (_isStart == false) {
+        return;
       }
       for (KPeerInfo info in infos) {
         findNodesInfo.addLast(info);
@@ -225,7 +227,7 @@ class KNodeAI {
   }
 
   onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcQuery query) {
-    if(_isStart == false) {
+    if (_isStart == false) {
       return null;
     }
     node._rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, query.queryingNodesId));
@@ -248,39 +250,48 @@ class KNodeAI {
   onReceiveError(KNode node, HetiReceiveUdpInfo info, KrpcError message) {}
 
   onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcResponse response) {
-    node._rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, response.queriedNodesId));
-    switch (response.messageSignature) {
-      case KrpcMessage.PING_RESPONSE:
-        break;
-      case KrpcMessage.FIND_NODE_RESPONSE:
-        {
-          KrpcFindNodeResponse findNode = response;
-          List<KPeerInfo> peerInfo = findNode.compactNodeInfoAsKPeerInfo;
-          List<Future> f = [];
-          for (KPeerInfo info in peerInfo) {
-            f.add(node._rootingtable.update(info));
+    new Future(() {
+      if (_isStart == false) {
+        return null;
+      }
+      node._rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, response.queriedNodesId));
+      switch (response.messageSignature) {
+        case KrpcMessage.PING_RESPONSE:
+          break;
+        case KrpcMessage.FIND_NODE_RESPONSE:
+          {
+            KrpcFindNodeResponse findNode = response;
+            List<KPeerInfo> peerInfo = findNode.compactNodeInfoAsKPeerInfo;
+            List<Future> f = [];
+            for (KPeerInfo info in peerInfo) {
+              f.add(node._rootingtable.update(info));
+            }
+            return Future.wait(f);
           }
-
-          return Future.wait(f).then((List<int> d) {
-            return node._rootingtable.findNode(node._nodeId).then((List<KPeerInfo> infos) {
-              for (KPeerInfo info in infos) {
-                if (!findNodesInfo.sequential.contains(info)) {
-                  node.sendFindNodeQuery(info.ipAsString, info.port, node.nodeId.id).catchError((e) {});
-                }
-              }
-            });
-          });
-        }
-        break;
-      case KrpcMessage.NONE_RESPONSE:
-        break;
-      case KrpcMessage.ANNOUNCE_RESPONSE:
-        break;
-      case KrpcMessage.GET_PEERS_RESPONSE:
-        break;
-      default:
-        break;
-    }
+          break;
+        case KrpcMessage.NONE_RESPONSE:
+          break;
+        case KrpcMessage.ANNOUNCE_RESPONSE:
+          break;
+        case KrpcMessage.GET_PEERS_RESPONSE:
+          break;
+        default:
+          break;
+      }
+    }).then((e) {
+      if (_isStart == false) {
+        return null;
+      }
+      node._rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, response.queriedNodesId)).then((_) {
+        return node._rootingtable.findNode(node._nodeId).then((List<KPeerInfo> infos) {
+          for (KPeerInfo info in infos) {
+            if (!findNodesInfo.sequential.contains(info)) {
+              node.sendFindNodeQuery(info.ipAsString, info.port, node.nodeId.id).catchError((e) {});
+            }
+          }
+        });
+      });
+    });
   }
 
   onReceiveUnknown(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {}

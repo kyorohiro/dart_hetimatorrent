@@ -11,10 +11,9 @@ import 'dart:async';
 void main() {
   unit.group('A group of tests', () {
     unit.test("retrive list 0", () {
-      Completer c = new Completer();
       List<KNode> knodes = [];
       List<KPeerInfo> kpeerInfos = [];
-      int numOfNode = 100;
+      int numOfNode = 1000;
       for (int i = 0; i < numOfNode; i++) {
         KNode a = new KNode(new HetiSocketBuilderSimu());
         knodes.add(a);
@@ -29,13 +28,22 @@ void main() {
         knodes[i].start(ip: kpeerInfos[i].ipAsString, port: kpeerInfos[i].port);
       }
 
-      return new Future.delayed(new Duration(seconds: 3)).then((_) {
-        for (int i = 0; i < numOfNode; i++) {
-          int jj = i;
-          knodes[i].rootingtable.toInfo().then((String s) {
-            print("[${jj}] : ${s}");
-          });
-        }
+      return new Future.delayed(new Duration(seconds: 5)).then((_) {
+        //for (int i = 0; i < numOfNode; i++) {
+        //  knodes[i].updatePeer();
+       // }
+      }).then((_) {
+        return new Future.delayed(new Duration(seconds: 5)).then((_) {
+          for (int i = 0; i < numOfNode; i++) {
+            knodes[i].stop();
+          }
+          for (int i = 0; i < numOfNode; i++) {
+            int jj = i;
+            knodes[i].rootingtable.toInfo().then((String s) {
+              print("[${jj}] : ${s}");
+            });
+          }
+        });
       });
     });
   });

@@ -85,7 +85,7 @@ class KrpcFindNodeResponse extends KrpcResponse {
   List<KPeerInfo> get compactNodeInfoAsKPeerInfo {
     List<KPeerInfo> ret = [];
     List<int> infos = compactNodeInfo;
-    for (int i = 0; i < infos.length / 26; i++) {
+    for (int i = 0; i < infos.length ~/ 26; i++) {
       ret.add(new KPeerInfo.fromBytes(infos, i * 26, 26));
     }
     return ret;
