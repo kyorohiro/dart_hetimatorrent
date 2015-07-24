@@ -34,13 +34,16 @@ class KrpcMessage {
   Map<String, Object> _messageAsMap = {};
   Map<String, Object> get messageAsMap => new Map.from(_messageAsMap);
   List<int> get messageAsBencode => Bencode.encode(_messageAsMap);
-  
+
   int _id = NONE_MESSAGE;
   int get id => _id;
-  
+
+  List<int> get transactionId => _messageAsMap["t"];
+  String get transactionIdAsString => UTF8.decode(_messageAsMap["t"]);
   KrpcMessage(int id) {
     this._id = id;
   }
+  
   KrpcMessage.fromMap(Map map) {
     _messageAsMap = map;
   }
@@ -97,13 +100,12 @@ class KrpcMessage {
         }
         parser.pop();
         return ret;
-      } else if(KrpcError.queryCheck(messageAsMap)) {
+      } else if (KrpcError.queryCheck(messageAsMap)) {
         KrpcMessage ret = null;
         ret = new KrpcError.fromMap(messageAsMap);
         parser.pop();
         return ret;
-      }
-      else {
+      } else {
         KrpcMessage ret = new KrpcMessage.fromMap(messageAsMap);
         parser.pop();
         return ret;
@@ -133,21 +135,22 @@ class KrpcMessage {
 }
 
 class KrpcQuery extends KrpcMessage {
-  KrpcQuery(int id):super(id) {}
+  KrpcQuery(int id) : super(id) {}
 
+  String get q => UTF8.decode(rawMessageMap["q"]);
   KId get queryingNodesId {
     Map<String, Object> a = messageAsMap["a"];
     return new KId(a["id"] as List<int>);
   }
 
-  KrpcQuery.fromMap(Map map):super(KrpcMessage.NONE_QUERY){
+  KrpcQuery.fromMap(Map map) : super(KrpcMessage.NONE_QUERY) {
     _messageAsMap = map;
   }
   static bool queryCheck(Map<String, Object> messageAsMap, String action) {
     if (!messageAsMap.containsKey("a")) {
       return false;
     }
-    if (!( messageAsMap["a"] is Map)){
+    if (!(messageAsMap["a"] is Map)) {
       return false;
     }
     Map<String, Object> a = messageAsMap["a"];
@@ -171,8 +174,8 @@ class KrpcResponse extends KrpcMessage {
     return new KId(r["id"] as List<int>);
   }
 
-  KrpcResponse(int id):super(id) {}
-  KrpcResponse.fromMap(Map map):super(KrpcMessage.NONE_RESPONSE) {
+  KrpcResponse(int id) : super(id) {}
+  KrpcResponse.fromMap(Map map) : super(KrpcMessage.NONE_RESPONSE) {
     _messageAsMap = map;
   }
   static bool queryCheck(Map<String, Object> messageAsMap) {
@@ -196,6 +199,21 @@ class KrpcError extends KrpcMessage {
   static const int PROTOCOL_ERROR = 203;
   static const int METHOD_ERROR = 204;
 
+  static String errorDescription(int errorCode) {
+    switch (errorCode) {
+      case 201:
+        return "Generic Error";
+      case 202:
+        return "Server Error";
+      case 203:
+        return "Protocol Error, such as a malformed packet, invalid arguments, or bad token";
+      case 204:
+        return "Method Unknown";
+      default:
+        return "Unknown";
+    }
+  }
+
   //  {"t":"aa", "y":"e", "e":[201, "A Generic Error Ocurred"]}
   //
   Map<String, Object> _messageAsMap = null;
@@ -207,32 +225,39 @@ class KrpcError extends KrpcMessage {
       return false;
     }
     Object e = messageAsMap["e"];
-    if (!(e is List) || (e as List).length<2 || !messageAsMap.containsKey("t") || !messageAsMap.containsKey("y")) {
+    if (!(e is List) || (e as List).length < 2 || !messageAsMap.containsKey("t") || !messageAsMap.containsKey("y")) {
       return false;
     }
     return true;
   }
-  
-  KrpcError.fromString(String transactionIdAsString, int errorCode, String errorMessageAsString):super(KrpcMessage.ERROR) {
+
+  KrpcError.fromString(String transactionIdAsString, int errorCode, [String errorMessageAsString=null]) : super(KrpcMessage.ERROR) {
     List<int> transactionId = UTF8.encode(transactionIdAsString);
+    if (errorMessageAsString == null) {
+      errorMessageAsString = KrpcError.errorDescription(errorCode);
+    }
     List<int> errorMessage = UTF8.encode(errorMessageAsString);
     _init(transactionId, errorCode, errorMessage);
   }
-  KrpcError(List<int> transactionId, int errorCode, List<int> errorMessage):super(KrpcMessage.ERROR) {
+  KrpcError(List<int> transactionId, int errorCode, List<int> errorMessage) : super(KrpcMessage.ERROR) {
     _init(transactionId, errorCode, errorMessage);
   }
 
-  _init(List<int> transactionId, int errorCode, List<int> errorMessage) {
-    if(!(transactionId is Uint8List)) {
+  _init(List<int> transactionId, int errorCode, [List<int> errorMessage=null]) {
+    if (!(transactionId is Uint8List)) {
       transactionId = new Uint8List.fromList(transactionId);
     }
-    if(!(errorMessage is Uint8List)) {
+    if (errorMessage == null) {
+      errorMessage = UTF8.encode(KrpcError.errorDescription(errorCode));
+    }
+    if (!(errorMessage is Uint8List)) {
       errorMessage = new Uint8List.fromList(errorMessage);
     }
+
     _messageAsMap = {"t": transactionId, "y": "e", "e": [errorCode, errorMessage]};
   }
 
-  KrpcError.fromMap(Map<String,Object> map):super(KrpcMessage.ERROR) {
+  KrpcError.fromMap(Map<String, Object> map) : super(KrpcMessage.ERROR) {
     _messageAsMap = {"t": map["t"], "y": map["y"], "e": map["e"]};
   }
 }
