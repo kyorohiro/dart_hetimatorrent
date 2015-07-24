@@ -120,14 +120,17 @@ class KNode extends Object with KrpcResponseInfo {
     KrpcPingQuery query = new KrpcPingQuery(UTF8.encode("p_${id++}"), _nodeId.id);
     return _sendQuery(ip, port, query);
   }
+
   Future sendFindNodeQuery(String ip, int port, List<int> targetNodeId) {
     KrpcFindNodeQuery query = new KrpcFindNodeQuery(UTF8.encode("p_${id++}"), _nodeId.id, targetNodeId);
     return _sendQuery(ip, port, query);
   }
+
   Future sendGetPeersQuery(String ip, int port, List<int> infoHash) {
     KrpcGetPeersQuery query = new KrpcGetPeersQuery(UTF8.encode("p_${id++}"), _nodeId.id, infoHash);
     return _sendQuery(ip, port, query);
   }
+
   Future sendAnnouncePeerQuery(String ip, int port, int implied_port, List<int> infoHash, List<int> opaqueToken) {
     KrpcAnnouncePeerQuery query = new KrpcAnnouncePeerQuery(UTF8.encode("p_${id++}"), _nodeId.id, implied_port, infoHash, port, opaqueToken);
     return _sendQuery(ip, port, query);
