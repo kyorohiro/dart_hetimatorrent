@@ -85,6 +85,11 @@ class ShuffleLinkedList<X> {
     }
   }
 
+  void clearAll() {
+    _sequential.clear();
+    _shuffled.clear();
+  }
+
   void removeHead() {
     if (_sequential.length <= 0) {
       return;

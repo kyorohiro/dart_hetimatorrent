@@ -180,13 +180,15 @@ class KNode extends Object with KrpcResponseInfo {
 }
 
 class KNodeAI {
+  ShuffleLinkedList<KPeerInfo> findNodesInfo = new ShuffleLinkedList(20);
   start(KNode node) {}
-
   stop(KNode node) {}
 
   maintenance(KNode node) {
+    findNodesInfo.clearAll();
     node._rootingtable.findNode(node._nodeId).then((List<KPeerInfo> infos) {
       for (KPeerInfo info in infos) {
+        findNodesInfo.addLast(info);
         node.sendFindNodeQuery(info.ipAsString, info.port, node._nodeId.id);
       }
     });
@@ -215,6 +217,14 @@ class KNodeAI {
 
   onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcResponse response) {
     node._rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, response.queriedNodesId));
+    switch (response.messageSignature) {
+      case KrpcMessage.PING_RESPONSE:
+      case KrpcMessage.FIND_NODE_RESPONSE:
+      case KrpcMessage.NONE_RESPONSE:
+      case KrpcMessage.ANNOUNCE_RESPONSE:
+      case KrpcMessage.GET_PEERS_RESPONSE:
+      default:
+    }
   }
 
   onReceiveUnknown(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {}
