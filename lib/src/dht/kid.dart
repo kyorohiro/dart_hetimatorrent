@@ -24,6 +24,17 @@ class KId {
 
   int getRootingTabkeIndex() {
     int ret = 0;
+    for (int i = 0,ret=19; i < 20; i++, ret--) {
+      if (_id[i] != 0) {
+        for (int j = 0; j < 9; j++) {
+          if (_id[i] < (0x1 << j)) {
+            return (ret * 8) + j;
+          }
+        }
+        return i;
+      }
+    }
+    /*
     for (int i = 19; i >= 0; i--, ret++) {
       if (_id[i] != 0) {
         for (int j = 0; j < 9; j++) {
@@ -34,6 +45,7 @@ class KId {
         return i;
       }
     }
+    */
     return 0;
   }
 
