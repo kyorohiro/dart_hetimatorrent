@@ -19,7 +19,7 @@ import 'message/krpcfindnode.dart';
 import 'message/krpcgetpeers.dart';
 import 'message/krpcannounce.dart';
 import 'kpeerinfo.dart';
-import 'knodeai.dart';
+import 'ai/knodeai.dart';
 
 class KNode extends Object with KrpcResponseInfo {
   HetiSocketBuilder _socketBuilder = null;
