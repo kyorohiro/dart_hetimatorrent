@@ -2,6 +2,7 @@ library hetimatorrent.dht.krpcmessage;
 
 import 'dart:core';
 import 'dart:async';
+import 'dart:convert';
 import '../../util/bencode.dart';
 import '../../util/hetibencode.dart';
 import 'package:hetimacore/hetimacore.dart';
@@ -38,8 +39,22 @@ class KrpcMessage {
   int _id = NONE_MESSAGE;
   int get messageSignature => _id;
 
-  List<int> get transactionId => _messageAsMap["t"];
-  String get transactionIdAsString => UTF8.decode(_messageAsMap["t"]);
+  List<int> get transactionId {
+    if( _messageAsMap["t"] is String) {
+      return UTF8.encode(_messageAsMap["t"]);
+    } else {
+      return _messageAsMap["t"];
+    }
+  }
+
+  String get transactionIdAsString  {
+    if( _messageAsMap["t"] is String) {
+      return _messageAsMap["t"];
+    } else {
+      return UTF8.decode(_messageAsMap["t"]);
+    }
+  }
+
   KrpcMessage(int id) {
     this._id = id;
   }
@@ -137,8 +152,13 @@ class KrpcMessage {
 class KrpcQuery extends KrpcMessage {
   KrpcQuery(int id) : super(id) {}
 
-  String get q => UTF8.decode(rawMessageMap["q"]);
-
+  String get q {
+    if(rawMessageMap["q"] is String) {
+      return rawMessageMap["q"];
+    } else {
+      return UTF8.decode(rawMessageMap["q"]);
+    }
+  }
 
   KId get queryingNodesId {
     Map<String, Object> a = messageAsMap["a"];

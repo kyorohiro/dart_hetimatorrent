@@ -29,6 +29,11 @@ class KNode extends Object with KrpcResponseInfo {
   KId get nodeId => _nodeId;
   List<SendInfo> queryInfo = [];
   KNodeAI _ai = null;
+
+  KRootingTable get rootingtable => _rootingtable;
+  KNodeAI get ai => _ai;
+ 
+  
   KNode(HetiSocketBuilder socketBuilder, {int kBucketSize: 8, List<int> nodeIdAsList: null, KNodeAI ai: null}) {
     if (nodeIdAsList == null) {
       _nodeId = KId.createIDAtRandom();
@@ -42,6 +47,10 @@ class KNode extends Object with KrpcResponseInfo {
     } else {
       this._ai = ai;
     }
+  }
+
+  addKPeerInfo(KPeerInfo info) {
+    _rootingtable.update(info);
   }
 
   Future start({String ip: "0.0.0.0", int port: 28080}) {
@@ -75,9 +84,10 @@ class KNode extends Object with KrpcResponseInfo {
             parser.last();
           });
           //
-
-          _ai.start(this);
         });
+        //////
+        //////
+        _ai.start(this);
       });
     });
   }
@@ -116,7 +126,7 @@ class KNode extends Object with KrpcResponseInfo {
   }
   static int id = 0;
   Future _sendQuery(String ip, int port, KrpcQuery message) {
-    Completer c;
+    Completer c = new Completer();
     new Future(() {
       queryInfo.add(new SendInfo(message.transactionIdAsString, message.q, c));
       return _udpSocket.send(message.messageAsBencode, ip, port);

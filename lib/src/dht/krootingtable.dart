@@ -49,6 +49,44 @@ class KRootingTable {
     }
   }
 
+  Future<String> toInfo() {
+    List<Future> ll = [];
+    List<Future> ls = [];
+    for (int i = 0; i < _kBuckets.length; i++) {
+      if (_kBuckets.length > 0) {
+        List<Future> l = [];
+        int i = 0;
+        ls.add(_kBuckets[i].length().then((int xx) {
+          for (int j = 0; j < xx; j++) {
+            l.add(_kBuckets[i].getPeerInfo(j).then((KPeerInfo info) {
+              return "${info.ipAsString}:${info.port}";
+            }));
+          }
+          if(l.length != 0) {
+          ll.add(Future.wait(l).then((List<String> rr) {
+            StringBuffer b = new StringBuffer();
+            b.write("${i}");
+            for (String r in rr) {
+              b.write("${r},");
+            }
+            b.write("\n");
+            return b.toString();
+          }));
+          }
+        }));
+      }
+    }
+    return Future.wait(ls).then((_) {
+      return Future.wait(ll).then((List<String> e) {
+        StringBuffer b = new StringBuffer();
+        for (String r in e) {
+          b.write("${r},");
+        }
+        b.write("\n");
+        return b.toString();
+      });
+    });
+  }
   Future update(KPeerInfo info) {
     return new Future(() {
       _kBuckets[info.id.getRootingTabkeIndex()].update(info);

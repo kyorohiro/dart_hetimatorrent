@@ -22,7 +22,9 @@ class KrpcFindNodeQuery extends KrpcQuery {
     _init(transactionId, queryingNodesId, targetNodeId);
   }
 
-  KrpcFindNodeQuery(List<int> transactionId, List<int> queryingNodesId, List<int> targetNodeId) : super(KrpcMessage.FIND_NODE_QUERY) {}
+  KrpcFindNodeQuery(List<int> transactionId, List<int> queryingNodesId, List<int> targetNodeId) : super(KrpcMessage.FIND_NODE_QUERY) {
+    _init(transactionId, queryingNodesId, targetNodeId);
+  }
 
   _init(List<int> transactionId, List<int> queryingNodesId, List<int> targetNodeId) {
     if (transactionId is Uint8List) {
