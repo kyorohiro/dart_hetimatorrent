@@ -22,6 +22,7 @@ void main() {
           knodes[i].addKPeerInfo(kpeerInfos[i - 1]);
         }
         knodes[i].addKPeerInfo(kpeerInfos[i]);
+        print("${i} : ${a.nodeId.getRootingTabkeIndex()}");
       }
 
       for (int i = 0; i < numOfNode; i++) {
