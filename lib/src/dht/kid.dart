@@ -107,10 +107,11 @@ class KId {
     return buffer.toString();
   }
 
+  static int _i =1000;
   static KId createIDAtRandom([List<int> op = null]) {
     List<int> ret = [];
 
-    Random r = new Random(new DateTime.now().millisecondsSinceEpoch);
+    Random r = new Random(new DateTime.now().millisecondsSinceEpoch+(_i++));
     for (int i = 0; i < 20; i++) {
       int v = 0xff;
       if (op != null && i < op.length) {

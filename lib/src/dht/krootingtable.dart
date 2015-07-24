@@ -66,10 +66,11 @@ class KRootingTable {
           if(l.length != 0) {
           ll.add(Future.wait(l).then((List<String> rr) {
             StringBuffer b = new StringBuffer();
-            b.write("${i}:");
+            b.write("<${i}>:");
             for (String r in rr) {
               b.write("${r},");
             }
+            b.write("\n");
             return b.toString();
           }));
           }
