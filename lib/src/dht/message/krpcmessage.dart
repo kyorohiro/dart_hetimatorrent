@@ -36,7 +36,7 @@ class KrpcMessage {
   List<int> get messageAsBencode => Bencode.encode(_messageAsMap);
 
   int _id = NONE_MESSAGE;
-  int get id => _id;
+  int get messageSignature => _id;
 
   List<int> get transactionId => _messageAsMap["t"];
   String get transactionIdAsString => UTF8.decode(_messageAsMap["t"]);

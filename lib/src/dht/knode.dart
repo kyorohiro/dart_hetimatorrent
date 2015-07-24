@@ -194,9 +194,9 @@ class KNodeAI {
 
   onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcQuery query) {
     node._rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, query.queryingNodesId));
-    switch (query.id) {
+    switch (query.messageSignature) {
       case KrpcMessage.PING_QUERY:
-        node.sendPingQuery(info.remoteAddress, info.remotePort);
+        node.sendPingResponse(info.remoteAddress, info.remotePort, query.transactionId);
         break;
       case KrpcMessage.FIND_NODE_QUERY:
         break;
