@@ -181,7 +181,19 @@ class KNodeAI {
 
   onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcQuery query) {
     node._rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, query.queryingNodesId));
-    
+    switch(query.id) {
+      case KrpcMessage.PING_QUERY:
+        node.sendPing(info.remoteAddress, info.remotePort);
+        break;
+      case KrpcMessage.ANNOUNCE_QUERY:
+        break;
+      case KrpcMessage.FIND_NODE_QUERY:
+        break;
+      case KrpcMessage.GET_PEERS_QUERY:
+        break;
+      case KrpcMessage.NONE_QUERY:
+        break;      
+    }
   }
 
   onReceiveError(KNode node, HetiReceiveUdpInfo info, KrpcError message) {
