@@ -138,6 +138,8 @@ class KrpcQuery extends KrpcMessage {
   KrpcQuery(int id) : super(id) {}
 
   String get q => UTF8.decode(rawMessageMap["q"]);
+
+
   KId get queryingNodesId {
     Map<String, Object> a = messageAsMap["a"];
     return new KId(a["id"] as List<int>);
@@ -146,6 +148,7 @@ class KrpcQuery extends KrpcMessage {
   KrpcQuery.fromMap(Map map) : super(KrpcMessage.NONE_QUERY) {
     _messageAsMap = map;
   }
+
   static bool queryCheck(Map<String, Object> messageAsMap, String action) {
     if (!messageAsMap.containsKey("a")) {
       return false;
@@ -239,7 +242,7 @@ class KrpcError extends KrpcMessage {
     List<int> errorMessage = UTF8.encode(errorMessageAsString);
     _init(transactionId, errorCode, errorMessage);
   }
-  KrpcError(List<int> transactionId, int errorCode, List<int> errorMessage) : super(KrpcMessage.ERROR) {
+  KrpcError(List<int> transactionId, int errorCode, [List<int> errorMessage]) : super(KrpcMessage.ERROR) {
     _init(transactionId, errorCode, errorMessage);
   }
 

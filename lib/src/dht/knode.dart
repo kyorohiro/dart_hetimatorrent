@@ -141,28 +141,28 @@ class KNode extends Object with KrpcResponseInfo {
     return _udpSocket.send(response.messageAsBencode, ip, port);
   }
 
-  Future sendFindNodeResponse(String ip, int port, List<int> transactionId,List<int> queryingNodesId, List<int> compactNodeInfo) {
-    KrpcFindNodeResponse query = new KrpcFindNodeResponse(transactionId, queryingNodesId, compactNodeInfo);
+  Future sendFindNodeResponse(String ip, int port, List<int> transactionId, List<int> compactNodeInfo) {
+    KrpcFindNodeResponse query = new KrpcFindNodeResponse(transactionId, this._nodeId.id, compactNodeInfo);
     return _udpSocket.send(query.messageAsBencode, ip, port);
   }
 
-  Future sendGetPeersResponseWithClosestNodes(String ip, int port, List<int> transactionId,List<int> queryingNodesId, List<int> opaqueWriteToken, List<int> compactNodeInfo) {
-    KrpcGetPeersResponse query = new KrpcGetPeersResponse.withClosestNodes(transactionId, queryingNodesId, opaqueWriteToken, compactNodeInfo);
+  Future sendGetPeersResponseWithClosestNodes(String ip, int port, List<int> transactionId, List<int> opaqueWriteToken, List<int> compactNodeInfo) {
+    KrpcGetPeersResponse query = new KrpcGetPeersResponse.withClosestNodes(transactionId, this._nodeId.id, opaqueWriteToken, compactNodeInfo);
     return _udpSocket.send(query.messageAsBencode, ip, port);
   }
 
-  Future sendGetPeersResponseWithPeers(String ip, int port, List<int> transactionId,List<int> queryingNodesId, List<int> opaqueWriteToken, List<List<int>> peerInfoStrings) {
-    KrpcGetPeersResponse query = new KrpcGetPeersResponse.withPeers(transactionId, queryingNodesId, opaqueWriteToken, peerInfoStrings);
+  Future sendGetPeersResponseWithPeers(String ip, int port, List<int> transactionId, List<int> opaqueWriteToken, List<List<int>> peerInfoStrings) {
+    KrpcGetPeersResponse query = new KrpcGetPeersResponse.withPeers(transactionId, this._nodeId.id, opaqueWriteToken, peerInfoStrings);
     return _udpSocket.send(query.messageAsBencode, ip, port);
   }
 
-  Future sendAnnouncePeerResponse(String ip, int port, List<int> transactionId,List<int> queryingNodesId) {
-    KrpcAnnouncePeerResponse query = new KrpcAnnouncePeerResponse(transactionId, queryingNodesId);
+  Future sendAnnouncePeerResponse(String ip, int port, List<int> transactionId) {
+    KrpcAnnouncePeerResponse query = new KrpcAnnouncePeerResponse(transactionId, this._nodeId.id);
     return _udpSocket.send(query.messageAsBencode, ip, port);
   }
 
-  Future sendErrorResponse(String ip, int port, int errorCode, [String errorDescription = null]) {
-    KrpcError query = new KrpcError.fromString("p_${id}", errorCode, errorDescription);
+  Future sendErrorResponse(String ip, int port, int errorCode,  List<int> transactionId, [String errorDescription = null]) {
+    KrpcError query = new KrpcError(transactionId, errorCode);
     return _udpSocket.send(query.messageAsBencode, ip, port);
   }
 
@@ -199,6 +199,10 @@ class KNodeAI {
         node.sendPingResponse(info.remoteAddress, info.remotePort, query.transactionId);
         break;
       case KrpcMessage.FIND_NODE_QUERY:
+        node._rootingtable.findNode(query.queryingNodesId).then((List<KPeerInfo> infos) {
+          node.sendFindNodeResponse(info.remoteAddress, info.remotePort,
+                                    query.transactionId,  compactNodeInfo);
+        });
         break;
       case KrpcMessage.NONE_QUERY:
         break;
