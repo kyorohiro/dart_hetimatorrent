@@ -25,6 +25,12 @@ class KPeerInfo {
     _id = id;
   }
 
+  KPeerInfo.fromBytes(List<int> buffer, int index, int length) {
+    _id = new KId(buffer.sublist(0+index,20+index));
+    _ip = buffer.sublist(20+index,24+index);
+    _port = ByteOrder.parseShort(buffer, 24+index, ByteOrder.BYTEORDER_BIG_ENDIAN);
+  }
+
   bool operator ==(Object o) {
     if (!(o is KPeerInfo)) {
       return false;

@@ -220,7 +220,10 @@ class KNodeAI {
     switch (response.messageSignature) {
       case KrpcMessage.PING_RESPONSE:
         break;
-      case KrpcMessage.FIND_NODE_RESPONSE:
+      case KrpcMessage.FIND_NODE_RESPONSE: {
+        KrpcFindNodeResponse findNode = response;
+        
+      }
         break;
       case KrpcMessage.NONE_RESPONSE:
         break;
