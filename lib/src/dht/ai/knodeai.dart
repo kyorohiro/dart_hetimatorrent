@@ -21,7 +21,37 @@ import '../message/krpcannounce.dart';
 import '../kpeerinfo.dart';
 import '../knode.dart';
 
-class KNodeAI {
+abstract class KNodeAI {
+  bool get isStart;
+  start(KNode node);
+  stop(KNode node);
+  maintenance(KNode node);
+  onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcQuery query);
+  onReceiveError(KNode node, HetiReceiveUdpInfo info, KrpcError message);
+  onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcResponse response);
+  onReceiveUnknown(KNode node, HetiReceiveUdpInfo info, KrpcMessage message);
+}
+
+class KNodeAIBasic extends KNodeAI {
+  bool _isStart = false;
+  bool get isStart => _isStart;
+  ShuffleLinkedList<KPeerInfo> findNodesInfo = new ShuffleLinkedList(20);
+
+  start(KNode node) {}
+
+  stop(KNode node) {}
+
+  maintenance(KNode node) {}
+
+  onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcQuery query) {}
+
+  onReceiveError(KNode node, HetiReceiveUdpInfo info, KrpcError message) {}
+
+  onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcResponse response) {}
+
+  onReceiveUnknown(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {}
+}
+class KNodeAIFindNode {
   bool _isStart = false;
   ShuffleLinkedList<KPeerInfo> findNodesInfo = new ShuffleLinkedList(20);
 
