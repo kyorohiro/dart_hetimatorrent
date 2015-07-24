@@ -74,7 +74,13 @@ class KrpcMessage {
       Map<String, Object> messageAsMap = v;
       if (KrpcQuery.queryCheck(messageAsMap, null)) {
         KrpcMessage ret = null;
-        switch (messageAsMap["q"]) {
+        String q = "";
+        if(messageAsMap["q"] is String) {
+           q = messageAsMap["q"];
+        } else {
+           q = UTF8.decode(messageAsMap["q"]);
+        }
+        switch (q) {
           case "ping":
             ret = new KrpcPingQuery.fromMap(messageAsMap);
             break;
@@ -181,7 +187,7 @@ class KrpcQuery extends KrpcMessage {
       return false;
     }
     if (messageAsMap["q"] is List) {
-      if (UTF8.decode(messageAsMap["q"]) != action) {
+      if (action != null && UTF8.decode(messageAsMap["q"]) != action) {
         throw {};
       }
     } else if (action != null && messageAsMap["q"] != action) {

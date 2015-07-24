@@ -68,6 +68,7 @@ class KNode extends Object with KrpcResponseInfo {
 
           //
           //
+          (parser.buffer as ArrayBuilder).appendIntList(info.data);
           KrpcMessage.decode(parser, this).then((KrpcMessage message) {
             if (message is KrpcResponse) {
               SendInfo rm = removeQueryNameFromTransactionId(UTF8.decode(message.rawMessageMap["t"]));
