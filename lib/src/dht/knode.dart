@@ -82,10 +82,18 @@ class KNode extends Object with KrpcResponseInfo {
     });
   }
 
-  _onReceiveQuery(HetiReceiveUdpInfo info, KrpcQuery message) {}
-  _onReceiveResponse(HetiReceiveUdpInfo info, KrpcResponse message) {}
-  _onReceiveError(HetiReceiveUdpInfo info, KrpcError message) {}
-  _onReceiveUnknown(HetiReceiveUdpInfo info, KrpcMessage message) {}
+  _onReceiveQuery(HetiReceiveUdpInfo info, KrpcQuery message) {
+    this._ai.onReceiveQuery(this, info, message);
+  }
+  _onReceiveResponse(HetiReceiveUdpInfo info, KrpcResponse message) {
+    this._ai.onReceiveResponse(this, info, message);
+  }
+  _onReceiveError(HetiReceiveUdpInfo info, KrpcError message) {
+    this._ai.onReceiveError(this, info, message);
+  }
+  _onReceiveUnknown(HetiReceiveUdpInfo info, KrpcMessage message) {
+    this._ai.onReceiveUnknown(this, info, message);
+  }
 
   String getQueryNameFromTransactionId(String transactionId) {
     for (SendInfo si in queryInfo) {
@@ -180,13 +188,24 @@ class KNode extends Object with KrpcResponseInfo {
 }
 
 class KNodeAI {
+  bool _isStart = false;
   ShuffleLinkedList<KPeerInfo> findNodesInfo = new ShuffleLinkedList(20);
-  start(KNode node) {}
-  stop(KNode node) {}
+
+  start(KNode node) {
+    _isStart = true;
+    maintenance(node);
+  }
+
+  stop(KNode node) {
+    _isStart = false;    
+  }
 
   maintenance(KNode node) {
     findNodesInfo.clearAll();
     node._rootingtable.findNode(node._nodeId).then((List<KPeerInfo> infos) {
+      if(_isStart == false) {
+        return ;
+      }
       for (KPeerInfo info in infos) {
         findNodesInfo.addLast(info);
         node.sendFindNodeQuery(info.ipAsString, info.port, node._nodeId.id);
@@ -195,6 +214,9 @@ class KNodeAI {
   }
 
   onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcQuery query) {
+    if(_isStart == false) {
+      return null;
+    }
     node._rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, query.queryingNodesId));
     switch (query.messageSignature) {
       case KrpcMessage.PING_QUERY:
