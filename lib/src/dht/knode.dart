@@ -161,7 +161,7 @@ class KNode extends Object with KrpcResponseInfo {
     return _udpSocket.send(query.messageAsBencode, ip, port);
   }
 
-  Future sendErrorResponse(String ip, int port, int errorCode,  List<int> transactionId, [String errorDescription = null]) {
+  Future sendErrorResponse(String ip, int port, int errorCode, List<int> transactionId, [String errorDescription = null]) {
     KrpcError query = new KrpcError(transactionId, errorCode);
     return _udpSocket.send(query.messageAsBencode, ip, port);
   }
@@ -201,8 +201,7 @@ class KNodeAI {
         return node.sendPingResponse(info.remoteAddress, info.remotePort, query.transactionId);
       case KrpcMessage.FIND_NODE_QUERY:
         return node._rootingtable.findNode(query.queryingNodesId).then((List<KPeerInfo> infos) {
-          return node.sendFindNodeResponse(info.remoteAddress, info.remotePort,
-                                    query.transactionId,  KPeerInfo.toCompactNodeInfos(infos));
+          return node.sendFindNodeResponse(info.remoteAddress, info.remotePort, query.transactionId, KPeerInfo.toCompactNodeInfos(infos));
         });
       case KrpcMessage.NONE_QUERY:
         return node.sendErrorResponse(info.remoteAddress, info.remotePort, KrpcError.METHOD_ERROR, query.transactionId);
@@ -220,10 +219,25 @@ class KNodeAI {
     switch (response.messageSignature) {
       case KrpcMessage.PING_RESPONSE:
         break;
-      case KrpcMessage.FIND_NODE_RESPONSE: {
-        KrpcFindNodeResponse findNode = response;
-        
-      }
+      case KrpcMessage.FIND_NODE_RESPONSE:
+        {
+          KrpcFindNodeResponse findNode = response;
+          List<KPeerInfo> peerInfo = findNode.compactNodeInfoAsKPeerInfo;
+          List<Future> f = [];
+          for (KPeerInfo info in peerInfo) {
+            f.add(node._rootingtable.update(info));
+          }
+
+          return Future.wait(f).then((List<int> d) {
+            return node._rootingtable.findNode(node._nodeId).then((List<KPeerInfo> infos) {
+              for (KPeerInfo info in infos) {
+                if (!findNodesInfo.sequential.contains(info)) {
+                  node.sendFindNodeQuery(info.ipAsString, info.port, node.nodeId.id).catchError((e) {});
+                }
+              }
+            });
+          });
+        }
         break;
       case KrpcMessage.NONE_RESPONSE:
         break;

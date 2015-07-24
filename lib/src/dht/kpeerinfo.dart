@@ -26,9 +26,20 @@ class KPeerInfo {
   }
 
   KPeerInfo.fromBytes(List<int> buffer, int index, int length) {
-    _id = new KId(buffer.sublist(0+index,20+index));
-    _ip = buffer.sublist(20+index,24+index);
-    _port = ByteOrder.parseShort(buffer, 24+index, ByteOrder.BYTEORDER_BIG_ENDIAN);
+    _id = new KId(buffer.sublist(0 + index, 20 + index));
+    _ip = buffer.sublist(20 + index, 24 + index);
+    _port = ByteOrder.parseShort(buffer, 24 + index, ByteOrder.BYTEORDER_BIG_ENDIAN);
+  }
+
+  int get hashCode {
+    int ret = _port;
+    for (int i in _id) {
+      ret ^= i;
+    }
+    for (int i in _ip) {
+      ret ^= i;
+    }
+    return ret;
   }
 
   bool operator ==(Object o) {
@@ -59,10 +70,10 @@ class KPeerInfo {
     ret.addAll(ByteOrder.parseShortByte(port, ByteOrder.BYTEORDER_BIG_ENDIAN));
     return new Uint8List.fromList(ret);
   }
-  
+
   static List<int> toCompactNodeInfos(List<KPeerInfo> infos) {
     List<int> ret = [];
-    for(KPeerInfo info in infos) {
+    for (KPeerInfo info in infos) {
       ret.addAll(info.toCompactNodeInfo());
     }
     return new Uint8List.fromList(ret);
