@@ -13,7 +13,7 @@ void main() {
     unit.test("retrive list 0", () {
       List<KNode> knodes = [];
       List<KPeerInfo> kpeerInfos = [];
-      int numOfNode = 1000;
+      int numOfNode = 200;
       for (int i = 0; i < numOfNode; i++) {
         KNode a = new KNode(new HetiSocketBuilderSimu());
         knodes.add(a);
@@ -29,12 +29,12 @@ void main() {
         knodes[i].start(ip: kpeerInfos[i].ipAsString, port: kpeerInfos[i].port);
       }
 
-      return new Future.delayed(new Duration(seconds: 5)).then((_) {
+      return new Future.delayed(new Duration(seconds: 4)).then((_) {
         //for (int i = 0; i < numOfNode; i++) {
         //  knodes[i].updatePeer();
        // }
       }).then((_) {
-        return new Future.delayed(new Duration(seconds: 5)).then((_) {
+        return new Future.delayed(new Duration(seconds: 4)).then((_) {
           for (int i = 0; i < numOfNode; i++) {
             knodes[i].stop();
           }
