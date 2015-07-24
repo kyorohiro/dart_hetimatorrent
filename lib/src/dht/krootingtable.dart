@@ -53,10 +53,9 @@ class KRootingTable {
     List<Future> ll = [];
     List<Future> ls = [];
     for (int i = 0; i < _kBuckets.length; i++) {
-      if (_kBuckets.length > 0) {
-        List<Future> l = [];
-        int i = 0;
         ls.add(_kBuckets[i].length().then((int xx) {
+         // print("${xx}");
+          List<Future> l = [];
           for (int j = 0; j < xx; j++) {
             l.add(_kBuckets[i].getPeerInfo(j).then((KPeerInfo info) {
               return "${info.ipAsString}:${info.port}";
@@ -65,7 +64,7 @@ class KRootingTable {
           if(l.length != 0) {
           ll.add(Future.wait(l).then((List<String> rr) {
             StringBuffer b = new StringBuffer();
-            b.write("${i}");
+            b.write("${i}:");
             for (String r in rr) {
               b.write("${r},");
             }
@@ -74,7 +73,6 @@ class KRootingTable {
           }));
           }
         }));
-      }
     }
     return Future.wait(ls).then((_) {
       return Future.wait(ll).then((List<String> e) {

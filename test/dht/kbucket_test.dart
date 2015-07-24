@@ -42,6 +42,9 @@ void main() {
           return kbucket.getPeerInfo(2);
         }).then((KPeerInfo i) {
           unit.expect(info4, i);
+          return kbucket.length().then((int length) {
+            unit.expect(length, 3);            
+          });
         });
       });
     });
