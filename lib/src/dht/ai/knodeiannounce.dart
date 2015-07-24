@@ -1,4 +1,4 @@
-library hetimatorrent.dht.knodeai;
+library hetimatorrent.dht.knodeai.announce;
 
 import 'dart:core';
 import 'dart:async';
@@ -22,28 +22,37 @@ import '../kpeerinfo.dart';
 import '../knode.dart';
 import 'knodeai.dart';
 
-class KNodeAIFindNode {
+class KNodeAIAnnounce {
   bool _isStart = false;
-  ShuffleLinkedList<KPeerInfo> findNodesInfo = new ShuffleLinkedList(20);
+  ShuffleLinkedList<KPeerInfo> announceNodesInfo = new ShuffleLinkedList(20);
+  KId _infoHashId = null;
+  bool get isStart => _isStart;
+
+  KNodeAIAnnounce (KId infoHashId) {
+    this._infoHashId = infoHashId;
+  }
 
   start(KNode node) {
     _isStart = true;
-    maintenance(node);
   }
 
   stop(KNode node) {
     _isStart = false;
   }
 
-  maintenance(KNode node) {
-    findNodesInfo.clearAll();
-    node.rootingtable.findNode(node.nodeId).then((List<KPeerInfo> infos) {
+  maintenance(node) {
+    
+  }
+
+  search(KNode node) {
+    announceNodesInfo.clearAll();
+    node.rootingtable.findNode(_infoHashId).then((List<KPeerInfo> infos) {
       if (_isStart == false) {
         return;
       }
       for (KPeerInfo info in infos) {
-        findNodesInfo.addLast(info);
-        node.sendFindNodeQuery(info.ipAsString, info.port, node.nodeId.id);
+        announceNodesInfo.addLast(info);
+        node.sendGetPeersQuery(info.ipAsString, info.port, _infoHashId.id).catchError((e){});
       }
     });
   }
@@ -107,7 +116,7 @@ class KNodeAIFindNode {
       node.rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, response.queriedNodesId)).then((_) {
         return node.rootingtable.findNode(node.nodeId).then((List<KPeerInfo> infos) {
           for (KPeerInfo info in infos) {
-            if (!findNodesInfo.sequential.contains(info)) {
+            if (!announceNodesInfo.sequential.contains(info)) {
               node.sendFindNodeQuery(info.ipAsString, info.port, node.nodeId.id).catchError((e) {});
             }
           }

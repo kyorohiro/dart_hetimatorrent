@@ -1,4 +1,4 @@
-library hetimatorrent.dht.knodeai;
+library hetimatorrent.dht.knodeai.findnode;
 
 import 'dart:core';
 import 'dart:async';
