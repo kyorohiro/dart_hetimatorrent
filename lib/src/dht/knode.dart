@@ -196,14 +196,12 @@ class KNodeAI {
     node._rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, query.queryingNodesId));
     switch (query.messageSignature) {
       case KrpcMessage.PING_QUERY:
-        node.sendPingResponse(info.remoteAddress, info.remotePort, query.transactionId);
-        break;
+        return node.sendPingResponse(info.remoteAddress, info.remotePort, query.transactionId);
       case KrpcMessage.FIND_NODE_QUERY:
-        node._rootingtable.findNode(query.queryingNodesId).then((List<KPeerInfo> infos) {
-          node.sendFindNodeResponse(info.remoteAddress, info.remotePort,
-                                    query.transactionId,  compactNodeInfo);
+        return node._rootingtable.findNode(query.queryingNodesId).then((List<KPeerInfo> infos) {
+          return node.sendFindNodeResponse(info.remoteAddress, info.remotePort,
+                                    query.transactionId,  KPeerInfo.toCompactNodeInfos(infos));
         });
-        break;
       case KrpcMessage.NONE_QUERY:
         break;
       case KrpcMessage.ANNOUNCE_QUERY:

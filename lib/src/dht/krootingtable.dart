@@ -2,12 +2,10 @@ library hetimatorrent.dht.rootingtable;
 
 import 'dart:core';
 import 'dart:async';
-import 'dart:math';
 import '../util/shufflelinkedlist.dart';
-import 'package:hetimacore/hetimacore.dart';
-import 'package:hetimanet/hetimanet.dart';
 import 'kpeerinfo.dart';
 import 'kid.dart';
+import 'dart:typed_data';
 
 class KBucket {
   int _k = 20;
