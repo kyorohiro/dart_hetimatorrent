@@ -203,7 +203,7 @@ class KNodeAI {
                                     query.transactionId,  KPeerInfo.toCompactNodeInfos(infos));
         });
       case KrpcMessage.NONE_QUERY:
-        break;
+        return node.sendErrorResponse(info.remoteAddress, info.remotePort, KrpcError.METHOD_ERROR, query.transactionId);
       case KrpcMessage.ANNOUNCE_QUERY:
         break;
       case KrpcMessage.GET_PEERS_QUERY:
