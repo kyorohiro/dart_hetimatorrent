@@ -14,9 +14,6 @@ import 'dart:convert';
 import '../util/shufflelinkedlist.dart';
 
 import 'message/krpcmessage.dart';
-import 'message/krpcping.dart';
-import 'message/krpcfindnode.dart';
-import 'message/krpcgetpeers.dart';
 import 'message/krpcannounce.dart';
 import 'kpeerinfo.dart';
 import 'ai/knodeai.dart';
@@ -40,7 +37,7 @@ class KNode extends Object with KrpcResponseInfo {
   List<KAnnounceInfo> get announcedPeer => _announcedPeer.sequential;
   ShuffleLinkedList<KAnnounceInfo> get rawAnnouncedPeerForSearchResult => _announcedPeerForSearchResult;
   ShuffleLinkedList<KAnnounceInfo> get rawAnnouncedPeer => _announcedPeer;
-
+  static int id = 0;
 
   void addAnnouncePeerWithFilter(KAnnounceInfo info) {
     _announcedPeer.addLast(info);
@@ -51,18 +48,13 @@ class KNode extends Object with KrpcResponseInfo {
   }
 
   _startTick() {
-    if (_isStart == false) {
-      return;
-    }
     new Future.delayed(new Duration(seconds: 5)).then((_) {
       if (_isStart == false) {
         return;
       }
       try {
         this._ai.onTicket(this);
-      } catch (e) {
-        ;
-      }
+      } catch (e) {}
       _startTick();
     }).catchError((e) {});
   }
@@ -140,7 +132,7 @@ class KNode extends Object with KrpcResponseInfo {
     });
   }
 
-  updatePeer() {
+  updateP2PNetwork() {
     this._ai.maintenance(this);
   }
 
@@ -164,7 +156,7 @@ class KNode extends Object with KrpcResponseInfo {
     queryInfo.remove(re);
     return re;
   }
-  static int id = 0;
+
   Future _sendQuery(String ip, int port, KrpcQuery message) {
     Completer c = new Completer();
     new Future(() {
