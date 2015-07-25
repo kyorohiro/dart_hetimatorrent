@@ -69,15 +69,16 @@ class KrpcGetPeersResponse extends KrpcResponse {
     }
   }
 
-  /*
-  List<KAnnounceInfo> get values(List<int> infoHash) {
+  List<KAnnounceInfo> valuesAsLAnnounceList(List<int> infoHash) {
     Map<String, Object> r = messageAsMap["r"];
     List<Uint8List> values = r["values"];
-   
-    KAnnounceInfo a = new KAnnounceInfo(peerInfo, infoHash);
-    return [];
+    List<KAnnounceInfo> ret = [];
+    for(Uint8List l in values) {
+      KAnnounceInfo a = new KAnnounceInfo.fromCompactIpPort(l, infoHash);
+      ret.add(a);
+    }
+    return ret;
   }
-   */
 
   // Response with peers = {"t":"aa", "y":"r", "r": {"id":"abcdefghij0123456789", "token":"aoeusnth", "values": ["axje.u", "idhtnm"]}}
   // bencoded = d1:rd2:id20:abcdefghij01234567895:token8:aoeusnth6:valuesl6:axje.u6:idhtnmee1:t2:aa1:y1:re
