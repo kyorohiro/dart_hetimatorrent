@@ -10,26 +10,37 @@ import 'kid.dart';
 import 'dart:typed_data';
 
 class KAnnounceInfo {
-  int _impliedPort = 0;
+  int _port = 0;
+  int get port => _port;
+
+  List<int> _ip = [];
+  List<int> get ip => new List.from(_ip);
+
   List<int> _infoHash = [];
-  KPeerInfo _peerInfo = null;
-
-  int get impliedPort => _impliedPort;
   List<int> get infoHash => new List.from(_infoHash);
-  KPeerInfo get peerInfo => _peerInfo;
 
-  KAnnounceInfo(KPeerInfo peerInfo, List<int> infoHash, int impliedPort) {
-    this._peerInfo = peerInfo;
+  KAnnounceInfo.fromString(String ip, int port, List<int> infoHash) {
+    _init(HetiIP.toRawIP(ip), port, infoHash);
+  }
+
+  KAnnounceInfo(List<int> ip, int port, List<int> infoHash) {
+    _init(ip, port, infoHash);
+  }
+
+  _init(List<int> ip, int port, List<int> infoHash) {
+    this._ip.addAll(ip);
+    this._port = port;
     this._infoHash.addAll(infoHash);
-    this._impliedPort = impliedPort;
   }
 
   int get hashCode {
-    int ret = _peerInfo.hashCode;
+    int ret = 0;
+    for (int i in _ip) {
+      ret ^= i;
+    }
     for (int i in _infoHash) {
       ret ^= i;
     }
-    ret ^= _impliedPort;
     return ret;
   }
 
@@ -39,7 +50,14 @@ class KAnnounceInfo {
     }
 
     KAnnounceInfo p = o;
-    if (this._peerInfo != p._peerInfo) {
+    if (this._ip.length == p._ip.length) {
+      for (int i = 0; i < p._ip.length; i++) {
+        if (this._ip[i] != p._ip[i]) {
+          return false;
+        }
+      }
+    }
+    if (this._port != p._port) {
       return false;
     }
     for (int i = 0; i < p._infoHash.length; i++) {
@@ -47,18 +65,22 @@ class KAnnounceInfo {
         return false;
       }
     }
-    if (this._impliedPort != p._impliedPort) {
-      return false;
-    }
     return true;
   }
-  
+
   static List<Uint8List> toPeerInfoStrings(List<KAnnounceInfo> infos) {
     List<Uint8List> ret = [];
-    for(KAnnounceInfo info in infos) {
-      ret.add(new Uint8List.fromList(info._peerInfo.toPeerInfoString()));
+    for (KAnnounceInfo info in infos) {
+      ret.add(new Uint8List.fromList(info.toPeerInfoString()));
     }
-    return ret;  
+    return ret;
+  }
+
+  List<int> toPeerInfoString() {
+    List<int> ret = [];
+    ret.addAll(_ip);
+    ret.addAll(ByteOrder.parseShortByte(_port, ByteOrder.BYTEORDER_BIG_ENDIAN));
+    return ret;
   }
 }
 
@@ -134,12 +156,11 @@ class KPeerInfo {
     }
     return new Uint8List.fromList(ret);
   }
-  
+
   List<int> toPeerInfoString() {
     List<int> ret = [];
     ret.addAll(_ip);
     ret.addAll(ByteOrder.parseShortByte(_port, ByteOrder.BYTEORDER_BIG_ENDIAN));
     return ret;
   }
-
 }

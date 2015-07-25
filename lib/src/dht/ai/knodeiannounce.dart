@@ -120,7 +120,7 @@ class KNodeAIAnnounce {
         {
           KrpcGetPeersResponse getPeer = response;
           if(getPeer.haveValue == true) {
-            
+            //node.addAnnouncePeerWithFilter(info)
           } else {
             
           }
