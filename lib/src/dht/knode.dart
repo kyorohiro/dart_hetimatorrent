@@ -136,8 +136,12 @@ class KNode extends Object with KrpcResponseInfo {
     this._ai.maintenance(this);
   }
 
-  searchPeer(KId infoHash) {
-    this._ai.searchPeer(this, infoHash);
+  startSearchPeer(KId infoHash) {
+    this._ai.startSearchPeer(this, infoHash);
+  }
+
+  stopSearchPeer(KId infoHash) {
+    this._ai.stopSearchPeer(this, infoHash);
   }
 
   String getQueryNameFromTransactionId(String transactionId) {

@@ -27,7 +27,8 @@ abstract class KNodeAI {
   start(KNode node);
   stop(KNode node);
   maintenance(KNode node);
-  searchPeer(KNode node, KId infoHash);
+  startSearchPeer(KNode node, KId infoHash);
+  stopSearchPeer(KNode node, KId infoHash);
   onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcQuery query);
   onReceiveError(KNode node, HetiReceiveUdpInfo info, KrpcError message);
   onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcResponse response);
@@ -52,9 +53,13 @@ class KNodeAIBasic extends KNodeAI {
   maintenance(KNode node) {
     findNodeAI.maintenance(node);
   }
-  searchPeer(KNode node, KId infoHash) {
+  startSearchPeer(KNode node, KId infoHash) {
     
   }
+  stopSearchPeer(KNode node, KId infoHash) {
+    
+  }
+
   onTicket(KNode node) {
     findNodeAI.onTicket(node);
   }
