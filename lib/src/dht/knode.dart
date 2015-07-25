@@ -139,14 +139,14 @@ class KNode extends Object with KrpcResponseInfo {
           KrpcMessage.decode(parser, this).then((KrpcMessage message) {
             if (message is KrpcResponse) {
               SendInfo rm = removeQueryNameFromTransactionId(UTF8.decode(message.rawMessageMap["t"]));
-              _onReceiveResponse(info, message);
+              this._ai.onReceiveResponse(this, info, message);
               rm._c.complete(message);
             } else if (message is KrpcQuery) {
-              _onReceiveQuery(info, message);
+              this._ai.onReceiveQuery(this, info, message);
             } else if (message is KrpcError) {
-              _onReceiveError(info, message);
+              this._ai.onReceiveError(this, info, message);
             } else {
-              _onReceiveUnknown(info, message);
+              this._ai.onReceiveUnknown(this, info, message);
             }
           }).catchError((e) {
             parser.last();
@@ -166,18 +166,6 @@ class KNode extends Object with KrpcResponseInfo {
 
   updatePeer() {
     this._ai.maintenance(this);
-  }
-  _onReceiveQuery(HetiReceiveUdpInfo info, KrpcQuery message) {
-    this._ai.onReceiveQuery(this, info, message);
-  }
-  _onReceiveResponse(HetiReceiveUdpInfo info, KrpcResponse message) {
-    this._ai.onReceiveResponse(this, info, message);
-  }
-  _onReceiveError(HetiReceiveUdpInfo info, KrpcError message) {
-    this._ai.onReceiveError(this, info, message);
-  }
-  _onReceiveUnknown(HetiReceiveUdpInfo info, KrpcMessage message) {
-    this._ai.onReceiveUnknown(this, info, message);
   }
 
   String getQueryNameFromTransactionId(String transactionId) {
