@@ -120,11 +120,23 @@ class KNodeAIAnnounce {
         {
           KrpcGetPeersResponse getPeer = response;
           if(getPeer.haveValue == true) {
-            for( KAnnounceInfo i in getPeer.valuesAsLAnnounceList(_infoHashId.id)) {
+            for( KAnnounceInfo i in getPeer.valuesAsKAnnounceInfo(_infoHashId.id)) {
               node.addAnnouncePeerWithFilter(i);              
             }
           } else {
-            
+            /*
+            announceNodesInfo.addLast(getPeer.)
+            peerInfos.rawshuffled.sort((KPeerInfo a, KPeerInfo b) {
+              if(a.id == b.id) {
+                return 0;
+              } 
+              else if(a.id > b.id) {
+                return 1;
+              } else {
+                return -1;
+              }
+            });
+             */
           }
         }
           break;

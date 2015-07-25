@@ -69,13 +69,36 @@ class KrpcGetPeersResponse extends KrpcResponse {
     }
   }
 
-  List<KAnnounceInfo> valuesAsLAnnounceList(List<int> infoHash) {
+  List<KAnnounceInfo> valuesAsKAnnounceInfo(List<int> infoHash) {
+    if(haveValue == false) {
+      return [];
+    }
     Map<String, Object> r = messageAsMap["r"];
     List<Uint8List> values = r["values"];
     List<KAnnounceInfo> ret = [];
     for(Uint8List l in values) {
       KAnnounceInfo a = new KAnnounceInfo.fromCompactIpPort(l, infoHash);
       ret.add(a);
+    }
+    return ret;
+  }
+
+  List<int> get compactNodeInfo {
+    if(haveValue == true) {
+      return [];
+    }
+    Map<String, Object> r = rawMessageMap["r"];
+    return r["nodes"];
+  }
+
+  List<KPeerInfo> get compactNodeInfoAsKPeerInfo {
+    if(haveValue == true) {
+      return [];
+    }
+    List<KPeerInfo> ret = [];
+    List<int> infos = compactNodeInfo;
+    for (int i = 0; i < infos.length ~/ 26; i++) {
+      ret.add(new KPeerInfo.fromBytes(infos, i * 26, 26));
     }
     return ret;
   }
