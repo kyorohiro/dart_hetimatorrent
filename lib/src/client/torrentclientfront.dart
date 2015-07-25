@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimanet/hetimanet.dart';
 import '../util/peeridcreator.dart';
-import '../message/message.dart';
+import 'message/message.dart';
 import 'torrentclientpeerinfo.dart';
 import '../util/bitfield.dart';
 import 'torrentclientmessage.dart';

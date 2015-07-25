@@ -13,7 +13,7 @@ import 'torrentclientmessage.dart';
 
 import '../util/blockdata.dart';
 import '../util/bitfield.dart';
-import '../message/message.dart';
+import 'message/message.dart';
 import '../file/torrentfile.dart';
 
 class TorrentClient {

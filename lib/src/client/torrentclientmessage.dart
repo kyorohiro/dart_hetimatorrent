@@ -1,7 +1,7 @@
 library hetimatorrent.torrent.client.message;
 
 import 'dart:core';
-import '../message/message.dart';
+import 'message/message.dart';
 
 import 'torrentclientfront.dart';
 import 'torrentclientpeerinfo.dart';

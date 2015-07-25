@@ -2,7 +2,7 @@ library hetimatorrent.torrent.ai;
 
 import 'dart:core';
 import 'dart:async';
-import '../message/message.dart';
+import 'message/message.dart';
 import 'torrentclient.dart';
 import 'torrentclientpeerinfo.dart';
 import 'torrentclientmessage.dart';

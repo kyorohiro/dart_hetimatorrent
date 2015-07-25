@@ -32,7 +32,7 @@ export 'src/client/torrentclientmessage.dart';
 export 'src/client/torrentai_choke.dart';
 export 'src/extra/terminal.dart';
 
-export 'src/message/message.dart';
+export 'src/client/message/message.dart';
 
 export 'src/dht/message/krpcmessage.dart';
 export 'src/dht/message/krpcping.dart';
