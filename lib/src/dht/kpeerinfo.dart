@@ -52,6 +52,14 @@ class KAnnounceInfo {
     }
     return true;
   }
+  
+  static List<Uint8List> toPeerInfoStrings(List<KAnnounceInfo> infos) {
+    List<Uint8List> ret = [];
+    for(KAnnounceInfo info in infos) {
+      ret.add(new Uint8List.fromList(info._peerInfo.toPeerInfoString()));
+    }
+    return ret;  
+  }
 }
 
 class KPeerInfo {
@@ -126,4 +134,12 @@ class KPeerInfo {
     }
     return new Uint8List.fromList(ret);
   }
+  
+  List<int> toPeerInfoString() {
+    List<int> ret = [];
+    ret.addAll(_ip);
+    ret.addAll(ByteOrder.parseShortByte(_port, ByteOrder.BYTEORDER_BIG_ENDIAN));
+    return ret;
+  }
+
 }

@@ -84,8 +84,9 @@ class KNodeAIAnnounce {
           });
           List<int> opaqueWriteToken = KId.createToken(new KId(getPeer.infoHash), getPeer.queryingNodesId, node.nodeId);
           if (target.length > 0) {
-            return node.sendGetPeersResponseWithPeers(info.remoteAddress, info.remotePort, query.transactionId,
-                opaqueWriteToken, peerInfoStrings);//todo
+            return node.sendGetPeersResponseWithPeers(
+                info.remoteAddress, info.remotePort, query.transactionId,
+                opaqueWriteToken, KAnnounceInfo.toPeerInfoStrings(target));//todo
           } else {
             return node.rootingtable.findNode(query.queryingNodesId).then((List<KPeerInfo> infos) {
               return node.sendGetPeersResponseWithClosestNodes(info.remoteAddress, info.remotePort, query.transactionId, 
