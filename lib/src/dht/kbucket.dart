@@ -20,6 +20,16 @@ class KBucket {
   Future update(KPeerInfo peerInfo) {
     return new Future(() {
       peerInfos.addLast(peerInfo);
+      peerInfos.rawshuffled.sort((KPeerInfo a, KPeerInfo b) {
+        if(a.id == b.id) {
+          return 0;
+        } 
+        else if(a.id > b.id) {
+          return 1;
+        } else {
+          return -1;
+        }
+      });
     });
   }
 

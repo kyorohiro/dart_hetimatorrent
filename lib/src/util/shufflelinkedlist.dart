@@ -8,6 +8,9 @@ class ShuffleLinkedList<X> {
   List<X> _shuffled = new List();
 
   List<X> get sequential => new List.from(_sequential);
+  List<X> get shuffled => new List.from(_shuffled);
+  
+  List<X> get rawshuffled => _shuffled;
 
   int _max = 0;
   int get max => _max;

@@ -69,5 +69,22 @@ void main() {
       });
     });
     
+    unit.test("update kbucket sort", () {
+      KBucket kbucket = new KBucket(3);
+      KPeerInfo info2 = new KPeerInfo("127.0.0.2", 8082, new KId(new List.filled(20, 2)));
+      KPeerInfo info1 = new KPeerInfo("127.0.0.1", 8081, new KId(new List.filled(20, 1)));
+      KPeerInfo info3 = new KPeerInfo("127.0.0.3", 8083, new KId(new List.filled(20, 3)));
+
+      kbucket.update(info1);
+      kbucket.update(info2);
+      kbucket.update(info3);
+
+      return kbucket.length().then((int length) {
+        unit.expect(length, 3);
+        unit.expect("127.0.0.1", kbucket.peerInfos.rawshuffled[0].ipAsString);
+        unit.expect("127.0.0.2", kbucket.peerInfos.rawshuffled[1].ipAsString);
+        unit.expect("127.0.0.3", kbucket.peerInfos.rawshuffled[2].ipAsString);
+      });
+    });
   });
 }
