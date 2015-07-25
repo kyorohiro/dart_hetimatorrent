@@ -60,11 +60,6 @@ class KNodeAIFindNode {
         return node.rootingtable.findNode(query.queryingNodesId).then((List<KPeerInfo> infos) {
           return node.sendFindNodeResponse(info.remoteAddress, info.remotePort, query.transactionId, KPeerInfo.toCompactNodeInfos(infos));
         });
-      case KrpcMessage.PING_QUERY:
-      case KrpcMessage.NONE_QUERY:
-      case KrpcMessage.ANNOUNCE_QUERY:
-      case KrpcMessage.GET_PEERS_QUERY:
-        break;
     }
   }
 
@@ -88,14 +83,6 @@ class KNodeAIFindNode {
             }
             return Future.wait(f);
           }
-          break;
-        case KrpcMessage.NONE_RESPONSE:
-          break;
-        case KrpcMessage.ANNOUNCE_RESPONSE:
-          break;
-        case KrpcMessage.GET_PEERS_RESPONSE:
-          break;
-        default:
           break;
       }
     }).then((e) {
