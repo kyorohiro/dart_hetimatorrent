@@ -33,7 +33,22 @@ class KNode extends Object with KrpcResponseInfo {
 
   KRootingTable get rootingtable => _rootingtable;
   KNodeAI get ai => _ai;
-  ShuffleLinkedList announcedPeer = null;
+  ShuffleLinkedList<KAnnounceInfo> _announcedPeer = new ShuffleLinkedList(300);
+  List<KAnnounceInfo> get announcedPeer => _announcedPeer.sequential;
+
+  List<KAnnounceInfo> announcePeerWithFilter(Function filter) {
+    List<KAnnounceInfo> ret = [];
+    for(KAnnounceInfo info in _announcedPeer.sequential) {
+      if(filter(info)){
+        ret.add(info);
+      }
+    }
+    return ret;
+  }
+  
+  void addAnnouncePeerWithFilter(KAnnounceInfo info) {
+    _announcedPeer.addLast(info);
+  }
 
   KNode(HetiSocketBuilder socketBuilder, {int kBucketSize: 8, List<int> nodeIdAsList: null, KNodeAI ai: null}) {
     if (nodeIdAsList == null) {
