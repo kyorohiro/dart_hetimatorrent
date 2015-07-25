@@ -46,7 +46,7 @@ class KNodeAIAnnounce {
   }
 
   maintenance(node) {}
-
+  searchPeer(KNode node, KId infoHash) {}
   search(KNode node) {
     _findedNode.clearAll();
     node.rootingtable.findNode(_infoHashId).then((List<KPeerInfo> infos) {
