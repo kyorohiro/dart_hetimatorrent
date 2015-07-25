@@ -52,18 +52,14 @@ class KNodeAIFindNode {
     if (_isStart == false) {
       return null;
     }
-    node.rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, query.queryingNodesId));
     switch (query.messageSignature) {
-      case KrpcMessage.PING_QUERY:
-        return node.sendPingResponse(info.remoteAddress, info.remotePort, query.transactionId);
       case KrpcMessage.FIND_NODE_QUERY:
         return node.rootingtable.findNode(query.queryingNodesId).then((List<KPeerInfo> infos) {
           return node.sendFindNodeResponse(info.remoteAddress, info.remotePort, query.transactionId, KPeerInfo.toCompactNodeInfos(infos));
         });
+      case KrpcMessage.PING_QUERY:
       case KrpcMessage.NONE_QUERY:
-        return node.sendErrorResponse(info.remoteAddress, info.remotePort, KrpcError.METHOD_ERROR, query.transactionId);
       case KrpcMessage.ANNOUNCE_QUERY:
-        break;
       case KrpcMessage.GET_PEERS_QUERY:
         break;
     }
@@ -76,7 +72,6 @@ class KNodeAIFindNode {
       if (_isStart == false) {
         return null;
       }
-      node.rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, response.queriedNodesId));
       switch (response.messageSignature) {
         case KrpcMessage.PING_RESPONSE:
           break;

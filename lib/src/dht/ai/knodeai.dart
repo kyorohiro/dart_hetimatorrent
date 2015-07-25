@@ -52,6 +52,19 @@ class KNodeAIBasic extends KNodeAI {
   }
 
   onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcQuery query) {
+    node.rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, query.queryingNodesId));
+    switch (query.messageSignature) {
+      case KrpcMessage.PING_QUERY:
+        return node.sendPingResponse(info.remoteAddress, info.remotePort, query.transactionId);
+      case KrpcMessage.FIND_NODE_QUERY:
+        break;
+      case KrpcMessage.NONE_QUERY:
+        return node.sendErrorResponse(info.remoteAddress, info.remotePort, KrpcError.METHOD_ERROR, query.transactionId);
+      case KrpcMessage.ANNOUNCE_QUERY:
+        break;
+      case KrpcMessage.GET_PEERS_QUERY:
+        break;
+    }
     findNodeAI.onReceiveQuery(node, info, query);
   }
 
