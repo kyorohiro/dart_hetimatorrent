@@ -75,7 +75,7 @@ class KNodeAIAnnounce {
       announcedNode.sort((KAnnounceInfo a, KAnnounceInfo b) {
         if (a.infoHash == b.infoHash) {
           return 0;
-        } else if (a.infoHash > b.infoHash) {
+        } else if (a.infoHash.xor(_infoHashId)  > b.infoHash.xor(_infoHashId) ) {
           return 1;
         } else {
           return -1;
@@ -152,7 +152,7 @@ class KNodeAIAnnounce {
                   _findedNode.rawshuffled.sort((KPeerInfo a, KPeerInfo b) {
                     if (a.id == b.id) {
                       return 0;
-                    } else if (a.id > b.id) {
+                    } else if (a.id.xor(_infoHashId) > b.id.xor(_infoHashId) ) {
                       return 1;
                     } else {
                       return -1;
