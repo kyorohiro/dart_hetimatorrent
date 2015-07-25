@@ -28,12 +28,12 @@ void main() {
         knodes[i].start(ip: kpeerInfos[i].ipAsString, port: kpeerInfos[i].port);
       }
 
-      return new Future.delayed(new Duration(seconds: 4)).then((_) {
+      return new Future.delayed(new Duration(seconds: 3)).then((_) {
         //for (int i = 0; i < numOfNode; i++) {
         //  knodes[i].updatePeer();
        // }
       }).then((_) {
-        return new Future.delayed(new Duration(seconds: 4)).then((_) {
+        return new Future.delayed(new Duration(seconds: 3)).then((_) {
           for (int i = 0; i < numOfNode; i++) {
             knodes[i].stop();
           }
