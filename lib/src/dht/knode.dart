@@ -38,25 +38,9 @@ class KNode extends Object with KrpcResponseInfo {
   ShuffleLinkedList<KAnnounceInfo> _announcedPeer = new ShuffleLinkedList(300);
   ShuffleLinkedList<KAnnounceInfo> _announcedPeerForSearchResult = new ShuffleLinkedList(300);
   List<KAnnounceInfo> get announcedPeer => _announcedPeer.sequential;
-  List<KAnnounceInfo> announcedPeerForSearchResult(KId infoHash) {
-    List<KAnnounceInfo> ret = [];
-    for (KAnnounceInfo info in _announcedPeerForSearchResult) {
-      if (info.infoHash == infoHash) {
-        ret.add(info);
-      }
-    }
-    return ret;
-  }
+  ShuffleLinkedList<KAnnounceInfo> get rawAnnouncedPeerForSearchResult => _announcedPeerForSearchResult;
+  ShuffleLinkedList<KAnnounceInfo> get rawAnnouncedPeer => _announcedPeer;
 
-  List<KAnnounceInfo> announcePeerWithFilter(Function filter) {
-    List<KAnnounceInfo> ret = [];
-    for (KAnnounceInfo info in _announcedPeer.sequential) {
-      if (filter(info)) {
-        ret.add(info);
-      }
-    }
-    return ret;
-  }
 
   void addAnnouncePeerWithFilter(KAnnounceInfo info) {
     _announcedPeer.addLast(info);
@@ -168,6 +152,7 @@ class KNode extends Object with KrpcResponseInfo {
     }
     return "";
   }
+
   SendInfo removeQueryNameFromTransactionId(String transactionId) {
     SendInfo re = null;
     for (SendInfo si in queryInfo) {

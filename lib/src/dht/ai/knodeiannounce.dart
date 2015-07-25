@@ -102,7 +102,7 @@ class KNodeAIAnnounce {
       case KrpcMessage.GET_PEERS_QUERY:
         {
           KrpcGetPeersQuery getPeer = query;
-          List<KAnnounceInfo> target = node.announcePeerWithFilter((KAnnounceInfo i) {
+          List<KAnnounceInfo> target = node.rawAnnouncedPeer.getWithFilter((KAnnounceInfo i) {
             List<int> a = i.infoHash.id;
             List<int> b = getPeer.infoHash;
             for (int i = 0; i < 20; i++) {

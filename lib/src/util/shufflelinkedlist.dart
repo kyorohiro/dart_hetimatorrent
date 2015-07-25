@@ -89,6 +89,16 @@ class ShuffleLinkedList<X> {
     }
   }
 
+  List<X> getWithFilter(bool filter(X xx)) {
+    List<X> t = [];
+    for (X x in _sequential) {
+      if (filter(x)) {
+        t.add(x);
+      }
+    }
+    return t;
+  }
+
   void clearAll() {
     _sequential.clear();
     _shuffled.clear();
