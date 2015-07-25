@@ -111,21 +111,20 @@ class KNodeAIAnnounce {
         case KrpcMessage.PING_RESPONSE:
           break;
         case KrpcMessage.FIND_NODE_RESPONSE:
-          {
-            KrpcFindNodeResponse findNode = response;
-            List<KPeerInfo> peerInfo = findNode.compactNodeInfoAsKPeerInfo;
-            List<Future> f = [];
-            for (KPeerInfo info in peerInfo) {
-              f.add(node.rootingtable.update(info));
-            }
-            return Future.wait(f);
-          }
           break;
         case KrpcMessage.NONE_RESPONSE:
           break;
         case KrpcMessage.ANNOUNCE_RESPONSE:
           break;
         case KrpcMessage.GET_PEERS_RESPONSE:
+        {
+          KrpcGetPeersResponse getPeer = response;
+          if(getPeer.haveValue == true) {
+            
+          } else {
+            
+          }
+        }
           break;
         default:
           break;

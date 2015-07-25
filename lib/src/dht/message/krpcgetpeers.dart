@@ -7,6 +7,7 @@ import 'package:hetimacore/hetimacore.dart';
 import 'krpcmessage.dart';
 import 'dart:typed_data';
 import 'dart:convert';
+import '../kpeerinfo.dart';
 
 class KrpcGetPeersQuery extends KrpcQuery {
   //find_node Query = {"t":"aa", "y":"q", "q":"find_node", "a": {"id":"abcdefghij0123456789", "target":"mnopqrstuvwxyz123456"}}
@@ -23,6 +24,7 @@ class KrpcGetPeersQuery extends KrpcQuery {
     List<int> queryingNodesId = UTF8.encode(queryingNodesIdAsString);
     _init(transactionId, queryingNodesId, infoHash);
   }
+
   KrpcGetPeersQuery(List<int> transactionId, List<int> queryingNodesId, List<int> infoHash)
   :super(KrpcMessage.GET_PEERS_QUERY){
     _init(transactionId, queryingNodesId, infoHash);
@@ -57,6 +59,26 @@ class KrpcGetPeersQuery extends KrpcQuery {
 }
 
 class KrpcGetPeersResponse extends KrpcResponse {
+  
+  bool get haveValue {
+    Map<String, Object> r = messageAsMap["r"];
+    if (((messageAsMap)["r"] as Map).containsKey("values") == true) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /*
+  List<KAnnounceInfo> get values(List<int> infoHash) {
+    Map<String, Object> r = messageAsMap["r"];
+    List<Uint8List> values = r["values"];
+   
+    KAnnounceInfo a = new KAnnounceInfo(peerInfo, infoHash);
+    return [];
+  }
+   */
+
   // Response with peers = {"t":"aa", "y":"r", "r": {"id":"abcdefghij0123456789", "token":"aoeusnth", "values": ["axje.u", "idhtnm"]}}
   // bencoded = d1:rd2:id20:abcdefghij01234567895:token8:aoeusnth6:valuesl6:axje.u6:idhtnmee1:t2:aa1:y1:re
   KrpcGetPeersResponse.withPeersFromString(String transactionIdAsString, String queryingNodesIdAsString, String opaqueWriteTokenAsString, List<String> peerInfoStringsAsString) 
