@@ -51,7 +51,9 @@ class KNodeAIBasic extends KNodeAI {
   maintenance(KNode node) {
     findNodeAI.maintenance(node);
   }
-
+  onTicket(KNode node) {
+    findNodeAI.onTicket(node);
+  }
   onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcQuery query) {
     node.rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, query.queryingNodesId));
     switch (query.messageSignature) {
