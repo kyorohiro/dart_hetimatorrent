@@ -8,6 +8,7 @@ import 'krpcmessage.dart';
 import 'dart:typed_data';
 import 'dart:convert';
 import '../kpeerinfo.dart';
+import '../kid.dart';
 
 class KrpcGetPeersQuery extends KrpcQuery {
   //find_node Query = {"t":"aa", "y":"q", "q":"find_node", "a": {"id":"abcdefghij0123456789", "target":"mnopqrstuvwxyz123456"}}
@@ -81,6 +82,11 @@ class KrpcGetPeersResponse extends KrpcResponse {
       ret.add(a);
     }
     return ret;
+  }
+
+  KId get tokenAsKId {
+    Map<String, Object> r = messageAsMap["r"];
+    return new KId(r["token"]);
   }
 
   List<int> get compactNodeInfo {

@@ -15,9 +15,11 @@ class KAnnounceInfo {
 
   List<int> _ip = [];
   List<int> get ip => new List.from(_ip);
-
+  String get ipAsString => HetiIP.toIPString(_ip);
   KId _infoHash = null;
   KId get infoHash => _infoHash;
+  
+  KId token = null;
 
   KAnnounceInfo.fromCompactIpPort(List<int> compact, List<int> infoHash) {
 -    _init(compact.sublist(0,compact.length-2), 

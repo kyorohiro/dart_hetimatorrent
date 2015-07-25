@@ -24,7 +24,8 @@ import 'knodeai.dart';
 
 class KNodeAIAnnounce {
   bool _isStart = false;
-  ShuffleLinkedList<KPeerInfo> announceNodesInfo = new ShuffleLinkedList(50);
+  ShuffleLinkedList<KPeerInfo> _findedNode = new ShuffleLinkedList(50);
+  List<KAnnounceInfo> announcedNode = [];
   KId _infoHashId = null;
   KId _tokenFilter = null;
   bool get isStart => _isStart;
@@ -47,40 +48,41 @@ class KNodeAIAnnounce {
   maintenance(node) {}
 
   search(KNode node) {
-    announceNodesInfo.clearAll();
+    _findedNode.clearAll();
     node.rootingtable.findNode(_infoHashId).then((List<KPeerInfo> infos) {
       if (_isStart == false) {
         return;
       }
       for (KPeerInfo info in infos) {
-        announceNodesInfo.addLast(info);
+        _findedNode.addLast(info);
         node.sendGetPeersQuery(info.ipAsString, info.port, _infoHashId.id).catchError((e) {});
       }
     });
   }
 
   onTicket(KNode node) {
-    if(lastUpdateTime == 0) {
+    if (lastUpdateTime == 0) {
       return;
     }
-/*
-    int t  = new DateTime.now().millisecondsSinceEpoch;
-    if(t-lastUpdateTime > 5000) {
-      announceNodesInfo.rawshuffled.sort((KPeerInfo a, KPeerInfo b) {
-        if (a.id == b.id) {
+
+    int t = new DateTime.now().millisecondsSinceEpoch;
+    if (t - lastUpdateTime > 5000) {
+      announcedNode.sort((KAnnounceInfo a, KAnnounceInfo b) {
+        if (a.infoHash == b.infoHash) {
           return 0;
-        } else if (a.id > b.id) {
+        } else if (a.infoHash > b.infoHash) {
           return 1;
         } else {
           return -1;
         }
       });
-      for(int i=0;i<7 && i<announceNodesInfo.rawshuffled.length;i++) {
-        KPeerInfo ainfo = announceNodesInfo.rawshuffled[i];
-        node.sendAnnouncePeerQuery(ip, port, implied_port, infoHash, opaqueToken)
+      while (8 < announcedNode.length) {
+        announcedNode.removeAt(10);
+      }
+      for(KAnnounceInfo i in announcedNode) {
+        node.sendAnnouncePeerQuery(i.ipAsString, i.port, 1, _infoHashId.id, i.token.id);
       }
     }
-     */
   }
 
   onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcQuery query) {
@@ -143,6 +145,7 @@ class KNodeAIAnnounce {
         case KrpcMessage.GET_PEERS_RESPONSE:
           {
             KrpcGetPeersResponse getPeer = response;
+            announcedNode.add(new KAnnounceInfo.fromString(info.remoteAddress, info.remotePort, _infoHashId.id)..token = getPeer.tokenAsKId);
             if (getPeer.haveValue == true) {
               for (KAnnounceInfo i in getPeer.valuesAsKAnnounceInfo(_infoHashId.id)) {
                 node.addAnnounceInfoForSearchResult(i);
@@ -150,10 +153,10 @@ class KNodeAIAnnounce {
             } else {
               List<KPeerInfo> candidate = [];
               for (KPeerInfo info in getPeer.compactNodeInfoAsKPeerInfo) {
-                if (false == announceNodesInfo.rawsequential.contains(info)) {
+                if (false == _findedNode.rawsequential.contains(info)) {
                   candidate.add(info);
-                  announceNodesInfo.addLast(info);
-                  announceNodesInfo.rawshuffled.sort((KPeerInfo a, KPeerInfo b) {
+                  _findedNode.addLast(info);
+                  _findedNode.rawshuffled.sort((KPeerInfo a, KPeerInfo b) {
                     if (a.id == b.id) {
                       return 0;
                     } else if (a.id > b.id) {
@@ -163,17 +166,17 @@ class KNodeAIAnnounce {
                     }
                   });
                 }
-                for (int i = 0; i < 8 && i < announceNodesInfo.length; i++) {
-                  KPeerInfo info = announceNodesInfo.rawshuffled[i];
+                for (int i = 0; i < 8 && i < _findedNode.length; i++) {
+                  KPeerInfo info = _findedNode.rawshuffled[i];
                   if (true == candidate.contains(info)) {
-                    lastUpdateTime  = new DateTime.now().millisecondsSinceEpoch;
+                    lastUpdateTime = new DateTime.now().millisecondsSinceEpoch;
                     node.sendGetPeersQuery(info.ipAsString, info.port, _infoHashId.id);
                   }
                 }
               }
               //
               //
-              
+
             }
           }
           break;
