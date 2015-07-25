@@ -31,6 +31,7 @@ abstract class KNodeAI {
   onReceiveError(KNode node, HetiReceiveUdpInfo info, KrpcError message);
   onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcResponse response);
   onReceiveUnknown(KNode node, HetiReceiveUdpInfo info, KrpcMessage message);
+  onTicket(KNode);
 }
 
 class KNodeAIBasic extends KNodeAI {

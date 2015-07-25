@@ -30,26 +30,58 @@ class KNode extends Object with KrpcResponseInfo {
   KId get nodeId => _nodeId;
   List<SendInfo> queryInfo = [];
   KNodeAI _ai = null;
+  bool _isStart = false;
+  bool get isStart => _isStart;
 
   KRootingTable get rootingtable => _rootingtable;
   KNodeAI get ai => _ai;
   ShuffleLinkedList<KAnnounceInfo> _announcedPeer = new ShuffleLinkedList(300);
+  ShuffleLinkedList<KAnnounceInfo> _announcedPeerForSearchResult = new ShuffleLinkedList(300);
   List<KAnnounceInfo> get announcedPeer => _announcedPeer.sequential;
-
-  List<KAnnounceInfo> announcePeerWithFilter(Function filter) {
+  List<KAnnounceInfo> announcedPeerForSearchResult(KId infoHash) {
     List<KAnnounceInfo> ret = [];
-    for(KAnnounceInfo info in _announcedPeer.sequential) {
-      if(filter(info)){
+    for (KAnnounceInfo info in _announcedPeerForSearchResult) {
+      if (info.infoHash == infoHash) {
         ret.add(info);
       }
     }
     return ret;
   }
-  
+
+  List<KAnnounceInfo> announcePeerWithFilter(Function filter) {
+    List<KAnnounceInfo> ret = [];
+    for (KAnnounceInfo info in _announcedPeer.sequential) {
+      if (filter(info)) {
+        ret.add(info);
+      }
+    }
+    return ret;
+  }
+
   void addAnnouncePeerWithFilter(KAnnounceInfo info) {
     _announcedPeer.addLast(info);
   }
 
+  void addAnnounceInfoForSearchResult(KAnnounceInfo info) {
+    _announcedPeer.addLast(info);
+  }
+
+  _startTick() {
+    if (_isStart == false) {
+      return;
+    }
+    new Future.delayed(new Duration(seconds: 5)).then((_) {
+      if (_isStart == false) {
+        return;
+      }
+      try {
+        this._ai.onTicket(this);
+      } catch (e) {
+        ;
+      }
+      _startTick();
+    }).catchError((e) {});
+  }
   KNode(HetiSocketBuilder socketBuilder, {int kBucketSize: 8, List<int> nodeIdAsList: null, KNodeAI ai: null}) {
     if (nodeIdAsList == null) {
       _nodeId = KId.createIDAtRandom();
@@ -69,7 +101,26 @@ class KNode extends Object with KrpcResponseInfo {
     _rootingtable.update(info);
   }
 
+  Future stop() {
+    return new Future(() {
+      if (_udpSocket == null) {
+        return null;
+      } else {
+        return _udpSocket.close();
+      }
+    }).whenComplete(() {
+      _isStart = false;
+      _ai.stop(this);
+    }).catchError((e) {
+      _isStart = false;
+    });
+  }
+
   Future start({String ip: "0.0.0.0", int port: 28080}) {
+    if (_isStart == true) {
+      return new Future(() {});
+    }
+    _isStart = true;
     return new Future(() {
       if (_udpSocket != null) {
         throw {};
@@ -105,7 +156,11 @@ class KNode extends Object with KrpcResponseInfo {
         //////
         //////
         _ai.start(this);
+        _startTick();
       });
+    }).catchError((e) {
+      _isStart = false;
+      throw e;
     });
   }
 
@@ -203,20 +258,7 @@ class KNode extends Object with KrpcResponseInfo {
     KrpcError query = new KrpcError(transactionId, errorCode);
     return _udpSocket.send(query.messageAsBencode, ip, port);
   }
-
-  Future stop() {
-    return new Future(() {
-      if (_udpSocket == null) {
-        return null;
-      } else {
-        return _udpSocket.close();
-      }
-    }).whenComplete(() {
-      _ai.stop(this);
-    });
-  }
 }
-
 
 class SendInfo {
   String _id = "";

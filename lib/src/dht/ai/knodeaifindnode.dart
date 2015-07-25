@@ -48,6 +48,9 @@ class KNodeAIFindNode {
     });
   }
 
+  onTicket(KNode) {
+    
+  }
   onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcQuery query) {
     if (_isStart == false) {
       return null;
@@ -102,7 +105,7 @@ class KNodeAIFindNode {
       node.rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, response.queriedNodesId)).then((_) {
         return node.rootingtable.findNode(node.nodeId).then((List<KPeerInfo> infos) {
           for (KPeerInfo info in infos) {
-            if (!findNodesInfo.sequential.contains(info)) {
+            if (!findNodesInfo.rawsequential.contains(info)) {
               node.sendFindNodeQuery(info.ipAsString, info.port, node.nodeId.id).catchError((e) {});
             }
           }

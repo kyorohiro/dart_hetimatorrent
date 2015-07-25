@@ -16,8 +16,8 @@ class KAnnounceInfo {
   List<int> _ip = [];
   List<int> get ip => new List.from(_ip);
 
-  List<int> _infoHash = [];
-  List<int> get infoHash => new List.from(_infoHash);
+  KId _infoHash = null;
+  KId get infoHash => _infoHash;
 
   KAnnounceInfo.fromCompactIpPort(List<int> compact, List<int> infoHash) {
 -    _init(compact.sublist(0,compact.length-2), 
@@ -35,7 +35,7 @@ class KAnnounceInfo {
   _init(List<int> ip, int port, List<int> infoHash) {
     this._ip.addAll(ip);
     this._port = port;
-    this._infoHash.addAll(infoHash);
+    this._infoHash = new KId(infoHash);
   }
 
   int get hashCode {
@@ -65,10 +65,8 @@ class KAnnounceInfo {
     if (this._port != p._port) {
       return false;
     }
-    for (int i = 0; i < p._infoHash.length; i++) {
-      if (this._infoHash[i] != p._infoHash[i]) {
-        return false;
-      }
+    if(this._infoHash != p._infoHash) {
+      return false;
     }
     return true;
   }
