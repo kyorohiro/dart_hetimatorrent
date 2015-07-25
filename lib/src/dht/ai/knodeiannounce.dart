@@ -29,7 +29,7 @@ class KNodeAIAnnounce {
   KId _tokenFilter = null;
   bool get isStart => _isStart;
 
-  KNodeAIAnnounce (KId infoHashId,{KId tokenFilter:null}) {
+  KNodeAIAnnounce(KId infoHashId, {KId tokenFilter: null}) {
     this._infoHashId = infoHashId;
     this._tokenFilter = new KId(new List.filled(20, 0xff));
   }
@@ -42,9 +42,7 @@ class KNodeAIAnnounce {
     _isStart = false;
   }
 
-  maintenance(node) {
-    
-  }
+  maintenance(node) {}
 
   search(KNode node) {
     announceNodesInfo.clearAll();
@@ -54,7 +52,7 @@ class KNodeAIAnnounce {
       }
       for (KPeerInfo info in infos) {
         announceNodesInfo.addLast(info);
-        node.sendGetPeersQuery(info.ipAsString, info.port, _infoHashId.id).catchError((e){});
+        node.sendGetPeersQuery(info.ipAsString, info.port, _infoHashId.id).catchError((e) {});
       }
     });
   }
@@ -72,10 +70,29 @@ class KNodeAIAnnounce {
       case KrpcMessage.ANNOUNCE_QUERY:
         break;
       case KrpcMessage.GET_PEERS_QUERY:
-        return node.rootingtable.findNode(query.queryingNodesId).then((List<KPeerInfo> infos) {
-          return node.sendFindNodeResponse(info.remoteAddress, info.remotePort, query.transactionId, KPeerInfo.toCompactNodeInfos(infos));
-        });
-
+        {
+          KrpcGetPeersQuery getPeer = query;
+          List<KAnnounceInfo> target = node.announcePeerWithFilter((KAnnounceInfo i) {
+            List<int> a = i.infoHash;
+            List<int> b = getPeer.infoHash;
+            for (int i = 0; i < 20; i++) {
+              if (a[i] != b[i]) {
+                return false;
+              }
+            }
+            return true;
+          });
+          List<int> opaqueWriteToken = KId.createToken(new KId(getPeer.infoHash), getPeer.queryingNodesId, node.nodeId);
+          if (target.length > 0) {
+            return node.sendGetPeersResponseWithPeers(info.remoteAddress, info.remotePort, query.transactionId,
+                opaqueWriteToken, peerInfoStrings);//todo
+          } else {
+            return node.rootingtable.findNode(query.queryingNodesId).then((List<KPeerInfo> infos) {
+              return node.sendGetPeersResponseWithClosestNodes(info.remoteAddress, info.remotePort, query.transactionId, 
+                  opaqueWriteToken, KPeerInfo.toCompactNodeInfos(infos));
+            });
+          }
+        }
         break;
     }
   }
@@ -129,4 +146,3 @@ class KNodeAIAnnounce {
 
   onReceiveUnknown(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {}
 }
-

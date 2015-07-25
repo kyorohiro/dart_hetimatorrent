@@ -37,6 +37,14 @@ class KId {
     return 0;
   }
 
+  static KId _optionTest = new KId(new List.filled(20, 0x7f));
+  static List<int> createToken(KId infoHash, KId targetId, KId myId, [KId option = null]) {
+    if(option == null) {
+      option = _optionTest;
+    }
+    return infoHash.xor(targetId).xor(myId).xor(option)._id;
+  }
+
   KId xor(KId b) {
     List<int> ret = [];
     for (int i = 0; i < b._id.length; i++) {
