@@ -95,10 +95,6 @@ class KNodeAIAnnounce {
       return null;
     }
     switch (query.messageSignature) {
-      case KrpcMessage.PING_QUERY:
-      case KrpcMessage.FIND_NODE_QUERY:
-      case KrpcMessage.NONE_QUERY:
-        break;
       case KrpcMessage.ANNOUNCE_QUERY:
         {
           return node.sendAnnouncePeerResponse(info.remoteAddress, info.remotePort, query.transactionId);
@@ -139,14 +135,6 @@ class KNodeAIAnnounce {
       }
       node.rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, response.queriedNodesId));
       switch (response.messageSignature) {
-        case KrpcMessage.PING_RESPONSE:
-          break;
-        case KrpcMessage.FIND_NODE_RESPONSE:
-          break;
-        case KrpcMessage.NONE_RESPONSE:
-          break;
-        case KrpcMessage.ANNOUNCE_RESPONSE:
-          break;
         case KrpcMessage.GET_PEERS_RESPONSE:
           {
             KrpcGetPeersResponse getPeer = response;
@@ -184,8 +172,6 @@ class KNodeAIAnnounce {
 
             }
           }
-          break;
-        default:
           break;
       }
     });
