@@ -9,6 +9,9 @@ class KId {
   List<int> get id => new List.from(_id);
 
   KId(List<int> id) {
+    if(id == null || id.length != 20) {
+      throw {};
+    }
     this._id.addAll(id);
   }
 

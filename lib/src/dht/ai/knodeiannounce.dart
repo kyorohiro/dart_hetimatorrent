@@ -129,7 +129,7 @@ class KNodeAIAnnounce extends KNodeAI {
 class KNodeAIAnnounceTask {
   bool _isStart = false;
   ShuffleLinkedList<KPeerInfo> _findedNode = new ShuffleLinkedList(50);
-  List<KAnnounceInfo> announcedNode = [];
+  List<KAnnounceInfo> receiveGetPeerResponseNode = [];
   KId _infoHashId = null;
   bool get isStart => _isStart;
   int lastUpdateTime = 0;
@@ -169,7 +169,7 @@ class KNodeAIAnnounceTask {
     int t = new DateTime.now().millisecondsSinceEpoch;
     if (t - lastUpdateTime > 5000) {
 
-      announcedNode.sort((KAnnounceInfo a, KAnnounceInfo b) {
+      receiveGetPeerResponseNode.sort((KAnnounceInfo a, KAnnounceInfo b) {
         if (a.infoHash == b.infoHash) {
           return 0;
         } else if (a.infoHash.xor(_infoHashId) > b.infoHash.xor(_infoHashId)) {
@@ -178,12 +178,12 @@ class KNodeAIAnnounceTask {
           return -1;
         }
       });
-      print("###########announce[${node.nodeDebugId}]  -----${announcedNode.length} ${node.rawAnnouncedPeerForSearchResult.length}");
-      while (8 < announcedNode.length) {
-        announcedNode.removeAt(8);
+      print("###########announce[${node.nodeDebugId}]  -----${receiveGetPeerResponseNode.length} ${node.rawAnnouncedPeerForSearchResult.length}");
+      while (8 < receiveGetPeerResponseNode.length) {
+        receiveGetPeerResponseNode.removeAt(8);
       }
-      for (KAnnounceInfo i in announcedNode) {
-        print("###########announce[${node.nodeDebugId}] -----${i.ipAsString}, ${i.port}");
+      for (KAnnounceInfo i in receiveGetPeerResponseNode) {
+        print("###########announce[${node.nodeDebugId}] -----${i.ipAsString}, ${i.port} >>${i.infoHash.xor(_infoHashId).getRootingTabkeIndex()} ::: ${i.infoHashAsString}");
         node.sendAnnouncePeerQuery(i.ipAsString, i.port, 1, _infoHashId.id, i.token.id);
       }
       _search(node);
@@ -213,7 +213,11 @@ class KNodeAIAnnounceTask {
           //print("## response query");
 
             KrpcGetPeersResponse getPeer = response;
-            announcedNode.add(new KAnnounceInfo.fromString(info.remoteAddress, info.remotePort, _infoHashId.id)..token = getPeer.tokenAsKId);
+            KAnnounceInfo i = new KAnnounceInfo.fromString(info.remoteAddress, info.remotePort, getPeer.queriedNodesId.id)..token = getPeer.tokenAsKId;
+            if(receiveGetPeerResponseNode.contains(i)) {
+              receiveGetPeerResponseNode.remove(i);
+            }
+            receiveGetPeerResponseNode.add(i);
             if (getPeer.haveValue == true) {
              // print("announce set value");
               for (KAnnounceInfo i in getPeer.valuesAsKAnnounceInfo(_infoHashId.id)) {
