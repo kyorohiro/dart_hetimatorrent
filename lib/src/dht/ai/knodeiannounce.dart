@@ -101,27 +101,17 @@ class KNodeAIAnnounce extends KNodeAI {
     }
   }
 
-  onReceiveError(KNode node, HetiReceiveUdpInfo info, KrpcError message) {
-    for (KNodeAIAnnounceTask t in taskList.values) {
-      if (t.isStart) {
-        t.onReceiveError(node, info, message);
-      }
-    }
-  }
+  onReceiveError(KNode node, HetiReceiveUdpInfo info, KrpcError message) {}
 
-  onReceiveUnknown(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {
-    for (KNodeAIAnnounceTask t in taskList.values) {
-      if (t.isStart) {
-        t.onReceiveUnknown(node, info, message);
-      }
-    }
-  }
+  onReceiveUnknown(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {}
 }
 
 class KNodeAIAnnounceTask {
   bool _isStart = false;
   ShuffleLinkedList<KPeerInfo> _findedNode = new ShuffleLinkedList(50);
+
   List<KGetPeerInfo> receiveGetPeerResponseNode = [];
+  
   KId _infoHashId = null;
   bool get isStart => _isStart;
   int lastUpdateTime = 0;
@@ -161,12 +151,12 @@ class KNodeAIAnnounceTask {
 
     int t = new DateTime.now().millisecondsSinceEpoch;
     if (t - lastUpdateTime > 5000) {
-      _requestAnnounce(node);
+      requestAnnounce(node);
       _search(node);
     }
   }
 
-  _requestAnnounce(KNode node) {
+  requestAnnounce(KNode node) {
     receiveGetPeerResponseNode.sort((KGetPeerInfo a, KGetPeerInfo b) {
       if (a.id == b.id) {
         return 0;
@@ -185,14 +175,12 @@ class KNodeAIAnnounceTask {
       node.sendAnnouncePeerQuery(i.ipAsString, i.port, 1, _infoHashId.id, i.token);
     }
   }
+
   onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcQuery query) {
     if (_isStart == false) {
       return null;
     }
-
   }
-
-  onReceiveError(KNode node, HetiReceiveUdpInfo info, KrpcError message) {}
 
   onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcResponse response) {
     new Future(() {
@@ -256,6 +244,4 @@ class KNodeAIAnnounceTask {
       }
     });
   }
-
-  onReceiveUnknown(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {}
 }
