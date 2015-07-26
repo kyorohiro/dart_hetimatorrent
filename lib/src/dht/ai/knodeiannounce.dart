@@ -143,7 +143,7 @@ class KNodeAIAnnounceTask {
       }
       for (KPeerInfo info in infos) {
         if(_findedNode.rawsequential.contains(info)) {
-          node.sendFindNodeQuery(info.ipAsString, info.port, _infoHashId.id);
+          node.sendFindNodeQuery(info.ipAsString, info.port, _infoHashId.id).catchError((e) {});
         } else {
           _findedNode.addLast(info);
           node.sendGetPeersQuery(info.ipAsString, info.port, _infoHashId.id).catchError((e) {});
