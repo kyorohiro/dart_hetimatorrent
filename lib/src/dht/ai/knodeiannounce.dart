@@ -53,30 +53,40 @@ class KNodeAIAnnounce extends KNodeAI {
 
   onTicket(KNode node) {
     for (KNodeAIAnnounceTask t in taskList) {
-      t.onTicket(node);
+      if(t.isStart) {
+        t.onTicket(node);
+      }
     }
   }
 
   onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcQuery query) {
     for (KNodeAIAnnounceTask t in taskList) {
-      t.onReceiveQuery(node, info, query);
+      if(t.isStart) {
+        t.onReceiveQuery(node, info, query);
+      }
     }
   }
   onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcResponse response) {
     for (KNodeAIAnnounceTask t in taskList) {
-      t.onReceiveResponse(node, info, response);
+      if(t.isStart) {
+        t.onReceiveResponse(node, info, response);
+      }
     }
   }
 
   onReceiveError(KNode node, HetiReceiveUdpInfo info, KrpcError message) {
     for (KNodeAIAnnounceTask t in taskList) {
-      t.onReceiveError(node, info, message);
+      if(t.isStart) {
+        t.onReceiveError(node, info, message);
+      }
     }
   }
 
   onReceiveUnknown(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {
     for (KNodeAIAnnounceTask t in taskList) {
-      t.onReceiveUnknown(node, info, message);
+      if(t.isStart) {
+        t.onReceiveUnknown(node, info, message);
+      }
     }
   }
 }
