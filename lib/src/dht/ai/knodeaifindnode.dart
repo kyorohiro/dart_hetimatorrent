@@ -90,25 +90,16 @@ class KNodeAIFindNode {
       if (_isStart == false) {
         return null;
       }
-      switch (response.messageSignature) {
-        case KrpcMessage.PING_RESPONSE:
-          break;
-        case KrpcMessage.FIND_NODE_RESPONSE:
-          {
-            KrpcFindNodeResponse findNode = response;
-            List<KPeerInfo> peerInfo = findNode.compactNodeInfoAsKPeerInfo;
-            List<Future> f = [];
-            for (KPeerInfo info in peerInfo) {
-              f.add(node.rootingtable.update(info));
-            }
-            return Future.wait(f);
-          }
-          break;
+      if (response.messageSignature == KrpcMessage.FIND_NODE_RESPONSE) {
+        KrpcFindNodeResponse findNode = response;
+        List<KPeerInfo> peerInfo = findNode.compactNodeInfoAsKPeerInfo;
+        List<Future> f = [];
+        for (KPeerInfo info in peerInfo) {
+          f.add(node.rootingtable.update(info));
+        }
+        return Future.wait(f);
       }
     }).then((e) {
-      if (_isStart == false) {
-        return null;
-      }
       node.rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, response.queriedNodesId)).then((_) {
         return updateP2PNetworkWithoutClear(node);
       });
