@@ -22,7 +22,59 @@ import '../kpeerinfo.dart';
 import '../knode.dart';
 import 'knodeai.dart';
 
-class KNodeAIAnnounce {
+class KNodeAIAnnounce extends KNodeAI  {
+  bool _isStart = false;
+  bool get isStart => _isStart;
+  List<KNodeAIAnnounceTask> taskList = [];
+  start(KNode node) {
+    _isStart = true;
+  }
+
+  stop(KNode node) {
+    _isStart = false;
+  }
+  maintenance(KNode node) {;}
+
+  startSearchPeer(KNode node, KId infoHash) {
+    ;
+  }
+
+  stopSearchPeer(KNode node, KId infoHash) {
+    ;
+  }
+
+  onTicket(KNode node) {
+    for(KNodeAIAnnounceTask t in taskList) {
+      t.onTicket(node);
+    }
+  }
+
+  onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcQuery query) {
+    for(KNodeAIAnnounceTask t in taskList) {
+      t.onReceiveQuery(node, info, query);
+    }
+  }
+  onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcResponse response) {
+    for(KNodeAIAnnounceTask t in taskList) {
+      t.onReceiveResponse(node, info, response);
+    }
+  }
+  
+  onReceiveError(KNode node, HetiReceiveUdpInfo info, KrpcError message) {
+    for(KNodeAIAnnounceTask t in taskList) {
+      t.onReceiveError(node, info, message);
+    }
+  }
+
+  onReceiveUnknown(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {
+    for(KNodeAIAnnounceTask t in taskList) {
+      t.onReceiveUnknown(node, info, message);
+    }
+  }
+}
+
+
+class KNodeAIAnnounceTask {
   bool _isStart = false;
   ShuffleLinkedList<KPeerInfo> _findedNode = new ShuffleLinkedList(50);
   List<KAnnounceInfo> announcedNode = [];
@@ -31,7 +83,7 @@ class KNodeAIAnnounce {
   bool get isStart => _isStart;
   int lastUpdateTime = 0;
 
-  KNodeAIAnnounce(KId infoHashId, {KId tokenFilter: null}) {
+  KNodeAIAnnounceTask(KId infoHashId, {KId tokenFilter: null}) {
     this._infoHashId = infoHashId;
     this._tokenFilter = new KId(new List.filled(20, 0xff));
   }
@@ -46,12 +98,8 @@ class KNodeAIAnnounce {
   }
 
   maintenance(node) {}
-  startSearchPeer(KNode node, KId infoHash) {
-    
-  }
-  stopSearchPeer(KNode node, KId infoHash) {
-    
-  }
+  startSearchPeer(KNode node, KId infoHash) {}
+  stopSearchPeer(KNode node, KId infoHash) {}
   search(KNode node) {
     _findedNode.clearAll();
     node.rootingtable.findNode(_infoHashId).then((List<KPeerInfo> infos) {
