@@ -124,22 +124,30 @@ class KNodeAIAnnounceTask {
   startSearchPeer(KNode node, KId infoHash) {
     _isStart = true;
     lastUpdateTime = 0;
-    _search(node);
+    _startSearch(node);
   }
 
   stopSearchPeer(KNode node, KId infoHash) {
     _isStart = false;
   }
 
-  _search(KNode node) {
+  _startSearch(KNode node) {
     _findedNode.clearAll();
+    _updateSearch(node);
+  }
+
+  _updateSearch(KNode node) {
     node.rootingtable.findNode(_infoHashId).then((List<KPeerInfo> infos) {
       if (_isStart == false) {
         return;
       }
       for (KPeerInfo info in infos) {
-        _findedNode.addLast(info);
-        node.sendGetPeersQuery(info.ipAsString, info.port, _infoHashId.id).catchError((e) {});
+        if(_findedNode.rawsequential.contains(info)) {
+          node.sendFindNodeQuery(info.ipAsString, info.port, _infoHashId.id);
+        } else {
+          _findedNode.addLast(info);
+          node.sendGetPeersQuery(info.ipAsString, info.port, _infoHashId.id).catchError((e) {});
+        }
       }
     });
   }
@@ -150,9 +158,9 @@ class KNodeAIAnnounceTask {
     }
 
     int t = new DateTime.now().millisecondsSinceEpoch;
-    if (t - lastUpdateTime > 5000) {
+    if (t - lastUpdateTime > 3000) {
       requestAnnounce(node);
-      _search(node);
+      _updateSearch(node);
     }
   }
 
@@ -212,6 +220,8 @@ class KNodeAIAnnounceTask {
               for (KAnnounceInfo i in getPeer.valuesAsKAnnounceInfo(_infoHashId.id)) {
                 node.addAnnounceInfoForSearchResult(i);
               }
+              // todo
+              node.sendFindNodeQuery(info.remoteAddress, info.remotePort, _infoHashId.id).catchError((e){});
             } else {
               //
               //
