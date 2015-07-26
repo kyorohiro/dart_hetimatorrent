@@ -44,6 +44,8 @@ export 'src/dht/krootingtable.dart';
 export 'src/dht/kpeerinfo.dart';
 export 'src/dht/knode.dart';
 export 'src/dht/kbucket.dart';
+export 'src/dht/kgetpeerinfo.dart';
+
 
 
 

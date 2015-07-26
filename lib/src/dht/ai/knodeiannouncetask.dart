@@ -13,7 +13,7 @@ import '../message/krpcannounce.dart';
 import '../kpeerinfo.dart';
 import '../knode.dart';
 import 'knodeai.dart';
-
+import '../kgetpeerinfo.dart';
 
 class KNodeAIAnnounceTask {
   bool _isStart = false;
