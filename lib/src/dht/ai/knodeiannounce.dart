@@ -4,19 +4,11 @@ import 'dart:core';
 import 'dart:async';
 import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimanet/hetimanet.dart';
-import '../krootingtable.dart';
-
-import '../message/krpcping.dart';
-import '../message/krpcfindnode.dart';
 import '../message/krpcgetpeers.dart';
 import '../kid.dart';
-import 'dart:convert';
 import '../../util/shufflelinkedlist.dart';
 
 import '../message/krpcmessage.dart';
-import '../message/krpcping.dart';
-import '../message/krpcfindnode.dart';
-import '../message/krpcgetpeers.dart';
 import '../message/krpcannounce.dart';
 import '../kpeerinfo.dart';
 import '../knode.dart';
@@ -169,30 +161,30 @@ class KNodeAIAnnounceTask {
 
     int t = new DateTime.now().millisecondsSinceEpoch;
     if (t - lastUpdateTime > 5000) {
-
-      receiveGetPeerResponseNode.sort((KGetPeerInfo a, KGetPeerInfo b) {
-        if (a.id == b.id) {
-          return 0;
-        } else if (a.id.xor(_infoHashId) > b.id.xor(_infoHashId)) {
-          return 1;
-        } else {
-          return -1;
-        }
-      });
-      print("###########announce[${node.nodeDebugId}]  -----${receiveGetPeerResponseNode.length} ${node.rawAnnouncedPeerForSearchResult.length}");
-      while (8 < receiveGetPeerResponseNode.length) {
-        receiveGetPeerResponseNode.removeAt(8);
-      }
-      for (KGetPeerInfo i in receiveGetPeerResponseNode) {
-        print("###########announce[${node.nodeDebugId}] -----${i.ipAsString}, ${i.port} >>${i.id.xor(_infoHashId).getRootingTabkeIndex()} ::: ${i.id.idAsString}");
-        node.sendAnnouncePeerQuery(i.ipAsString, i.port, 1, _infoHashId.id, i.token);
-      }
+      _requestAnnounce(node);
       _search(node);
     }
-    
-
   }
 
+  _requestAnnounce(KNode node) {
+    receiveGetPeerResponseNode.sort((KGetPeerInfo a, KGetPeerInfo b) {
+      if (a.id == b.id) {
+        return 0;
+      } else if (a.id.xor(_infoHashId) > b.id.xor(_infoHashId)) {
+        return 1;
+      } else {
+        return -1;
+      }
+    });
+    print("###########announce[${node.nodeDebugId}]  -----${receiveGetPeerResponseNode.length} ${node.rawAnnouncedPeerForSearchResult.length}");
+    while (8 < receiveGetPeerResponseNode.length) {
+      receiveGetPeerResponseNode.removeAt(8);
+    }
+    for (KGetPeerInfo i in receiveGetPeerResponseNode) {
+      print("###########announce[${node.nodeDebugId}] -----${i.ipAsString}, ${i.port} >>${i.id.xor(_infoHashId).getRootingTabkeIndex()} ::: ${i.id.idAsString}");
+      node.sendAnnouncePeerQuery(i.ipAsString, i.port, 1, _infoHashId.id, i.token);
+    }
+  }
   onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcQuery query) {
     if (_isStart == false) {
       return null;
