@@ -182,6 +182,19 @@ class KNodeAIAnnounceTask {
     }
   }
 
+  updateReceveGetPeerInfo(HetiReceiveUdpInfo info,KrpcGetPeersResponse getPeer) {
+    KGetPeerInfo i = new KGetPeerInfo(info.remoteAddress, info.remotePort, getPeer.queriedNodesId, _infoHashId, getPeer.tokenAsKId);
+    List<KGetPeerInfo> alreadyHave = KGetPeerInfo.extract(receiveGetPeerResponseNode, (KGetPeerInfo a){
+        return a.id == i.id;
+    });
+    if(alreadyHave.length > 0) {
+      receiveGetPeerResponseNode.remove(alreadyHave[0]);
+      receiveGetPeerResponseNode.add(i);
+    } else {
+      receiveGetPeerResponseNode.add(i);
+    }
+  }
+
   onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcResponse response) {
     new Future(() {
       if (_isStart == false) {
@@ -191,27 +204,17 @@ class KNodeAIAnnounceTask {
       switch (response.messageSignature) {
         case KrpcMessage.GET_PEERS_RESPONSE:
           {
-          //print("## response query");
-
             KrpcGetPeersResponse getPeer = response;
-            KGetPeerInfo i = new KGetPeerInfo(info.remoteAddress, info.remotePort, getPeer.queriedNodesId, _infoHashId, getPeer.tokenAsKId);
-            List<KGetPeerInfo> alreadyHave = KGetPeerInfo.extract(receiveGetPeerResponseNode, (KGetPeerInfo a){
-                return a.id == i.id;
-            });
-            if(alreadyHave.length > 0) {
-              receiveGetPeerResponseNode.remove(alreadyHave[0]);
-              receiveGetPeerResponseNode.add(i);
-            } else {
-              receiveGetPeerResponseNode.add(i);
-            }
+            updateReceveGetPeerInfo(info, getPeer);
 
             if (getPeer.haveValue == true) {
-             // print("announce set value");
+              print("announce set value");
               for (KAnnounceInfo i in getPeer.valuesAsKAnnounceInfo(_infoHashId.id)) {
-               // print("----announce set value ${i.port}");
                 node.addAnnounceInfoForSearchResult(i);
               }
             } else {
+              //
+              //
               List<KPeerInfo> candidate = [];
               for (KPeerInfo info in getPeer.compactNodeInfoAsKPeerInfo) {
                 if (false == _findedNode.rawsequential.contains(info)) {
@@ -236,8 +239,6 @@ class KNodeAIAnnounceTask {
                 }
               }
               //
-              //
-
             }
           }
           break;
