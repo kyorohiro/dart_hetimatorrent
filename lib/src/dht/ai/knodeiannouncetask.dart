@@ -20,7 +20,7 @@ class KNodeAIAnnounceTask {
   ShuffleLinkedList<KPeerInfo> _findedNode = new ShuffleLinkedList(50);
 
   List<KGetPeerInfo> receiveGetPeerResponseNode = [];
-  
+
   KId _infoHashId = null;
   bool get isStart => _isStart;
   int lastUpdateTime = 0;
@@ -28,7 +28,6 @@ class KNodeAIAnnounceTask {
   KNodeAIAnnounceTask(KId infoHashId) {
     this._infoHashId = infoHashId;
   }
-  
 
   startSearchPeer(KNode node, KId infoHash) {
     _isStart = true;
@@ -51,7 +50,7 @@ class KNodeAIAnnounceTask {
         return;
       }
       for (KPeerInfo info in infos) {
-        if(_findedNode.rawsequential.contains(info)) {
+        if (_findedNode.rawsequential.contains(info)) {
           //node.sendFindNodeQuery(info.ipAsString, info.port, _infoHashId.id).catchError((e) {});
         } else {
           _findedNode.addLast(info);
@@ -93,18 +92,12 @@ class KNodeAIAnnounceTask {
     }
   }
 
-  onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcQuery query) {
-    if (_isStart == false) {
-      return null;
-    }
-  }
-
-  updateReceveGetPeerInfo(HetiReceiveUdpInfo info,KrpcGetPeersResponse getPeer) {
+  updateReceveGetPeerInfo(HetiReceiveUdpInfo info, KrpcGetPeersResponse getPeer) {
     KGetPeerInfo i = new KGetPeerInfo(info.remoteAddress, info.remotePort, getPeer.queriedNodesId, _infoHashId, getPeer.tokenAsKId);
-    List<KGetPeerInfo> alreadyHave = KGetPeerInfo.extract(receiveGetPeerResponseNode, (KGetPeerInfo a){
-        return a.id == i.id;
+    List<KGetPeerInfo> alreadyHave = KGetPeerInfo.extract(receiveGetPeerResponseNode, (KGetPeerInfo a) {
+      return a.id == i.id;
     });
-    if(alreadyHave.length > 0) {
+    if (alreadyHave.length > 0) {
       receiveGetPeerResponseNode.remove(alreadyHave[0]);
       receiveGetPeerResponseNode.add(i);
     } else {
@@ -112,55 +105,60 @@ class KNodeAIAnnounceTask {
     }
   }
 
+  onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcQuery query) {
+    if (_isStart == false) {
+      return null;
+    }
+    new Future(() {
+      _updateSearch(node);
+    });
+  }
+
   onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcResponse response) {
     new Future(() {
       if (_isStart == false) {
         return null;
       }
-      node.rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, response.queriedNodesId));
-      switch (response.messageSignature) {
-        case KrpcMessage.GET_PEERS_RESPONSE:
-          {
-            KrpcGetPeersResponse getPeer = response;
-            updateReceveGetPeerInfo(info, getPeer);
 
-            if (getPeer.haveValue == true) {
-              print("announce set value");
-              for (KAnnounceInfo i in getPeer.valuesAsKAnnounceInfo(_infoHashId.id)) {
-                node.addAnnounceInfoForSearchResult(i);
-              }
-              // todo
-              node.sendFindNodeQuery(info.remoteAddress, info.remotePort, _infoHashId.id).catchError((e){});
-            } else {
-              //
-              //
-              List<KPeerInfo> candidate = [];
-              for (KPeerInfo info in getPeer.compactNodeInfoAsKPeerInfo) {
-                if (false == _findedNode.rawsequential.contains(info)) {
-                  candidate.add(info);
-                  _findedNode.addLast(info);
-                  _findedNode.rawshuffled.sort((KPeerInfo a, KPeerInfo b) {
-                    if (a.id == b.id) {
-                      return 0;
-                    } else if (a.id.xor(_infoHashId) > b.id.xor(_infoHashId)) {
-                      return 1;
-                    } else {
-                      return -1;
-                    }
-                  });
+      if (response.messageSignature == KrpcMessage.GET_PEERS_RESPONSE) {
+        KrpcGetPeersResponse getPeer = response;
+        updateReceveGetPeerInfo(info, getPeer);
+
+        if (getPeer.haveValue == true) {
+          print("announce set value");
+          for (KAnnounceInfo i in getPeer.valuesAsKAnnounceInfo(_infoHashId.id)) {
+            node.addAnnounceInfoForSearchResult(i);
+          }
+          // todo
+          node.sendFindNodeQuery(info.remoteAddress, info.remotePort, _infoHashId.id).catchError((e) {});
+        } else {
+          //
+          //
+          List<KPeerInfo> candidate = [];
+          for (KPeerInfo info in getPeer.compactNodeInfoAsKPeerInfo) {
+            if (false == _findedNode.rawsequential.contains(info)) {
+              candidate.add(info);
+              _findedNode.addLast(info);
+              _findedNode.rawshuffled.sort((KPeerInfo a, KPeerInfo b) {
+                if (a.id == b.id) {
+                  return 0;
+                } else if (a.id.xor(_infoHashId) > b.id.xor(_infoHashId)) {
+                  return 1;
+                } else {
+                  return -1;
                 }
-                for (int i = 0; i < 8 && i < _findedNode.length; i++) {
-                  KPeerInfo info = _findedNode.rawshuffled[i];
-                  if (true == candidate.contains(info)) {
-                    lastUpdateTime = new DateTime.now().millisecondsSinceEpoch;
-                    node.sendGetPeersQuery(info.ipAsString, info.port, _infoHashId.id);
-                  }
-                }
+              });
+            }
+            for (int i = 0; i < 8 && i < _findedNode.length; i++) {
+              KPeerInfo info = _findedNode.rawshuffled[i];
+              if (true == candidate.contains(info)) {
+                lastUpdateTime = new DateTime.now().millisecondsSinceEpoch;
+                node.sendGetPeersQuery(info.ipAsString, info.port, _infoHashId.id);
               }
-              //
             }
           }
-          break;
+          //
+        }
       }
     });
   }
