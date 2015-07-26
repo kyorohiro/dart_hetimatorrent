@@ -143,6 +143,10 @@ class KNode extends Object with KrpcResponseInfo {
     this._ai.updateP2PNetwork(this);
   }
 
+  researchSearchPeer(KId infoHash) {
+    this._ai.startSearchPeer(this, infoHash);
+  }
+
   startSearchPeer(KId infoHash) {
     this._ai.startSearchPeer(this, infoHash);
   }
