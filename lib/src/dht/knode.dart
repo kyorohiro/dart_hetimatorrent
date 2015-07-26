@@ -25,7 +25,7 @@ class KNode extends Object with KrpcResponseInfo {
   Map<String, EasyParser> buffers = {};
   KId _nodeId = null;
   KId get nodeId => _nodeId;
-  List<SendInfo> queryInfo = [];
+  List<KSendInfo> queryInfo = [];
   KNodeAI _ai = null;
   bool _isStart = false;
   bool get isStart => _isStart;
@@ -112,7 +112,7 @@ class KNode extends Object with KrpcResponseInfo {
           //
           KrpcMessage.decode(parser, this).then((KrpcMessage message) {
             if (message is KrpcResponse) {
-              SendInfo rm = removeQueryNameFromTransactionId(UTF8.decode(message.rawMessageMap["t"]));
+              KSendInfo rm = removeQueryNameFromTransactionId(UTF8.decode(message.rawMessageMap["t"]));
               this._ai.onReceiveResponse(this, info, message);
               rm._c.complete(message);
             } else if (message is KrpcQuery) {
@@ -152,7 +152,7 @@ class KNode extends Object with KrpcResponseInfo {
   }
 
   String getQueryNameFromTransactionId(String transactionId) {
-    for (SendInfo si in queryInfo) {
+    for (KSendInfo si in queryInfo) {
       if (si._id == transactionId) {
         return si._act;
       }
@@ -160,9 +160,9 @@ class KNode extends Object with KrpcResponseInfo {
     return "";
   }
 
-  SendInfo removeQueryNameFromTransactionId(String transactionId) {
-    SendInfo re = null;
-    for (SendInfo si in queryInfo) {
+  KSendInfo removeQueryNameFromTransactionId(String transactionId) {
+    KSendInfo re = null;
+    for (KSendInfo si in queryInfo) {
       if (si._id == transactionId) {
         re = si;
         break;
@@ -175,7 +175,7 @@ class KNode extends Object with KrpcResponseInfo {
   Future _sendQuery(String ip, int port, KrpcQuery message) {
     Completer c = new Completer();
     new Future(() {
-      queryInfo.add(new SendInfo(message.transactionIdAsString, message.q, c));
+      queryInfo.add(new KSendInfo(message.transactionIdAsString, message.q, c));
       return _udpSocket.send(message.messageAsBencode, ip, port);
     }).catchError(c.completeError);
     return c.future;
@@ -233,7 +233,7 @@ class KNode extends Object with KrpcResponseInfo {
   }
 }
 
-class SendInfo {
+class KSendInfo {
   String _id = "";
   String get id => _id;
   String _act = "";
@@ -243,7 +243,7 @@ class SendInfo {
   int get time => _time;
 
   Completer _c = null;
-  SendInfo(String id, String act, Completer c) {
+  KSendInfo(String id, String act, Completer c) {
     this._id = id;
     this._c = c;
     this._act = act;
