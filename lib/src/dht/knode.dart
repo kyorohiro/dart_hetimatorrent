@@ -41,6 +41,10 @@ class KNode extends Object with KrpcResponseInfo {
 
   int _nodeDebugId = 0;
   int get nodeDebugId => _nodeDebugId;
+  
+  int _intervalSecond = 5;
+  int get intervalSecond => _intervalSecond;
+
   void addAnnouncePeerWithFilter(KAnnounceInfo info) {
     _announcedPeer.addLast(info);
   }
@@ -50,7 +54,7 @@ class KNode extends Object with KrpcResponseInfo {
   }
 
   _startTick() {
-    new Future.delayed(new Duration(seconds: 5)).then((_) {
+    new Future.delayed(new Duration(seconds: this._intervalSecond)).then((_) {
       if (_isStart == false) {
         return;
       }
@@ -61,7 +65,8 @@ class KNode extends Object with KrpcResponseInfo {
     }).catchError((e) {});
   }
 
-  KNode(HetiSocketBuilder socketBuilder, {int kBucketSize: 8, List<int> nodeIdAsList: null, KNodeAI ai: null}) {
+  KNode(HetiSocketBuilder socketBuilder, {int kBucketSize: 8, List<int> nodeIdAsList: null, KNodeAI ai: null, intervalSecond:5}) {
+    this._intervalSecond = intervalSecond;
     if (nodeIdAsList == null) {
       _nodeId = KId.createIDAtRandom();
     } else {
