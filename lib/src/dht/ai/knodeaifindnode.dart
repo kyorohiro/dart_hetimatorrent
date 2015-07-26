@@ -37,29 +37,38 @@ class KNodeAIFindNode {
 
   updateP2PNetwork(KNode node) {
     findNodesInfo.clearAll();
+    updateP2PNetworkWithoutClear(node);
+  }
+
+  updateP2PNetworkWithoutClear(KNode node) {
     node.rootingtable.findNode(node.nodeId).then((List<KPeerInfo> infos) {
       if (_isStart == false) {
         return;
       }
       for (KPeerInfo info in infos) {
-        findNodesInfo.addLast(info);
-        node.sendFindNodeQuery(info.ipAsString, info.port, node.nodeId.id);
+        if (!findNodesInfo.rawsequential.contains(info)) {
+          findNodesInfo.addLast(info);
+          node.sendFindNodeQuery(info.ipAsString, info.port, node.nodeId.id);
+        }
       }
     });
-
-
   }
-
-  onTicket(KNode node) {
+  updateP2PNetworkWithRandom(KNode node) {
     node.rootingtable.findNode(node.nodeId.xor(KId.createIDAtRandom())).then((List<KPeerInfo> infos) {
       if (_isStart == false) {
         return;
       }
       for (KPeerInfo info in infos) {
-        findNodesInfo.addLast(info);
-        node.sendFindNodeQuery(info.ipAsString, info.port, KId.createIDAtRandom().id);
+        if (!findNodesInfo.rawsequential.contains(info)) {
+          findNodesInfo.addLast(info);
+          node.sendFindNodeQuery(info.ipAsString, info.port, KId.createIDAtRandom().id);
+        }
       }
     });
+  }
+
+  onTicket(KNode node) {
+    updateP2PNetworkWithRandom(node);
   }
 
   onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcQuery query) {
@@ -101,18 +110,10 @@ class KNodeAIFindNode {
         return null;
       }
       node.rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, response.queriedNodesId)).then((_) {
-        return node.rootingtable.findNode(node.nodeId).then((List<KPeerInfo> infos) {
-          for (KPeerInfo info in infos) {
-            if (!findNodesInfo.rawsequential.contains(info)) {
-             // print("----findNode  ${info.ipAsString}:${info.port} ${infos.length}");
-              node.sendFindNodeQuery(info.ipAsString, info.port, node.nodeId.id).catchError((e) {});
-            }
-          }
-        });
+        return updateP2PNetworkWithoutClear(node);
       });
     });
   }
 
   onReceiveUnknown(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {}
 }
-

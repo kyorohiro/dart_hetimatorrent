@@ -22,6 +22,7 @@ import '../kpeerinfo.dart';
 import '../knode.dart';
 import 'knodeaifindnode.dart';
 import 'knodeiannounce.dart';
+
 abstract class KNodeAI {
   bool get isStart;
   start(KNode node);
