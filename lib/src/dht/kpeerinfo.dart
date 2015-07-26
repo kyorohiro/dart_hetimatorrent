@@ -88,6 +88,8 @@ class KAnnounceInfo {
   }
 }
 
+
+
 class KGetPeerInfo {
   int _port = 0;
   int get port => _port;
@@ -102,9 +104,9 @@ class KGetPeerInfo {
 
   List<int> _token = [];
   List<int> get token => _token;
-
+  List<int> get rawToken => _token;
   KId _id = null;
-  KId get id => id;
+  KId get id => _id;
 
   static String toIPFromCompact(List<int> compact) {
     return HetiIP.toIPString(compact.sublist(0, compact.length - 2));
@@ -167,6 +169,24 @@ class KGetPeerInfo {
       return false;
     }
     return true;
+  }
+  
+  static List<KGetPeerInfo> extract(List<KGetPeerInfo> vs, bool filter(KGetPeerInfo a)) {
+    List<KGetPeerInfo> ret = [];
+    for(KGetPeerInfo v in vs) {
+      if(filter(v) == true) { 
+        ret.add(v);
+      }
+    }
+    return ret;
+  }
+  static bool contain(List<KGetPeerInfo> vs, bool filter(KGetPeerInfo a)) {
+    for(KGetPeerInfo v in vs) {
+      if(filter(v) == true) { 
+        return true;
+      }
+    }
+    return false;
   }
 }
 

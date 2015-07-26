@@ -132,3 +132,4 @@ class ShuffleLinkedList<X> {
     return _sequential[index];
   }
 }
+

@@ -8,6 +8,7 @@ import 'package:hetimacore/hetimacore.dart';
 class KId {
   List<int> _id = [];
   List<int> get id => new List.from(_id);
+  String get idAsString => PercentEncode.encode(_id);
 
   KId(List<int> id) {
     if(id == null || id.length != 20) {

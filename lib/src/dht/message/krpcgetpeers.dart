@@ -84,9 +84,9 @@ class KrpcGetPeersResponse extends KrpcResponse {
     return ret;
   }
 
-  KId get tokenAsKId {
+  List<int> get tokenAsKId {
     Map<String, Object> r = messageAsMap["r"];
-    return new KId(r["token"]);
+    return r["token"];
   }
 
   List<int> get compactNodeInfo {

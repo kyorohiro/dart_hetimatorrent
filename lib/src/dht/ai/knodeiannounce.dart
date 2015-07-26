@@ -129,7 +129,7 @@ class KNodeAIAnnounce extends KNodeAI {
 class KNodeAIAnnounceTask {
   bool _isStart = false;
   ShuffleLinkedList<KPeerInfo> _findedNode = new ShuffleLinkedList(50);
-  List<KAnnounceInfo> receiveGetPeerResponseNode = [];
+  List<KGetPeerInfo> receiveGetPeerResponseNode = [];
   KId _infoHashId = null;
   bool get isStart => _isStart;
   int lastUpdateTime = 0;
@@ -137,6 +137,7 @@ class KNodeAIAnnounceTask {
   KNodeAIAnnounceTask(KId infoHashId) {
     this._infoHashId = infoHashId;
   }
+  
 
   startSearchPeer(KNode node, KId infoHash) {
     _isStart = true;
@@ -169,10 +170,10 @@ class KNodeAIAnnounceTask {
     int t = new DateTime.now().millisecondsSinceEpoch;
     if (t - lastUpdateTime > 5000) {
 
-      receiveGetPeerResponseNode.sort((KAnnounceInfo a, KAnnounceInfo b) {
-        if (a.infoHash == b.infoHash) {
+      receiveGetPeerResponseNode.sort((KGetPeerInfo a, KGetPeerInfo b) {
+        if (a.id == b.id) {
           return 0;
-        } else if (a.infoHash.xor(_infoHashId) > b.infoHash.xor(_infoHashId)) {
+        } else if (a.id.xor(_infoHashId) > b.id.xor(_infoHashId)) {
           return 1;
         } else {
           return -1;
@@ -182,9 +183,9 @@ class KNodeAIAnnounceTask {
       while (8 < receiveGetPeerResponseNode.length) {
         receiveGetPeerResponseNode.removeAt(8);
       }
-      for (KAnnounceInfo i in receiveGetPeerResponseNode) {
-        print("###########announce[${node.nodeDebugId}] -----${i.ipAsString}, ${i.port} >>${i.infoHash.xor(_infoHashId).getRootingTabkeIndex()} ::: ${i.infoHashAsString}");
-        node.sendAnnouncePeerQuery(i.ipAsString, i.port, 1, _infoHashId.id, i.token.id);
+      for (KGetPeerInfo i in receiveGetPeerResponseNode) {
+        print("###########announce[${node.nodeDebugId}] -----${i.ipAsString}, ${i.port} >>${i.id.xor(_infoHashId).getRootingTabkeIndex()} ::: ${i.id.idAsString}");
+        node.sendAnnouncePeerQuery(i.ipAsString, i.port, 1, _infoHashId.id, i.token);
       }
       _search(node);
     }
@@ -213,11 +214,17 @@ class KNodeAIAnnounceTask {
           //print("## response query");
 
             KrpcGetPeersResponse getPeer = response;
-            KAnnounceInfo i = new KAnnounceInfo.fromString(info.remoteAddress, info.remotePort, getPeer.queriedNodesId.id)..token = getPeer.tokenAsKId;
-            if(receiveGetPeerResponseNode.contains(i)) {
-              receiveGetPeerResponseNode.remove(i);
+            KGetPeerInfo i = new KGetPeerInfo(info.remoteAddress, info.remotePort, getPeer.queriedNodesId, _infoHashId, getPeer.tokenAsKId);
+            List<KGetPeerInfo> alreadyHave = KGetPeerInfo.extract(receiveGetPeerResponseNode, (KGetPeerInfo a){
+                return a.id == i.id;
+            });
+            if(alreadyHave.length > 0) {
+              receiveGetPeerResponseNode.remove(alreadyHave[0]);
+              receiveGetPeerResponseNode.add(i);
+            } else {
+              receiveGetPeerResponseNode.add(i);
             }
-            receiveGetPeerResponseNode.add(i);
+
             if (getPeer.haveValue == true) {
              // print("announce set value");
               for (KAnnounceInfo i in getPeer.valuesAsKAnnounceInfo(_infoHashId.id)) {

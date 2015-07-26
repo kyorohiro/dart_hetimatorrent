@@ -24,18 +24,19 @@ void main() {
       }
 
       for (int i = 0; i < numOfNode; i++) {
-          knodes[i].addKPeerInfo(kpeerInfos[(i+numOfNode~/2)%numOfNode]);
+        knodes[i].addKPeerInfo(kpeerInfos[(i + numOfNode ~/ 2) % numOfNode]);
       }
 
       for (int i = 0; i < numOfNode; i++) {
         knodes[i].start(ip: kpeerInfos[i].ipAsString, port: kpeerInfos[i].port);
       }
+
       KId i = KId.createIDAtRandom();
       return new Future.delayed(new Duration(seconds: 7)).then((_) {
         knodes[2].startSearchPeer(i);
-      }).then((_){
-        knodes[numOfNode~/2].startSearchPeer(i);
-        for (int d = 0; d < numOfNode; d+=5) {
+      }).then((_) {
+        knodes[numOfNode ~/ 2].startSearchPeer(i);
+        for (int d = 0; d < numOfNode; d += 5) {
           knodes[d].updateP2PNetwork();
         }
         return new Future.delayed(new Duration(seconds: 7)).then((_) {
@@ -48,12 +49,12 @@ void main() {
            for (int d = 0; d < numOfNode; d+=5) {
              knodes[d].updateP2PNetwork();
            }*/
-           return new Future.delayed(new Duration(seconds: 160));
-        }).then((_){
+          return new Future.delayed(new Duration(seconds: 160));
+        }).then((_) {
           print("#[2]# end");
           print("#[1]# test ${knodes[2].rawAnnouncedPeerForSearchResult.length}");
           print("#[2]# test ${knodes[numOfNode~/3].rawAnnouncedPeerForSearchResult.length}");
-        }).catchError((e){
+        }).catchError((e) {
           print("# erro ${e}");
         });
       });
