@@ -35,7 +35,7 @@ class KNodeAIAnnounce extends KNodeAI {
     _isStart = false;
   }
 
-  maintenance(KNode node) {
+  updateP2PNetwork(KNode node) {
     ;
   }
 

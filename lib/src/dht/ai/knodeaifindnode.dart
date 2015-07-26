@@ -28,14 +28,14 @@ class KNodeAIFindNode {
 
   start(KNode node) {
     _isStart = true;
-    maintenance(node);
+    updateP2PNetwork(node);
   }
 
   stop(KNode node) {
     _isStart = false;
   }
 
-  maintenance(KNode node) {
+  updateP2PNetwork(KNode node) {
     findNodesInfo.clearAll();
     node.rootingtable.findNode(node.nodeId).then((List<KPeerInfo> infos) {
       if (_isStart == false) {

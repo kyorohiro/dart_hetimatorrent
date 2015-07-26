@@ -140,7 +140,7 @@ class KNode extends Object with KrpcResponseInfo {
   }
 
   updateP2PNetwork() {
-    this._ai.maintenance(this);
+    this._ai.updateP2PNetwork(this);
   }
 
   startSearchPeer(KId infoHash) {

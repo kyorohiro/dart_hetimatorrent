@@ -26,7 +26,7 @@ abstract class KNodeAI {
   bool get isStart;
   start(KNode node);
   stop(KNode node);
-  maintenance(KNode node);
+  updateP2PNetwork(KNode node);
   startSearchPeer(KNode node, KId infoHash);
   stopSearchPeer(KNode node, KId infoHash);
   onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcQuery query);
@@ -53,9 +53,9 @@ class KNodeAIBasic extends KNodeAI {
     announceAI.stop(node);
   }
 
-  maintenance(KNode node) {
-    findNodeAI.maintenance(node);
-    announceAI.maintenance(node);
+  updateP2PNetwork(KNode node) {
+    findNodeAI.updateP2PNetwork(node);
+    announceAI.updateP2PNetwork(node);
   }
   startSearchPeer(KNode node, KId infoHash) {
     announceAI.startSearchPeer(node, infoHash);
