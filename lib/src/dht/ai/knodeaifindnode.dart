@@ -46,11 +46,22 @@ class KNodeAIFindNode {
         node.sendFindNodeQuery(info.ipAsString, info.port, node.nodeId.id);
       }
     });
+
+
   }
 
-  onTicket(KNode) {
-    
+  onTicket(KNode node) {
+    node.rootingtable.findNode(node.nodeId.xor(KId.createIDAtRandom())).then((List<KPeerInfo> infos) {
+      if (_isStart == false) {
+        return;
+      }
+      for (KPeerInfo info in infos) {
+        findNodesInfo.addLast(info);
+        node.sendFindNodeQuery(info.ipAsString, info.port, KId.createIDAtRandom().id);
+      }
+    });
   }
+
   onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcQuery query) {
     if (_isStart == false) {
       return null;

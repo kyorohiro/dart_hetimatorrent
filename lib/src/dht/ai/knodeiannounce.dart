@@ -70,12 +70,14 @@ class KNodeAIAnnounce extends KNodeAI {
     switch (query.messageSignature) {
       case KrpcMessage.ANNOUNCE_QUERY:
         {
+          KrpcAnnouncePeerQuery announce = query;
+          node.addAnnouncePeerWithFilter(new KAnnounceInfo.fromString(info.remoteAddress, info.remotePort, announce.infoHash));
           return node.sendAnnouncePeerResponse(info.remoteAddress, info.remotePort, query.transactionId);
         }
         break;
       case KrpcMessage.GET_PEERS_QUERY:
         {
-        print("## receive query");
+        //print("## receive query");
           KrpcGetPeersQuery getPeer = query;
           List<KAnnounceInfo> target = node.rawAnnouncedPeer.getWithFilter((KAnnounceInfo i) {
             List<int> a = i.infoHash.id;
@@ -176,14 +178,18 @@ class KNodeAIAnnounceTask {
           return -1;
         }
       });
-      print("###########announce -----${announcedNode.length}");
+      print("###########announce -----${announcedNode.length} ${node.rawAnnouncedPeerForSearchResult.length}");
       while (8 < announcedNode.length) {
         announcedNode.removeAt(8);
       }
       for (KAnnounceInfo i in announcedNode) {
+        print("###########announce -----${i.ipAsString}, ${i.port}");
         node.sendAnnouncePeerQuery(i.ipAsString, i.port, 1, _infoHashId.id, i.token.id);
       }
+      _search(node);
     }
+    
+
   }
 
   onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcQuery query) {
@@ -204,12 +210,14 @@ class KNodeAIAnnounceTask {
       switch (response.messageSignature) {
         case KrpcMessage.GET_PEERS_RESPONSE:
           {
-          print("## response query");
+          //print("## response query");
 
             KrpcGetPeersResponse getPeer = response;
             announcedNode.add(new KAnnounceInfo.fromString(info.remoteAddress, info.remotePort, _infoHashId.id)..token = getPeer.tokenAsKId);
             if (getPeer.haveValue == true) {
+              print("announce set value");
               for (KAnnounceInfo i in getPeer.valuesAsKAnnounceInfo(_infoHashId.id)) {
+               // print("----announce set value ${i.port}");
                 node.addAnnounceInfoForSearchResult(i);
               }
             } else {

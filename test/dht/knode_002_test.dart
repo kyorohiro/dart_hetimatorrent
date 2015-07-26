@@ -21,7 +21,10 @@ void main() {
         if (i != 0) {
           knodes[i].addKPeerInfo(kpeerInfos[i - 1]);
         }
-        print("${i} : ${a.nodeId.getRootingTabkeIndex()}");
+      }
+
+      for (int i = 0; i < numOfNode; i++) {
+          knodes[i].addKPeerInfo(kpeerInfos[(i+numOfNode~/2)%numOfNode]);
       }
 
       for (int i = 0; i < numOfNode; i++) {
@@ -39,9 +42,27 @@ void main() {
           });
         }*/
       }).then((_){
-        knodes[0].startSearchPeer(KId.createIDAtRandom());
-        return new Future.delayed(new Duration(seconds: 10)).then((_) {
-          print("## end");
+        KId i = KId.createIDAtRandom();
+        knodes[2].startSearchPeer(i);
+        knodes[numOfNode~/2].startSearchPeer(i);
+        for (int d = 0; d < numOfNode; d+=5) {
+          knodes[d].updateP2PNetwork();
+        }
+        return new Future.delayed(new Duration(seconds: 5)).then((_) {
+          print("#[1]# end");
+          print("#[1]# test ${knodes[2].rawAnnouncedPeerForSearchResult.length}");
+          print("#[1]# test ${knodes[numOfNode~/2].rawAnnouncedPeerForSearchResult.length}");
+          /*
+          knodes[2].startSearchPeer(i);
+           knodes[50].startSearchPeer(i);
+           for (int d = 0; d < numOfNode; d+=5) {
+             knodes[d].updateP2PNetwork();
+           }*/
+           return new Future.delayed(new Duration(seconds: 60));
+        }).then((_){
+          print("#[2]# end");
+          print("#[1]# test ${knodes[2].rawAnnouncedPeerForSearchResult.length}");
+          print("#[2]# test ${knodes[numOfNode~/2].rawAnnouncedPeerForSearchResult.length}");
         });
       });
     });

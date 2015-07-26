@@ -44,7 +44,7 @@ class KNode extends Object with KrpcResponseInfo {
   }
 
   void addAnnounceInfoForSearchResult(KAnnounceInfo info) {
-    _announcedPeer.addLast(info);
+    _announcedPeerForSearchResult.addLast(info);
   }
 
   _startTick() {
@@ -188,7 +188,7 @@ class KNode extends Object with KrpcResponseInfo {
   }
 
   Future sendGetPeersQuery(String ip, int port, List<int> infoHash) {
-    print("sendGetPeersQuery ${ip} ${port}");
+    //print("sendGetPeersQuery ${ip} ${port}");
     KrpcGetPeersQuery query = new KrpcGetPeersQuery(UTF8.encode("p_${id++}"), _nodeId.id, infoHash);
     return _sendQuery(ip, port, query);
   }
