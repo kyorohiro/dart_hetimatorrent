@@ -178,7 +178,7 @@ class KNodeAIAnnounceTask {
       });
       print("###########announce -----${announcedNode.length}");
       while (8 < announcedNode.length) {
-        announcedNode.removeAt(10);
+        announcedNode.removeAt(8);
       }
       for (KAnnounceInfo i in announcedNode) {
         node.sendAnnouncePeerQuery(i.ipAsString, i.port, 1, _infoHashId.id, i.token.id);
