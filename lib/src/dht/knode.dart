@@ -112,6 +112,9 @@ class KNode extends Object with KrpcResponseInfo {
               this._ai.onReceiveResponse(this, info, message);
               rm._c.complete(message);
             } else if (message is KrpcQuery) {
+              //if(message.messageSignature == KrpcMessage.GET_PEERS_QUERY) {
+              //  print("receive get peers");
+              //}
               this._ai.onReceiveQuery(this, info, message);
             } else if (message is KrpcError) {
               this._ai.onReceiveError(this, info, message);
@@ -185,6 +188,7 @@ class KNode extends Object with KrpcResponseInfo {
   }
 
   Future sendGetPeersQuery(String ip, int port, List<int> infoHash) {
+    print("sendGetPeersQuery ${ip} ${port}");
     KrpcGetPeersQuery query = new KrpcGetPeersQuery(UTF8.encode("p_${id++}"), _nodeId.id, infoHash);
     return _sendQuery(ip, port, query);
   }

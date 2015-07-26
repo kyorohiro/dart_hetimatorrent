@@ -93,6 +93,7 @@ class KNodeAIFindNode {
         return node.rootingtable.findNode(node.nodeId).then((List<KPeerInfo> infos) {
           for (KPeerInfo info in infos) {
             if (!findNodesInfo.rawsequential.contains(info)) {
+             // print("----findNode  ${info.ipAsString}:${info.port} ${infos.length}");
               node.sendFindNodeQuery(info.ipAsString, info.port, node.nodeId.id).catchError((e) {});
             }
           }

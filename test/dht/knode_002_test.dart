@@ -13,7 +13,7 @@ void main() {
     unit.test("retrive list 0", () {
       List<KNode> knodes = [];
       List<KPeerInfo> kpeerInfos = [];
-      int numOfNode = 30;
+      int numOfNode = 10;
       for (int i = 0; i < numOfNode; i++) {
         KNode a = new KNode(new HetiSocketBuilderSimu());
         knodes.add(a);
@@ -27,24 +27,23 @@ void main() {
       for (int i = 0; i < numOfNode; i++) {
         knodes[i].start(ip: kpeerInfos[i].ipAsString, port: kpeerInfos[i].port);
       }
-
-     // return new Future.delayed(new Duration(seconds: 3)).then((_) {
-        //for (int i = 0; i < numOfNode; i++) {
-        //  knodes[i].updatePeer();
-       // }
-     // }).then((_) {
-        return new Future.delayed(new Duration(seconds: 5)).then((_) {
-          for (int i = 0; i < numOfNode; i++) {
-            knodes[i].stop();
-          }
-          for (int i = 0; i < numOfNode; i++) {
-            int jj = i;
-            knodes[i].rootingtable.toInfo().then((String s) {
-              print("[${jj}] : ${s}");
-            });
-          }
+      return new Future.delayed(new Duration(seconds: 3)).then((_) {
+        /*
+        for (int i = 0; i < numOfNode; i++) {
+          knodes[i].stop();
+        }
+        for (int i = 0; i < numOfNode; i++) {
+          int jj = i;
+          knodes[i].rootingtable.toInfo().then((String s) {
+            print("[${jj}] : ${s}");
+          });
+        }*/
+      }).then((_){
+        knodes[0].startSearchPeer(KId.createIDAtRandom());
+        return new Future.delayed(new Duration(seconds: 10)).then((_) {
+          print("## end");
         });
-      //});
+      });
     });
   });
 }
