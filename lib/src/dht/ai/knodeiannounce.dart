@@ -178,12 +178,12 @@ class KNodeAIAnnounceTask {
           return -1;
         }
       });
-      print("###########announce -----${announcedNode.length} ${node.rawAnnouncedPeerForSearchResult.length}");
+      print("###########announce[${node.nodeDebugId}]  -----${announcedNode.length} ${node.rawAnnouncedPeerForSearchResult.length}");
       while (8 < announcedNode.length) {
         announcedNode.removeAt(8);
       }
       for (KAnnounceInfo i in announcedNode) {
-        print("###########announce -----${i.ipAsString}, ${i.port}");
+        print("###########announce[${node.nodeDebugId}] -----${i.ipAsString}, ${i.port}");
         node.sendAnnouncePeerQuery(i.ipAsString, i.port, 1, _infoHashId.id, i.token.id);
       }
       _search(node);
@@ -215,7 +215,7 @@ class KNodeAIAnnounceTask {
             KrpcGetPeersResponse getPeer = response;
             announcedNode.add(new KAnnounceInfo.fromString(info.remoteAddress, info.remotePort, _infoHashId.id)..token = getPeer.tokenAsKId);
             if (getPeer.haveValue == true) {
-              print("announce set value");
+             // print("announce set value");
               for (KAnnounceInfo i in getPeer.valuesAsKAnnounceInfo(_infoHashId.id)) {
                // print("----announce set value ${i.port}");
                 node.addAnnounceInfoForSearchResult(i);

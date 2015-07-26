@@ -13,7 +13,7 @@ void main() {
     unit.test("retrive list 0", () {
       List<KNode> knodes = [];
       List<KPeerInfo> kpeerInfos = [];
-      int numOfNode = 10;
+      int numOfNode = 100;
       for (int i = 0; i < numOfNode; i++) {
         KNode a = new KNode(new HetiSocketBuilderSimu());
         knodes.add(a);
@@ -30,39 +30,31 @@ void main() {
       for (int i = 0; i < numOfNode; i++) {
         knodes[i].start(ip: kpeerInfos[i].ipAsString, port: kpeerInfos[i].port);
       }
-      return new Future.delayed(new Duration(seconds: 3)).then((_) {
-        /*
-        for (int i = 0; i < numOfNode; i++) {
-          knodes[i].stop();
-        }
-        for (int i = 0; i < numOfNode; i++) {
-          int jj = i;
-          knodes[i].rootingtable.toInfo().then((String s) {
-            print("[${jj}] : ${s}");
-          });
-        }*/
-      }).then((_){
-        KId i = KId.createIDAtRandom();
+      KId i = KId.createIDAtRandom();
+      return new Future.delayed(new Duration(seconds: 7)).then((_) {
         knodes[2].startSearchPeer(i);
+      }).then((_){
         knodes[numOfNode~/2].startSearchPeer(i);
         for (int d = 0; d < numOfNode; d+=5) {
           knodes[d].updateP2PNetwork();
         }
-        return new Future.delayed(new Duration(seconds: 5)).then((_) {
+        return new Future.delayed(new Duration(seconds: 7)).then((_) {
           print("#[1]# end");
           print("#[1]# test ${knodes[2].rawAnnouncedPeerForSearchResult.length}");
-          print("#[1]# test ${knodes[numOfNode~/2].rawAnnouncedPeerForSearchResult.length}");
+          print("#[1]# test ${knodes[numOfNode~/3].rawAnnouncedPeerForSearchResult.length}");
           /*
           knodes[2].startSearchPeer(i);
            knodes[50].startSearchPeer(i);
            for (int d = 0; d < numOfNode; d+=5) {
              knodes[d].updateP2PNetwork();
            }*/
-           return new Future.delayed(new Duration(seconds: 60));
+           return new Future.delayed(new Duration(seconds: 160));
         }).then((_){
           print("#[2]# end");
           print("#[1]# test ${knodes[2].rawAnnouncedPeerForSearchResult.length}");
-          print("#[2]# test ${knodes[numOfNode~/2].rawAnnouncedPeerForSearchResult.length}");
+          print("#[2]# test ${knodes[numOfNode~/3].rawAnnouncedPeerForSearchResult.length}");
+        }).catchError((e){
+          print("# erro ${e}");
         });
       });
     });

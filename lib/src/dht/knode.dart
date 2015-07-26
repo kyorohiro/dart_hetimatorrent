@@ -39,6 +39,8 @@ class KNode extends Object with KrpcResponseInfo {
   ShuffleLinkedList<KAnnounceInfo> get rawAnnouncedPeer => _announcedPeer;
   static int id = 0;
 
+  int _nodeDebugId = 0;
+  int get nodeDebugId => _nodeDebugId;
   void addAnnouncePeerWithFilter(KAnnounceInfo info) {
     _announcedPeer.addLast(info);
   }
@@ -72,6 +74,8 @@ class KNode extends Object with KrpcResponseInfo {
     } else {
       this._ai = ai;
     }
+    _nodeDebugId = id;
+    id++;
   }
 
   addKPeerInfo(KPeerInfo info) {
