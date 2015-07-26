@@ -22,10 +22,10 @@ import '../kpeerinfo.dart';
 import '../knode.dart';
 import 'knodeai.dart';
 
-class KNodeAIAnnounce extends KNodeAI  {
+class KNodeAIAnnounce extends KNodeAI {
   bool _isStart = false;
   bool get isStart => _isStart;
-  List<KNodeAIAnnounceTask> taskList = [];
+  Map<KId, KNodeAIAnnounceTask> taskList = {};
   start(KNode node) {
     _isStart = true;
   }
@@ -33,46 +33,53 @@ class KNodeAIAnnounce extends KNodeAI  {
   stop(KNode node) {
     _isStart = false;
   }
-  maintenance(KNode node) {;}
+
+  maintenance(KNode node) {
+    ;
+  }
 
   startSearchPeer(KNode node, KId infoHash) {
-    ;
+    if (false == taskList.containsKey(infoHash)) {
+      taskList[infoHash] = new KNodeAIAnnounceTask(infoHash);
+    }
+    taskList[infoHash].startSearchPeer(node, infoHash);
   }
 
   stopSearchPeer(KNode node, KId infoHash) {
-    ;
+    if (true== taskList.containsKey(infoHash)) {
+      taskList[infoHash].stopSearchPeer(node, infoHash);
+    }
   }
 
   onTicket(KNode node) {
-    for(KNodeAIAnnounceTask t in taskList) {
+    for (KNodeAIAnnounceTask t in taskList) {
       t.onTicket(node);
     }
   }
 
   onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcQuery query) {
-    for(KNodeAIAnnounceTask t in taskList) {
+    for (KNodeAIAnnounceTask t in taskList) {
       t.onReceiveQuery(node, info, query);
     }
   }
   onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcResponse response) {
-    for(KNodeAIAnnounceTask t in taskList) {
+    for (KNodeAIAnnounceTask t in taskList) {
       t.onReceiveResponse(node, info, response);
     }
   }
-  
+
   onReceiveError(KNode node, HetiReceiveUdpInfo info, KrpcError message) {
-    for(KNodeAIAnnounceTask t in taskList) {
+    for (KNodeAIAnnounceTask t in taskList) {
       t.onReceiveError(node, info, message);
     }
   }
 
   onReceiveUnknown(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {
-    for(KNodeAIAnnounceTask t in taskList) {
+    for (KNodeAIAnnounceTask t in taskList) {
       t.onReceiveUnknown(node, info, message);
     }
   }
 }
-
 
 class KNodeAIAnnounceTask {
   bool _isStart = false;
@@ -123,7 +130,7 @@ class KNodeAIAnnounceTask {
       announcedNode.sort((KAnnounceInfo a, KAnnounceInfo b) {
         if (a.infoHash == b.infoHash) {
           return 0;
-        } else if (a.infoHash.xor(_infoHashId)  > b.infoHash.xor(_infoHashId) ) {
+        } else if (a.infoHash.xor(_infoHashId) > b.infoHash.xor(_infoHashId)) {
           return 1;
         } else {
           return -1;
@@ -132,7 +139,7 @@ class KNodeAIAnnounceTask {
       while (8 < announcedNode.length) {
         announcedNode.removeAt(10);
       }
-      for(KAnnounceInfo i in announcedNode) {
+      for (KAnnounceInfo i in announcedNode) {
         node.sendAnnouncePeerQuery(i.ipAsString, i.port, 1, _infoHashId.id, i.token.id);
       }
     }
@@ -200,7 +207,7 @@ class KNodeAIAnnounceTask {
                   _findedNode.rawshuffled.sort((KPeerInfo a, KPeerInfo b) {
                     if (a.id == b.id) {
                       return 0;
-                    } else if (a.id.xor(_infoHashId) > b.id.xor(_infoHashId) ) {
+                    } else if (a.id.xor(_infoHashId) > b.id.xor(_infoHashId)) {
                       return 1;
                     } else {
                       return -1;
