@@ -3,6 +3,7 @@ library hetimatorrent.dht.krpcid;
 import 'dart:core';
 import 'dart:async';
 import 'dart:math';
+import 'package:hetimacore/hetimacore.dart';
 
 class KId {
   List<int> _id = [];
@@ -76,6 +77,14 @@ class KId {
       }
     }
     return true;
+  }
+
+  int get hashCode {
+    int v = 0;
+    v = ByteOrder.parseLong(_id, 0, ByteOrder.BYTEORDER_BIG_ENDIAN);
+    v ^= ByteOrder.parseLong(_id, 8, ByteOrder.BYTEORDER_BIG_ENDIAN);
+    v ^= ByteOrder.parseShort(_id, 16, ByteOrder.BYTEORDER_BIG_ENDIAN);
+    return v;
   }
 
   bool operator >=(KId b) {
