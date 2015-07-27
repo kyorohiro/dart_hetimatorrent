@@ -28,7 +28,6 @@ class KNodeAIAnnounce extends KNodeAI {
   }
 
   updateP2PNetwork(KNode node) {
-    ;
   }
 
   startSearchPeer(KNode node, KId infoHash) {
@@ -100,6 +99,7 @@ class KNodeAIAnnounce extends KNodeAI {
         break;
     }
   }
+
   onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcResponse response) {
     for (KNodeAIAnnounceTask t in taskList.values) {
       if (t.isStart) {
