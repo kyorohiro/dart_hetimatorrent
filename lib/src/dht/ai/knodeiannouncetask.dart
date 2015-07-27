@@ -125,7 +125,7 @@ class KNodeAIAnnounceTask {
         updateReceveGetPeerInfo(info, getPeer);
 
         if (getPeer.haveValue == true) {
-          print("announce set value");
+          //print("announce set value");
           for (KAnnounceInfo i in getPeer.valuesAsKAnnounceInfo(_infoHashId.id)) {
             node.addAnnounceInfoForSearchResult(i);
           }

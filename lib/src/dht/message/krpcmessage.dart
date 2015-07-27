@@ -120,6 +120,9 @@ class KrpcMessage {
             break;
         }
         parser.pop();
+        if(parser.stack.length == 0) {
+          parser.buffer.clearInnerBuffer(parser.index);
+        }
         return ret;
       } else if (KrpcError.queryCheck(messageAsMap)) {
         KrpcMessage ret = null;

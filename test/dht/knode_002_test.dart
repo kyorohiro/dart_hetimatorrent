@@ -15,7 +15,7 @@ void main() {
       List<KPeerInfo> kpeerInfos = [];
       int numOfNode = 100;
       for (int i = 0; i < numOfNode; i++) {
-        KNode a = new KNode(new HetiSocketBuilderSimu());
+        KNode a = new KNode(new HetiSocketBuilderSimu(),intervalSecond:1);
         knodes.add(a);
         kpeerInfos.add(new KPeerInfo("127.0.0.1", i, a.nodeId));
         if (i != 0) {
@@ -32,14 +32,15 @@ void main() {
       }
 
       KId i = KId.createIDAtRandom();
-      return new Future.delayed(new Duration(seconds: 7)).then((_) {
+      return new Future.delayed(new Duration(seconds: 3)).then((_) {
         knodes[2].startSearchPeer(i);
+        return new Future.delayed(new Duration(seconds: 5));
       }).then((_) {
         knodes[numOfNode ~/ 2].startSearchPeer(i);
         for (int d = 0; d < numOfNode; d += 5) {
           knodes[d].updateP2PNetwork();
         }
-        return new Future.delayed(new Duration(seconds: 7)).then((_) {
+        return new Future.delayed(new Duration(seconds: 5)).then((_) {
           print("#[1]# end");
           print("#[1]# test ${knodes[2].rawAnnouncedPeerForSearchResult.length}");
           print("#[1]# test ${knodes[numOfNode~/3].rawAnnouncedPeerForSearchResult.length}");
@@ -49,7 +50,7 @@ void main() {
            for (int d = 0; d < numOfNode; d+=5) {
              knodes[d].updateP2PNetwork();
            }*/
-          return new Future.delayed(new Duration(seconds: 160));
+          return new Future.delayed(new Duration(seconds: 1));
         }).then((_) {
           print("#[2]# end");
           print("#[1]# test ${knodes[2].rawAnnouncedPeerForSearchResult.length}");
