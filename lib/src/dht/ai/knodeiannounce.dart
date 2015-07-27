@@ -32,11 +32,18 @@ class KNodeAIAnnounce extends KNodeAI {
   }
 
   startSearchPeer(KNode node, KId infoHash) {
-    if (false == taskList.containsKey(infoHash)) {
-      taskList[infoHash] = new KNodeAIAnnounceTask(infoHash);
+    if (infoHash == null) {
+      for(KNodeAIAnnounceTask t in taskList.values) {
+        if(t != null && t.isStart == true) { 
+          t.startSearchPeer(node, infoHash);
+        }
+      }
+    } else {
+      if (false == taskList.containsKey(infoHash)) {
+        taskList[infoHash] = new KNodeAIAnnounceTask(infoHash);
+      }
+      taskList[infoHash].startSearchPeer(node, infoHash);
     }
-    print("## start");
-    taskList[infoHash].startSearchPeer(node, infoHash);
   }
 
   stopSearchPeer(KNode node, KId infoHash) {
@@ -69,7 +76,7 @@ class KNodeAIAnnounce extends KNodeAI {
         break;
       case KrpcMessage.GET_PEERS_QUERY:
         {
-        //print("## receive query");
+          //print("## receive query");
           KrpcGetPeersQuery getPeer = query;
           List<KAnnounceInfo> target = node.rawAnnouncedPeer.getWithFilter((KAnnounceInfo i) {
             List<int> a = i.infoHash.id;
@@ -105,4 +112,3 @@ class KNodeAIAnnounce extends KNodeAI {
 
   onReceiveUnknown(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {}
 }
-

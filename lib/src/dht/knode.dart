@@ -42,9 +42,13 @@ class KNode extends Object with KrpcResponseInfo {
   int _nodeDebugId = 0;
   int get nodeDebugId => _nodeDebugId;
   
-  int _intervalSecond = 5;
-  int get intervalSecond => _intervalSecond;
+  int _intervalSecondForMaintenance = 5;
+  int get intervalSecond => _intervalSecondForMaintenance;
 
+  int _intervalSecondForAnnounce = 60;
+  int get intervalSecondForAnnounce => _intervalSecondForAnnounce;
+
+  int _lastAnnouncedTIme = 0;
   void addAnnouncePeerWithFilter(KAnnounceInfo info) {
     _announcedPeer.addLast(info);
   }
@@ -54,19 +58,30 @@ class KNode extends Object with KrpcResponseInfo {
   }
 
   _startTick() {
-    new Future.delayed(new Duration(seconds: this._intervalSecond)).then((_) {
+    new Future.delayed(new Duration(seconds: this._intervalSecondForMaintenance)).then((_) {
       if (_isStart == false) {
         return;
       }
       try {
         this._ai.onTicket(this);
       } catch (e) {}
+      if(_lastAnnouncedTIme == 0) {
+        _lastAnnouncedTIme = new DateTime.now().millisecondsSinceEpoch;
+      } else {
+        int currentTime = new DateTime.now().millisecondsSinceEpoch;
+        if((_lastAnnouncedTIme -currentTime) > _intervalSecondForAnnounce) {
+          _intervalSecondForAnnounce = currentTime;
+          researchSearchPeer(null);
+        }
+      }
       _startTick();
     }).catchError((e) {});
   }
 
-  KNode(HetiSocketBuilder socketBuilder, {int kBucketSize: 8, List<int> nodeIdAsList: null, KNodeAI ai: null, intervalSecond:5}) {
-    this._intervalSecond = intervalSecond;
+  KNode(HetiSocketBuilder socketBuilder, {int kBucketSize: 8, List<int> nodeIdAsList: null, KNodeAI ai: null, 
+    intervalSecondForMaintenance:5,intervalSecondForAnnounce:60}) {
+    this._intervalSecondForMaintenance = intervalSecondForMaintenance;
+    this._intervalSecondForAnnounce = intervalSecondForAnnounce;
     if (nodeIdAsList == null) {
       _nodeId = KId.createIDAtRandom();
     } else {
@@ -148,7 +163,7 @@ class KNode extends Object with KrpcResponseInfo {
     this._ai.updateP2PNetwork(this);
   }
 
-  researchSearchPeer(KId infoHash) {
+  researchSearchPeer([KId infoHash=null]) {
     this._ai.startSearchPeer(this, infoHash);
   }
 
