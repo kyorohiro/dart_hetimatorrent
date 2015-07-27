@@ -76,9 +76,10 @@ class TorrentEngineAI extends TorrentAI {
     }
   }
 
-  Future go() {
+  Future start() {
     return _startTorrent().then((_) {
       isGo = true;
+      _upnpPortMapClient.clearSearchedRouterInfo();
       _startTracker(1).catchError((e) {});
     });
   }
@@ -86,7 +87,7 @@ class TorrentEngineAI extends TorrentAI {
   Future stop() {
     return this._torrent.stop().then((_) {
       if (usePortMap == true) {
-        return _upnpPortMapClient.deletePortMapFromAppIdDesc().catchError((e) {});
+        return _upnpPortMapClient.deletePortMapFromAppIdDesc(reuseRouter:true).catchError((e) {});
       } else {
         isGo = false;
       }
@@ -106,7 +107,7 @@ class TorrentEngineAI extends TorrentAI {
             _torrent.globalPort = _torrent.localPort;
             throw e;
           }).then((_) {
-            return _upnpPortMapClient.startGetExternalIp().then((StartGetExternalIp ip) {
+            return _upnpPortMapClient.startGetExternalIp(reuseRouter:true).then((StartGetExternalIp ip) {
               _torrent.globalIp = ip.externalIp;
             }).catchError((e) {
               ;
@@ -138,7 +139,7 @@ class TorrentEngineAI extends TorrentAI {
     _upnpPortMapClient.basePort = _torrent.localPort;
     _upnpPortMapClient.localAddress = _torrent.localAddress;
     _upnpPortMapClient.localPort = _torrent.localPort;
-    return _upnpPortMapClient.startPortMap();
+    return _upnpPortMapClient.startPortMap(reuseRouter:true);
   }
 
   bool localNetworkIp(String ip) {

@@ -86,7 +86,7 @@ class TorrentEngine {
 
   Future start({usePortMap: false}) {
     ai.usePortMap = usePortMap;
-    return ai.go().then((v){
+    return ai.start().then((v){
       _isGO = true;
       return v;
     }).catchError((e){
