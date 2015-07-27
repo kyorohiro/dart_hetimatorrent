@@ -15,8 +15,8 @@ class HashItem {
   html.SpanElement torrentHashSpan = html.querySelector("#torrent-hash");
   html.SpanElement torrentRemoveBtn = html.querySelector("#torrent-remove-btn");
   html.SpanElement torrentNumOfPeerSpan = html.querySelector("#torrent-num-of-peer");
-// "torrent-upnpon"
-  
+
+  // "torrent-upnpon"
   html.InputElement seedFile = html.querySelector("#torrent-seedfile");
   
   html.InputElement globalAddress = html.querySelector("#torrent-input-globaladdress");
@@ -34,9 +34,8 @@ class HashItem {
   Map<String,html.File> seedRawFiles = {};
   Map<String,int> seedState = {};
   Map<String,SeederModel> seedModels = {};
-//  html.File seedRawFile = null;
+
   init(TrackerModel trackerModel, Map<String, TorrentFile> managedTorrentFile, Tab tab, Dialog dialog) {
- //   SeederModel model = new SeederModel();
 
     torrentRemoveBtn.onClick.listen((html.MouseEvent e) {
       if (trackerModel.selectKey != null) {
