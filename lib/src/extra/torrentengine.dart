@@ -57,7 +57,8 @@ class TorrentEngine {
       haveAllData: false, 
       int localPort: 18085,int globalPort: 18085,
       String globalIp:"0.0.0.0",String localIp:"0.0.0.0",
-      int retryNum:10, bool useUpnp:false,List<int>bitfield:null}) {
+      int retryNum:10, bool useUpnp:false,bool useDht:false,
+      List<int>bitfield:null}) {
     return new Future(() {
       TorrentEngine engine = new TorrentEngine._empty();
       return TrackerClient.createTrackerClient(builder, torrentfile).then((TrackerClient trackerClient) {

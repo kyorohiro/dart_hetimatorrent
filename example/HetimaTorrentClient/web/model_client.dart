@@ -69,7 +69,7 @@ class ClientModel {
       return TorrentEngine
           .createTorrentEngine(new HetiSocketBuilderChrome(), torrentFile, seedfile,
               globalPort: globalPort, localPort: localPort, localIp: localIp,
-              globalIp: globalIp, useUpnp: useUpnp, appid: "hetimatorrentclient${clientModeId++}",bitfield:re.buffer)
+              globalIp: globalIp, useUpnp: useUpnp, useDht: useDHT,appid: "hetimatorrentclient${clientModeId++}",bitfield:re.buffer)
           .then((TorrentEngine engine) {
         _engine = engine;
         _engine.onProgress.listen((TorrentEngineAIProgress info) {
