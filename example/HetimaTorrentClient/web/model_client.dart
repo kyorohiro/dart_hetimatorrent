@@ -16,6 +16,7 @@ class ClientModel {
   int localPort = 18080;
   int globalPort = 18080;
   bool useUpnp = false;
+  bool useDHT = false;
   HetimaData _seedfile = null;
   HetimaData get seedfile => _seedfile;
   HetimaData _torrentfile = null;

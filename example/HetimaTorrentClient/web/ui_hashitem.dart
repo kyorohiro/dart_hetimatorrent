@@ -135,15 +135,15 @@ class HashItem {
       });
     });
 
-    html.querySelectorAll('[name="torrent-upnpon"]').forEach((html.InputElement radioButton) {
+    html.querySelectorAll('[name="torrent-dhton"]').forEach((html.InputElement radioButton) {
       radioButton.onClick.listen((html.MouseEvent e) {
         String key = trackerModel.selectKey;
         html.InputElement clicked = e.target;
         print("The user is ${clicked.value}");
         if (clicked.value == "Use") {
-          seedModels[key].useUpnp = true;
+          seedModels[key].useDHT = true;
         } else {
-          seedModels[key].useUpnp = false;
+          seedModels[key].useDHT = false;
         }
       });
     });

@@ -27,6 +27,9 @@ class MainItem {
   html.InputElement inputLocalPort = html.querySelector("#input-localport");
   html.InputElement inputGlobalPort = html.querySelector("#input-globalport");
   html.InputElement inputGlobalAddress = html.querySelector("#input-globaladdress");
+  html.InputElement inputUPnPOn = html.querySelector("#input-upnpon");
+  html.InputElement inputUPnPOff = html.querySelector("#input-upnpoff");
+  
   
   html.DivElement outputFileProgress = html.querySelector("#fileprogress");
  
@@ -98,6 +101,12 @@ class MainItem {
         stopServerBtn.style.display = "block";
         startServerBtn.style.display = "none";
         loadServerBtn.style.display = "none";
+        inputGlobalAddress.readOnly = true;
+        inputGlobalPort.readOnly = true;
+        inputLocalAddress.readOnly = true;
+        inputLocalPort.readOnly = true;
+        inputUPnPOn.disabled = true;
+        inputUPnPOff.disabled = true;
       }).catchError((e) {
         stopServerBtn.style.display = "none";
         startServerBtn.style.display = "block";
@@ -115,6 +124,12 @@ class MainItem {
         startServerBtn.style.display = "block";
         stopServerBtn.style.display = "none";
         loadServerBtn.style.display = "none";
+        inputGlobalAddress.readOnly = false;
+        inputGlobalPort.readOnly = false;
+        inputLocalAddress.readOnly =false;
+        inputLocalPort.readOnly = false;
+        inputUPnPOn.disabled = false;
+        inputUPnPOff.disabled = false;
       }).catchError((e) {
         startServerBtn.style.display = "none";
         stopServerBtn.style.display = "block";
