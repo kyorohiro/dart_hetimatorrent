@@ -19,7 +19,7 @@ class TrackerResponse {
   static final String KEY_PORT = "port";
   static final String KEY_FAILURE_REASON = "failure reason";
 
-  bool get isOK => failureReason.length != 0;
+  bool get isOK => failureReason.length == 0;
   int interval = 10;
   List<TrackerPeerInfo> peers = [];
   TrackerResponse() {}

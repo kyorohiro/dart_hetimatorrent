@@ -172,7 +172,7 @@ class TorrentEngineAI extends TorrentAI {
         for (TrackerPeerInfo info in r.response.peers) {
           _torrent.putTorrentPeerInfoFromTracker(info.ipAsString, info.port);
         }
-        if (isGo == true) {
+        if (isGo == true && r.response.interval != null) {
           _startTracker(r.response.interval);
         }
       }).catchError((e) {
