@@ -40,7 +40,7 @@ class TrackerModel {
     return Future.wait(v);
   }
 
-  Future startTracker(String localIP, int localPort, int globalPort) {
+  Future startTracker(String localIP, int localPort, String globalAddress, int globalPort) {
     trackerServer.address = localIP;
     trackerServer.port = localPort;
     return trackerServer.start().then((StartResult r) {
@@ -57,6 +57,7 @@ class TrackerModel {
           });
         });
       } else {
+        trackerServer.trackerAnnounceAddressForTorrentFile = "http://${globalAddress}:${globalPort}/announce";
         return [trackerServer.address, "${trackerServer.port}"];
       }
     }).catchError((e) {

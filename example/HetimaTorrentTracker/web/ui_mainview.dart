@@ -26,7 +26,8 @@ class MainItem {
   html.InputElement inputLocalAddress = html.querySelector("#input-localaddress");
   html.InputElement inputLocalPort = html.querySelector("#input-localport");
   html.InputElement inputGlobalPort = html.querySelector("#input-globalport");
-
+  html.InputElement inputGlobalAddress = html.querySelector("#input-globaladdress");
+  
   html.DivElement outputFileProgress = html.querySelector("#fileprogress");
  
   html.SpanElement outputLocalStageSpn = html.querySelector("#localstage");
@@ -90,7 +91,7 @@ class MainItem {
       stopServerBtn.style.display = "none";
       startServerBtn.style.display = "none";
 
-      model.startTracker(inputLocalAddress.value, int.parse(inputLocalPort.value), int.parse(inputGlobalPort.value)).then((List<String> v) {
+      model.startTracker(inputLocalAddress.value, int.parse(inputLocalPort.value), inputGlobalAddress.value, int.parse(inputGlobalPort.value)).then((List<String> v) {
         outputLocalPortSpn.innerHtml = v[1];
         outputLocalAddressSpn.innerHtml = v[0];
         outputLocalStageSpn.setInnerHtml("http://${outputLocalAddressSpn.innerHtml}:${outputLocalPortSpn.innerHtml}");
@@ -138,6 +139,7 @@ class MainItem {
     model.portMapHelder.onUpdateGlobalIp.listen((String globalIP) {
       outputGlobalAddressSpn.setInnerHtml(globalIP);
       outputGlobalStageSpn.setInnerHtml("http://${model.portMapHelder.externalIp}:${model.portMapHelder.externalPort}");
+      inputGlobalAddress.value = globalIP;
     });
 
     model.portMapHelder.onUpdateGlobalPort.listen((String globalPort) {
