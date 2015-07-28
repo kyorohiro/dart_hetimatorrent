@@ -79,6 +79,7 @@ class TorrentClientFront {
     _reseved.clear();
     _reseved.addAll(v);
   }
+
   static Future<TorrentClientFront> connect(HetiSocketBuilder _builder, TorrentClientPeerInfo info, int bitfieldSize, List<int> infoHash, {List<int> peerId:null,List<int> reseved:null}) {
     return new Future(() {
       HetiSocket socket = _builder.createClient();
