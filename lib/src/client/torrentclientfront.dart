@@ -69,21 +69,39 @@ class TorrentClientFront {
 
   static int debugIdSeed = 0;
   int _debugId = 0;
-  static Future<TorrentClientFront> connect(HetiSocketBuilder _builder, TorrentClientPeerInfo info, int bitfieldSize, List<int> infoHash, [List<int> peerId = null]) {
+  
+  List<int> _reseved = [0, 0, 0, 0, 0, 0, 0, 0];
+  List<int> get reseved => new List.from(_reseved);
+  set reseved( List<int>  v) {
+    if(v.length != 8) {
+      throw {};
+    }
+    _reseved.clear();
+    _reseved.addAll(v);
+  }
+  static Future<TorrentClientFront> connect(HetiSocketBuilder _builder, TorrentClientPeerInfo info, int bitfieldSize, List<int> infoHash, {List<int> peerId:null,List<int> reseved:null}) {
     return new Future(() {
       HetiSocket socket = _builder.createClient();
       return socket.connect(info.ip, info.portAcceptable).then((HetiSocket socket) {
-        return new TorrentClientFront(socket, info.ip, info.portAcceptable, socket.buffer, bitfieldSize, infoHash, peerId);
+        return new TorrentClientFront(socket, info.ip, info.portAcceptable, socket.buffer, bitfieldSize, infoHash, peerId, reseved);
       });
     });
   }
 
-  TorrentClientFront(HetiSocket socket, String peerIp, int peerPort, HetimaReader reader, int bitfieldSize, List<int> infoHash, List<int> peerId) {
+  TorrentClientFront(HetiSocket socket, String peerIp, int peerPort, HetimaReader reader, int bitfieldSize, List<int> infoHash, List<int> peerId, List<int> reseved) {
     if (peerId == null) {
       _myPeerId.addAll(PeerIdCreator.createPeerid("heti69"));
     } else {
       _myPeerId.addAll(peerId);
     }
+
+    if (reseved == null) {
+      this._reseved = [0, 0, 0, 0, 0, 0, 0, 0];
+    } else {
+      this._reseved.clear();
+      this._reseved.addAll(reseved);
+    }
+
     _debugId = debugIdSeed++;
     _peerIp = peerIp;
     _peerPort = peerPort;
@@ -128,7 +146,7 @@ class TorrentClientFront {
 
   Future sendHandshake({List<int> reseved: null}) {
     if (reseved == null) {
-      reseved = [0, 0, 0, 0, 0, 0, 0, 0];
+      reseved = new List.from(_reseved);
     }
     MessageHandshake message = new MessageHandshake(MessageHandshake.ProtocolId, reseved, _infoHash, _myPeerId);
     return sendMessage(message);
