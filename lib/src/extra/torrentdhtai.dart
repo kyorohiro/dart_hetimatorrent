@@ -31,6 +31,14 @@ class TorrentEngineDHT extends TorrentAI {
     });
   }
 
+  Future startSearchPeer(KId infoHash) {
+    
+  }
+  
+  Future stopSearchPeer(KId infoHash) {
+    
+  }
+
   @override
   Future onRegistAI(TorrentClient client) {
     return new Future(() {
