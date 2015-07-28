@@ -176,7 +176,7 @@ class KNode extends Object with KrpcResponseInfo {
   }
 
   addNodeFromIPAndPort(String ip, int port) {
-    this._ai.onAddNodeFromIPAndPort(ip, port);
+    this._ai.onAddNodeFromIPAndPort(this, ip, port);
   }
 
   String getQueryNameFromTransactionId(String transactionId) {
