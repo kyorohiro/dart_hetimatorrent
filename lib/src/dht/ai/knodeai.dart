@@ -30,7 +30,7 @@ abstract class KNodeAI {
   updateP2PNetwork(KNode node);
   startSearchPeer(KNode node, KId infoHash);
   stopSearchPeer(KNode node, KId infoHash);
-  onAddNodeFromIPAndPort(Node node, String ip, int port);
+  onAddNodeFromIPAndPort(KNode node, String ip, int port);
   onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcQuery query);
   onReceiveError(KNode node, HetiReceiveUdpInfo info, KrpcError message);
   onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcResponse response);
