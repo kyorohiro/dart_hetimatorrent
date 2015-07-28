@@ -47,9 +47,8 @@ class TorrentEngine {
   int get globalPort => _torrentClient.globalPort;
   String get globalIp => _torrentClient.globalIp;
 
-  TorrentEngine._empty() {
-    ;
-  }
+  TorrentEngine._empty() {}
+
   Stream<TorrentEngineAIProgress> get onProgress => ai.onProgress;
   
   static Future<TorrentEngine> createTorrentEngine(HetiSocketBuilder builder, TorrentFile torrentfile, HetimaData downloadedData, 

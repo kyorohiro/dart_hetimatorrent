@@ -8,20 +8,67 @@ import '../client/torrentai_basic.dart';
 import '../client/torrentclient.dart';
 import '../tracker/trackerclient.dart';
 import '../dht/knode.dart';
+import 'torrentdhtai.dart';
+
+class TorrentEngineDHTManager {
+  static TorrentEngineDHT dht = null;
+  UpnpPortMapHelper _upnpPortMapClient = null;
+}
 
 class TorrentEngineDHT extends TorrentAI {
   KNode _node = null;
   int _dhtPort = 18080;
   int get dhtPort => _dhtPort;
 
-  TorrentEngineDHT(HetiSocketBuilder socketBuilder, int dhtPort) {
-    _node = new KNode(socketBuilder);
-    this._dhtPort = dhtPort;
+  UpnpPortMapHelper _upnpPortMapClient = null;
+  HetiSocketBuilder _socketBuilder = null;
+  String _localIp = "0.0.0.0";
+  int _localPort = 0;
+
+  bool _useUpnp = false;
+  bool get useUpnp => _useUpnp;
+
+  TorrentEngineDHT(HetiSocketBuilder socketBuilder, String appid, {String localIp: "0.0.0.0", int localPort: 38080, bool useUpnp: false}) {
+    _upnpPortMapClient = new UpnpPortMapHelper(socketBuilder, appid);
+    _localIp = localIp;
+    _localPort = localPort;
+    _socketBuilder = socketBuilder;
   }
 
   Future start() {
     return new Future(() {
-      _node.start();
+      int count = 0;
+      int localPort = _localPort;
+      _node = new KNode(_socketBuilder);
+
+      a() {
+        if (useUpnp) {
+          return _startPortMap().then((_) {
+            return {};
+          }).catchError((e) {
+            localPort++;
+            count++;
+            _node.stop();
+            if (count < 5) {
+              return a();
+            }
+          });
+        } else {
+          return {};
+        }
+      }
+      b() {
+        _node.start(ip: _localIp, port: localPort).then((_) {
+          a();
+        }).catchError((e) {
+          localPort++;
+          count++;
+          if (count < 5) {
+            b();
+          }
+        });
+      }
+      return b();
     });
   }
 
@@ -34,9 +81,9 @@ class TorrentEngineDHT extends TorrentAI {
   Future startSearchPeer(KId infoHash) {
     _node.startSearchPeer(infoHash);
   }
-  
+
   Future stopSearchPeer(KId infoHash) {
-    _node.stopSearchPeer(infoHash);    
+    _node.stopSearchPeer(infoHash);
   }
 
   @override
@@ -52,11 +99,10 @@ class TorrentEngineDHT extends TorrentAI {
   Future onReceive(TorrentClient client, TorrentClientPeerInfo info, TorrentMessage message) {
     return new Future(() {
       if (message.id == TorrentMessage.DUMMY_SIGN_SHAKEHAND) {
-        info.front.sendPort(_dhtPort).catchError((e){
+        info.front.sendPort(_dhtPort).catchError((e) {
           print("wean : failed to sendPort");
         });
-      }
-      else if (message.id == TorrentMessage.SIGN_PORT) {
+      } else if (message.id == TorrentMessage.SIGN_PORT) {
         ;
       }
     });
@@ -70,5 +116,13 @@ class TorrentEngineDHT extends TorrentAI {
   @override
   Future onTick(TorrentClient client) {
     return new Future(() {});
+  }
+
+  Future _startPortMap() {
+    _upnpPortMapClient.numOfRetry = 0;
+    _upnpPortMapClient.basePort = _localPort;
+    _upnpPortMapClient.localAddress = _localIp;
+    _upnpPortMapClient.localPort = _localPort;
+    return _upnpPortMapClient.startPortMap(reuseRouter: true);
   }
 }
