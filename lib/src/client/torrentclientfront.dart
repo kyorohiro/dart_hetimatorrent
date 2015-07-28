@@ -68,7 +68,7 @@ class TorrentClientFront {
   int get lastRequestIndex => _lastRequestIndex;
 
   static int debugIdSeed = 0;
-  int _debugId = 0; 
+  int _debugId = 0;
   static Future<TorrentClientFront> connect(HetiSocketBuilder _builder, TorrentClientPeerInfo info, int bitfieldSize, List<int> infoHash, [List<int> peerId = null]) {
     return new Future(() {
       HetiSocket socket = _builder.createClient();
@@ -126,8 +126,11 @@ class TorrentClientFront {
     a();
   }
 
-  Future sendHandshake() {
-    MessageHandshake message = new MessageHandshake(MessageHandshake.ProtocolId, [0, 0, 0, 0, 0, 0, 0, 0], _infoHash, _myPeerId);
+  Future sendHandshake({List<int> reseved: null}) {
+    if (reseved == null) {
+      reseved = [0, 0, 0, 0, 0, 0, 0, 0];
+    }
+    MessageHandshake message = new MessageHandshake(MessageHandshake.ProtocolId, reseved, _infoHash, _myPeerId);
     return sendMessage(message);
   }
 
