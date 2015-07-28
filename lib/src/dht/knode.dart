@@ -41,7 +41,7 @@ class KNode extends Object with KrpcResponseInfo {
 
   int _nodeDebugId = 0;
   int get nodeDebugId => _nodeDebugId;
-  
+
   int _intervalSecondForMaintenance = 5;
   int get intervalSecond => _intervalSecondForMaintenance;
 
@@ -65,11 +65,11 @@ class KNode extends Object with KrpcResponseInfo {
       try {
         this._ai.onTicket(this);
       } catch (e) {}
-      if(_lastAnnouncedTIme == 0) {
+      if (_lastAnnouncedTIme == 0) {
         _lastAnnouncedTIme = new DateTime.now().millisecondsSinceEpoch;
       } else {
         int currentTime = new DateTime.now().millisecondsSinceEpoch;
-        if((_lastAnnouncedTIme -currentTime) > _intervalSecondForAnnounce) {
+        if ((_lastAnnouncedTIme - currentTime) > _intervalSecondForAnnounce) {
           _intervalSecondForAnnounce = currentTime;
           researchSearchPeer(null);
         }
@@ -78,8 +78,7 @@ class KNode extends Object with KrpcResponseInfo {
     }).catchError((e) {});
   }
 
-  KNode(HetiSocketBuilder socketBuilder, {int kBucketSize: 8, List<int> nodeIdAsList: null, KNodeAI ai: null, 
-    intervalSecondForMaintenance:5,intervalSecondForAnnounce:60}) {
+  KNode(HetiSocketBuilder socketBuilder, {int kBucketSize: 8, List<int> nodeIdAsList: null, KNodeAI ai: null, intervalSecondForMaintenance: 5, intervalSecondForAnnounce: 60}) {
     this._intervalSecondForMaintenance = intervalSecondForMaintenance;
     this._intervalSecondForAnnounce = intervalSecondForAnnounce;
     if (nodeIdAsList == null) {
@@ -123,35 +122,24 @@ class KNode extends Object with KrpcResponseInfo {
       _udpSocket = this._socketBuilder.createUdpClient();
       return _udpSocket.bind(ip, port).then((int v) {
         _udpSocket.onReceive().listen((HetiReceiveUdpInfo info) {
+          print("${UTF8.decode(info.data,allowMalformed:true)}");
           if (!buffers.containsKey("${info.remoteAddress}:${info.remotePort}")) {
             buffers["${info.remoteAddress}:${info.remotePort}"] = new EasyParser(new ArrayBuilder());
+            _startParseLoop(buffers["${info.remoteAddress}:${info.remotePort}"],  info);
           }
           EasyParser parser = buffers["${info.remoteAddress}:${info.remotePort}"];
           (parser.buffer as ArrayBuilder).appendIntList(info.data);
 
-          //
-          KrpcMessage.decode(parser, this).then((KrpcMessage message) {
-            if (message is KrpcResponse) {
-              KSendInfo rm = removeQueryNameFromTransactionId(UTF8.decode(message.rawMessageMap["t"]));
-              this._ai.onReceiveResponse(this, info, message);
-              rm._c.complete(message);
-            } else if (message is KrpcQuery) {
-              //if(message.messageSignature == KrpcMessage.GET_PEERS_QUERY) {
-              //  print("receive get peers");
-              //}
-              this._ai.onReceiveQuery(this, info, message);
-            } else if (message is KrpcError) {
-              this._ai.onReceiveError(this, info, message);
-            } else {
-              this._ai.onReceiveUnknown(this, info, message);
-            }
-          }).catchError((e) {});
         });
         //////
         //////
         _isStart = true;
         _ai.start(this);
         _startTick();
+        ////
+        ////
+        ////
+
       });
     }).catchError((e) {
       _isStart = false;
@@ -159,11 +147,35 @@ class KNode extends Object with KrpcResponseInfo {
     });
   }
 
+  _startParseLoop(EasyParser parser, HetiReceiveUdpInfo info) {
+    a() {
+      //
+      KrpcMessage.decode(parser, this).then((KrpcMessage message) {
+        if (message is KrpcResponse) {
+          KSendInfo rm = removeQueryNameFromTransactionId(UTF8.decode(message.rawMessageMap["t"]));
+          this._ai.onReceiveResponse(this, info, message);
+          rm._c.complete(message);
+        } else if (message is KrpcQuery) {
+          //if(message.messageSignature == KrpcMessage.GET_PEERS_QUERY) {
+          //  print("receive get peers");
+          //}
+          this._ai.onReceiveQuery(this, info, message);
+        } else if (message is KrpcError) {
+          this._ai.onReceiveError(this, info, message);
+        } else {
+          this._ai.onReceiveUnknown(this, info, message);
+        }
+        a();
+      }).catchError((e) {});
+    }
+    a();
+  }
+
   updateP2PNetwork() {
     this._ai.updateP2PNetwork(this);
   }
 
-  researchSearchPeer([KId infoHash=null]) {
+  researchSearchPeer([KId infoHash = null]) {
     this._ai.startSearchPeer(this, infoHash);
   }
 

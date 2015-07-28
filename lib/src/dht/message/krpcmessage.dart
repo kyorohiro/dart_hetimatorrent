@@ -71,6 +71,7 @@ class KrpcMessage {
       if (!(v is Map)) {
         throw {};
       }
+      print("##=+>${v}");
       Map<String, Object> messageAsMap = v;
       if (KrpcQuery.queryCheck(messageAsMap, null)) {
         KrpcMessage ret = null;
@@ -135,8 +136,10 @@ class KrpcMessage {
         return ret;
       }
     }).catchError((e) {
+      print("${parser.index}");
       parser.back();
       parser.pop();
+      print("${parser.index}");
       throw e;
     });
   }

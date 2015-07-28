@@ -88,6 +88,7 @@ class HetiBdecoder {
           elem();
         }
       }).catchError((e){
+        print("dict error ${parser.index}");
         completer.completeError(e);
       });
     };
