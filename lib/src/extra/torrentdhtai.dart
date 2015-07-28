@@ -32,11 +32,11 @@ class TorrentEngineDHT extends TorrentAI {
   }
 
   Future startSearchPeer(KId infoHash) {
-    
+    _node.startSearchPeer(infoHash);
   }
   
   Future stopSearchPeer(KId infoHash) {
-    
+    _node.stopSearchPeer(infoHash);    
   }
 
   @override
@@ -51,10 +51,13 @@ class TorrentEngineDHT extends TorrentAI {
   @override
   Future onReceive(TorrentClient client, TorrentClientPeerInfo info, TorrentMessage message) {
     return new Future(() {
-      if (message.id == TorrentMessage.SIGN_PORT) {
+      if (message.id == TorrentMessage.DUMMY_SIGN_SHAKEHAND) {
         info.front.sendPort(_dhtPort).catchError((e){
           print("wean : failed to sendPort");
         });
+      }
+      else if (message.id == TorrentMessage.SIGN_PORT) {
+        ;
       }
     });
   }

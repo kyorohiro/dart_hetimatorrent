@@ -175,6 +175,10 @@ class KNode extends Object with KrpcResponseInfo {
     this._ai.stopSearchPeer(this, infoHash);
   }
 
+  addNodeFromIPAndPort(String ip, int port) {
+    this._ai.onAddNodeFromIPAndPort(ip, port);
+  }
+
   String getQueryNameFromTransactionId(String transactionId) {
     for (KSendInfo si in queryInfo) {
       if (si._id == transactionId) {

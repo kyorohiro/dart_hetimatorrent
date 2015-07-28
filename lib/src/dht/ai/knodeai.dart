@@ -30,6 +30,7 @@ abstract class KNodeAI {
   updateP2PNetwork(KNode node);
   startSearchPeer(KNode node, KId infoHash);
   stopSearchPeer(KNode node, KId infoHash);
+  onAddNodeFromIPAndPort(Node node, String ip, int port);
   onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcQuery query);
   onReceiveError(KNode node, HetiReceiveUdpInfo info, KrpcError message);
   onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcResponse response);
@@ -58,9 +59,11 @@ class KNodeAIBasic extends KNodeAI {
     findNodeAI.updateP2PNetwork(node);
     announceAI.updateP2PNetwork(node);
   }
+
   startSearchPeer(KNode node, KId infoHash) {
     announceAI.startSearchPeer(node, infoHash);
   }
+
   stopSearchPeer(KNode node, KId infoHash) {
     announceAI.stopSearchPeer(node, infoHash);
   }
@@ -70,6 +73,10 @@ class KNodeAIBasic extends KNodeAI {
     announceAI.onTicket(node);
   }
 
+  onAddNodeFromIPAndPort(KNode node, String ip, int port) {
+    findNodeAI.onAddNodeFromIPAndPort(node, ip, port);
+    announceAI.onAddNodeFromIPAndPort(node, ip, port);
+  }
   onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcQuery query) {
     node.rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, query.queryingNodesId));
     switch (query.messageSignature) {

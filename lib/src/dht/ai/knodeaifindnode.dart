@@ -67,6 +67,10 @@ class KNodeAIFindNode {
     });
   }
 
+  onAddNodeFromIPAndPort(KNode node, String ip, int port) {
+    node.sendFindNodeQuery(ip, port, node.nodeId.id);
+  }
+
   onTicket(KNode node) {
     updateP2PNetworkWithRandom(node);
   }
@@ -81,6 +85,9 @@ class KNodeAIFindNode {
           return node.sendFindNodeResponse(info.remoteAddress, info.remotePort, query.transactionId, KPeerInfo.toCompactNodeInfos(infos));
         });
     }
+    node.rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, query.queryingNodesId)).then((_) {
+      return updateP2PNetworkWithoutClear(node);
+    });
   }
 
   onReceiveError(KNode node, HetiReceiveUdpInfo info, KrpcError message) {}

@@ -111,4 +111,6 @@ class KNodeAIAnnounce extends KNodeAI {
   onReceiveError(KNode node, HetiReceiveUdpInfo info, KrpcError message) {}
 
   onReceiveUnknown(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {}
+  
+  onAddNodeFromIPAndPort(KNode node, String ip, int port) {}
 }
