@@ -87,10 +87,9 @@ class TorrentEngineAI extends TorrentAI {
 
   Future stop() {
     return this._torrent.stop().then((_) {
+      isGo = false;
       if (usePortMap == true) {
         return _upnpPortMapClient.deletePortMapFromAppIdDesc(reuseRouter:true).catchError((e) {});
-      } else {
-        isGo = false;
       }
     }).then((_) {
       return _startTracker(0).catchError((e){});
