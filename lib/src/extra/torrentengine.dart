@@ -7,6 +7,7 @@ import 'package:hetimatorrent/hetimatorrent.dart';
 import '../client/torrentclient.dart';
 import '../tracker/trackerclient.dart';
 import 'torrentengineai.dart';
+import 'torrentdhtai.dart';
 
 abstract class TorrentEngineCommand {
   Future<CommandResult> execute(TorrentEngine engine, {List<String> args: null});
@@ -47,6 +48,7 @@ class TorrentEngine {
   int get globalPort => _torrentClient.globalPort;
   String get globalIp => _torrentClient.globalIp;
 
+  TorrentEngineDHT _dht = null;
   TorrentEngine._empty() {}
 
   Stream<TorrentEngineAIProgress> get onProgress => ai.onProgress;
@@ -75,7 +77,15 @@ class TorrentEngine {
         //
         engine._torrentClient = new TorrentClient(builder, trackerClient.peerId, trackerClient.infoHash, torrentfile.info.pieces, torrentfile.info.piece_length, torrentfile.info.files.dataSize, downloadedData,
             ai: engine.ai, haveAllData: haveAllData,bitfield:bitfield);  
-        return engine;
+        
+        if(useDht == true) {
+          engine._dht = new TorrentEngineDHT(builder, "dht");
+          return engine._dht.start().then((_){
+            return engine;            
+          });
+        } else {
+          return engine;
+        }
       });
     });
   }

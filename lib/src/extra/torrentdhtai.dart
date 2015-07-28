@@ -75,15 +75,16 @@ class TorrentEngineDHT extends TorrentAI {
   Future stop() {
     return new Future(() {
       _node.stop();
+      _upnpPortMapClient.deletePortMapFromAppIdDesc(reuseRouter:true);
     });
   }
 
   Future startSearchPeer(KId infoHash) {
-    _node.startSearchPeer(infoHash);
+    return _node.startSearchPeer(infoHash);
   }
 
   Future stopSearchPeer(KId infoHash) {
-    _node.stopSearchPeer(infoHash);
+    return _node.stopSearchPeer(infoHash);
   }
 
   @override
