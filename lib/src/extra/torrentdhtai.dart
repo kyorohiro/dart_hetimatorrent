@@ -10,11 +10,6 @@ import '../tracker/trackerclient.dart';
 import '../dht/knode.dart';
 import 'torrentdhtai.dart';
 
-class TorrentEngineDHTManager {
-  static TorrentEngineDHT dht = null;
-  UpnpPortMapHelper _upnpPortMapClient = null;
-}
-
 class TorrentEngineDHT extends TorrentAI {
   KNode _node = null;
   int _dhtPort = 18080;

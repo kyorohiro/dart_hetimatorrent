@@ -13,6 +13,7 @@ import '../tracker/trackerclient.dart';
 class TorrentEngineAI extends TorrentAI {
   TorrentAIBasic basic = new TorrentAIBasic();
   bool usePortMap = false;
+  bool useDht = false;
   bool isGo = false;
 
   String baseLocalAddress = "0.0.0.0";
