@@ -24,7 +24,7 @@ class TorrentEngineDHT extends TorrentAI {
   bool get useUpnp => _useUpnp;
 
   int _intervalSecondForAnnounce = 60;
-  TorrentEngineDHT(HetiSocketBuilder socketBuilder, String appid, {String localIp: "0.0.0.0", int localPort: 38080, bool useUpnp: false, int intervalSecondForAnnounce:120}) {
+  TorrentEngineDHT(HetiSocketBuilder socketBuilder, String appid, {String localIp: "0.0.0.0", int localPort: 38080, bool useUpnp: false, int intervalSecondForAnnounce: 120}) {
     _upnpPortMapClient = new UpnpPortMapHelper(socketBuilder, appid);
     _localIp = localIp;
     _localPort = localPort;
@@ -37,7 +37,7 @@ class TorrentEngineDHT extends TorrentAI {
     return new Future(() {
       int count = 0;
       int localPort = _localPort;
-      _node = new KNode(_socketBuilder,intervalSecondForAnnounce: _intervalSecondForAnnounce);
+      _node = new KNode(_socketBuilder, intervalSecondForAnnounce: _intervalSecondForAnnounce);
 
       a() {
         if (useUpnp) {
@@ -73,7 +73,7 @@ class TorrentEngineDHT extends TorrentAI {
   Future stop() {
     return new Future(() {
       _node.stop();
-      _upnpPortMapClient.deletePortMapFromAppIdDesc(reuseRouter:true, newProtocol:UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_UDP);
+      _upnpPortMapClient.deletePortMapFromAppIdDesc(reuseRouter: true, newProtocol: UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_UDP);
     });
   }
 
@@ -114,6 +114,24 @@ class TorrentEngineDHT extends TorrentAI {
 
   @override
   Future onTick(TorrentClient client) {
+    for (KAnnounceInfo ainfo in _node.rawAnnounced) {
+      if(ainfo.infoHash.id.length != client.infoHash.length) {
+        break;
+      }
+      {
+        bool isTarget = true;
+        for(int i=0;i<ainfo.infoHash.id.length;i++) {
+          if(ainfo.infoHash.id[i] != client.infoHash[i]) {
+            isTarget = false;
+            break;
+          }
+        }
+        if(isTarget == false) {
+          break;
+        }
+      }
+      client.putTorrentPeerInfoFromTracker(ainfo.ipAsString, ainfo.port);
+    }
     return new Future(() {});
   }
 
@@ -122,6 +140,6 @@ class TorrentEngineDHT extends TorrentAI {
     _upnpPortMapClient.basePort = _localPort;
     _upnpPortMapClient.localAddress = _localIp;
     _upnpPortMapClient.localPort = _localPort;
-    return _upnpPortMapClient.startPortMap(reuseRouter: true,newProtocol:UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_UDP);
+    return _upnpPortMapClient.startPortMap(reuseRouter: true, newProtocol: UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_UDP);
   }
 }

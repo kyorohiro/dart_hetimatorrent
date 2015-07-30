@@ -42,8 +42,8 @@ void main() {
         }
         return new Future.delayed(new Duration(seconds: 5)).then((_) {
           print("#[1]# end");
-          print("#[1]# test ${knodes[2].rawAnnouncedPeerForSearchResult.length}");
-          print("#[1]# test ${knodes[numOfNode~/3].rawAnnouncedPeerForSearchResult.length}");
+          print("#[1]# test ${knodes[2].rawSearchResult.length}");
+          print("#[1]# test ${knodes[numOfNode~/3].rawSearchResult.length}");
           /*
           knodes[2].startSearchPeer(i);
            knodes[50].startSearchPeer(i);
@@ -53,8 +53,8 @@ void main() {
           return new Future.delayed(new Duration(seconds: 1));
         }).then((_) {
           print("#[2]# end");
-          print("#[1]# test ${knodes[2].rawAnnouncedPeerForSearchResult.length}");
-          print("#[2]# test ${knodes[numOfNode~/3].rawAnnouncedPeerForSearchResult.length}");
+          print("#[1]# test ${knodes[2].rawSearchResult.length}");
+          print("#[2]# test ${knodes[numOfNode~/3].rawSearchResult.length}");
         }).catchError((e) {
           print("# erro ${e}");
         });

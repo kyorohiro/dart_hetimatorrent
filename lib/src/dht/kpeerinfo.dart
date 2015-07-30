@@ -25,6 +25,7 @@ class KAnnounceInfo {
   KAnnounceInfo.fromCompactIpPort(List<int> compact, List<int> infoHash) {
     _init(compact.sublist(0, compact.length - 2), ByteOrder.parseShort(compact, compact.length - 2, ByteOrder.BYTEORDER_BIG_ENDIAN), infoHash);
   }
+
   KAnnounceInfo.fromString(String ip, int port, List<int> infoHash) {
     _init(HetiIP.toRawIP(ip), port, infoHash);
   }

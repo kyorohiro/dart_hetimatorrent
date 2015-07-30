@@ -79,7 +79,7 @@ class KNodeAIAnnounce extends KNodeAI {
               return {};
             }
           }
-          node.addAnnouncePeerWithFilter(new KAnnounceInfo.fromString(info.remoteAddress, info.remotePort, announce.infoHash));
+          node.rawAnnounced.addLast(new KAnnounceInfo.fromString(info.remoteAddress, info.remotePort, announce.infoHash));
           return node.sendAnnouncePeerResponse(info.remoteAddress, info.remotePort, query.transactionId);
         }
         break;
@@ -87,7 +87,7 @@ class KNodeAIAnnounce extends KNodeAI {
         {
           //print("## receive query");
           KrpcGetPeersQuery getPeer = query;
-          List<KAnnounceInfo> target = node.rawAnnouncedPeer.getWithFilter((KAnnounceInfo i) {
+          List<KAnnounceInfo> target = node.rawAnnounced.getWithFilter((KAnnounceInfo i) {
             List<int> a = i.infoHash.id;
             List<int> b = getPeer.infoHash;
             for (int i = 0; i < 20; i++) {

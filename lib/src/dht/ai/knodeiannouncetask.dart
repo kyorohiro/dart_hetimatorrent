@@ -82,7 +82,7 @@ class KNodeAIAnnounceTask {
         return -1;
       }
     });
-    print("###########announce[${node.nodeDebugId}]  -----${receiveGetPeerResponseNode.length} ${node.rawAnnouncedPeerForSearchResult.length}");
+    print("###########announce[${node.nodeDebugId}]  -----${receiveGetPeerResponseNode.length} ${node.rawSearchResult.length}");
     while (8 < receiveGetPeerResponseNode.length) {
       receiveGetPeerResponseNode.removeAt(8);
     }
@@ -127,7 +127,7 @@ class KNodeAIAnnounceTask {
         if (getPeer.haveValue == true) {
           //print("announce set value");
           for (KAnnounceInfo i in getPeer.valuesAsKAnnounceInfo(_infoHashId.id)) {
-            node.addAnnounceInfoForSearchResult(i);
+            node.rawSearchResult.addLast(i);
           }
           // todo
           node.sendFindNodeQuery(info.remoteAddress, info.remotePort, _infoHashId.id).catchError((e) {});

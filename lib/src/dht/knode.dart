@@ -32,11 +32,11 @@ class KNode extends Object with KrpcResponseInfo {
 
   KRootingTable get rootingtable => _rootingtable;
   KNodeAI get ai => _ai;
-  ShuffleLinkedList<KAnnounceInfo> _announcedPeer = new ShuffleLinkedList(300);
-  ShuffleLinkedList<KAnnounceInfo> _announcedPeerForSearchResult = new ShuffleLinkedList(300);
-  List<KAnnounceInfo> get announcedPeer => _announcedPeer.sequential;
-  ShuffleLinkedList<KAnnounceInfo> get rawAnnouncedPeerForSearchResult => _announcedPeerForSearchResult;
-  ShuffleLinkedList<KAnnounceInfo> get rawAnnouncedPeer => _announcedPeer;
+  ShuffleLinkedList<KAnnounceInfo> _announced = new ShuffleLinkedList(300);
+  ShuffleLinkedList<KAnnounceInfo> _searcResult = new ShuffleLinkedList(300);
+  List<KAnnounceInfo> get announcedPeer => _announced.sequential;
+  ShuffleLinkedList<KAnnounceInfo> get rawSearchResult => _searcResult;
+  ShuffleLinkedList<KAnnounceInfo> get rawAnnounced => _announced;
   static int id = 0;
 
   int _nodeDebugId = 0;
@@ -49,13 +49,14 @@ class KNode extends Object with KrpcResponseInfo {
   int get intervalSecondForAnnounce => _intervalSecondForAnnounce;
 
   int _lastAnnouncedTIme = 0;
+  /*
   void addAnnouncePeerWithFilter(KAnnounceInfo info) {
-    _announcedPeer.addLast(info);
+    _announced.addLast(info);
   }
 
   void addAnnounceInfoForSearchResult(KAnnounceInfo info) {
-    _announcedPeerForSearchResult.addLast(info);
-  }
+    _searcResult.addLast(info);
+  }*/
 
   _startTick() {
     new Future.delayed(new Duration(seconds: this._intervalSecondForMaintenance)).then((_) {
