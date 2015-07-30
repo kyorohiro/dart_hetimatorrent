@@ -23,19 +23,21 @@ class TorrentEngineDHT extends TorrentAI {
   bool _useUpnp = false;
   bool get useUpnp => _useUpnp;
 
-  TorrentEngineDHT(HetiSocketBuilder socketBuilder, String appid, {String localIp: "0.0.0.0", int localPort: 38080, bool useUpnp: false}) {
+  int _intervalSecondForAnnounce = 60;
+  TorrentEngineDHT(HetiSocketBuilder socketBuilder, String appid, {String localIp: "0.0.0.0", int localPort: 38080, bool useUpnp: false, int intervalSecondForAnnounce:120}) {
     _upnpPortMapClient = new UpnpPortMapHelper(socketBuilder, appid);
     _localIp = localIp;
     _localPort = localPort;
     _socketBuilder = socketBuilder;
     _useUpnp = useUpnp;
+    _intervalSecondForAnnounce = intervalSecondForAnnounce;
   }
 
   Future start() {
     return new Future(() {
       int count = 0;
       int localPort = _localPort;
-      _node = new KNode(_socketBuilder);
+      _node = new KNode(_socketBuilder,intervalSecondForAnnounce: _intervalSecondForAnnounce);
 
       a() {
         if (useUpnp) {
