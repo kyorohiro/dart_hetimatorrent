@@ -69,6 +69,16 @@ class KNodeAIAnnounce extends KNodeAI {
       case KrpcMessage.ANNOUNCE_QUERY:
         {
           KrpcAnnouncePeerQuery announce = query;
+          List<int> opaqueWriteTokenA = node.getOpaqueWriteToken(new KId(announce.infoHash), announce.queryingNodesId);
+          List<int> opaqueWriteTokenB = announce.token;
+          if(opaqueWriteTokenA.length != opaqueWriteTokenB.length) {
+            return{};
+          }
+          for(int i=0;i<opaqueWriteTokenA.length;i++) {
+            if(opaqueWriteTokenA[i] != opaqueWriteTokenB[i]) {
+              return {};
+            }
+          }
           node.addAnnouncePeerWithFilter(new KAnnounceInfo.fromString(info.remoteAddress, info.remotePort, announce.infoHash));
           return node.sendAnnouncePeerResponse(info.remoteAddress, info.remotePort, query.transactionId);
         }
@@ -87,7 +97,7 @@ class KNodeAIAnnounce extends KNodeAI {
             }
             return true;
           });
-          List<int> opaqueWriteToken = KId.createToken(new KId(getPeer.infoHash), getPeer.queryingNodesId, node.nodeId);
+          List<int> opaqueWriteToken = node.getOpaqueWriteToken(new KId(getPeer.infoHash), getPeer.queryingNodesId);
           if (target.length > 0) {
             return node.sendGetPeersResponseWithPeers(info.remoteAddress, info.remotePort, query.transactionId, opaqueWriteToken, KAnnounceInfo.toPeerInfoStrings(target)); //todo
           } else {

@@ -14,7 +14,7 @@ void main() {
     unit.test("retrive list 0", () {
       List<KNode> knodes = [];
       List<KPeerInfo> kpeerInfos = [];
-      int numOfNode = 2;
+      int numOfNode = 4;
       for (int i = 0; i < numOfNode; i++) {
         KNode a = new KNode(new HetiSocketBuilderChrome(),intervalSecondForMaintenance:1);
         knodes.add(a);

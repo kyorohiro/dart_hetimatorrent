@@ -71,7 +71,7 @@ class KrpcMessage {
       if (!(v is Map)) {
         throw {};
       }
-      print("##=+>${v}");
+      //print("##=+>${v}");
       Map<String, Object> messageAsMap = v;
       if (KrpcQuery.queryCheck(messageAsMap, null)) {
         KrpcMessage ret = null;

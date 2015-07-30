@@ -120,16 +120,15 @@ class KNode extends Object with KrpcResponseInfo {
         throw {};
       }
       _udpSocket = this._socketBuilder.createUdpClient();
-      return _udpSocket.bind(ip, port).then((int v) {
+      return _udpSocket.bind(ip, port, multicast: true).then((int v) {
         _udpSocket.onReceive().listen((HetiReceiveUdpInfo info) {
-          print("${UTF8.decode(info.data,allowMalformed:true)}");
+          //print("[${_nodeDebugId}+${ip}:${port}]${UTF8.decode(info.data,allowMalformed:true)}");
           if (!buffers.containsKey("${info.remoteAddress}:${info.remotePort}")) {
             buffers["${info.remoteAddress}:${info.remotePort}"] = new EasyParser(new ArrayBuilder());
-            _startParseLoop(buffers["${info.remoteAddress}:${info.remotePort}"],  info);
+            _startParseLoop(buffers["${info.remoteAddress}:${info.remotePort}"], info);
           }
           EasyParser parser = buffers["${info.remoteAddress}:${info.remotePort}"];
           (parser.buffer as ArrayBuilder).appendIntList(info.data);
-
         });
         //////
         //////
@@ -151,22 +150,28 @@ class KNode extends Object with KrpcResponseInfo {
     a() {
       //
       KrpcMessage.decode(parser, this).then((KrpcMessage message) {
+        // print("decode----> [${_nodeDebugId}] ${info.remoteAddress} ${info.remotePort} ${message.messageAsMap}");
         if (message is KrpcResponse) {
           KSendInfo rm = removeQueryNameFromTransactionId(UTF8.decode(message.rawMessageMap["t"]));
           this._ai.onReceiveResponse(this, info, message);
-          rm._c.complete(message);
+          if (rm != null) {
+            rm._c.complete(message);
+          } else {
+            print("----> receive null : [${_nodeDebugId}] ${info.remoteAddress} ${info.remotePort}");
+          }
         } else if (message is KrpcQuery) {
-          //if(message.messageSignature == KrpcMessage.GET_PEERS_QUERY) {
-          //  print("receive get peers");
-          //}
           this._ai.onReceiveQuery(this, info, message);
         } else if (message is KrpcError) {
           this._ai.onReceiveError(this, info, message);
         } else {
           this._ai.onReceiveUnknown(this, info, message);
         }
+      }).catchError((e) {
+        parser.resetIndex((parser.buffer as ArrayBuilder).size());
+        (parser.buffer as ArrayBuilder).clearInnerBuffer((parser.buffer as ArrayBuilder).size());
+      }).whenComplete(() {
         a();
-      }).catchError((e) {});
+      });
     }
     a();
   }
@@ -216,6 +221,7 @@ class KNode extends Object with KrpcResponseInfo {
     Completer c = new Completer();
     new Future(() {
       queryInfo.add(new KSendInfo(message.transactionIdAsString, message.q, c));
+      //print("--->send[${_nodeDebugId}] ${ip}:${port} ${message.q}");
       return _udpSocket.send(message.messageAsBencode, ip, port);
     }).catchError(c.completeError);
     return c.future;
@@ -270,6 +276,10 @@ class KNode extends Object with KrpcResponseInfo {
   Future sendErrorResponse(String ip, int port, int errorCode, List<int> transactionId, [String errorDescription = null]) {
     KrpcError query = new KrpcError(transactionId, errorCode);
     return _udpSocket.send(query.messageAsBencode, ip, port);
+  }
+  
+  List<int> getOpaqueWriteToken(KId infoHash, KId nodeID) {
+    return  KId.createToken(infoHash, nodeID, this.nodeId);
   }
 }
 
