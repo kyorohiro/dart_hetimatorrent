@@ -73,7 +73,7 @@ class ClientModel {
               globalIp: globalIp, useUpnp: useUpnp, useDht: useDHT,appid: "hetimatorrentclient${clientModeId++}",bitfield:re.buffer)
           .then((TorrentEngine engine) {
         _engine = engine;
-        _engine.onProgress.listen((TorrentEngineAIProgress info) {
+        _engine.onProgress.listen((TorrentEngineProgress info) {
           _bitfieldfile.write(_engine.torrentClient.targetBlock.rawHead.getBinary(), 0).catchError((e) {
             ;
           });

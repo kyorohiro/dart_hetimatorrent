@@ -38,7 +38,7 @@ class HashItem {
   Map<String, int> seedState = {};
   Map<String, ClientModel> seedModels = {};
 //  html.File seedRawFile = null;
-  onProgress(int x, int a, TorrentEngineAIProgress info) {
+  onProgress(int x, int a, TorrentEngineProgress info) {
     torrentProgressSpan.setInnerHtml("${x}/${a} : ${100*x~/a}");
     if(info != null) {
       if(info.trackerIsOk == true) {

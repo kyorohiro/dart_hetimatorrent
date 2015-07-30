@@ -131,5 +131,9 @@ class ShuffleLinkedList<X> {
   X getSequential(int index) {
     return _sequential[index];
   }
+
+  Iterator<X> get iterator {
+    return _sequential.iterator;
+  }
 }
 

@@ -9,7 +9,6 @@ import '../client/torrentclient.dart';
 import '../tracker/trackerclient.dart';
 //import 'torrentengineai.dart';
 
-
 class TorrentEngineAI extends TorrentAI {
   TorrentAIBasic basic = new TorrentAIBasic();
   bool usePortMap = false;
@@ -26,19 +25,22 @@ class TorrentEngineAI extends TorrentAI {
   TrackerClient _tracker = null;
   UpnpPortMapHelper _upnpPortMapClient = null;
 
-  StreamController<TorrentEngineAIProgress> _progressStream = new StreamController.broadcast();
-  Stream<TorrentEngineAIProgress> get onProgress => _progressStream.stream;
-  TorrentEngineAIProgress _progressCash = new TorrentEngineAIProgress();
+  StreamController<TorrentEngineProgress> _progressStream = new StreamController.broadcast();
+  Stream<TorrentEngineProgress> get onProgress => _progressStream.stream;
+  TorrentEngineProgress _progressCash = new TorrentEngineProgress();
 
-  TorrentEngineAI(TrackerClient tracker, UpnpPortMapHelper upnpPortMapClient) {
+  TorrentEngineDHTMane _dhtmane = null;
+  TorrentEngineAI(TrackerClient tracker, UpnpPortMapHelper upnpPortMapClient, TorrentEngineDHTMane mane) {
     this._tracker = tracker;
     this._upnpPortMapClient = upnpPortMapClient;
+    this._dhtmane = mane;
   }
 
   @override
   Future onRegistAI(TorrentClient client) {
     this._torrent = client;
     basic.onRegistAI(client);
+    _dhtmane.onRegistAI(client);
     return new Future(() {});
   }
 
@@ -49,6 +51,7 @@ class TorrentEngineAI extends TorrentAI {
         print("Empty AI receive : ${message.id}");
       });
     } else {
+      _dhtmane.onReceive(client, info, message);
       return basic.onReceive(client, info, message);
     }
   }
@@ -60,19 +63,21 @@ class TorrentEngineAI extends TorrentAI {
         print("Empty AI signal : ${signal.id}");
       });
     } else {
+      _dhtmane.onSignal(client, info, signal);
       return basic.onSignal(client, info, signal);
     }
   }
 
   @override
   Future onTick(TorrentClient client) {
-    _progressCash._update(_tracker, _torrent);
+    _progressCash.update(_tracker, _torrent);
     _progressStream.add(_progressCash);
     if (isGo != true) {
       return new Future(() {
         print("Empty AI tick : ${client.peerId}");
       });
     } else {
+      _dhtmane.onTick(client);
       return basic.onTick(client);
     }
   }
@@ -82,6 +87,7 @@ class TorrentEngineAI extends TorrentAI {
       isGo = true;
       _upnpPortMapClient.clearSearchedRouterInfo();
       _startTracker(1).catchError((e) {});
+      return _dhtmane.startDHT(useUpnp: usePortMap);
     });
   }
 
@@ -89,10 +95,14 @@ class TorrentEngineAI extends TorrentAI {
     return this._torrent.stop().then((_) {
       isGo = false;
       if (usePortMap == true) {
-        return _upnpPortMapClient.deletePortMapFromAppIdDesc(reuseRouter:true).catchError((e) {});
+        return _upnpPortMapClient.deletePortMapFromAppIdDesc(reuseRouter: true).catchError((e) {}).then((_) {
+          return _dhtmane.stopDHT();
+        });
+      } else {
+        return _dhtmane.stopDHT();
       }
     }).then((_) {
-      return _startTracker(0).catchError((e){});
+      return _startTracker(0).catchError((e) {});
     });
   }
 
@@ -107,7 +117,7 @@ class TorrentEngineAI extends TorrentAI {
             _torrent.globalPort = _torrent.localPort;
             throw e;
           }).then((_) {
-            return _upnpPortMapClient.startGetExternalIp(reuseRouter:true).then((StartGetExternalIp ip) {
+            return _upnpPortMapClient.startGetExternalIp(reuseRouter: true).then((StartGetExternalIp ip) {
               _torrent.globalIp = ip.externalIp;
             }).catchError((e) {
               ;
@@ -139,7 +149,7 @@ class TorrentEngineAI extends TorrentAI {
     _upnpPortMapClient.basePort = _torrent.localPort;
     _upnpPortMapClient.localAddress = _torrent.localAddress;
     _upnpPortMapClient.localPort = _torrent.localPort;
-    return _upnpPortMapClient.startPortMap(reuseRouter:true);
+    return _upnpPortMapClient.startPortMap(reuseRouter: true);
   }
 
   bool localNetworkIp(String ip) {
@@ -186,25 +196,3 @@ class TorrentEngineAI extends TorrentAI {
   }
 }
 
-class TorrentEngineAIProgress {
-  int _downloadSize = 0;
-  int _fileSize = 0;
-  int _numOfPeer = 0;
-  String _failureReason = "";
-  int get downloadSize => _downloadSize;
-  int get fileSize => _fileSize;
-  int get numOfPeer => _numOfPeer;
-  String get trackerFailureReason => _failureReason;
-  bool get trackerIsOk => _failureReason.length == 0;
-
-  void _update(TrackerClient tracker, TorrentClient torrent) {
-    _downloadSize = torrent.targetBlock.rawHead.numOfOn(true) * torrent.targetBlock.blockSize;
-    _fileSize = torrent.targetBlock.dataSize;
-    _numOfPeer = torrent.rawPeerInfos.numOfPeerInfo();
-    _failureReason = tracker.failedReason;
-  }
-  
-  String toString() {
-    return "progress:${100*downloadSize/fileSize}, numOfPeer:${numOfPeer}, tracker:${trackerFailureReason}";
-  }
-}
