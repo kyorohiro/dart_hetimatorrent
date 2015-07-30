@@ -116,7 +116,7 @@ class KNode extends Object with KrpcResponseInfo {
 
   Future start({String ip: "0.0.0.0", int port: 28080}) {
     return new Future(() {
-      if (_isStart == true || _udpSocket != null) {
+      if (_isStart) {
         throw {};
       }
       _udpSocket = this._socketBuilder.createUdpClient();
@@ -131,12 +131,9 @@ class KNode extends Object with KrpcResponseInfo {
           (parser.buffer as ArrayBuilder).appendIntList(info.data);
         });
         //////
-        //////
         _isStart = true;
         _ai.start(this);
         _startTick();
-        ////
-        ////
         ////
 
       });
@@ -277,7 +274,7 @@ class KNode extends Object with KrpcResponseInfo {
     KrpcError query = new KrpcError(transactionId, errorCode);
     return _udpSocket.send(query.messageAsBencode, ip, port);
   }
-  
+
   List<int> getOpaqueWriteToken(KId infoHash, KId nodeID) {
     return  KId.createToken(infoHash, nodeID, this.nodeId);
   }

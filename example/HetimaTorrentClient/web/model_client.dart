@@ -62,6 +62,7 @@ class ClientModel {
       }
     });
   }
+
   Future<SeederModelStartResult> startEngine(TorrentFile torrentFile, Function onProgress) {
     return this._bitfieldfile.getLength().then((int length) {
       return this._bitfieldfile.read(0, length);
@@ -69,7 +70,7 @@ class ClientModel {
       return TorrentEngine
           .createTorrentEngine(new HetiSocketBuilderChrome(), torrentFile, seedfile,
               globalPort: globalPort, localPort: localPort, localIp: localIp,
-              globalIp: globalIp, useUpnp: useUpnp, useDht: false,appid: "hetimatorrentclient${clientModeId++}",bitfield:re.buffer)
+              globalIp: globalIp, useUpnp: useUpnp, useDht: useDHT,appid: "hetimatorrentclient${clientModeId++}",bitfield:re.buffer)
           .then((TorrentEngine engine) {
         _engine = engine;
         _engine.onProgress.listen((TorrentEngineAIProgress info) {

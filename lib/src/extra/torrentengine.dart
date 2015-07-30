@@ -46,15 +46,24 @@ class TorrentEngineDHTMane {
       throw {"error": "now starting DHT"};
     }
     _startDHTIsNow = true;
-    TorrentEngineDHT dht = new TorrentEngineDHT(_socketBuilder, "dht");
-    return dht.start().then((_) {
-      return dht;
+    if(_dht == null) {
+      _dht = new TorrentEngineDHT(_socketBuilder, "dht",useUpnp:useUpnp);
+    }
+    return _dht.start().then((_) {
+      return _dht;
     }).whenComplete(() {
       _startDHTIsNow = false;
     });
   }
 
-  Future<TorrentEngineDHT> stopDHT() {}
+  Future<TorrentEngineDHT> stopDHT() {
+    if (_startDHTIsNow == true) {
+      _startDHTIsNow = false;
+      return _dht.stop();
+    } else {
+      return new Future((){});
+    }
+  }
 }
 
 class TorrentEngine {
@@ -116,7 +125,7 @@ class TorrentEngine {
     return ai.start().then((v) {
       _isGO = true;
       if (this.ai.useDht) {
-        return _dhtMane.startDHT().then((_) {
+        return _dhtMane.startDHT(useUpnp:usePortMap).then((_) {
           return v;
         });
       } else {
@@ -130,6 +139,7 @@ class TorrentEngine {
   Future stop() {
     return ai.stop().whenComplete(() {
       _isGO = false;
+      return _dhtMane.stopDHT();
     });
   }
 }

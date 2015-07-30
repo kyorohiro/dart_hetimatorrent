@@ -28,6 +28,7 @@ class TorrentEngineDHT extends TorrentAI {
     _localIp = localIp;
     _localPort = localPort;
     _socketBuilder = socketBuilder;
+    _useUpnp = useUpnp;
   }
 
   Future start() {
