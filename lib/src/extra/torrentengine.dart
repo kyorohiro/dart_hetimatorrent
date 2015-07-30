@@ -7,7 +7,7 @@ import 'package:hetimatorrent/hetimatorrent.dart';
 import '../client/torrentclient.dart';
 import '../tracker/trackerclient.dart';
 import 'torrentengineai.dart';
-import 'torrentdhtai.dart';
+import 'torrentengineaidht.dart';
 
 abstract class TorrentEngineCommand {
   Future<CommandResult> execute(TorrentEngine engine, {List<String> args: null});

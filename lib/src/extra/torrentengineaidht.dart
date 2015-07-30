@@ -8,7 +8,7 @@ import '../client/torrentai_basic.dart';
 import '../client/torrentclient.dart';
 import '../tracker/trackerclient.dart';
 import '../dht/knode.dart';
-import 'torrentdhtai.dart';
+import 'torrentengineaidht.dart';
 
 class TorrentEngineDHT extends TorrentAI {
   KNode _node = null;
