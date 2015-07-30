@@ -45,14 +45,13 @@ class TorrentEngineDHTMane {
     if (_startDHTIsNow == true) {
       throw {"error": "now starting DHT"};
     }
-    _startDHTIsNow = true;
     if(_dht == null) {
       _dht = new TorrentEngineDHT(_socketBuilder, "dht",useUpnp:useUpnp);
     }
     return _dht.start().then((_) {
       return _dht;
     }).whenComplete(() {
-      _startDHTIsNow = false;
+      _startDHTIsNow = true;
     });
   }
 
