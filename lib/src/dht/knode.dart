@@ -21,6 +21,7 @@ import 'ai/knodeai.dart';
 class KNode extends Object with KrpcResponseInfo {
   HetiSocketBuilder _socketBuilder = null;
   HetiUdpSocket _udpSocket = null;
+  HetiUdpSocket get rawUdoSocket => _udpSocket;
   KRootingTable _rootingtable = null;
   Map<String, EasyParser> buffers = {};
   KId _nodeId = null;

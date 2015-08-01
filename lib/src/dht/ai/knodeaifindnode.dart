@@ -67,12 +67,21 @@ class KNodeAIFindNode {
     });
   }
 
+  List mustTofindNode = [];
   onAddNodeFromIPAndPort(KNode node, String ip, int port) {
-    node.sendFindNodeQuery(ip, port, node.nodeId.id);
+    if (node.rawUdoSocket != null) {
+      node.sendFindNodeQuery(ip, port, node.nodeId.id);
+    } else {
+      mustTofindNode.add([ip, port]);
+    }
   }
 
   onTicket(KNode node) {
     updateP2PNetworkWithRandom(node);
+    for (List l in mustTofindNode) {
+      node.sendFindNodeQuery(l[0], l[1], node.nodeId.id);
+    }
+    mustTofindNode.clear();
   }
 
   onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcQuery query) {
