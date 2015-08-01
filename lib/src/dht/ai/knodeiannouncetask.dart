@@ -127,6 +127,7 @@ class KNodeAIAnnounceTask {
         if (getPeer.haveValue == true) {
           //print("announce set value");
           for (KAnnounceInfo i in getPeer.valuesAsKAnnounceInfo(_infoHashId.id)) {
+            lastUpdateTime = new DateTime.now().millisecondsSinceEpoch;
             node.rawSearchResult.addLast(i);
           }
           // todo
