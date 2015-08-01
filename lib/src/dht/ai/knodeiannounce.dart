@@ -19,6 +19,7 @@ class KNodeAIAnnounce extends KNodeAI {
   bool _isStart = false;
   bool get isStart => _isStart;
   Map<KId, KNodeAIAnnounceTask> taskList = {};
+
   start(KNode node) {
     _isStart = true;
   }
