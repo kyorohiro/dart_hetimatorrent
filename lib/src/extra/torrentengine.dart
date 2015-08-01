@@ -160,6 +160,15 @@ class TorrentEngineDHTMane extends TorrentAI {
     }
   }
 
+  Future<TorrentEngineDHT> startGetPeer(List<int> infoHash) {
+    if (_startDHTIsNow == true) {
+      _startDHTIsNow = false;
+      return _dht.startSearchPeer(new KId(infoHash));
+    } else {
+      return new Future((){});
+    }
+  }
+
   @override
   Future onReceive(TorrentClient client, TorrentClientPeerInfo info, TorrentMessage message) {
     return new Future(() {

@@ -87,7 +87,10 @@ class TorrentEngineAI extends TorrentAI {
       isGo = true;
       _upnpPortMapClient.clearSearchedRouterInfo();
       _startTracker(1).catchError((e) {});
-      return _dhtmane.startDHT(useUpnp: usePortMap);
+      return _dhtmane.startDHT(useUpnp: usePortMap).then((a) {
+        _dhtmane.startGetPeer(_torrent.infoHash);
+        return a;
+      });
     });
   }
 

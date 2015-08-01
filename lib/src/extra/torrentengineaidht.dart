@@ -12,8 +12,6 @@ import 'torrentengineaidht.dart';
 
 class TorrentEngineDHT extends TorrentAI {
   KNode _node = null;
-  int _dhtPort = 18080;
-  int get dhtPort => _dhtPort;
 
   UpnpPortMapHelper _upnpPortMapClient = null;
   HetiSocketBuilder _socketBuilder = null;
@@ -36,7 +34,6 @@ class TorrentEngineDHT extends TorrentAI {
   Future start() {
     return new Future(() {
       int count = 0;
-      int localPort = _localPort;
       _node = new KNode(_socketBuilder, intervalSecondForAnnounce: _intervalSecondForAnnounce);
 
       a() {
@@ -44,7 +41,7 @@ class TorrentEngineDHT extends TorrentAI {
           return _startPortMap().then((_) {
             return {};
           }).catchError((e) {
-            localPort++;
+            _localPort++;
             count++;
             _node.stop();
             if (count < 5) {
@@ -56,10 +53,10 @@ class TorrentEngineDHT extends TorrentAI {
         }
       }
       b() {
-        _node.start(ip: _localIp, port: localPort).then((_) {
+        _node.start(ip: _localIp, port: _localPort).then((_) {
           a();
         }).catchError((e) {
-          localPort++;
+          _localPort++;
           count++;
           if (count < 5) {
             b();
@@ -98,11 +95,12 @@ class TorrentEngineDHT extends TorrentAI {
   Future onReceive(TorrentClient client, TorrentClientPeerInfo info, TorrentMessage message) {
     return new Future(() {
       if (message.id == TorrentMessage.DUMMY_SIGN_SHAKEHAND) {
-        info.front.sendPort(_dhtPort).catchError((e) {
+        info.front.sendPort(_localPort).catchError((e) {
           print("wean : failed to sendPort");
         });
       } else if (message.id == TorrentMessage.SIGN_PORT) {
-        ;
+        MessagePort portMessage = message;
+        _node.addNodeFromIPAndPort(info.ip, portMessage.port);
       }
     });
   }
@@ -130,6 +128,7 @@ class TorrentEngineDHT extends TorrentAI {
           break;
         }
       }
+      print("--####-#### find dht #---------${ainfo.ipAsString}, ${ainfo.port}-----------");
       client.putTorrentPeerInfoFromTracker(ainfo.ipAsString, ainfo.port);
     }
     return new Future(() {});
