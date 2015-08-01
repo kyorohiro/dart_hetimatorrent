@@ -71,7 +71,7 @@ class KNode extends Object with KrpcResponseInfo {
         _lastAnnouncedTIme = new DateTime.now().millisecondsSinceEpoch;
       } else {
         int currentTime = new DateTime.now().millisecondsSinceEpoch;
-        if ((_lastAnnouncedTIme - currentTime) > _intervalSecondForAnnounce) {
+        if ((currentTime-_lastAnnouncedTIme) > _intervalSecondForAnnounce) {
           _intervalSecondForAnnounce = currentTime;
           researchSearchPeer(null);
         }
