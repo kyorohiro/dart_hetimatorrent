@@ -151,6 +151,19 @@ class MainItem {
       });
     });
 
+    // Adds a click event for each radio button in the group with name "gender"
+    html.querySelectorAll('[name="dhton"]').forEach((html.InputElement radioButton) {
+      radioButton.onClick.listen((html.MouseEvent e) {
+        html.InputElement clicked = e.target;
+        print("The user is ${clicked.value}");
+        if (clicked.value == "Use") {
+          model.dhtIsUse = true;
+        } else {
+          model.dhtIsUse = false;
+        }
+      });
+    });
+
     model.portMapHelder.onUpdateGlobalIp.listen((String globalIP) {
       outputGlobalAddressSpn.setInnerHtml(globalIP);
       outputGlobalStageSpn.setInnerHtml("http://${model.portMapHelder.externalIp}:${model.portMapHelder.externalPort}");

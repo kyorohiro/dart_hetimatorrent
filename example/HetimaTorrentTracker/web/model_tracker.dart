@@ -7,6 +7,7 @@ import 'package:hetimanet/hetimanet_chrome.dart';
 import 'package:hetimatorrent/hetimatorrent.dart';
 
 class TrackerModel {
+  bool dhtIsUse = false;
   bool upnpIsUse = false;
   String selectKey = null;
 

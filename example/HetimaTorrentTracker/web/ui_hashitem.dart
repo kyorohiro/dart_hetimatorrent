@@ -26,9 +26,6 @@ class HashItem {
   html.ButtonElement startServerBtn = html.querySelector("#torrent-startserver");
   html.ButtonElement stopServerBtn = html.querySelector("#torrent-stopserver");
   html.ObjectElement loadServerBtn = html.querySelector("#torrent-loaderserver");
-
-  html.InputElement upnpUse = html.querySelector("#torrent-upnpon-use");
-  html.InputElement upnpUnuse = html.querySelector("#torrent-upnpon-unuse");
   
   
   Map<String,html.File> seedRawFiles = {};
@@ -76,6 +73,8 @@ class HashItem {
       seedModels[key].localPort = int.parse(localport.value);
       seedModels[key].localIp = localAddress.value;
       seedModels[key].globalIp = globalAddress.value;
+      seedModels[key].useUpnp = trackerModel.upnpIsUse;
+      seedModels[key].useDht = trackerModel.dhtIsUse;
       torrentFile.announce = "http://${trackerModel.trackerServer.address}:${trackerModel.trackerServer.port}/announce";
       
       HetimaData seedData = new HetimaDataCache(new HetimaDataBlob(seedRawFiles[trackerModel.selectKey]),cacheSize:torrentFile.info.piece_length,cacheNum:6);
@@ -117,19 +116,6 @@ class HashItem {
       });
     });
     
-    // Adds a click event for each radio button in the group with name "gender"
-    html.querySelectorAll('[name="torrent-upnpon"]').forEach((html.InputElement radioButton) {
-      radioButton.onClick.listen((html.MouseEvent e) {
-        String key = trackerModel.selectKey;
-        html.InputElement clicked = e.target;
-        print("The user is ${clicked.value}");
-        if (clicked.value == "Use") {
-          seedModels[key].useUpnp = true;
-        } else {
-          seedModels[key].useUpnp = false;
-        }
-      });
-    });
     
     html.querySelectorAll('[name="torrent-upnpon"]').forEach((html.InputElement radioButton) {
       radioButton.onClick.listen((html.MouseEvent e) {
@@ -190,11 +176,6 @@ class HashItem {
       localAddress.value = seedModels[key].localIp;
       localport.value = "${seedModels[key].localPort}";
       globalport.value = "${seedModels[key].globalPort}";
-      if(seedModels[key].useUpnp) {
-        upnpUse.checked = true;
-      } else {
-        upnpUnuse.checked = true;
-      }
     }
   }
 }
