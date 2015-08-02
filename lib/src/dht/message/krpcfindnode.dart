@@ -26,14 +26,18 @@ class KrpcFindNodeQuery extends KrpcQuery {
     _init(transactionId, queryingNodesId, targetNodeId);
   }
 
+  String toString() {
+    return "find_node@query:${this.rawMessageMap}";
+  }
+
   _init(List<int> transactionId, List<int> queryingNodesId, List<int> targetNodeId) {
-    if (transactionId is Uint8List) {
+    if (!(transactionId is Uint8List)) {
       transactionId = new Uint8List.fromList(transactionId);
     }
-    if (queryingNodesId is Uint8List) {
+    if (!(queryingNodesId is Uint8List)) {
       queryingNodesId = new Uint8List.fromList(queryingNodesId);
     }
-    if (targetNodeId is Uint8List) {
+    if (!(targetNodeId is Uint8List)) {
       targetNodeId = new Uint8List.fromList(targetNodeId);
     }
     rawMessageMap.addAll({"a": {"id": queryingNodesId, "target": targetNodeId}, "q": "find_node", "t": transactionId, "y": "q"});
@@ -75,6 +79,10 @@ class KrpcFindNodeResponse extends KrpcResponse {
       compactNodeInfo = new Uint8List.fromList(compactNodeInfo);
     }
     _init(transactionId, queryingNodesId, compactNodeInfo);
+  }
+
+  String toString() {
+    return "find_node@response:${this.rawMessageMap}";
   }
 
   List<int> get compactNodeInfo {

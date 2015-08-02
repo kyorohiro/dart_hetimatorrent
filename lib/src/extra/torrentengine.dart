@@ -64,7 +64,7 @@ class TorrentEngine {
         //
         engine._upnpPortMapClient = new UpnpPortMapHelper(builder, appid);
       //  engine._dhtMane = new TorrentEngineDHTMane(builder);
-        engine.ai = new TorrentEngineAI(engine._trackerClient, engine._upnpPortMapClient, new TorrentEngineDHTMane(builder));
+        engine.ai = new TorrentEngineAI(engine._trackerClient, engine._upnpPortMapClient, new TorrentEngineDHTMane(builder, appid));
         engine.ai.baseLocalAddress = localIp;
         engine.ai.baseLocalPort = localPort;
         engine.ai.baseGlobalPort = globalPort;
@@ -133,8 +133,11 @@ class TorrentEngineDHTMane extends TorrentAI {
 
   bool _startDHTIsNow = false;
   HetiSocketBuilder _socketBuilder = null;
-  TorrentEngineDHTMane(HetiSocketBuilder socketBuilder) {
+  String _appId = "";
+  String get appId => "dht:${_appId}";
+  TorrentEngineDHTMane(HetiSocketBuilder socketBuilder, String appId) {
     this._socketBuilder = socketBuilder;
+    this._appId = appId;
   }
 
   Future<TorrentEngineDHT> startDHT({String localIp: "0.0.0.0", int localPort: 38080, bool useUpnp: false}) {
@@ -142,7 +145,7 @@ class TorrentEngineDHTMane extends TorrentAI {
       throw {"error": "now starting DHT"};
     }
     if(_dht == null) {
-      _dht = new TorrentEngineDHT(_socketBuilder, "dht",useUpnp:useUpnp);
+      _dht = new TorrentEngineDHT(_socketBuilder, appId, useUpnp:useUpnp);
     }
     return _dht.start().then((_) {
       return _dht;

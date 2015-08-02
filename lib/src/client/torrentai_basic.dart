@@ -52,7 +52,9 @@ class TorrentAIBasic extends TorrentAI {
         // close
         //
         for (TorrentClientPeerInfo info in infos) {
-          info.front.close();
+          new Future.delayed(new Duration(seconds:5)).then((_){
+            info.front.close();
+          });
         }
       }
       _chokeTest.chokeTest(client, _maxUnchoke);

@@ -22,7 +22,8 @@ class TorrentEngineDHT extends TorrentAI {
   bool get useUpnp => _useUpnp;
 
   int _intervalSecondForAnnounce = 60;
-  TorrentEngineDHT(HetiSocketBuilder socketBuilder, String appid, {String localIp: "0.0.0.0", int localPort: 38080, bool useUpnp: false, int intervalSecondForAnnounce: 120}) {
+  TorrentEngineDHT(HetiSocketBuilder socketBuilder, String appid, 
+      {String localIp: "0.0.0.0", int localPort: 38080, bool useUpnp: false, int intervalSecondForAnnounce: 120}) {
     _upnpPortMapClient = new UpnpPortMapHelper(socketBuilder, appid);
     _localIp = localIp;
     _localPort = localPort;
@@ -43,23 +44,24 @@ class TorrentEngineDHT extends TorrentAI {
           }).catchError((e) {
             _localPort++;
             count++;
-            _node.stop();
-            if (count < 5) {
-              return a();
-            }
+            return _node.stop().then((_){
+              if (count < 5) {
+                return a();
+              }              
+            });
           });
         } else {
           return {};
         }
       }
       b() {
-        _node.start(ip: _localIp, port: _localPort).then((_) {
-          a();
+        return _node.start(ip: _localIp, port: _localPort).then((_) {
+          return a();
         }).catchError((e) {
           _localPort++;
           count++;
           if (count < 5) {
-            b();
+            return b();
           }
         });
       }
@@ -86,7 +88,7 @@ class TorrentEngineDHT extends TorrentAI {
   Future onRegistAI(TorrentClient client) {
     return new Future(() {
       List<int> reserved = client.reseved;
-      reserved[7] |= 0x01;
+      reserved[7] |= 0x05;
       client.reseved = reserved;
     });
   }

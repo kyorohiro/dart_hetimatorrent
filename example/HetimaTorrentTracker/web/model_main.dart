@@ -1,4 +1,4 @@
-library app.mainview;
+library app.main;
 
 import 'package:hetimatorrent/hetimatorrent.dart';
 import 'ui_dialog.dart';

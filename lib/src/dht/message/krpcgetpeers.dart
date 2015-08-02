@@ -52,6 +52,10 @@ class KrpcGetPeersQuery extends KrpcQuery {
     rawMessageMap.addAll({"a": {"id": a["id"], "info_hash": a["info_hash"]}, "q": "get_peers", "t": messageAsMap["t"], "y": "q"});
   }
 
+  String toString() {
+    return "get_peers@qurey:${this.rawMessageMap}";
+  }
+
   static Future<KrpcGetPeersQuery> decode(EasyParser parser) {
     return KrpcMessage.decodeTest(parser, (Object v) {
       return new KrpcGetPeersQuery.fromMap(v);
@@ -126,6 +130,10 @@ class KrpcGetPeersResponse extends KrpcResponse {
   KrpcGetPeersResponse.withPeers(List<int> transactionId, List<int> queryingNodesId, List<int> opaqueWriteToken, List<List<int>> peerInfoStrings) 
   :super(KrpcMessage.GET_PEERS_RESPONSE){
     _initWithPeers(transactionId, queryingNodesId, opaqueWriteToken, peerInfoStrings);
+  }
+
+  String toString() {
+    return "get_peers@response:${this.rawMessageMap}";
   }
 
   _initWithPeers(List<int> transactionId, List<int> queryingNodesId, List<int> opaqueWriteToken, List<List<int>> peerInfoStrings) {

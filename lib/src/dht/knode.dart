@@ -149,6 +149,7 @@ class KNode extends Object with KrpcResponseInfo {
     a() {
       //
       KrpcMessage.decode(parser, this).then((KrpcMessage message) {
+        print("--->receive[${_nodeDebugId}] ${info.remoteAddress}:${info.remotePort} ${message}");
         // print("decode----> [${_nodeDebugId}] ${info.remoteAddress} ${info.remotePort} ${message.messageAsMap}");
         if (message is KrpcResponse) {
           KSendInfo rm = removeQueryNameFromTransactionId(UTF8.decode(message.rawMessageMap["t"]));
@@ -220,7 +221,8 @@ class KNode extends Object with KrpcResponseInfo {
     Completer c = new Completer();
     new Future(() {
       queryInfo.add(new KSendInfo(message.transactionIdAsString, message.q, c));
-      //print("--->send[${_nodeDebugId}] ${ip}:${port} ${message.q}");
+      print("--->send[${_nodeDebugId}] ${ip}:${port} ${message}");
+      print("--->send[${_nodeDebugId}] ${UTF8.decode(message.messageAsBencode,allowMalformed:true)}");
       return _udpSocket.send(message.messageAsBencode, ip, port);
     }).catchError(c.completeError);
     return c.future;

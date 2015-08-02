@@ -1,0 +1,37 @@
+{
+  "name": "Test KNode 003",
+  "version": "1",
+  
+  "manifest_version": 2,
+  
+  "icons": {"128": "dart_icon.png"},
+  
+  "app": {
+    "background": {
+      "scripts": ["background.js"]
+    }
+  },
+  "sockets": {
+        "udp": {
+            "send": ["*:*"],
+            "bind": ["*:*"],
+            "multicastMembership": ""
+        },
+        "tcp": {
+            "connect": "*"
+        },
+        "tcpServer": {
+            "listen": "*"
+        }
+    }, 
+  "permissions": [
+    "http://*/*",
+    "https://*/*",
+    {"socket": [
+      "tcp-listen","tcp-connect:*:*"
+    ]},
+    "system.network",
+    "unlimitedStorage",
+    {"fileSystem": ["write", "retainEntries", "directory", "retainEntries"]} 
+  ]
+}

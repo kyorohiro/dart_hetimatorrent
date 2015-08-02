@@ -86,10 +86,17 @@ class TorrentEngineAI extends TorrentAI {
     return _startTorrent().then((_) {
       isGo = true;
       _upnpPortMapClient.clearSearchedRouterInfo();
-      _startTracker(1).catchError((e) {});
-      return _dhtmane.startDHT(useUpnp: usePortMap).then((a) {
-        _dhtmane.startGetPeer(_torrent.infoHash);
-        return a;
+
+      return new Future(() {
+        if (useDht == true) {
+          return _dhtmane.startDHT(useUpnp: usePortMap).then((a) {
+            _dhtmane.onRegistAI(_torrent);
+            _dhtmane.startGetPeer(_torrent.infoHash);
+            return a;
+          });
+        }
+      }).then((_) {
+        _startTracker(1).catchError((e) {});
       });
     });
   }
@@ -198,4 +205,3 @@ class TorrentEngineAI extends TorrentAI {
     });
   }
 }
-

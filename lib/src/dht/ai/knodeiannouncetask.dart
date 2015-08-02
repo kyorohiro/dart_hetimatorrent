@@ -30,6 +30,7 @@ class KNodeAIAnnounceTask {
   }
 
   startSearchPeer(KNode node, KId infoHash) {
+    print("[${node.nodeDebugId}]");
     _isStart = true;
     lastUpdateTime = 0;
     _startSearch(node);

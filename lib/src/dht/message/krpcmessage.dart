@@ -181,6 +181,10 @@ class KrpcQuery extends KrpcMessage {
     _messageAsMap = map;
   }
 
+  String toString() {
+    return "null_message@query:${this.rawMessageMap}";
+  }
+
   static bool queryCheck(Map<String, Object> messageAsMap, String action) {
     if (!messageAsMap.containsKey("a")) {
       return false;

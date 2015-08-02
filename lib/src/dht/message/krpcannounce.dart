@@ -34,10 +34,16 @@ class KrpcAnnouncePeerQuery extends KrpcQuery {
       "y": "q"
       });
   }
+
   KrpcAnnouncePeerQuery(List<int> transactionId, List<int> queryingNodesId, int implied_port, List<int> infoHash, int port, List<int> opaqueToken) 
   :super(KrpcMessage.ANNOUNCE_QUERY){
     _init(transactionId, queryingNodesId, implied_port, infoHash, port, opaqueToken);
   }
+
+  String toString() {
+    return "announce@query:${this.rawMessageMap}";
+  }
+
   _init(List<int> transactionId, List<int> queryingNodesId, int implied_port, List<int> infoHash, int port, List<int> opaqueToken) {
     if(!(transactionId is Uint8List)) {
       transactionId = new Uint8List.fromList(transactionId);
@@ -91,9 +97,14 @@ class KrpcAnnouncePeerResponse extends KrpcResponse {
     List<int> queryingNodesId = UTF8.encode(queryingNodesIdAsString);
     _init(transactionId, queryingNodesId);
   }
+
   KrpcAnnouncePeerResponse(List<int> transactionId, List<int> queryingNodesId)
   :super(KrpcMessage.ANNOUNCE_RESPONSE) {
     _init(transactionId, queryingNodesId);
+  }
+
+  String toString() {
+    return "announce@response:${this.rawMessageMap}";
   }
 
   _init(List<int> transactionId, List<int> queryingNodesId) {
