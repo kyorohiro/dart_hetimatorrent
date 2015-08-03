@@ -8,9 +8,11 @@ void main() {
     String initialNodeIP = "0.0.0.0";
     int initialNodePort = 14803;
     node.addNodeFromIPAndPort(initialNodeIP, initialNodePort);
+
     int torrentClientAccessPort = 18080;
     KId torrentClientDownloadDataHash = new KId(new List.filled(20, 1));
     node.startSearchPeer(torrentClientDownloadDataHash, torrentClientAccessPort);
+
     return new Future.delayed(new Duration(seconds: 60 * 5));
   }).then((_) {
     return node.stop();
