@@ -17,6 +17,7 @@ class KNodeAIAnnounceTask {
   ShuffleLinkedList<KPeerInfo> _findedNode = new ShuffleLinkedList(50);
 
   List<KGetPeerInfo> receiveGetPeerResponseNode = [];
+  List<KGetPeerInfo> _announcedPeers = [];
 
   KId _infoHashId = null;
   bool get isStart => _isStart;
@@ -27,22 +28,35 @@ class KNodeAIAnnounceTask {
   }
 
   startSearchPeer(KNode node, KId infoHash) {
-    print("[${node.nodeDebugId}]");
+    if(node.verbose == true) {
+      print("## startSearchPeer");
+    }
     _isStart = true;
     lastUpdateTime = 0;
     _startSearch(node);
   }
 
   stopSearchPeer(KNode node, KId infoHash) {
+    if(node.verbose == true) {
+      print("## stopSearchPeer");
+    }
     _isStart = false;
   }
 
   _startSearch(KNode node) {
+    if(node.verbose == true) {
+      print("## _startSearch");
+    }
     _findedNode.clearAll();
+    _announcedPeers.clear();
     _updateSearch(node);
   }
 
   _updateSearch(KNode node) {
+    if(node.verbose == true) {
+      print("## _updateSearch");
+    }
+
     node.rootingtable.findNode(_infoHashId).then((List<KPeerInfo> infos) {
       if (_isStart == false) {
         return;
@@ -71,6 +85,10 @@ class KNodeAIAnnounceTask {
   }
 
   requestAnnounce(KNode node) {
+    if(node.verbose == true) {
+      print("## requestAnnounce");
+    }
+
     receiveGetPeerResponseNode.sort((KGetPeerInfo a, KGetPeerInfo b) {
       if (a.id == b.id) {
         return 0;
@@ -80,17 +98,22 @@ class KNodeAIAnnounceTask {
         return -1;
       }
     });
-    if (node.verbose) {
-      print("###########announce[${node.nodeDebugId}]  -----${receiveGetPeerResponseNode.length} ${node.rawSearchResult.length}");
-      for (KGetPeerInfo i in receiveGetPeerResponseNode) {
-        print("###########announce[${node.nodeDebugId}] -----${i.ipAsString}, ${i.port} >>${i.id.xor(_infoHashId).getRootingTabkeIndex()} ::: ${i.id.idAsString}");
-      }
-    }
+
     // while (8 < receiveGetPeerResponseNode.length) {
     //    receiveGetPeerResponseNode.removeAt(8);
     //  }
+    int count = 0;
     for (KGetPeerInfo i in receiveGetPeerResponseNode) {
-      node.sendAnnouncePeerQuery(i.ipAsString, i.port, 1, _infoHashId.id, i.token);
+      if (false == _announcedPeers.contains(i)) {
+        node.sendAnnouncePeerQuery(i.ipAsString, i.port, 1, _infoHashId.id, i.token);
+        _announcedPeers.add(i);
+        if (node.verbose) {
+          print("###########announce[${node.nodeDebugId}] ---${receiveGetPeerResponseNode.length} ${node.rawSearchResult.length}--${i.ipAsString}, ${i.port} >>${i.id.xor(_infoHashId).getRootingTabkeIndex()} ::: ${i.id.idAsString}");
+        }
+      }
+      if (++count > 8) {
+        break;
+      }
     }
   }
 

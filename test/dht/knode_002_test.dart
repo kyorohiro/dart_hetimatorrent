@@ -40,7 +40,7 @@ void main() {
         for (int d = 0; d < numOfNode; d += 5) {
           knodes[d].updateP2PNetwork();
         }
-        return new Future.delayed(new Duration(seconds: 5)).then((_) {
+        return new Future.delayed(new Duration(seconds: 10)).then((_) {
           print("#[1]# end");
           print("#[1]# test ${knodes[2].rawSearchResult.length}");
           print("#[1]# test ${knodes[numOfNode~/3].rawSearchResult.length}");
