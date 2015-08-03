@@ -2,17 +2,14 @@ library hetimatorrent.dht.knodeai.announcetask;
 
 import 'dart:core';
 import 'dart:async';
-import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimanet/hetimanet.dart';
 import '../message/krpcgetpeers.dart';
 import '../kid.dart';
 import '../../util/shufflelinkedlist.dart';
 
 import '../message/krpcmessage.dart';
-import '../message/krpcannounce.dart';
 import '../kpeerinfo.dart';
 import '../knode.dart';
-import 'knodeai.dart';
 import 'kgetpeerinfo.dart';
 
 class KNodeAIAnnounceTask {
@@ -83,12 +80,16 @@ class KNodeAIAnnounceTask {
         return -1;
       }
     });
-    print("###########announce[${node.nodeDebugId}]  -----${receiveGetPeerResponseNode.length} ${node.rawSearchResult.length}");
-    while (8 < receiveGetPeerResponseNode.length) {
-      receiveGetPeerResponseNode.removeAt(8);
+    if (node.verbose) {
+      print("###########announce[${node.nodeDebugId}]  -----${receiveGetPeerResponseNode.length} ${node.rawSearchResult.length}");
+      for (KGetPeerInfo i in receiveGetPeerResponseNode) {
+        print("###########announce[${node.nodeDebugId}] -----${i.ipAsString}, ${i.port} >>${i.id.xor(_infoHashId).getRootingTabkeIndex()} ::: ${i.id.idAsString}");
+      }
     }
+    // while (8 < receiveGetPeerResponseNode.length) {
+    //    receiveGetPeerResponseNode.removeAt(8);
+    //  }
     for (KGetPeerInfo i in receiveGetPeerResponseNode) {
-      print("###########announce[${node.nodeDebugId}] -----${i.ipAsString}, ${i.port} >>${i.id.xor(_infoHashId).getRootingTabkeIndex()} ::: ${i.id.idAsString}");
       node.sendAnnouncePeerQuery(i.ipAsString, i.port, 1, _infoHashId.id, i.token);
     }
   }

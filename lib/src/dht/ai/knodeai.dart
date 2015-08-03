@@ -44,6 +44,8 @@ class KNodeAIBasic extends KNodeAI {
 
   KNodeAIFindNode findNodeAI = new KNodeAIFindNode();
   KNodeAIAnnounce announceAI = new KNodeAIAnnounce();
+ 
+  KNodeAIBasic({bool verbose: false}) {}
 
   start(KNode node) {
     findNodeAI.start(node);

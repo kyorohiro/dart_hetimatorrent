@@ -51,6 +51,7 @@ class KNode extends Object with KrpcResponseInfo {
 
   int _lastAnnouncedTIme = 0;
   bool _verbose = false;
+  bool get verbose => _verbose;
 
   _startTick() {
     new Future.delayed(new Duration(seconds: this._intervalSecondForMaintenance)).then((_) {
@@ -85,7 +86,7 @@ class KNode extends Object with KrpcResponseInfo {
     this._socketBuilder = socketBuilder;
     this._rootingtable = new KRootingTable(kBucketSize, _nodeId);
     if (ai == null) {
-      this._ai = new KNodeAIBasic();
+      this._ai = new KNodeAIBasic(verbose:verbose);
     } else {
       this._ai = ai;
     }

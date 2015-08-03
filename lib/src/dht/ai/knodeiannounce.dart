@@ -1,12 +1,9 @@
 library hetimatorrent.dht.knodeai.announce;
 
 import 'dart:core';
-import 'dart:async';
-import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimanet/hetimanet.dart';
 import '../message/krpcgetpeers.dart';
 import '../kid.dart';
-import '../../util/shufflelinkedlist.dart';
 
 import '../message/krpcmessage.dart';
 import '../message/krpcannounce.dart';
