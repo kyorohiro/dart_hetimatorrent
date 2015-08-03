@@ -33,10 +33,10 @@ void main() {
 
       KId valueInfoHash = KId.createIDAtRandom();
       return new Future.delayed(new Duration(seconds: 3)).then((_) {
-        knodes[2].startSearchPeer(valueInfoHash);
+        knodes[2].startSearchPeer(valueInfoHash,99999);
         return new Future.delayed(new Duration(seconds: 5));
       }).then((_) {
-        knodes[numOfNode ~/ 2].startSearchPeer(valueInfoHash);
+        knodes[numOfNode ~/ 2].startSearchPeer(valueInfoHash,888888);
         for (int d = 0; d < numOfNode; d += 5) {
           knodes[d].updateP2PNetwork();
         }
