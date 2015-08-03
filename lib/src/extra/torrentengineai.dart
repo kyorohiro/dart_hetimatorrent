@@ -91,7 +91,7 @@ class TorrentEngineAI extends TorrentAI {
         if (useDht == true) {
           return _dhtmane.startDHT(useUpnp: usePortMap).then((a) {
             _dhtmane.onRegistAI(_torrent);
-            _dhtmane.startGetPeer(_torrent.infoHash);
+            _dhtmane.startGetPeer(_torrent.infoHash, _torrent.globalPort);
             return a;
           });
         }

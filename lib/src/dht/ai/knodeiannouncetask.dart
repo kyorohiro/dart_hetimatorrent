@@ -22,9 +22,11 @@ class KNodeAIAnnounceTask {
   KId _infoHashId = null;
   bool get isStart => _isStart;
   int lastUpdateTime = 0;
+  int port = 0;
 
-  KNodeAIAnnounceTask(KId infoHashId) {
+  KNodeAIAnnounceTask(KId infoHashId, int port) {
     this._infoHashId = infoHashId;
+    this.port = port;
   }
 
   startSearchPeer(KNode node, KId infoHash) {
@@ -106,7 +108,7 @@ class KNodeAIAnnounceTask {
     int count = 0;
     for (KGetPeerInfo i in receiveGetPeerResponseNode) {
       if (false == _announcedPeers.contains(i)) {
-        node.sendAnnouncePeerQuery(i.ipAsString, i.port, 1, _infoHashId.id, i.token);
+        node.sendAnnouncePeerQuery(i.ipAsString, i.port, 1, _infoHashId.id, this.port,  i.token);
         _announcedPeers.add(i);
         if (node.verbose) {
           print("###########announce[${node.nodeDebugId}] ---${receiveGetPeerResponseNode.length} ${node.rawSearchResult.length}--${i.ipAsString}, ${i.port} >>${i.id.xor(_infoHashId).getRootingTabkeIndex()} ::: ${i.id.idAsString}");

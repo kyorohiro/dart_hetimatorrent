@@ -163,10 +163,10 @@ class TorrentEngineDHTMane extends TorrentAI {
     }
   }
 
-  Future<TorrentEngineDHT> startGetPeer(List<int> infoHash) {
+  Future<TorrentEngineDHT> startGetPeer(List<int> infoHash, int port) {
     if (_startDHTIsNow == true) {
       _startDHTIsNow = false;
-      return _dht.startSearchPeer(new KId(infoHash));
+      return _dht.startSearchPeer(new KId(infoHash), port);
     } else {
       return new Future((){});
     }

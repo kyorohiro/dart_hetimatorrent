@@ -110,8 +110,8 @@ class KNode extends Object with KrpcResponseInfo {
     });
   }
 
-  startSearchPeer(KId infoHash) {
-    return this._ai.startSearchPeer(this, infoHash);
+  startSearchPeer(KId infoHash, int port) {
+    return this._ai.startSearchPeer(this, infoHash, port);
   }
 
   stopSearchPeer(KId infoHash) {
@@ -122,7 +122,7 @@ class KNode extends Object with KrpcResponseInfo {
 
   updateP2PNetwork() => this._ai.updateP2PNetwork(this);
 
-  researchSearchPeer([KId infoHash = null]) => this._ai.startSearchPeer(this, infoHash);
+  researchSearchPeer([KId infoHash = null]) => this._ai.researchSearchPeer(this, infoHash);
 
 
 
@@ -157,8 +157,8 @@ class KNode extends Object with KrpcResponseInfo {
 
   Future sendGetPeersQuery(String ip, int port, List<int> infoHash) => _sendMessage(ip, port, new KrpcGetPeersQuery(UTF8.encode("p_${id++}"), _nodeId.id, infoHash));
 
-  Future sendAnnouncePeerQuery(String ip, int port, int implied_port, List<int> infoHash, List<int> opaqueToken) =>
-      _sendMessage(ip, port, new KrpcAnnouncePeerQuery(UTF8.encode("p_${id++}"), _nodeId.id, implied_port, infoHash, port, opaqueToken));
+  Future sendAnnouncePeerQuery(String ip, int port, int implied_port, List<int> infoHash, int announcedPort,List<int> opaqueToken) =>
+      _sendMessage(ip, port, new KrpcAnnouncePeerQuery(UTF8.encode("p_${id++}"), _nodeId.id, implied_port, infoHash, announcedPort, opaqueToken));
 
   Future sendPingResponse(String ip, int port, List<int> transactionId) => _sendMessage(ip, port, new KrpcPingResponse(transactionId, _nodeId.id));
 

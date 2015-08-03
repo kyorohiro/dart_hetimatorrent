@@ -28,7 +28,8 @@ abstract class KNodeAI {
   start(KNode node);
   stop(KNode node);
   updateP2PNetwork(KNode node);
-  startSearchPeer(KNode node, KId infoHash);
+  startSearchPeer(KNode node, KId infoHash, int port);
+  researchSearchPeer(KNode node, KId infoHash);
   stopSearchPeer(KNode node, KId infoHash);
   onAddNodeFromIPAndPort(KNode node, String ip, int port);
   onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcQuery query);
@@ -62,8 +63,12 @@ class KNodeAIBasic extends KNodeAI {
     announceAI.updateP2PNetwork(node);
   }
 
-  startSearchPeer(KNode node, KId infoHash) {
-    announceAI.startSearchPeer(node, infoHash);
+  startSearchPeer(KNode node, KId infoHash, int port) {
+    announceAI.startSearchPeer(node, infoHash, port);
+  }
+
+  researchSearchPeer(KNode node, KId infoHash) {
+    announceAI.researchSearchPeer(node, infoHash);
   }
 
   stopSearchPeer(KNode node, KId infoHash) {

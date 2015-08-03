@@ -76,8 +76,8 @@ class TorrentEngineDHT extends TorrentAI {
     });
   }
 
-  Future startSearchPeer(KId infoHash) {
-    return _node.startSearchPeer(infoHash);
+  Future startSearchPeer(KId infoHash, int port) {
+    return _node.startSearchPeer(infoHash, port);
   }
 
   Future stopSearchPeer(KId infoHash) {

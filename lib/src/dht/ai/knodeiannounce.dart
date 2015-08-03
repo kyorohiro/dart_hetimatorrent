@@ -28,7 +28,17 @@ class KNodeAIAnnounce extends KNodeAI {
   updateP2PNetwork(KNode node) {
   }
 
-  startSearchPeer(KNode node, KId infoHash) {
+  startSearchPeer(KNode node, KId infoHash, int port) {
+    if (infoHash != null) {
+      if (false == taskList.containsKey(infoHash)) {
+        taskList[infoHash] = new KNodeAIAnnounceTask(infoHash, port);
+      }
+      taskList[infoHash].port = port;
+    }
+    researchSearchPeer(node, infoHash);
+  }
+
+  researchSearchPeer(KNode node, KId infoHash) {
     if (infoHash == null) {
       for(KNodeAIAnnounceTask t in taskList.values) {
         if(t != null && t.isStart == true) { 
@@ -36,10 +46,9 @@ class KNodeAIAnnounce extends KNodeAI {
         }
       }
     } else {
-      if (false == taskList.containsKey(infoHash)) {
-        taskList[infoHash] = new KNodeAIAnnounceTask(infoHash);
+      if (true == taskList.containsKey(infoHash)) {
+        taskList[infoHash].startSearchPeer(node, infoHash);
       }
-      taskList[infoHash].startSearchPeer(node, infoHash);
     }
   }
 
