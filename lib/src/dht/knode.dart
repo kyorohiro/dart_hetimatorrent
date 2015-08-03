@@ -110,15 +110,21 @@ class KNode extends Object with KrpcResponseInfo {
     });
   }
 
+  startSearchPeer(KId infoHash) {
+    return this._ai.startSearchPeer(this, infoHash);
+  }
+
+  stopSearchPeer(KId infoHash) {
+    return this._ai.stopSearchPeer(this, infoHash);
+  }
+
   addKPeerInfo(KPeerInfo info) => _rootingtable.update(info);
 
   updateP2PNetwork() => this._ai.updateP2PNetwork(this);
 
   researchSearchPeer([KId infoHash = null]) => this._ai.startSearchPeer(this, infoHash);
 
-  startSearchPeer(KId infoHash) => this._ai.startSearchPeer(this, infoHash);
 
-  stopSearchPeer(KId infoHash) => this._ai.stopSearchPeer(this, infoHash);
 
   addNodeFromIPAndPort(String ip, int port) => this._ai.onAddNodeFromIPAndPort(this, ip, port);
 
