@@ -53,27 +53,6 @@ class KNode extends Object with KrpcResponseInfo {
   bool _verbose = false;
   bool get verbose => _verbose;
 
-  _startTick() {
-    new Future.delayed(new Duration(seconds: this._intervalSecondForMaintenance)).then((_) {
-      if (_isStart == false) {
-        return;
-      }
-      try {
-        this._ai.onTicket(this);
-      } catch (e) {}
-      if (_lastAnnouncedTIme == 0) {
-        _lastAnnouncedTIme = new DateTime.now().millisecondsSinceEpoch;
-      } else {
-        int currentTime = new DateTime.now().millisecondsSinceEpoch;
-        if (_lastAnnouncedTIme != 0 && (currentTime - _lastAnnouncedTIme) > _intervalSecondForAnnounce * 1000) {
-          _lastAnnouncedTIme = currentTime;
-          researchSearchPeer(null);
-        }
-      }
-      _startTick();
-    }).catchError((e) {});
-  }
-
   KNode(HetiSocketBuilder socketBuilder, {int kBucketSize: 8, List<int> nodeIdAsList: null, KNodeAI ai: null, intervalSecondForMaintenance: 5, intervalSecondForAnnounce: 60, bool verbose: false}) {
     this._verbose = verbose;
     this._intervalSecondForMaintenance = intervalSecondForMaintenance;
@@ -86,7 +65,7 @@ class KNode extends Object with KrpcResponseInfo {
     this._socketBuilder = socketBuilder;
     this._rootingtable = new KRootingTable(kBucketSize, _nodeId);
     if (ai == null) {
-      this._ai = new KNodeAIBasic(verbose:verbose);
+      this._ai = new KNodeAIBasic(verbose: verbose);
     } else {
       this._ai = ai;
     }
@@ -136,7 +115,7 @@ class KNode extends Object with KrpcResponseInfo {
     });
   }
 
-  _startParseLoop(EasyParser parser, HetiReceiveUdpInfo info) {
+  _startParseLoop(EasyParser parser, HetiReceiveUdpInfo info, String deleteKey) {
     a() {
       //
       KrpcMessage.decode(parser, this).then((KrpcMessage message) {
@@ -159,11 +138,12 @@ class KNode extends Object with KrpcResponseInfo {
         } else {
           this._ai.onReceiveUnknown(this, info, message);
         }
+      }).then((_) {
+        a();
       }).catchError((e) {
         parser.resetIndex((parser.buffer as ArrayBuilder).size());
         (parser.buffer as ArrayBuilder).clearInnerBuffer((parser.buffer as ArrayBuilder).size());
-      }).whenComplete(() {
-        a();
+        buffers.remove(deleteKey);
       });
     }
     a();
@@ -204,29 +184,7 @@ class KNode extends Object with KrpcResponseInfo {
     return re;
   }
 
-  Future _sendMessage(String ip, int port, KrpcMessage message) {
-    Completer c = new Completer();
-    new Future(() {
-      if (message is KrpcQuery) {
-        queryInfo.add(new KSendInfo(message.transactionIdAsString, message.q, c));
-      }
-      if (_verbose == true) {
-        String sign = "null";
 
-        if (message is KrpcError) {
-          sign = "error";
-        } else if (message is KrpcQuery) {
-          sign = "query";
-        } else if (message is KrpcResponse) {
-          sign = "response";
-        }
-        print("--->send ${sign}[${_nodeDebugId}] ${ip}:${port} ${message}");
-        print("--->send ${sign}[${_nodeDebugId}] ${UTF8.decode(message.messageAsBencode,allowMalformed:true)}");
-      }
-      return _udpSocket.send(message.messageAsBencode, ip, port);
-    }).catchError(c.completeError);
-    return c.future;
-  }
 
   Future sendPingQuery(String ip, int port) => _sendMessage(ip, port, new KrpcPingQuery(UTF8.encode("p_${id++}"), _nodeId.id));
 
@@ -252,7 +210,51 @@ class KNode extends Object with KrpcResponseInfo {
 
   Future sendErrorResponse(String ip, int port, int errorCode, List<int> transactionId, [String errorDescription = null]) => _sendMessage(ip, port, new KrpcError(transactionId, errorCode));
 
+  
+  Future _sendMessage(String ip, int port, KrpcMessage message) {
+    Completer c = new Completer();
+    new Future(() {
+      if (message is KrpcQuery) {
+        queryInfo.add(new KSendInfo(message.transactionIdAsString, message.q, c));
+      }
+      if (_verbose == true) {
+        String sign = "null";
 
+        if (message is KrpcError) {
+          sign = "error";
+        } else if (message is KrpcQuery) {
+          sign = "query";
+        } else if (message is KrpcResponse) {
+          sign = "response";
+        }
+        print("--->send ${sign}[${_nodeDebugId}] ${ip}:${port} ${message}");
+        print("--->send ${sign}[${_nodeDebugId}] ${UTF8.decode(message.messageAsBencode,allowMalformed:true)}");
+      }
+      return _udpSocket.send(message.messageAsBencode, ip, port);
+    }).catchError(c.completeError);
+    return c.future;
+  }
+  
+  _startTick() {
+    new Future.delayed(new Duration(seconds: this._intervalSecondForMaintenance)).then((_) {
+      if (_isStart == false) {
+        return;
+      }
+      try {
+        this._ai.onTicket(this);
+      } catch (e) {}
+      if (_lastAnnouncedTIme == 0) {
+        _lastAnnouncedTIme = new DateTime.now().millisecondsSinceEpoch;
+      } else {
+        int currentTime = new DateTime.now().millisecondsSinceEpoch;
+        if (_lastAnnouncedTIme != 0 && (currentTime - _lastAnnouncedTIme) > _intervalSecondForAnnounce * 1000) {
+          _lastAnnouncedTIme = currentTime;
+          researchSearchPeer(null);
+        }
+      }
+      _startTick();
+    }).catchError((e) {});
+  }
 }
 
 class KSendInfo {
