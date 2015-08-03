@@ -1,7 +1,6 @@
 library hetimatorrent.dht.krpcid;
 
 import 'dart:core';
-import 'dart:async';
 import 'dart:math';
 import 'package:hetimacore/hetimacore.dart';
 

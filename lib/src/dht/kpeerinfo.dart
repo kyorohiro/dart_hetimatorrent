@@ -1,9 +1,6 @@
 library hetimatorrent.dht.kpeerinfo;
 
 import 'dart:core';
-import 'dart:async';
-import 'dart:math';
-import '../util/shufflelinkedlist.dart';
 import 'package:hetimanet/hetimanet.dart';
 import 'package:hetimacore/hetimacore.dart';
 import 'kid.dart';
@@ -35,6 +32,7 @@ class KPeerInfo {
   String toString() {
     return "${_id.toString()}:${ipAsString}:${port}";
   }
+
   int get hashCode {
     int ret = _port;
     for (int i in _id) {
