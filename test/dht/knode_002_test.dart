@@ -44,12 +44,6 @@ void main() {
           print("#[1]# end");
           print("#[1]# test ${knodes[2].rawSearchResult.length}");
           print("#[1]# test ${knodes[numOfNode~/3].rawSearchResult.length}");
-          /*
-          knodes[2].startSearchPeer(i);
-           knodes[50].startSearchPeer(i);
-           for (int d = 0; d < numOfNode; d+=5) {
-             knodes[d].updateP2PNetwork();
-           }*/
           return new Future.delayed(new Duration(seconds: 1));
         }).then((_) {
           print("#[2]# end");
