@@ -69,8 +69,7 @@ class KNode extends Object with KrpcResponseInfo {
     } else {
       this._ai = ai;
     }
-    _nodeDebugId = id;
-    id++;
+    _nodeDebugId = id++;
   }
 
   Future stop() {
@@ -115,39 +114,6 @@ class KNode extends Object with KrpcResponseInfo {
     });
   }
 
-  _startParseLoop(EasyParser parser, HetiReceiveUdpInfo info, String deleteKey) {
-    a() {
-      //
-      KrpcMessage.decode(parser, this).then((KrpcMessage message) {
-        if (_verbose == true) {
-          print("--->receive[${_nodeDebugId}] ${info.remoteAddress}:${info.remotePort} ${message}");
-        }
-        if (message is KrpcResponse) {
-          KSendInfo rm = removeQueryNameFromTransactionId(UTF8.decode(message.rawMessageMap["t"]));
-          this._ai.onReceiveResponse(this, info, message);
-          if (rm != null) {
-            rm._c.complete(message);
-          } else {
-            print("----> receive null : [${_nodeDebugId}] ${info.remoteAddress} ${info.remotePort}");
-          }
-        } else if (message is KrpcQuery) {
-          this._ai.onReceiveQuery(this, info, message);
-        } else if (message is KrpcError) {
-          this._ai.onReceiveError(this, info, message);
-        } else {
-          this._ai.onReceiveUnknown(this, info, message);
-        }
-      }).then((_) {
-        a();
-      }).catchError((e) {
-        parser.resetIndex((parser.buffer as ArrayBuilder).size());
-        (parser.buffer as ArrayBuilder).clearInnerBuffer((parser.buffer as ArrayBuilder).size());
-        buffers.remove(deleteKey);
-      });
-    }
-    a();
-  }
-
   addKPeerInfo(KPeerInfo info) => _rootingtable.update(info);
 
   updateP2PNetwork() => this._ai.updateP2PNetwork(this);
@@ -182,8 +148,6 @@ class KNode extends Object with KrpcResponseInfo {
     queryInfo.remove(re);
     return re;
   }
-
-
 
   Future sendPingQuery(String ip, int port) => _sendMessage(ip, port, new KrpcPingQuery(UTF8.encode("p_${id++}"), _nodeId.id));
 
@@ -253,6 +217,39 @@ class KNode extends Object with KrpcResponseInfo {
       }
       _startTick();
     }).catchError((e) {});
+  }
+  
+  _startParseLoop(EasyParser parser, HetiReceiveUdpInfo info, String deleteKey) {
+    a() {
+      //
+      KrpcMessage.decode(parser, this).then((KrpcMessage message) {
+        if (_verbose == true) {
+          print("--->receive[${_nodeDebugId}] ${info.remoteAddress}:${info.remotePort} ${message}");
+        }
+        if (message is KrpcResponse) {
+          KSendInfo rm = removeQueryNameFromTransactionId(UTF8.decode(message.rawMessageMap["t"]));
+          this._ai.onReceiveResponse(this, info, message);
+          if (rm != null) {
+            rm._c.complete(message);
+          } else {
+            print("----> receive null : [${_nodeDebugId}] ${info.remoteAddress} ${info.remotePort}");
+          }
+        } else if (message is KrpcQuery) {
+          this._ai.onReceiveQuery(this, info, message);
+        } else if (message is KrpcError) {
+          this._ai.onReceiveError(this, info, message);
+        } else {
+          this._ai.onReceiveUnknown(this, info, message);
+        }
+      }).then((_) {
+        a();
+      }).catchError((e) {
+        parser.resetIndex((parser.buffer as ArrayBuilder).size());
+        (parser.buffer as ArrayBuilder).clearInnerBuffer((parser.buffer as ArrayBuilder).size());
+        buffers.remove(deleteKey);
+      });
+    }
+    a();
   }
 }
 
