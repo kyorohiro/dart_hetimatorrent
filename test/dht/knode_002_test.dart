@@ -13,7 +13,7 @@ void main() {
     unit.test("retrive list 0", () {
       List<KNode> knodes = [];
       List<KPeerInfo> kpeerInfos = [];
-      int numOfNode = 100;
+      int numOfNode = 20;
       for (int i = 0; i < numOfNode; i++) {
         KNode a = new KNode(new HetiSocketBuilderSimu(),intervalSecondForMaintenance:1);
         knodes.add(a);
@@ -31,12 +31,12 @@ void main() {
         knodes[i].start(ip: kpeerInfos[i].ipAsString, port: kpeerInfos[i].port);
       }
 
-      KId i = KId.createIDAtRandom();
+      KId valueInfoHash = KId.createIDAtRandom();
       return new Future.delayed(new Duration(seconds: 3)).then((_) {
-        knodes[2].startSearchPeer(i);
+        knodes[2].startSearchPeer(valueInfoHash);
         return new Future.delayed(new Duration(seconds: 5));
       }).then((_) {
-        knodes[numOfNode ~/ 2].startSearchPeer(i);
+        knodes[numOfNode ~/ 2].startSearchPeer(valueInfoHash);
         for (int d = 0; d < numOfNode; d += 5) {
           knodes[d].updateP2PNetwork();
         }

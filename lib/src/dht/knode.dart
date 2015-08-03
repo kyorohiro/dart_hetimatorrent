@@ -50,6 +50,7 @@ class KNode extends Object with KrpcResponseInfo {
   int get intervalSecondForAnnounce => _intervalSecondForAnnounce;
 
   int _lastAnnouncedTIme = 0;
+  bool _verbose = false;
   /*
   void addAnnouncePeerWithFilter(KAnnounceInfo info) {
     _announced.addLast(info);
@@ -71,7 +72,7 @@ class KNode extends Object with KrpcResponseInfo {
         _lastAnnouncedTIme = new DateTime.now().millisecondsSinceEpoch;
       } else {
         int currentTime = new DateTime.now().millisecondsSinceEpoch;
-        if (_lastAnnouncedTIme!=0 && (currentTime-_lastAnnouncedTIme) > _intervalSecondForAnnounce*1000) {
+        if (_lastAnnouncedTIme != 0 && (currentTime - _lastAnnouncedTIme) > _intervalSecondForAnnounce * 1000) {
           _lastAnnouncedTIme = currentTime;
           researchSearchPeer(null);
         }
@@ -80,7 +81,8 @@ class KNode extends Object with KrpcResponseInfo {
     }).catchError((e) {});
   }
 
-  KNode(HetiSocketBuilder socketBuilder, {int kBucketSize: 8, List<int> nodeIdAsList: null, KNodeAI ai: null, intervalSecondForMaintenance: 5, intervalSecondForAnnounce: 60}) {
+  KNode(HetiSocketBuilder socketBuilder, {int kBucketSize: 8, List<int> nodeIdAsList: null, KNodeAI ai: null, intervalSecondForMaintenance: 5, intervalSecondForAnnounce: 60, bool verbose: false}) {
+    this._verbose = verbose;
     this._intervalSecondForMaintenance = intervalSecondForMaintenance;
     this._intervalSecondForAnnounce = intervalSecondForAnnounce;
     if (nodeIdAsList == null) {
@@ -149,7 +151,9 @@ class KNode extends Object with KrpcResponseInfo {
     a() {
       //
       KrpcMessage.decode(parser, this).then((KrpcMessage message) {
-        print("--->receive[${_nodeDebugId}] ${info.remoteAddress}:${info.remotePort} ${message}");
+        if (_verbose == true) {
+          print("--->receive[${_nodeDebugId}] ${info.remoteAddress}:${info.remotePort} ${message}");
+        }
         // print("decode----> [${_nodeDebugId}] ${info.remoteAddress} ${info.remotePort} ${message.messageAsMap}");
         if (message is KrpcResponse) {
           KSendInfo rm = removeQueryNameFromTransactionId(UTF8.decode(message.rawMessageMap["t"]));
@@ -217,70 +221,63 @@ class KNode extends Object with KrpcResponseInfo {
     return re;
   }
 
-  Future _sendQuery(String ip, int port, KrpcQuery message) {
+
+  Future _sendMessage(String ip, int port, KrpcMessage message) {
     Completer c = new Completer();
     new Future(() {
-      queryInfo.add(new KSendInfo(message.transactionIdAsString, message.q, c));
-      print("--->send[${_nodeDebugId}] ${ip}:${port} ${message}");
-      print("--->send[${_nodeDebugId}] ${UTF8.decode(message.messageAsBencode,allowMalformed:true)}");
+      if(message is KrpcQuery) {
+        queryInfo.add(new KSendInfo(message.transactionIdAsString, message.q, c));
+      }
+      if (_verbose == true) {
+        String sign = "null";
+        
+        if(message is KrpcError) {
+          sign = "error";
+        } else if(message is KrpcQuery) {
+          sign = "query";
+        } else if(message is KrpcResponse) {
+          sign = "response";
+        }
+        print("--->send ${sign}[${_nodeDebugId}] ${ip}:${port} ${message}");
+        print("--->send ${sign}[${_nodeDebugId}] ${UTF8.decode(message.messageAsBencode,allowMalformed:true)}");
+      }
       return _udpSocket.send(message.messageAsBencode, ip, port);
     }).catchError(c.completeError);
     return c.future;
   }
 
-  Future sendPingQuery(String ip, int port) {
-    KrpcPingQuery query = new KrpcPingQuery(UTF8.encode("p_${id++}"), _nodeId.id);
-    return _sendQuery(ip, port, query);
-  }
+  Future sendPingQuery(String ip, int port) 
+  => _sendMessage(ip, port, new KrpcPingQuery(UTF8.encode("p_${id++}"), _nodeId.id));
 
-  Future sendFindNodeQuery(String ip, int port, List<int> targetNodeId) {
-    KrpcFindNodeQuery query = new KrpcFindNodeQuery(UTF8.encode("p_${id++}"), _nodeId.id, targetNodeId);
-    return _sendQuery(ip, port, query);
-  }
+  Future sendFindNodeQuery(String ip, int port, List<int> targetNodeId) 
+  =>  _sendMessage(ip, port, new KrpcFindNodeQuery(UTF8.encode("p_${id++}"), _nodeId.id, targetNodeId));
 
-  Future sendGetPeersQuery(String ip, int port, List<int> infoHash) {
-    //print("sendGetPeersQuery ${ip} ${port}");
-    KrpcGetPeersQuery query = new KrpcGetPeersQuery(UTF8.encode("p_${id++}"), _nodeId.id, infoHash);
-    return _sendQuery(ip, port, query);
-  }
+  Future sendGetPeersQuery(String ip, int port, List<int> infoHash) 
+  => _sendMessage(ip, port, new KrpcGetPeersQuery(UTF8.encode("p_${id++}"), _nodeId.id, infoHash));
 
-  Future sendAnnouncePeerQuery(String ip, int port, int implied_port, List<int> infoHash, List<int> opaqueToken) {
-    KrpcAnnouncePeerQuery query = new KrpcAnnouncePeerQuery(UTF8.encode("p_${id++}"), _nodeId.id, implied_port, infoHash, port, opaqueToken);
-    return _sendQuery(ip, port, query);
-  }
+  Future sendAnnouncePeerQuery(String ip, int port, int implied_port, List<int> infoHash, List<int> opaqueToken) 
+  => _sendMessage(ip, port, new KrpcAnnouncePeerQuery(UTF8.encode("p_${id++}"), _nodeId.id, implied_port, infoHash, port, opaqueToken));
 
-  Future sendPingResponse(String ip, int port, List<int> transactionId) {
-    KrpcPingResponse response = new KrpcPingResponse(transactionId, _nodeId.id);
-    return _udpSocket.send(response.messageAsBencode, ip, port);
-  }
+  Future sendPingResponse(String ip, int port, List<int> transactionId) 
+  =>  _sendMessage(ip, port, new KrpcPingResponse(transactionId, _nodeId.id));
 
-  Future sendFindNodeResponse(String ip, int port, List<int> transactionId, List<int> compactNodeInfo) {
-    KrpcFindNodeResponse query = new KrpcFindNodeResponse(transactionId, this._nodeId.id, compactNodeInfo);
-    return _udpSocket.send(query.messageAsBencode, ip, port);
-  }
+  Future sendFindNodeResponse(String ip, int port, List<int> transactionId, List<int> compactNodeInfo) 
+  => _sendMessage(ip, port, new KrpcFindNodeResponse(transactionId, this._nodeId.id, compactNodeInfo));
 
-  Future sendGetPeersResponseWithClosestNodes(String ip, int port, List<int> transactionId, List<int> opaqueWriteToken, List<int> compactNodeInfo) {
-    KrpcGetPeersResponse query = new KrpcGetPeersResponse.withClosestNodes(transactionId, this._nodeId.id, opaqueWriteToken, compactNodeInfo);
-    return _udpSocket.send(query.messageAsBencode, ip, port);
-  }
+  Future sendGetPeersResponseWithClosestNodes(String ip, int port, List<int> transactionId, List<int> opaqueWriteToken, List<int> compactNodeInfo) 
+  => _sendMessage(ip, port, new KrpcGetPeersResponse.withClosestNodes(transactionId, this._nodeId.id, opaqueWriteToken, compactNodeInfo));
 
-  Future sendGetPeersResponseWithPeers(String ip, int port, List<int> transactionId, List<int> opaqueWriteToken, List<List<int>> peerInfoStrings) {
-    KrpcGetPeersResponse query = new KrpcGetPeersResponse.withPeers(transactionId, this._nodeId.id, opaqueWriteToken, peerInfoStrings);
-    return _udpSocket.send(query.messageAsBencode, ip, port);
-  }
+  Future sendGetPeersResponseWithPeers(String ip, int port, List<int> transactionId, List<int> opaqueWriteToken, List<List<int>> peerInfoStrings)
+  => _sendMessage(ip, port, new KrpcGetPeersResponse.withPeers(transactionId, this._nodeId.id, opaqueWriteToken, peerInfoStrings));
 
-  Future sendAnnouncePeerResponse(String ip, int port, List<int> transactionId) {
-    KrpcAnnouncePeerResponse query = new KrpcAnnouncePeerResponse(transactionId, this._nodeId.id);
-    return _udpSocket.send(query.messageAsBencode, ip, port);
-  }
+  Future sendAnnouncePeerResponse(String ip, int port, List<int> transactionId) 
+  => _sendMessage(ip, port, new KrpcAnnouncePeerResponse(transactionId, this._nodeId.id));
 
-  Future sendErrorResponse(String ip, int port, int errorCode, List<int> transactionId, [String errorDescription = null]) {
-    KrpcError query = new KrpcError(transactionId, errorCode);
-    return _udpSocket.send(query.messageAsBencode, ip, port);
-  }
+  Future sendErrorResponse(String ip, int port, int errorCode, List<int> transactionId, [String errorDescription = null]) 
+  => _sendMessage(ip, port, new KrpcError(transactionId, errorCode));
 
   List<int> getOpaqueWriteToken(KId infoHash, KId nodeID) {
-    return  KId.createToken(infoHash, nodeID, this.nodeId);
+    return KId.createToken(infoHash, nodeID, this.nodeId);
   }
 }
 
