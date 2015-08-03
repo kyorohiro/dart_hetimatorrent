@@ -64,11 +64,7 @@ class KNode extends Object with KrpcResponseInfo {
     }
     this._socketBuilder = socketBuilder;
     this._rootingtable = new KRootingTable(kBucketSize, _nodeId);
-    if (ai == null) {
-      this._ai = new KNodeAIBasic(verbose: verbose);
-    } else {
-      this._ai = ai;
-    }
+    this._ai = (ai == null ? new KNodeAIBasic(verbose: verbose) : ai);
     _nodeDebugId = id++;
   }
 
@@ -96,7 +92,7 @@ class KNode extends Object with KrpcResponseInfo {
           //print("[${_nodeDebugId}+${ip}:${port}]${UTF8.decode(info.data,allowMalformed:true)}");
           if (!buffers.containsKey("${info.remoteAddress}:${info.remotePort}")) {
             buffers["${info.remoteAddress}:${info.remotePort}"] = new EasyParser(new ArrayBuilder());
-            _startParseLoop(buffers["${info.remoteAddress}:${info.remotePort}"], info,"${info.remoteAddress}:${info.remotePort}");
+            _startParseLoop(buffers["${info.remoteAddress}:${info.remotePort}"], info, "${info.remoteAddress}:${info.remotePort}");
           }
           EasyParser parser = buffers["${info.remoteAddress}:${info.remotePort}"];
           (parser.buffer as ArrayBuilder).appendIntList(info.data);
@@ -173,7 +169,6 @@ class KNode extends Object with KrpcResponseInfo {
 
   Future sendErrorResponse(String ip, int port, int errorCode, List<int> transactionId, [String errorDescription = null]) => _sendMessage(ip, port, new KrpcError(transactionId, errorCode));
 
-  
   Future _sendMessage(String ip, int port, KrpcMessage message) {
     Completer c = new Completer();
     new Future(() {
@@ -197,7 +192,7 @@ class KNode extends Object with KrpcResponseInfo {
     }).catchError(c.completeError);
     return c.future;
   }
-  
+
   _startTick() {
     new Future.delayed(new Duration(seconds: this._intervalSecondForMaintenance)).then((_) {
       if (_isStart == false) {
@@ -218,7 +213,7 @@ class KNode extends Object with KrpcResponseInfo {
       _startTick();
     }).catchError((e) {});
   }
-  
+
   _startParseLoop(EasyParser parser, HetiReceiveUdpInfo info, String deleteKey) {
     a() {
       //
