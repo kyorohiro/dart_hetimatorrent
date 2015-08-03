@@ -20,6 +20,16 @@ class KrpcAnnouncePeerQuery extends KrpcQuery {
     return a["token"];
   }
 
+  int get impliedPort{
+    Map<String, Object> a = messageAsMap["a"];
+    return a["implied_port"];
+  }
+  
+  int get port{
+    Map<String, Object> a = messageAsMap["a"];
+    return a["port"];
+  }
+
   // find_node Query = {"t":"aa", "y":"q", "q":"find_node", "a": {"id":"abcdefghij0123456789", "target":"mnopqrstuvwxyz123456"}}
   // bencoded = d1:ad2:id20:abcdefghij01234567896:target20:mnopqrstuvwxyz123456e1:q9:find_node1:t2:aa1:y1:qe
   KrpcAnnouncePeerQuery.fromString(String transactionIdAsString, String queryingNodesIdAsString, int implied_port, List<int> infoHash, int port, String opaqueTokenAsString) 
@@ -72,8 +82,13 @@ class KrpcAnnouncePeerQuery extends KrpcQuery {
       throw {};
     }
     Map<String, Object> a = messageAsMap["a"];
+    int impliedPort = 0;
+    if(a.containsKey("implied_port") == true) {
+      impliedPort = a["implied_port"];
+    }
+
     rawMessageMap.addAll({
-      "a": {"id": a["id"], "info_hash": a["info_hash"], "implied_port": a["implied_port"], "port": a["port"], "token": a["token"]},
+      "a": {"id": a["id"], "info_hash": a["info_hash"], "implied_port": impliedPort , "port": a["port"], "token": a["token"]},
       "q": "announce_peer",
       "t": messageAsMap["t"],
       "y": "q"

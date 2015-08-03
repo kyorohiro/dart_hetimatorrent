@@ -86,7 +86,11 @@ class KNodeAIAnnounce extends KNodeAI {
               return {};
             }
           }
-          node.rawAnnounced.addLast(new KAnnounceInfo.fromString(info.remoteAddress, info.remotePort, announce.infoHash));
+          if(announce.impliedPort == 0) {
+            node.rawAnnounced.addLast(new KAnnounceInfo.fromString(info.remoteAddress, announce.port, announce.infoHash));
+          } else {
+            node.rawAnnounced.addLast(new KAnnounceInfo.fromString(info.remoteAddress, info.remotePort, announce.infoHash));            
+          }
           return node.sendAnnouncePeerResponse(info.remoteAddress, info.remotePort, query.transactionId);
         }
         break;

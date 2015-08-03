@@ -102,13 +102,10 @@ class KNodeAIAnnounceTask {
       }
     });
 
-    // while (8 < receiveGetPeerResponseNode.length) {
-    //    receiveGetPeerResponseNode.removeAt(8);
-    //  }
     int count = 0;
     for (KGetPeerInfo i in receiveGetPeerResponseNode) {
       if (false == _announcedPeers.contains(i)) {
-        node.sendAnnouncePeerQuery(i.ipAsString, i.port, 1, _infoHashId.id, this.port,  i.token);
+        node.sendAnnouncePeerQuery(i.ipAsString, i.port, 0, _infoHashId.id, this.port,  i.token);
         _announcedPeers.add(i);
         if (node.verbose) {
           print("###########announce[${node.nodeDebugId}] ---${receiveGetPeerResponseNode.length} ${node.rawSearchResult.length}--${i.ipAsString}, ${i.port} >>${i.id.xor(_infoHashId).getRootingTabkeIndex()} ::: ${i.id.idAsString}");
