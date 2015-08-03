@@ -78,7 +78,8 @@ class KNodeAIAnnounceTask {
     }
 
     int t = new DateTime.now().millisecondsSinceEpoch;
-    if (t - lastUpdateTime > 3000) {
+    if (lastUpdateTime != 0 && t - lastUpdateTime > 3000) {
+      lastUpdateTime = 0;
       requestAnnounce(node);
       _updateSearch(node);
     }
