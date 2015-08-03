@@ -15,7 +15,7 @@ void main() {
       List<KPeerInfo> kpeerInfos = [];
       int numOfNode = 20;
       for (int i = 0; i < numOfNode; i++) {
-        KNode a = new KNode(new HetiSocketBuilderSimu(),intervalSecondForMaintenance:1);
+        KNode a = new KNode(new HetiSocketBuilderSimu(),intervalSecondForMaintenance:1, verbose:(i==2));
         knodes.add(a);
         kpeerInfos.add(new KPeerInfo("127.0.0.1", i, a.nodeId));
         if (i != 0) {
