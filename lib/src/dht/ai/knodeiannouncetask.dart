@@ -157,6 +157,9 @@ class KNodeAIAnnounceTask {
           for (KAnnounceInfo i in getPeer.valuesAsKAnnounceInfo(_infoHashId.id)) {
             lastUpdateTime = new DateTime.now().millisecondsSinceEpoch;
             node.rawSearchResult.addLast(i);
+            if (node.verbose) {
+              print("########### get peer value ${i.ipAsString} ${i.port}");
+            }
           }
           // todo
           node.sendFindNodeQuery(info.remoteAddress, info.remotePort, _infoHashId.id).catchError((e) {});
