@@ -16,6 +16,7 @@ import '../util/shufflelinkedlist.dart';
 import 'message/krpcmessage.dart';
 import 'message/krpcannounce.dart';
 import 'kpeerinfo.dart';
+import 'message/kgetpeervalue.dart';
 import 'ai/knodeai.dart';
 
 class KNode extends Object with KrpcResponseInfo {
@@ -33,11 +34,11 @@ class KNode extends Object with KrpcResponseInfo {
 
   KRootingTable get rootingtable => _rootingtable;
   KNodeAI get ai => _ai;
-  ShuffleLinkedList<KAnnounceInfo> _announced = new ShuffleLinkedList(300);
-  ShuffleLinkedList<KAnnounceInfo> _searcResult = new ShuffleLinkedList(300);
-  List<KAnnounceInfo> get announcedPeer => _announced.sequential;
-  ShuffleLinkedList<KAnnounceInfo> get rawSearchResult => _searcResult;
-  ShuffleLinkedList<KAnnounceInfo> get rawAnnounced => _announced;
+  ShuffleLinkedList<KGetPeerValue> _announced = new ShuffleLinkedList(300);
+  ShuffleLinkedList<KGetPeerValue> _searcResult = new ShuffleLinkedList(300);
+  List<KGetPeerValue> get announcedPeer => _announced.sequential;
+  ShuffleLinkedList<KGetPeerValue> get rawSearchResult => _searcResult;
+  ShuffleLinkedList<KGetPeerValue> get rawAnnounced => _announced;
   static int id = 0;
 
   int _nodeDebugId = 0;
@@ -116,6 +117,10 @@ class KNode extends Object with KrpcResponseInfo {
 
   stopSearchPeer(KId infoHash) {
     return this._ai.stopSearchPeer(this, infoHash);
+  }
+
+  addSeardchResult(KGetPeerValue info) {
+    _searcResult.addLast(info);
   }
 
   addKPeerInfo(KPeerInfo info) => _rootingtable.update(info);

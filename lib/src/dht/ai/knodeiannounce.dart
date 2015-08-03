@@ -8,6 +8,7 @@ import '../kid.dart';
 import '../message/krpcmessage.dart';
 import '../message/krpcannounce.dart';
 import '../kpeerinfo.dart';
+import '../message/kgetpeervalue.dart';
 import '../knode.dart';
 import 'knodeai.dart';
 import 'knodeiannouncetask.dart';
@@ -87,9 +88,9 @@ class KNodeAIAnnounce extends KNodeAI {
             }
           }
           if(announce.impliedPort == 0) {
-            node.rawAnnounced.addLast(new KAnnounceInfo.fromString(info.remoteAddress, announce.port, announce.infoHash));
+            node.rawAnnounced.addLast(new KGetPeerValue.fromString(info.remoteAddress, announce.port, announce.infoHash));
           } else {
-            node.rawAnnounced.addLast(new KAnnounceInfo.fromString(info.remoteAddress, info.remotePort, announce.infoHash));            
+            node.rawAnnounced.addLast(new KGetPeerValue.fromString(info.remoteAddress, info.remotePort, announce.infoHash));            
           }
           return node.sendAnnouncePeerResponse(info.remoteAddress, info.remotePort, query.transactionId);
         }
@@ -98,7 +99,7 @@ class KNodeAIAnnounce extends KNodeAI {
         {
           //print("## receive query");
           KrpcGetPeersQuery getPeer = query;
-          List<KAnnounceInfo> target = node.rawAnnounced.getWithFilter((KAnnounceInfo i) {
+          List<KGetPeerValue> target = node.rawAnnounced.getWithFilter((KGetPeerValue i) {
             List<int> a = i.infoHash.id;
             List<int> b = getPeer.infoHash;
             for (int i = 0; i < 20; i++) {
@@ -110,7 +111,7 @@ class KNodeAIAnnounce extends KNodeAI {
           });
           List<int> opaqueWriteToken = node.getOpaqueWriteToken(new KId(getPeer.infoHash), getPeer.queryingNodesId);
           if (target.length > 0) {
-            return node.sendGetPeersResponseWithPeers(info.remoteAddress, info.remotePort, query.transactionId, opaqueWriteToken, KAnnounceInfo.toPeerInfoStrings(target)); //todo
+            return node.sendGetPeersResponseWithPeers(info.remoteAddress, info.remotePort, query.transactionId, opaqueWriteToken, KGetPeerValue.toPeerInfoStrings(target)); //todo
           } else {
             return node.rootingtable.findNode(query.queryingNodesId).then((List<KPeerInfo> infos) {
               return node.sendGetPeersResponseWithClosestNodes(info.remoteAddress, info.remotePort, query.transactionId, opaqueWriteToken, KPeerInfo.toCompactNodeInfos(infos));

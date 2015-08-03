@@ -8,6 +8,7 @@ import 'krpcmessage.dart';
 import 'dart:typed_data';
 import 'dart:convert';
 import '../kpeerinfo.dart';
+import 'kgetpeervalue.dart';
 import '../kid.dart';
 
 class KrpcGetPeersQuery extends KrpcQuery {
@@ -74,15 +75,15 @@ class KrpcGetPeersResponse extends KrpcResponse {
     }
   }
 
-  List<KAnnounceInfo> valuesAsKAnnounceInfo(List<int> infoHash) {
+  List<KGetPeerValue> valuesAsKAnnounceInfo(List<int> infoHash) {
     if(haveValue == false) {
       return [];
     }
     Map<String, Object> r = messageAsMap["r"];
     List<Uint8List> values = r["values"];
-    List<KAnnounceInfo> ret = [];
+    List<KGetPeerValue> ret = [];
     for(Uint8List l in values) {
-      KAnnounceInfo a = new KAnnounceInfo.fromCompactIpPort(l, infoHash);
+      KGetPeerValue a = new KGetPeerValue.fromCompactIpPort(l, infoHash);
       ret.add(a);
     }
     return ret;

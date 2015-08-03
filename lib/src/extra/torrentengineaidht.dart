@@ -9,6 +9,7 @@ import '../client/torrentclient.dart';
 import '../tracker/trackerclient.dart';
 import '../dht/knode.dart';
 import 'torrentengineaidht.dart';
+import '../dht/message/kgetpeervalue.dart';
 
 class TorrentEngineDHT extends TorrentAI {
   KNode _node = null;
@@ -114,7 +115,7 @@ class TorrentEngineDHT extends TorrentAI {
 
   @override
   Future onTick(TorrentClient client) {
-    for (KAnnounceInfo ainfo in _node.rawAnnounced) {
+    for (KGetPeerValue ainfo in _node.rawAnnounced) {
       if(ainfo.infoHash.id.length != client.infoHash.length) {
         break;
       }

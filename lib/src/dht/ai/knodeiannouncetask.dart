@@ -9,15 +9,16 @@ import '../../util/shufflelinkedlist.dart';
 
 import '../message/krpcmessage.dart';
 import '../kpeerinfo.dart';
+import '../message/kgetpeervalue.dart';
 import '../knode.dart';
-import 'kgetpeerinfo.dart';
+import '../message/kgetpeernodes.dart';
 
 class KNodeAIAnnounceTask {
   bool _isStart = false;
   ShuffleLinkedList<KPeerInfo> _findedNode = new ShuffleLinkedList(50);
 
-  List<KGetPeerInfo> receiveGetPeerResponseNode = [];
-  List<KGetPeerInfo> _announcedPeers = [];
+  List<KGetPeerNodes> receiveGetPeerResponseNode = [];
+  List<KGetPeerNodes> _announcedPeers = [];
 
   KId _infoHashId = null;
   bool get isStart => _isStart;
@@ -92,7 +93,7 @@ class KNodeAIAnnounceTask {
       print("## requestAnnounce");
     }
 
-    receiveGetPeerResponseNode.sort((KGetPeerInfo a, KGetPeerInfo b) {
+    receiveGetPeerResponseNode.sort((KGetPeerNodes a, KGetPeerNodes b) {
       if (a.id == b.id) {
         return 0;
       } else if (a.id.xor(_infoHashId) > b.id.xor(_infoHashId)) {
@@ -103,7 +104,7 @@ class KNodeAIAnnounceTask {
     });
 
     int count = 0;
-    for (KGetPeerInfo i in receiveGetPeerResponseNode) {
+    for (KGetPeerNodes i in receiveGetPeerResponseNode) {
       if (false == _announcedPeers.contains(i)) {
         node.sendAnnouncePeerQuery(i.ipAsString, i.port, 0, _infoHashId.id, this.port,  i.token);
         _announcedPeers.add(i);
@@ -118,8 +119,8 @@ class KNodeAIAnnounceTask {
   }
 
   updateReceveGetPeerInfo(HetiReceiveUdpInfo info, KrpcGetPeersResponse getPeer) {
-    KGetPeerInfo i = new KGetPeerInfo(info.remoteAddress, info.remotePort, getPeer.queriedNodesId, _infoHashId, getPeer.tokenAsKId);
-    List<KGetPeerInfo> alreadyHave = KGetPeerInfo.extract(receiveGetPeerResponseNode, (KGetPeerInfo a) {
+    KGetPeerNodes i = new KGetPeerNodes(info.remoteAddress, info.remotePort, getPeer.queriedNodesId, _infoHashId, getPeer.tokenAsKId);
+    List<KGetPeerNodes> alreadyHave = KGetPeerNodes.extract(receiveGetPeerResponseNode, (KGetPeerNodes a) {
       return a.id == i.id;
     });
     if (alreadyHave.length > 0) {
@@ -151,9 +152,9 @@ class KNodeAIAnnounceTask {
 
         if (getPeer.haveValue == true) {
           //print("announce set value");
-          for (KAnnounceInfo i in getPeer.valuesAsKAnnounceInfo(_infoHashId.id)) {
+          for (KGetPeerValue i in getPeer.valuesAsKAnnounceInfo(_infoHashId.id)) {
             lastUpdateTime = new DateTime.now().millisecondsSinceEpoch;
-            node.rawSearchResult.addLast(i);
+            node.addSeardchResult(i);
             if (node.verbose) {
               print("########### get peer value ${i.ipAsString} ${i.port}");
             }

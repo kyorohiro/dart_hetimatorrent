@@ -10,7 +10,7 @@ import '../kid.dart';
 import 'dart:typed_data';
 
 
-class KGetPeerInfo {
+class KGetPeerNodes {
   int _port = 0;
   int get port => _port;
 
@@ -36,7 +36,7 @@ class KGetPeerInfo {
     return ByteOrder.parseShort(compact, compact.length - 2, ByteOrder.BYTEORDER_BIG_ENDIAN);
   }
 
-  KGetPeerInfo(String ip, int port, KId id, KId infoHash, List<int> token) {
+  KGetPeerNodes(String ip, int port, KId id, KId infoHash, List<int> token) {
     this._ip.addAll(HetiIP.toRawIP(ip));
     this._port = port;
     this._infoHash = infoHash;
@@ -59,11 +59,11 @@ class KGetPeerInfo {
   }
 
   bool operator ==(Object o) {
-    if (!(o is KGetPeerInfo)) {
+    if (!(o is KGetPeerNodes)) {
       return false;
     }
 
-    KGetPeerInfo p = o;
+    KGetPeerNodes p = o;
     if (this._ip.length == p._ip.length) {
       for (int i = 0; i < p._ip.length; i++) {
         if (this._ip[i] != p._ip[i]) {
@@ -91,17 +91,17 @@ class KGetPeerInfo {
     return true;
   }
   
-  static List<KGetPeerInfo> extract(List<KGetPeerInfo> vs, bool filter(KGetPeerInfo a)) {
-    List<KGetPeerInfo> ret = [];
-    for(KGetPeerInfo v in vs) {
+  static List<KGetPeerNodes> extract(List<KGetPeerNodes> vs, bool filter(KGetPeerNodes a)) {
+    List<KGetPeerNodes> ret = [];
+    for(KGetPeerNodes v in vs) {
       if(filter(v) == true) { 
         ret.add(v);
       }
     }
     return ret;
   }
-  static bool contain(List<KGetPeerInfo> vs, bool filter(KGetPeerInfo a)) {
-    for(KGetPeerInfo v in vs) {
+  static bool contain(List<KGetPeerNodes> vs, bool filter(KGetPeerNodes a)) {
+    for(KGetPeerNodes v in vs) {
       if(filter(v) == true) { 
         return true;
       }
