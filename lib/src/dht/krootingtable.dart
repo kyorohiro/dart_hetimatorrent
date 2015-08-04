@@ -45,7 +45,7 @@ class KRootingTable {
 
   Future<List<KPeerInfo>> findNode(KId id) {
     return new Future(() {
-      int targetIndex = id.getRootingTabkeIndex();
+      int targetIndex = id.xor(_amId).getRootingTabkeIndex();
       List<KPeerInfo> ret = [];
       for (int v in retrievePath(targetIndex)) {
         for (KPeerInfo p in _kBuckets[v].peerInfos.sequential) {

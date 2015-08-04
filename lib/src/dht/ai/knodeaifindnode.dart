@@ -33,7 +33,7 @@ class KNodeAIFindNode {
   }
 
   updateP2PNetworkWithoutClear(KNode node) {
-    node.rootingtable.findNode(node.nodeId.xor(node.nodeId)).then((List<KPeerInfo> infos) {
+    node.rootingtable.findNode(node.nodeId).then((List<KPeerInfo> infos) {
       if (_isStart == false) {
         return;
       }
@@ -59,7 +59,7 @@ class KNodeAIFindNode {
     });
   }
   updateP2PNetworkWithRandom(KNode node) {
-    node.rootingtable.findNode(node.nodeId.xor(KId.createIDAtRandom())).then((List<KPeerInfo> infos) {
+    node.rootingtable.findNode(KId.createIDAtRandom()).then((List<KPeerInfo> infos) {
       if (_isStart == false) {
         return;
       }
