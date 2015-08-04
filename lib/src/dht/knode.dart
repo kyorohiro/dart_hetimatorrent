@@ -53,7 +53,6 @@ class KNode extends Object with KrpcResponseInfo {
   int _intervalSecondForAnnounce = 60;
   int get intervalSecondForAnnounce => _intervalSecondForAnnounce;
 
-  int _lastAnnouncedTIme = 0;
   bool _verbose = false;
   bool get verbose => _verbose;
 
@@ -190,7 +189,6 @@ class KNode extends Object with KrpcResponseInfo {
           sign = "response";
         }
         print("--->send ${sign}[${_nodeDebugId}] ${ip}:${port} ${message}");
-        print("--->send ${sign}[${_nodeDebugId}] ${UTF8.decode(message.messageAsBencode,allowMalformed:true)}");
       }
       return _udpSocket.send(message.messageAsBencode, ip, port);
     }).catchError(c.completeError);

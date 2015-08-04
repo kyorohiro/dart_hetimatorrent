@@ -77,7 +77,7 @@ abstract class KNodeAI {
         return;
       }
       try {
-        this.onTicket(this);
+        this.onTicket(node);
       } catch (e) {}
       if (_lastAnnouncedTIme == 0) {
         _lastAnnouncedTIme = new DateTime.now().millisecondsSinceEpoch;

@@ -93,6 +93,7 @@ class KrpcFindNodeResponse extends KrpcResponse {
   List<KPeerInfo> get compactNodeInfoAsKPeerInfo {
     List<KPeerInfo> ret = [];
     List<int> infos = compactNodeInfo;
+    
     for (int i = 0; i < infos.length ~/ 26; i++) {
       ret.add(new KPeerInfo.fromBytes(infos, i * 26, 26));
     }
@@ -108,7 +109,11 @@ class KrpcFindNodeResponse extends KrpcResponse {
       throw {};
     }
     Map<String, Object> r = messageAsMap["r"];
-    rawMessageMap.addAll({"r": {"id": r["id"], "nodes": r["nodes"]}, "t": messageAsMap["t"], "y": "r"});
+    List<int> nodes = r["nodes"];
+    if(nodes == null) {
+      nodes = [];
+    }
+    rawMessageMap.addAll({"r": {"id": r["id"], "nodes": nodes}, "t": messageAsMap["t"], "y": "r"});
   }
 
   static Future<KrpcFindNodeResponse> decode(EasyParser parser) {
