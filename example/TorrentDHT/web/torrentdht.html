@@ -10,7 +10,7 @@
   <div>
     <h1>TorrentDHT</h1>
 
-    local ip: <input id='localAddress' type="text" value="192.168.1.26"><br>
+    local ip: <input id='localAddress' type="text" value="192.168.1.26">:<input id="localPort" type="text" value="28080"><br>
     initial node (ip:port) :<input id="initNodeIp" tyoe="text" value="192.168.1.26">:<input id="initNodePort" type="text" value="43611"><br>
     <input id='startButton' type='button' value='start' style='display:block'>
     <input id='stopButton' type='button' value='stop'  style='display:none'>
@@ -18,6 +18,10 @@
     <script src="packages/chrome/bootstrap.js" defer></script>
     <script src="torrentdht.dart" type="application/dart"></script>  
 
+    <h2>Search</h2>
+    <div id='targetInfohash'></div>
+    <input id='searchTarget' type='file' value='torrent file' style='display:block'>
+    <input id='startSearchButton' type='button' value='startSearch' style='display:block'>
 
     <h2>localIp</h2>
     <div id='localipContainer'>
@@ -27,5 +31,6 @@
     </div>
     <input id='logButton' type='button' value='log' style='display:block'>
     </div>
+
   </body>
 </html>
