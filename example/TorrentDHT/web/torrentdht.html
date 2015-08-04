@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="torrentdht.css">
   </head>
   <body>
+  <div>
     <h1>TorrentDHT</h1>
 
     local ip: <input id='localAddress' type="text" value="192.168.1.26"><br>
@@ -22,8 +23,9 @@
     <div id='localipContainer'>
     </div>
     <h2>Message</h2> 
-    <div id='messageContainer'>
+    <div id='messageContainer' style="overflow:scroll; overflow-y: scroll;width:100%;height:300px;">
     </div>
     <input id='logButton' type='button' value='log' style='display:block'>
+    </div>
   </body>
 </html>
