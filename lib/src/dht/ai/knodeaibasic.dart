@@ -48,7 +48,7 @@ class KNodeAIBasic extends KNodeAI {
     announceAI.updateP2PNetwork(node);
   }
 
-  startSearchPeer(KNode node, KId infoHash, int port) {
+  startSearchPeer(KNode node, KId infoHash, int port, {getPeerOnly:false}) {
     announceAI.startSearchPeer(node, infoHash, port);
   }
 

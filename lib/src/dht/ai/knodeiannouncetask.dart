@@ -25,15 +25,18 @@ class KNodeAIAnnounceTask {
   int lastUpdateTime = 0;
   int port = 0;
 
+  bool _getPeerOnly = false;
+  bool get getPeerOnly  => _getPeerOnly;
   KNodeAIAnnounceTask(KId infoHashId, int port) {
     this._infoHashId = infoHashId;
     this.port = port;
   }
 
-  startSearchPeer(KNode node, KId infoHash) {
+  startSearchPeer(KNode node, KId infoHash, {getPeerOnly:false}) {
     if(node.verbose == true) {
-      print("## startSearchPeer");
+      print("## startSearchPeer:${_getPeerOnly}");
     }
+    _getPeerOnly = getPeerOnly;
     _isStart = true;
     lastUpdateTime = 0;
     _startSearch(node);
@@ -92,7 +95,9 @@ class KNodeAIAnnounceTask {
     if(node.verbose == true) {
       print("## requestAnnounce");
     }
-
+    if(_getPeerOnly == true) {
+      return;
+    }
     receiveGetPeerResponseNode.sort((KGetPeerNodes a, KGetPeerNodes b) {
       if (a.id == b.id) {
         return 0;

@@ -77,7 +77,14 @@ void main() {
           targetInfohash.children.add(new Element.html("<div>${PercentEncode.encode(ih)}</div>"));
         });
       });
-    }).catchError(() {});
+    }).catchError(() {
+      messageContainer.children.clear();
+      messageContainer.children.add(new Element.html("<div>Failed to load torrent file</dic>"));
+    });
+  });
+  
+  startSearchButton.onClick.listen((_){
+    dht.addTarget(infoHash);
   });
 }
 
@@ -97,6 +104,10 @@ class DHT {
 
   addNode(String ip, int port) {
     node.addNodeFromIPAndPort(ip, port);
+  }
+
+  addTarget(List<int> infoHash) {
+    node.startSearchPeer(new KId(infoHash), 18080, getPeerOnly:true);
   }
 
   String log() {

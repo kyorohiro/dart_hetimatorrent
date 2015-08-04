@@ -104,8 +104,8 @@ class KNode extends Object with KrpcResponseInfo {
     });
   }
 
-  startSearchPeer(KId infoHash, int port) {
-    return this._ai.startSearchPeer(this, infoHash, port);
+  startSearchPeer(KId infoHash, int port, {getPeerOnly:false}) {
+    return this._ai.startSearchPeer(this, infoHash, port, getPeerOnly:false);
   }
 
   stopSearchPeer(KId infoHash) {
