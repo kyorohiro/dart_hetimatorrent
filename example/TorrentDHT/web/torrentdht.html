@@ -9,16 +9,15 @@
   <body>
     <h1>TorrentDHT</h1>
 
-    local ip: <input id='localAddress' type="text">
+    local ip: <input id='localAddress' type="text"><br>
+    initial node (ip:port) :<input id="initNodeIp" tyoe="text">:<input id="initNodePort" type="text"><br>
     <input id='startButton' type='button' value='start' style='display:block'>
     <input id='stopButton' type='button' value='stop'  style='display:none'>
     <object id='loadingButton' type="image/svg+xml" data="loader_a.svg" width="32" height="16" style='display:none'></object>
     <script src="packages/chrome/bootstrap.js" defer></script>
     <script src="torrentdht.dart" type="application/dart"></script>  
 
-    <h2>initial node</h2>
-    ip   : <input id="initNodeIp" tyoe="text">
-    port : <input id="initNodePort" type="text">
+
     <h2>localIp</h2>
     <div id='localipContainer'>
     </div>  
