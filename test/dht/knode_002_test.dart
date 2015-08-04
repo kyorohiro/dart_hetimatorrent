@@ -34,6 +34,9 @@ void main() {
       KId valueInfoHash = KId.createIDAtRandom();
       return new Future.delayed(new Duration(seconds: 3)).then((_) {
         knodes[2].startSearchPeer(valueInfoHash,39999);
+        knodes[2].onGetPeerValue.listen((KGetPeerValue v) {
+          print("---onGetPeerValue ${v.ipAsString} ${v.port} ${v.infoHashAsString} ----------------------------------------");
+        });
         return new Future.delayed(new Duration(seconds: 5));
       }).then((_) {
         knodes[numOfNode ~/ 2].startSearchPeer(valueInfoHash,38888);
