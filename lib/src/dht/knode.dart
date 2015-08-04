@@ -65,7 +65,7 @@ class KNode extends Object with KrpcResponseInfo {
     this._socketBuilder = socketBuilder;
     this._rootingtable = new KRootingTable(kBucketSize, _nodeId);
     this._ai = (ai == null ? new KNodeAIBasic(verbose: verbose) : ai);
-    _nodeDebugId = id++;
+    this. _nodeDebugId = id++;
   }
 
   Future stop() {
