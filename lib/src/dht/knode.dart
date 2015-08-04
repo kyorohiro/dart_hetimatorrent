@@ -55,26 +55,21 @@ class KNode extends Object with KrpcResponseInfo {
   int _lastAnnouncedTIme = 0;
   bool _verbose = false;
   bool get verbose => _verbose;
-  
 
   KNode(HetiSocketBuilder socketBuilder, {int kBucketSize: 8, List<int> nodeIdAsList: null, KNodeAI ai: null, intervalSecondForMaintenance: 5, intervalSecondForAnnounce: 60, bool verbose: false}) {
     this._verbose = verbose;
     this._intervalSecondForMaintenance = intervalSecondForMaintenance;
     this._intervalSecondForAnnounce = intervalSecondForAnnounce;
-    this._nodeId = (nodeIdAsList == null?KId.createIDAtRandom():new KId(nodeIdAsList));
+    this._nodeId = (nodeIdAsList == null ? KId.createIDAtRandom() : new KId(nodeIdAsList));
     this._socketBuilder = socketBuilder;
     this._rootingtable = new KRootingTable(kBucketSize, _nodeId);
     this._ai = (ai == null ? new KNodeAIBasic(verbose: verbose) : ai);
-    this. _nodeDebugId = id++;
+    this._nodeDebugId = id++;
   }
 
   Future stop() {
     return new Future(() {
-      if (_udpSocket == null) {
-        return null;
-      } else {
-        return _udpSocket.close();
-      }
+      return (_udpSocket == null ? null : _udpSocket.close());
     }).whenComplete(() {
       _isStart = false;
       _ai.stop(this);
@@ -129,8 +124,6 @@ class KNode extends Object with KrpcResponseInfo {
 
   researchSearchPeer([KId infoHash = null]) => this._ai.researchSearchPeer(this, infoHash);
 
-
-
   addNodeFromIPAndPort(String ip, int port) => this._ai.onAddNodeFromIPAndPort(this, ip, port);
 
   List<int> getOpaqueWriteToken(KId infoHash, KId nodeID) => KId.createToken(infoHash, nodeID, this.nodeId);
@@ -162,7 +155,7 @@ class KNode extends Object with KrpcResponseInfo {
 
   Future sendGetPeersQuery(String ip, int port, List<int> infoHash) => _sendMessage(ip, port, new KrpcGetPeersQuery(UTF8.encode("p_${id++}"), _nodeId.id, infoHash));
 
-  Future sendAnnouncePeerQuery(String ip, int port, int implied_port, List<int> infoHash, int announcedPort,List<int> opaqueToken) =>
+  Future sendAnnouncePeerQuery(String ip, int port, int implied_port, List<int> infoHash, int announcedPort, List<int> opaqueToken) =>
       _sendMessage(ip, port, new KrpcAnnouncePeerQuery(UTF8.encode("p_${id++}"), _nodeId.id, implied_port, infoHash, announcedPort, opaqueToken));
 
   Future sendPingResponse(String ip, int port, List<int> transactionId) => _sendMessage(ip, port, new KrpcPingResponse(transactionId, _nodeId.id));
