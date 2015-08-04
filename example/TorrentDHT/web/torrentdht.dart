@@ -11,6 +11,7 @@ InputElement localAddress = querySelector("#localAddress");
 DivElement messageContainer = querySelector("#messageContainer");
 InputElement initNodeIp = querySelector("#initNodeIp");
 InputElement initNodePort = querySelector("#initNodePort");
+ButtonElement logButton = querySelector("#logButton");
 void main() {
   DHT dht = new DHT();
   startButton.onClick.listen((_) {
@@ -44,6 +45,10 @@ void main() {
     });
   });
 
+  logButton.onClick.listen((_) {
+    messageContainer.children.clear();
+    messageContainer.children.add(new Element.html("<div>${dht.log()}</dic>"));
+  });
   (new HetiSocketBuilderChrome()).getNetworkInterfaces().then((List<HetiNetworkInterface> interfaces) {
     localIpContainer.children.clear();
     for (HetiNetworkInterface interface in interfaces) {
@@ -68,5 +73,9 @@ class DHT {
 
   addNode(String ip, int port) {
     node.addNodeFromIPAndPort(ip, port);
+  }
+  
+  String log() {
+    return node.rootingtable.toInfo().replaceAll("\n", "<br>");
   }
 }
