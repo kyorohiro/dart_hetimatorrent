@@ -67,15 +67,6 @@ class KNode extends Object with KrpcResponseInfo {
     this._nodeDebugId = id++;
   }
 
-  Future stop() {
-    return new Future(() {
-      return (_udpSocket == null ? null : _udpSocket.close());
-    }).whenComplete(() {
-      _isStart = false;
-      _ai.stop(this);
-    });
-  }
-
   Future start({String ip: "0.0.0.0", int port: 28080}) {
     return new Future(() {
       if (_isStart) {
@@ -101,6 +92,15 @@ class KNode extends Object with KrpcResponseInfo {
     }).catchError((e) {
       _isStart = false;
       throw e;
+    });
+  }
+
+  Future stop() {
+    return new Future(() {
+      return (_udpSocket == null ? null : _udpSocket.close());
+    }).whenComplete(() {
+      _isStart = false;
+      _ai.stop(this);
     });
   }
 
