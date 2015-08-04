@@ -35,10 +35,20 @@ class KNodeAIFindNode {
       if (_isStart == false) {
         return;
       }
+      int count = 0;
       for (KPeerInfo info in infos) {
         if (!findNodesInfo.rawsequential.contains(info)) {
+          count++;
           findNodesInfo.addLast(info);
           node.sendFindNodeQuery(info.ipAsString, info.port, node.nodeId.id);
+          if(node.verbose == true) {
+            print("<id_index>=${info.id.xor(node.nodeId).getRootingTabkeIndex()}");
+          }
+        }
+        //
+        // todo 
+        if(count > 5) {
+           break;
         }
       }
     });
@@ -48,10 +58,15 @@ class KNodeAIFindNode {
       if (_isStart == false) {
         return;
       }
+      int count = 0;
       for (KPeerInfo info in infos) {
         if (!findNodesInfo.rawsequential.contains(info)) {
+          count++;
           findNodesInfo.addLast(info);
           node.sendFindNodeQuery(info.ipAsString, info.port, KId.createIDAtRandom().id);
+        }
+        if(count > 3) {
+          break;
         }
       }
     });
