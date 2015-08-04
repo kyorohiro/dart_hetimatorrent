@@ -61,11 +61,7 @@ class KNode extends Object with KrpcResponseInfo {
     this._verbose = verbose;
     this._intervalSecondForMaintenance = intervalSecondForMaintenance;
     this._intervalSecondForAnnounce = intervalSecondForAnnounce;
-    if (nodeIdAsList == null) {
-      _nodeId = KId.createIDAtRandom();
-    } else {
-      _nodeId = new KId(nodeIdAsList);
-    }
+    this._nodeId = (nodeIdAsList == null?KId.createIDAtRandom():new KId(nodeIdAsList));
     this._socketBuilder = socketBuilder;
     this._rootingtable = new KRootingTable(kBucketSize, _nodeId);
     this._ai = (ai == null ? new KNodeAIBasic(verbose: verbose) : ai);
