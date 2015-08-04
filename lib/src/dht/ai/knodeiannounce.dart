@@ -36,14 +36,14 @@ class KNodeAIAnnounce extends KNodeAI {
       }
       taskList[infoHash].port = port;
     }
-    researchSearchPeer(node, infoHash);
+    researchSearchPeer(node, infoHash, getPeerOnly:getPeerOnly);
   }
 
   researchSearchPeer(KNode node, KId infoHash,{getPeerOnly:false}) {
     if (infoHash == null) {
       for(KNodeAIAnnounceTask t in taskList.values) {
         if(t != null && t.isStart == true) { 
-          t.startSearchPeer(node, infoHash);
+          t.startSearchPeer(node, infoHash, getPeerOnly:getPeerOnly);
         }
       }
     } else {
