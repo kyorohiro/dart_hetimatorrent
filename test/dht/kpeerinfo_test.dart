@@ -12,11 +12,11 @@ void main() {
   unit.group('A group of tests', () {
     unit.test("same", () {
       KPeerInfo peerInfoA = new KPeerInfo("127.0.0.1", 8080, new KId(new List.filled(20, 1)));
-      KAnnounceInfo announceInfoA = new KAnnounceInfo.fromString("127.0.0.1", 8080, new List.filled(20, 1));
+      KGetPeerValue announceInfoA = new KGetPeerValue.fromString("127.0.0.1", 8080, new List.filled(20, 1));
       
 
       KPeerInfo peerInfoB = new KPeerInfo("127.0.0.1", 8080, new KId(new List.filled(20, 1)));
-      KAnnounceInfo announceInfoB = new KAnnounceInfo.fromString("127.0.0.1", 8080, new List.filled(20, 1));
+      KGetPeerValue announceInfoB = new KGetPeerValue.fromString("127.0.0.1", 8080, new List.filled(20, 1));
 
       unit.expect(peerInfoA, peerInfoB);
       unit.expect(announceInfoA, announceInfoB);
@@ -24,19 +24,19 @@ void main() {
     
     unit.test("diff", () {
       KPeerInfo peerInfoA = new KPeerInfo("127.0.0.1", 8080, new KId(new List.filled(20, 1)));
-      KAnnounceInfo announceInfoA = new KAnnounceInfo.fromString("127.0.0.1", 8080, new List.filled(20, 1));
+      KGetPeerValue announceInfoA = new KGetPeerValue.fromString("127.0.0.1", 8080, new List.filled(20, 1));
       
 
       KPeerInfo peerInfoB = new KPeerInfo("127.0.0.1", 8080, new KId(new List.filled(20, 2)));
-      KAnnounceInfo announceInfoB = new KAnnounceInfo.fromString("127.0.0.1", 8080, new List.filled(20, 2));
+      KGetPeerValue announceInfoB = new KGetPeerValue.fromString("127.0.0.1", 8080, new List.filled(20, 2));
 
       unit.expect(false, peerInfoA == peerInfoB);
       unit.expect(false, announceInfoA == announceInfoB);
     });
     
     unit.test("same", () {
-      KAnnounceInfo announceInfoA = new KAnnounceInfo.fromString("127.0.0.1", 8080, new List.filled(20, 1));
-      KAnnounceInfo announceInfoB = new KAnnounceInfo.fromString("127.0.0.2", 8081, new List.filled(20, 1));
+      KGetPeerValue announceInfoA = new KGetPeerValue.fromString("127.0.0.1", 8080, new List.filled(20, 1));
+      KGetPeerValue announceInfoB = new KGetPeerValue.fromString("127.0.0.2", 8081, new List.filled(20, 1));
 
       unit.expect(false, announceInfoA == announceInfoB);
     });

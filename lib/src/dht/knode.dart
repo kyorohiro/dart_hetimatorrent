@@ -41,6 +41,8 @@ class KNode extends Object with KrpcResponseInfo {
   ShuffleLinkedList<KGetPeerValue> get rawAnnounced => _announced;
   static int id = 0;
 
+  StreamController<KGetPeerValue> _controller = new StreamController.broadcast();
+  Stream<KGetPeerValue> get onGetPeerValue => _controller.stream;
   int _nodeDebugId = 0;
   int get nodeDebugId => _nodeDebugId;
 
@@ -53,6 +55,7 @@ class KNode extends Object with KrpcResponseInfo {
   int _lastAnnouncedTIme = 0;
   bool _verbose = false;
   bool get verbose => _verbose;
+  
 
   KNode(HetiSocketBuilder socketBuilder, {int kBucketSize: 8, List<int> nodeIdAsList: null, KNodeAI ai: null, intervalSecondForMaintenance: 5, intervalSecondForAnnounce: 60, bool verbose: false}) {
     this._verbose = verbose;
@@ -121,6 +124,7 @@ class KNode extends Object with KrpcResponseInfo {
 
   addSeardchResult(KGetPeerValue info) {
     _searcResult.addLast(info);
+    _controller.add(info);
   }
 
   addKPeerInfo(KPeerInfo info) => _rootingtable.update(info);
