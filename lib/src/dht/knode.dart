@@ -18,6 +18,7 @@ import 'message/krpcannounce.dart';
 import 'kpeerinfo.dart';
 import 'message/kgetpeervalue.dart';
 import 'ai/knodeai.dart';
+import 'ai/knodeaibasic.dart';
 
 class KNode extends Object with KrpcResponseInfo {
   HetiSocketBuilder _socketBuilder = null;
@@ -47,7 +48,7 @@ class KNode extends Object with KrpcResponseInfo {
   int get nodeDebugId => _nodeDebugId;
 
   int _intervalSecondForMaintenance = 5;
-  int get intervalSecond => _intervalSecondForMaintenance;
+  int get intervalSecondForMaintenance => _intervalSecondForMaintenance;
 
   int _intervalSecondForAnnounce = 60;
   int get intervalSecondForAnnounce => _intervalSecondForAnnounce;
@@ -85,7 +86,7 @@ class KNode extends Object with KrpcResponseInfo {
         //////
         _isStart = true;
         _ai.start(this);
-        _startTick();
+        ai.startTick(this);
         ////
 
       });
@@ -196,26 +197,7 @@ class KNode extends Object with KrpcResponseInfo {
     return c.future;
   }
 
-  _startTick() {
-    new Future.delayed(new Duration(seconds: this._intervalSecondForMaintenance)).then((_) {
-      if (_isStart == false) {
-        return;
-      }
-      try {
-        this._ai.onTicket(this);
-      } catch (e) {}
-      if (_lastAnnouncedTIme == 0) {
-        _lastAnnouncedTIme = new DateTime.now().millisecondsSinceEpoch;
-      } else {
-        int currentTime = new DateTime.now().millisecondsSinceEpoch;
-        if (_lastAnnouncedTIme != 0 && (currentTime - _lastAnnouncedTIme) > _intervalSecondForAnnounce * 1000) {
-          _lastAnnouncedTIme = currentTime;
-          researchSearchPeer(null);
-        }
-      }
-      _startTick();
-    }).catchError((e) {});
-  }
+
 
 }
 
