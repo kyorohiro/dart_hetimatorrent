@@ -84,10 +84,9 @@ class KNode extends Object with KrpcResponseInfo {
       _udpSocket = this._socketBuilder.createUdpClient();
       return _udpSocket.bind(ip, port, multicast: true).then((int v) {
         _udpSocket.onReceive().listen((HetiReceiveUdpInfo info) {
-          //print("[${_nodeDebugId}+${ip}:${port}]${UTF8.decode(info.data,allowMalformed:true)}");
           if (!buffers.containsKey("${info.remoteAddress}:${info.remotePort}")) {
             buffers["${info.remoteAddress}:${info.remotePort}"] = new EasyParser(new ArrayBuilder());
-            _startParseLoop(buffers["${info.remoteAddress}:${info.remotePort}"], info, "${info.remoteAddress}:${info.remotePort}");
+            _ai.startParseLoop(this, buffers["${info.remoteAddress}:${info.remotePort}"], info, "${info.remoteAddress}:${info.remotePort}");
           }
           EasyParser parser = buffers["${info.remoteAddress}:${info.remotePort}"];
           (parser.buffer as ArrayBuilder).appendIntList(info.data);
@@ -218,38 +217,6 @@ class KNode extends Object with KrpcResponseInfo {
     }).catchError((e) {});
   }
 
-  _startParseLoop(EasyParser parser, HetiReceiveUdpInfo info, String deleteKey) {
-    a() {
-      //
-      KrpcMessage.decode(parser, this).then((KrpcMessage message) {
-        if (_verbose == true) {
-          print("--->receive[${_nodeDebugId}] ${info.remoteAddress}:${info.remotePort} ${message}");
-        }
-        if (message is KrpcResponse) {
-          KSendInfo rm = removeQueryNameFromTransactionId(UTF8.decode(message.rawMessageMap["t"]));
-          this._ai.onReceiveResponse(this, info, message);
-          if (rm != null) {
-            rm._c.complete(message);
-          } else {
-            print("----> receive null : [${_nodeDebugId}] ${info.remoteAddress} ${info.remotePort}");
-          }
-        } else if (message is KrpcQuery) {
-          this._ai.onReceiveQuery(this, info, message);
-        } else if (message is KrpcError) {
-          this._ai.onReceiveError(this, info, message);
-        } else {
-          this._ai.onReceiveUnknown(this, info, message);
-        }
-      }).then((_) {
-        a();
-      }).catchError((e) {
-        parser.resetIndex((parser.buffer as ArrayBuilder).size());
-        (parser.buffer as ArrayBuilder).clearInnerBuffer((parser.buffer as ArrayBuilder).size());
-        buffers.remove(deleteKey);
-      });
-    }
-    a();
-  }
 }
 
 class KSendInfo {
@@ -262,6 +229,7 @@ class KSendInfo {
   int get time => _time;
 
   Completer _c = null;
+  Completer get  c => _c;
   KSendInfo(String id, String act, Completer c) {
     this._id = id;
     this._c = c;
