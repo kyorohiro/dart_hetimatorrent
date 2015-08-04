@@ -35,9 +35,7 @@ void main() {
           }
           for (int i = 0; i < numOfNode; i++) {
             int jj = i;
-            knodes[i].rootingtable.toInfo().then((String s) {
-              print("[${jj}] : ${s}");
-            });
+              print("[${jj}] : ${knodes[i].rootingtable.toInfo()}");
           }
         });
       //});

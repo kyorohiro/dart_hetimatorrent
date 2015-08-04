@@ -12,14 +12,10 @@ void main() {
       KBucket kbucket = new KBucket(4);
       KPeerInfo info = new KPeerInfo("127.0.0.1", 8080, new KId(new List.filled(20, 1)));
       kbucket.update(info);
-      return kbucket.length().then((int length) {
-        unit.expect(length, 1);
-        return kbucket.getPeerInfo(0).then((KPeerInfo i) {
-          unit.expect(info, i);
-        });
-      });
+      unit.expect(1, kbucket.length());
+      unit.expect(info, kbucket.getPeerInfo(0));
     });
-    
+
     unit.test("update remove auto", () {
       KBucket kbucket = new KBucket(3);
       KPeerInfo info1 = new KPeerInfo("127.0.0.1", 8081, new KId(new List.filled(20, 1)));
@@ -32,23 +28,13 @@ void main() {
       kbucket.update(info3);
       kbucket.update(info4);
 
-      return kbucket.length().then((int length) {
-        unit.expect(length, 3);
-        return kbucket.getPeerInfo(0).then((KPeerInfo i) {
-          unit.expect(info2, i);
-          return kbucket.getPeerInfo(1);
-        }).then((KPeerInfo i) {
-          unit.expect(info3, i);
-          return kbucket.getPeerInfo(2);
-        }).then((KPeerInfo i) {
-          unit.expect(info4, i);
-          return kbucket.length().then((int length) {
-            unit.expect(length, 3);            
-          });
-        });
-      });
+      unit.expect(kbucket.length(), 3);
+      unit.expect(info2, kbucket.getPeerInfo(0));
+      unit.expect(info3, kbucket.getPeerInfo(1));
+      unit.expect(info4, kbucket.getPeerInfo(2));
+      unit.expect(kbucket.length(), 3);
     });
-    
+
     unit.test("update same info", () {
       KBucket kbucket = new KBucket(3);
       KPeerInfo info1 = new KPeerInfo("127.0.0.1", 8081, new KId(new List.filled(20, 1)));
@@ -58,17 +44,11 @@ void main() {
       kbucket.update(info2);
       kbucket.update(new KPeerInfo("127.0.0.1", 8081, new KId(new List.filled(20, 1))));
 
-      return kbucket.length().then((int length) {
-        unit.expect(length, 2);
-        return kbucket.getPeerInfo(0).then((KPeerInfo i) {
-          unit.expect(info2, i);
-          return kbucket.getPeerInfo(1);
-        }).then((KPeerInfo i) {
-          unit.expect(info1, i);
-        });
-      });
+      unit.expect(kbucket.length(), 2);
+      unit.expect(info2, kbucket.getPeerInfo(0));
+      unit.expect(info1, kbucket.getPeerInfo(1));
     });
-    
+
     unit.test("update kbucket sort", () {
       KBucket kbucket = new KBucket(3);
       KPeerInfo info2 = new KPeerInfo("127.0.0.2", 8082, new KId(new List.filled(20, 2)));
@@ -79,12 +59,10 @@ void main() {
       kbucket.update(info2);
       kbucket.update(info3);
 
-      return kbucket.length().then((int length) {
-        unit.expect(length, 3);
-        unit.expect("127.0.0.1", kbucket.peerInfos.rawshuffled[0].ipAsString);
-        unit.expect("127.0.0.2", kbucket.peerInfos.rawshuffled[1].ipAsString);
-        unit.expect("127.0.0.3", kbucket.peerInfos.rawshuffled[2].ipAsString);
-      });
+      unit.expect(kbucket.length(), 3);
+      unit.expect("127.0.0.1", kbucket.peerInfos.rawshuffled[0].ipAsString);
+      unit.expect("127.0.0.2", kbucket.peerInfos.rawshuffled[1].ipAsString);
+      unit.expect("127.0.0.3", kbucket.peerInfos.rawshuffled[2].ipAsString);
     });
   });
 }

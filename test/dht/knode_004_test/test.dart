@@ -18,9 +18,7 @@ void main() {
       a.start(ip:"192.168.1.26");
       return new Future.delayed(new Duration(seconds: 30)).then((_) {
         a.stop();
-        a.rootingtable.toInfo().then((String s) {
-          print(" ${s}");
-        });
+          print(" ${a.rootingtable.toInfo()}");
       });
       //});
     });

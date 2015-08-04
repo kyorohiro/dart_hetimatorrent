@@ -43,9 +43,7 @@ void main() {
       return table.update(info).then((_){
         return table.findNode(new KId(new List.filled(20, 0))).then((List<KPeerInfo> infos) {
           unit.expect(infos.length, 1);
-          return table.toInfo().then((String s) {
-            print("##### ${s}");
-          });
+            print("##### ${table.toInfo()}");
         });
       });
     });
@@ -56,9 +54,7 @@ void main() {
       return table.update(info).then((_){
         return table.findNode(new KId(new List.filled(20, 0))).then((List<KPeerInfo> infos) {
           unit.expect(infos.length, 1);
-          return table.toInfo().then((String s) {
-            print("##### ${s}");
-          });
+            print("##### ${table.toInfo()}");
         });
       });
     });

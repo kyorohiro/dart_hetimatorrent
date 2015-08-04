@@ -14,6 +14,7 @@ class KRootingTable {
   int _kBucketSize = 0;
   KId _amId = null;
   KId get amId => _amId;
+
   KRootingTable(int k_bucketSize, KId amId) {
     this._kBucketSize = k_bucketSize;
     for (int i = 0; i < 161; i++) {
@@ -22,46 +23,20 @@ class KRootingTable {
     this._amId = amId;
   }
 
-  Future<String> toInfo() {
-    List<Future> ll = [];
-    List<Future> ls = [];
-    int num =0;
+  String toInfo() {
+    StringBuffer buffer = new StringBuffer();
     for (int j = 0; j < _kBuckets.length; j++) {
-        int i = j;
-        ls.add(_kBuckets[i].length().then((int xx) {
-          num += xx;
-         // print("${xx}");
-          List<Future> l = [];
-          for (int j = 0; j < xx; j++) {
-            l.add(_kBuckets[i].getPeerInfo(j).then((KPeerInfo info) {
-              return "${info}";
-            }));
-          }
-          if(l.length != 0) {
-          ll.add(Future.wait(l).then((List<String> rr) {
-            StringBuffer b = new StringBuffer();
-            b.write("<${i}>:");
-            for (String r in rr) {
-              b.write("${r},");
-            }
-            b.write("\n");
-            return b.toString();
-          }));
-          }
-        }));
-    }
-    return Future.wait(ls).then((_) {
-      return Future.wait(ll).then((List<String> e) {
-        StringBuffer b = new StringBuffer();
-        b.write("::${num}::");
-        for (String r in e) {
-          b.write("${r},");
+        int bucketLength = _kBuckets[j].length();
+        if(bucketLength == 0) {continue;}
+        buffer.write("[${j}] len:${bucketLength}:## ");
+        for(int i=0;i<bucketLength;i++){
+          buffer.write(_kBuckets[j].getPeerInfo(i).toString());
         }
-        b.write("\n");
-        return b.toString();
-      });
-    });
+        buffer.write("\n");
+    }
+    return buffer.toString();
   }
+
   Future update(KPeerInfo info) {
     return new Future(() {
       _kBuckets[_amId.xor(info.id).getRootingTabkeIndex()].update(info);
@@ -104,29 +79,4 @@ class KRootingTable {
   }
 }
 
-/**
-[1] 
-We assign 160-bit opaque ID. lookup algorithm that find closer node.
-treat nodes as leaves in a binary tree
-       let write btree
-Every node have btree
-k closet nodes.
 
-   000 0  -2 2  010     C(2-4):010-100
-   001 1  -1 3  011     C(2-4):010-100
- + 010 2   0 0  000     A(0-1):000-001
-   011 3   1 1  001     B(1-2):001-010
-   100 4   2 6  110     D(4-8):100-1000
-   101 5   3 7  111     D(4-8):100-1000
-   110 6   4 4  100     D(4-8):100-1000
-   111 7   5 5  101     D(4-8):100-1000
-
-[2.1] XOR metric
-
-KadNode has a 160bit node id
-
-[2.2 Node state]
-store {ipaddress port id]
-0<=i<160 2**i-2**l+1
-1,  2,  4,  8 , 16, 32
-*/

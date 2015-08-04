@@ -15,9 +15,11 @@ import '../knode.dart';
 class KNodeAIFindNode {
   bool _isStart = false;
   ShuffleLinkedList<KPeerInfo> findNodesInfo = new ShuffleLinkedList(20);
+  int startTime = 0;
 
   start(KNode node) {
     _isStart = true;
+    startTime = new DateTime.now().millisecondsSinceEpoch;
     updateP2PNetwork(node);
   }
 
@@ -47,8 +49,11 @@ class KNodeAIFindNode {
         }
         //
         // todo 
-        if(count > 5) {
-           break;
+        int currentTime = new DateTime.now().millisecondsSinceEpoch;
+        if(currentTime-startTime > 30000 && count > 3) {
+          break;
+        } else if(currentTime-startTime > 5000 && count > 5){
+          break;          
         }
       }
     });
