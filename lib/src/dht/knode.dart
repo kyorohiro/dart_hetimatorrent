@@ -116,6 +116,10 @@ class KNode extends Object with KrpcResponseInfo {
     });
   }
 
+  bool containSeardchResult(KGetPeerValue info) {
+    return _searcResult.sequential.contains(info);
+  }
+
   addSeardchResult(KGetPeerValue info) {
     _searcResult.addLast(info);
     _controller.add(info);

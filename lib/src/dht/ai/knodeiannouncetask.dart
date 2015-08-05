@@ -131,7 +131,7 @@ class KNodeAIAnnounceTask {
         break;
       }
     }
-    if(receiveGetPeerResponseNode.length > 12) {
+    if (receiveGetPeerResponseNode.length > 12) {
       receiveGetPeerResponseNode.removeRange(10, receiveGetPeerResponseNode.length);
     }
   }
@@ -172,11 +172,12 @@ class KNodeAIAnnounceTask {
           //print("announce set value");
           for (KGetPeerValue i in getPeer.valuesAsKAnnounceInfo(_infoHashId.id)) {
             lastUpdateTime = new DateTime.now().millisecondsSinceEpoch;
-            node.addSeardchResult(i);
-            if (node.verbose) {
+            if (node.verbose == true && node.containSeardchResult(i)) {
               print("########### get peer value ${i.ipAsString} ${i.port}");
             }
+            node.addSeardchResult(i);
           }
+          //
           // todo
           node.sendFindNodeQuery(info.remoteAddress, info.remotePort, _infoHashId.id).catchError((e) {});
         } else {
