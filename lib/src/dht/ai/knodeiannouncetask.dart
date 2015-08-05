@@ -120,7 +120,7 @@ class KNodeAIAnnounceTask {
     int count = 0;
     for (KGetPeerNodes i in receiveGetPeerResponseNode) {
       if (false == _announcedPeers.contains(i)) {
-        node.sendAnnouncePeerQuery(i.ipAsString, i.port, 0, _infoHashId.id, this.port, i.token);
+        node.sendAnnouncePeerQuery(i.ipAsString, i.port, 0, _infoHashId.id, this.port, i.token).catchError((_){});
         _announcedPeers.add(i);
         if (node.verbose) {
           print(
@@ -202,7 +202,7 @@ class KNodeAIAnnounceTask {
               KPeerInfo info = _findedNode.rawshuffled[i];
               if (true == candidate.contains(info)) {
                 lastUpdateTime = new DateTime.now().millisecondsSinceEpoch;
-                node.sendGetPeersQuery(info.ipAsString, info.port, _infoHashId.id);
+                node.sendGetPeersQuery(info.ipAsString, info.port, _infoHashId.id).catchError((_){});
               }
             }
           }

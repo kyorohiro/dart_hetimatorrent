@@ -46,7 +46,7 @@ abstract class KNodeAI {
         } else {
           this.onReceiveUnknown(node, info, message);
         }
-        for(KSendInfo i in node.clearTimeout(5000)) {
+        for(KSendInfo i in node.clearTimeout(10000)) {
           if(i.c.isCompleted == false) {
             i.c.completeError({message:"timeout"});
           }

@@ -92,7 +92,7 @@ class KNodeAIAnnounce extends KNodeAI {
           } else {
             node.rawAnnounced.addLast(new KGetPeerValue.fromString(info.remoteAddress, info.remotePort, announce.infoHash));            
           }
-          return node.sendAnnouncePeerResponse(info.remoteAddress, info.remotePort, query.transactionId);
+          return node.sendAnnouncePeerResponse(info.remoteAddress, info.remotePort, query.transactionId).catchError((_){});
         }
         break;
       case KrpcMessage.GET_PEERS_QUERY:
@@ -111,10 +111,10 @@ class KNodeAIAnnounce extends KNodeAI {
           });
           List<int> opaqueWriteToken = node.getOpaqueWriteToken(new KId(getPeer.infoHash), getPeer.queryingNodesId);
           if (target.length > 0) {
-            return node.sendGetPeersResponseWithPeers(info.remoteAddress, info.remotePort, query.transactionId, opaqueWriteToken, KGetPeerValue.toPeerInfoStrings(target)); //todo
+            return node.sendGetPeersResponseWithPeers(info.remoteAddress, info.remotePort, query.transactionId, opaqueWriteToken, KGetPeerValue.toPeerInfoStrings(target)).catchError((_){}); //todo
           } else {
             return node.rootingtable.findNode(query.queryingNodesId).then((List<KPeerInfo> infos) {
-              return node.sendGetPeersResponseWithClosestNodes(info.remoteAddress, info.remotePort, query.transactionId, opaqueWriteToken, KPeerInfo.toCompactNodeInfos(infos));
+              return node.sendGetPeersResponseWithClosestNodes(info.remoteAddress, info.remotePort, query.transactionId, opaqueWriteToken, KPeerInfo.toCompactNodeInfos(infos)).catchError((_){});
             });
           }
         }

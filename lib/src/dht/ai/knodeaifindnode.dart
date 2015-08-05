@@ -42,7 +42,7 @@ class KNodeAIFindNode {
         if (!findNodesInfo.rawsequential.contains(info)) {
           count++;
           findNodesInfo.addLast(info);
-          node.sendFindNodeQuery(info.ipAsString, info.port, node.nodeId.id);
+          node.sendFindNodeQuery(info.ipAsString, info.port, node.nodeId.id).catchError((_){});
           if(node.verbose == true) {
             print("<id_index>=${info.id.xor(node.nodeId).getRootingTabkeIndex()}");
           }
@@ -80,7 +80,7 @@ class KNodeAIFindNode {
   List mustTofindNode = [];
   onAddNodeFromIPAndPort(KNode node, String ip, int port) {
     if (node.rawUdoSocket != null) {
-      node.sendFindNodeQuery(ip, port, node.nodeId.id);
+      node.sendFindNodeQuery(ip, port, node.nodeId.id).catchError((_){});
     } else {
       mustTofindNode.add([ip, port]);
     }
@@ -89,7 +89,7 @@ class KNodeAIFindNode {
   onTicket(KNode node) {
     updateP2PNetworkWithRandom(node);
     for (List l in mustTofindNode) {
-      node.sendFindNodeQuery(l[0], l[1], node.nodeId.id);
+      node.sendFindNodeQuery(l[0], l[1], node.nodeId.id).catchError((_){});
     }
     mustTofindNode.clear();
   }
@@ -101,7 +101,7 @@ class KNodeAIFindNode {
     switch (query.messageSignature) {
       case KrpcMessage.FIND_NODE_QUERY:
         return node.rootingtable.findNode(query.queryingNodesId).then((List<KPeerInfo> infos) {
-          return node.sendFindNodeResponse(info.remoteAddress, info.remotePort, query.transactionId, KPeerInfo.toCompactNodeInfos(infos));
+          return node.sendFindNodeResponse(info.remoteAddress, info.remotePort, query.transactionId, KPeerInfo.toCompactNodeInfos(infos)).catchError((_){});
         });
     }
     node.rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, query.queryingNodesId)).then((_) {
