@@ -26,14 +26,14 @@ class KNodeAIAnnounceTask {
   int port = 0;
 
   bool _getPeerOnly = false;
-  bool get getPeerOnly  => _getPeerOnly;
+  bool get getPeerOnly => _getPeerOnly;
   KNodeAIAnnounceTask(KId infoHashId, int port) {
     this._infoHashId = infoHashId;
     this.port = port;
   }
 
-  startSearchPeer(KNode node, KId infoHash, {getPeerOnly:false}) {
-    if(node.verbose == true) {
+  startSearchPeer(KNode node, KId infoHash, {getPeerOnly: false}) {
+    if (node.verbose == true) {
       print("## startSearchPeer:${_getPeerOnly}");
     }
     _getPeerOnly = getPeerOnly;
@@ -43,14 +43,14 @@ class KNodeAIAnnounceTask {
   }
 
   stopSearchPeer(KNode node, KId infoHash) {
-    if(node.verbose == true) {
+    if (node.verbose == true) {
       print("## stopSearchPeer");
     }
     _isStart = false;
   }
 
   _startSearch(KNode node) {
-    if(node.verbose == true) {
+    if (node.verbose == true) {
       print("## _startSearch");
     }
     _findedNode.clearAll();
@@ -59,7 +59,7 @@ class KNodeAIAnnounceTask {
   }
 
   _updateSearch(KNode node) {
-    if(node.verbose == true) {
+    if (node.verbose == true) {
       print("## _updateSearch");
     }
 
@@ -92,10 +92,10 @@ class KNodeAIAnnounceTask {
   }
 
   requestAnnounce(KNode node) {
-    if(node.verbose == true) {
+    if (node.verbose == true) {
       print("## requestAnnounce");
     }
-    if(_getPeerOnly == true) {
+    if (_getPeerOnly == true) {
       return;
     }
     receiveGetPeerResponseNode.sort((KGetPeerNodes a, KGetPeerNodes b) {
@@ -108,13 +108,23 @@ class KNodeAIAnnounceTask {
       }
     });
 
+    {
+      int count = 0;
+      for (KGetPeerNodes i in receiveGetPeerResponseNode) {
+        print("Announce[${count}] distance=${i.id.xor(_infoHashId).getRootingTabkeIndex()}");
+        if (++count > 20) {
+          break;
+        }
+      }
+    }
     int count = 0;
     for (KGetPeerNodes i in receiveGetPeerResponseNode) {
       if (false == _announcedPeers.contains(i)) {
-        node.sendAnnouncePeerQuery(i.ipAsString, i.port, 0, _infoHashId.id, this.port,  i.token);
+        node.sendAnnouncePeerQuery(i.ipAsString, i.port, 0, _infoHashId.id, this.port, i.token);
         _announcedPeers.add(i);
         if (node.verbose) {
-          print("###########announce[${node.nodeDebugId}] ---${receiveGetPeerResponseNode.length} ${node.rawSearchResult.length}--${i.ipAsString}, ${i.port} >>${i.id.xor(_infoHashId).getRootingTabkeIndex()} ::: ${i.id.idAsString}");
+          print(
+              "###########announce[${node.nodeDebugId}] ---${receiveGetPeerResponseNode.length} ${node.rawSearchResult.length}--${i.ipAsString}, ${i.port} >>${i.id.xor(_infoHashId).getRootingTabkeIndex()} ::: ${i.id.idAsString}");
         }
       }
       if (++count > 8) {
