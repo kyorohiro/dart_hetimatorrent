@@ -131,6 +131,9 @@ class KNodeAIAnnounceTask {
         break;
       }
     }
+    if(receiveGetPeerResponseNode.length > 12) {
+      receiveGetPeerResponseNode.removeRange(10, receiveGetPeerResponseNode.length);
+    }
   }
 
   updateReceveGetPeerInfo(HetiReceiveUdpInfo info, KrpcGetPeersResponse getPeer) {
