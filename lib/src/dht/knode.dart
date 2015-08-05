@@ -56,7 +56,8 @@ class KNode extends Object with KrpcResponseInfo {
   bool _verbose = false;
   bool get verbose => _verbose;
 
-  KNode(HetiSocketBuilder socketBuilder, {int kBucketSize: 8, List<int> nodeIdAsList: null, KNodeAI ai: null, intervalSecondForMaintenance: 10, intervalSecondForAnnounce: 3*60, bool verbose: false}) {
+  KNode(HetiSocketBuilder socketBuilder,
+      {int kBucketSize: 8, List<int> nodeIdAsList: null, KNodeAI ai: null, intervalSecondForMaintenance: 10, intervalSecondForAnnounce: 3 * 60, bool verbose: false}) {
     this._verbose = verbose;
     this._intervalSecondForMaintenance = intervalSecondForMaintenance;
     this._intervalSecondForAnnounce = intervalSecondForAnnounce;
@@ -82,12 +83,11 @@ class KNode extends Object with KrpcResponseInfo {
           EasyParser parser = buffers["${info.remoteAddress}:${info.remotePort}"];
           (parser.buffer as ArrayBuilder).appendIntList(info.data);
         });
+
         //////
         _isStart = true;
         _ai.start(this);
         ai.startTick(this);
-        ////
-
       });
     }).catchError((e) {
       _isStart = false;
@@ -123,7 +123,7 @@ class KNode extends Object with KrpcResponseInfo {
   addSeardchResult(KGetPeerValue info) {
     bool c = containSeardchResult(info);
     _searcResult.addLast(info);
-    if(c == false) {
+    if (c == false) {
       _controller.add(info);
     }
   }
@@ -157,6 +157,20 @@ class KNode extends Object with KrpcResponseInfo {
     }
     queryInfo.remove(re);
     return re;
+  }
+
+  List<KSendInfo> clearTimeout(int timeout) {
+    int currentTime = new DateTime.now().millisecondsSinceEpoch;
+    List<KSendInfo> ret = [];
+    for (KSendInfo si in queryInfo) {
+      if (currentTime - si._time > timeout) {
+        ret.add(si);
+      }
+    }
+    for (KSendInfo i in ret) {
+      queryInfo.remove(i);
+    }
+    return ret;
   }
 
   Future sendPingQuery(String ip, int port) => _sendMessage(ip, port, new KrpcPingQuery(UTF8.encode("p_${id++}"), _nodeId.id));
