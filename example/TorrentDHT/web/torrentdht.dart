@@ -82,8 +82,8 @@ void main() {
       messageContainer.children.add(new Element.html("<div>Failed to load torrent file</dic>"));
     });
   });
-  
-  startSearchButton.onClick.listen((_){
+
+  startSearchButton.onClick.listen((_) {
     dht.addTarget(infoHash);
   });
 }
@@ -103,14 +103,15 @@ class DHT {
   }
 
   addNode(String ip, int port) {
-    node.addNodeFromIPAndPort(ip, port);
+    node.addBootringNode(ip, port);
   }
 
   addTarget(List<int> infoHash) {
-    node.startSearchPeer(new KId(infoHash), 18080, getPeerOnly:true);
+    node.startSearchValue(new KId(infoHash), 18080, getPeerOnly: true);
   }
 
   String log() {
     return node.rootingtable.toInfo().replaceAll("\n", "<br>");
   }
 }
+

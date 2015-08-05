@@ -78,7 +78,7 @@ class TorrentEngineDHT extends TorrentAI {
   }
 
   Future startSearchPeer(KId infoHash, int port) {
-    return _node.startSearchPeer(infoHash, port);
+    return _node.startSearchValue(infoHash, port);
   }
 
   Future stopSearchPeer(KId infoHash) {
@@ -103,7 +103,7 @@ class TorrentEngineDHT extends TorrentAI {
         });
       } else if (message.id == TorrentMessage.SIGN_PORT) {
         MessagePort portMessage = message;
-        _node.addNodeFromIPAndPort(info.ip, portMessage.port);
+        _node.addBootringNode(info.ip, portMessage.port);
       }
     });
   }

@@ -104,7 +104,7 @@ class KNode extends Object with KrpcResponseInfo {
     });
   }
 
-  startSearchPeer(KId infoHash, int port, {getPeerOnly:false}) {
+  startSearchValue(KId infoHash, int port, {getPeerOnly:false}) {
     return this._ai.startSearchPeer(this, infoHash, port, getPeerOnly:false);
   }
 
@@ -123,7 +123,7 @@ class KNode extends Object with KrpcResponseInfo {
 
   researchSearchPeer([KId infoHash = null]) => this._ai.researchSearchPeer(this, infoHash);
 
-  addNodeFromIPAndPort(String ip, int port) => this._ai.onAddNodeFromIPAndPort(this, ip, port);
+  addBootringNode(String ip, int port) => this._ai.onAddNodeFromIPAndPort(this, ip, port);
 
   List<int> getOpaqueWriteToken(KId infoHash, KId nodeID) => KId.createToken(infoHash, nodeID, this.nodeId);
 
