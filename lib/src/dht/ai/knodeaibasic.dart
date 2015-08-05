@@ -48,16 +48,16 @@ class KNodeAIBasic extends KNodeAI {
     announceAI.updateP2PNetwork(node);
   }
 
-  startSearchPeer(KNode node, KId infoHash, int port, {getPeerOnly:false}) {
-    return announceAI.startSearchPeer(node, infoHash, port);
+  startSearchValue(KNode node, KId infoHash, int port, {getPeerOnly:false}) {
+    return announceAI.startSearchValue(node, infoHash, port);
   }
 
   researchSearchPeer(KNode node, KId infoHash) {
     announceAI.researchSearchPeer(node, infoHash);
   }
 
-  stopSearchPeer(KNode node, KId infoHash) {
-    announceAI.stopSearchPeer(node, infoHash);
+  stopSearchValue(KNode node, KId infoHash) {
+    announceAI.stopSearchValue(node, infoHash);
   }
 
   onTicket(KNode node) {

@@ -29,7 +29,7 @@ class KNodeAIAnnounce extends KNodeAI {
   updateP2PNetwork(KNode node) {
   }
 
-  startSearchPeer(KNode node, KId infoHash, int port, {getPeerOnly:false}) {
+  startSearchValue(KNode node, KId infoHash, int port, {getPeerOnly:false}) {
     if (infoHash != null) {
       if (false == taskList.containsKey(infoHash)) {
         taskList[infoHash] = new KNodeAIAnnounceTask(infoHash, port);
@@ -53,7 +53,7 @@ class KNodeAIAnnounce extends KNodeAI {
     }
   }
 
-  stopSearchPeer(KNode node, KId infoHash) {
+  stopSearchValue(KNode node, KId infoHash) {
     if (true == taskList.containsKey(infoHash)) {
       taskList[infoHash].stopSearchPeer(node, infoHash);
     }

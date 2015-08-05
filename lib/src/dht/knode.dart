@@ -106,13 +106,13 @@ class KNode extends Object with KrpcResponseInfo {
 
   Future startSearchValue(KId infoHash, int port, {getPeerOnly: false}) {
     return new Future(() {
-      return this._ai.startSearchPeer(this, infoHash, port, getPeerOnly: getPeerOnly);
+      return this._ai.startSearchValue(this, infoHash, port, getPeerOnly: getPeerOnly);
     });
   }
 
   Future stopSearchPeer(KId infoHash) {
     return new Future(() {
-      return this._ai.stopSearchPeer(this, infoHash);
+      return this._ai.stopSearchValue(this, infoHash);
     });
   }
 
