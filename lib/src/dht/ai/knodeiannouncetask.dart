@@ -172,7 +172,7 @@ class KNodeAIAnnounceTask {
           //print("announce set value");
           for (KGetPeerValue i in getPeer.valuesAsKAnnounceInfo(_infoHashId.id)) {
             lastUpdateTime = new DateTime.now().millisecondsSinceEpoch;
-            if (node.verbose == true && node.containSeardchResult(i)) {
+            if (node.verbose == true && false == node.containSeardchResult(i)) {
               print("########### get peer value ${i.ipAsString} ${i.port}");
             }
             node.addSeardchResult(i);
