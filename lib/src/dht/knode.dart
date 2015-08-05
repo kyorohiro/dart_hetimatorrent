@@ -121,8 +121,11 @@ class KNode extends Object with KrpcResponseInfo {
   }
 
   addSeardchResult(KGetPeerValue info) {
+    bool c = containSeardchResult(info);
     _searcResult.addLast(info);
-    _controller.add(info);
+    if(c == false) {
+      _controller.add(info);
+    }
   }
 
   addKPeerInfo(KPeerInfo info) => _rootingtable.update(info);
