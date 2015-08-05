@@ -18,6 +18,8 @@ ButtonElement logButton = querySelector("#logButton");
 
 DivElement targetInfohash = querySelector("#targetInfohash");
 ButtonElement startSearchButton = querySelector("#startSearchButton");
+ButtonElement stopSearchButton = querySelector("#stopSearchButton");
+Element loadingSearchButton= querySelector("#loadingSearchButton");
 InputElement searchTarget = querySelector("#searchTarget");
 
 void main() {
@@ -84,7 +86,37 @@ void main() {
   });
 
   startSearchButton.onClick.listen((_) {
-    dht.addTarget(infoHash);
+    startSearchButton.style.display = "none";
+    stopSearchButton.style.display = "none";
+    loadingSearchButton.style.display = "block";
+    new Future((){
+      return dht.addTarget(infoHash).then((_){
+        startSearchButton.style.display = "none";
+        stopSearchButton.style.display = "block";
+        loadingSearchButton.style.display = "none";  
+      });      
+    }).catchError((e){
+      startSearchButton.style.display = "block";
+      stopSearchButton.style.display = "none";
+      loadingSearchButton.style.display = "none";      
+    });
+  });
+  
+  stopSearchButton.onClick.listen((_){
+    startSearchButton.style.display = "none";
+    stopSearchButton.style.display = "none";
+    loadingSearchButton.style.display = "block";
+    new Future(() {
+      return dht.rmTarget(infoHash).then((_){
+        startSearchButton.style.display = "block";
+        stopSearchButton.style.display = "none";
+        loadingSearchButton.style.display = "none"; 
+      });      
+    }).catchError((e){
+      startSearchButton.style.display = "none";
+      stopSearchButton.style.display = "block";
+      loadingSearchButton.style.display = "none";  
+    });
   });
 }
 
@@ -106,8 +138,12 @@ class DHT {
     node.addBootNode(ip, port);
   }
 
-  addTarget(List<int> infoHash) {
-    node.startSearchValue(new KId(infoHash), 18080, getPeerOnly: true);
+  Future addTarget(List<int> infoHash) {
+    return node.startSearchValue(new KId(infoHash), 18080, getPeerOnly: true);
+  }
+
+  Future rmTarget(List<int> infoHash) {
+    return node.stopSearchPeer(new KId(infoHash));
   }
 
   String log() {
