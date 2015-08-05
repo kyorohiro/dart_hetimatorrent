@@ -13,8 +13,8 @@ void main() {
   unit.group('A group of tests', () {
     unit.test("retrive list 0", () {
       KNode a = new KNode(new HetiSocketBuilderChrome(), intervalSecondForMaintenance: 1, verbose:true);
-      a.addBootringNode("192.168.1.26", 43611);
-      a.addBootringNode("192.168.1.26", 43611);
+      a.addBootNode("192.168.1.26", 43611);
+      a.addBootNode("192.168.1.26", 43611);
       a.start(ip:"192.168.1.26");
       return new Future.delayed(new Duration(seconds: 30)).then((_) {
         a.stop();

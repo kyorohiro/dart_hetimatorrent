@@ -19,7 +19,7 @@ void main() {
         knodes.add(a);
         kpeerInfos.add(new KPeerInfo("127.0.0.1", i, a.nodeId));
         if (i != 0) {
-          knodes[i].addBootringNode(kpeerInfos[i - 1].ipAsString, kpeerInfos[i - 1].port);
+          knodes[i].addBootNode(kpeerInfos[i - 1].ipAsString, kpeerInfos[i - 1].port);
 //          knodes[i].addKPeerInfo(kpeerInfos[i - 1]);
         }
         print("${i} : ${a.nodeId.getRootingTabkeIndex()}");

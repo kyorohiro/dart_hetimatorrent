@@ -103,7 +103,7 @@ class DHT {
   }
 
   addNode(String ip, int port) {
-    node.addBootringNode(ip, port);
+    node.addBootNode(ip, port);
   }
 
   addTarget(List<int> infoHash) {

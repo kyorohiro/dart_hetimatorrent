@@ -103,7 +103,7 @@ class TorrentEngineDHT extends TorrentAI {
         });
       } else if (message.id == TorrentMessage.SIGN_PORT) {
         MessagePort portMessage = message;
-        _node.addBootringNode(info.ip, portMessage.port);
+        _node.addBootNode(info.ip, portMessage.port);
       }
     });
   }

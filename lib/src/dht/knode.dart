@@ -123,7 +123,7 @@ class KNode extends Object with KrpcResponseInfo {
 
   researchSearchPeer([KId infoHash = null]) => this._ai.researchSearchPeer(this, infoHash);
 
-  addBootringNode(String ip, int port) => this._ai.onAddNodeFromIPAndPort(this, ip, port);
+  addBootNode(String ip, int port) => this._ai.onAddNodeFromIPAndPort(this, ip, port);
 
   List<int> getOpaqueWriteToken(KId infoHash, KId nodeID) => KId.createToken(infoHash, nodeID, this.nodeId);
 
