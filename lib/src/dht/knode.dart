@@ -104,12 +104,16 @@ class KNode extends Object with KrpcResponseInfo {
     });
   }
 
-  startSearchValue(KId infoHash, int port, {getPeerOnly:false}) {
-    return this._ai.startSearchPeer(this, infoHash, port, getPeerOnly:false);
+  Future startSearchValue(KId infoHash, int port, {getPeerOnly: false}) {
+    return new Future(() {
+      return this._ai.startSearchPeer(this, infoHash, port, getPeerOnly: false);
+    });
   }
 
-  stopSearchPeer(KId infoHash) {
-    return this._ai.stopSearchPeer(this, infoHash);
+  Future stopSearchPeer(KId infoHash) {
+    return new Future(() {
+      return this._ai.stopSearchPeer(this, infoHash);
+    });
   }
 
   addSeardchResult(KGetPeerValue info) {
@@ -194,9 +198,6 @@ class KNode extends Object with KrpcResponseInfo {
     }).catchError(c.completeError);
     return c.future;
   }
-
-
-
 }
 
 class KSendInfo {
@@ -209,7 +210,7 @@ class KSendInfo {
   int get time => _time;
 
   Completer _c = null;
-  Completer get  c => _c;
+  Completer get c => _c;
   KSendInfo(String id, String act, Completer c) {
     this._id = id;
     this._c = c;

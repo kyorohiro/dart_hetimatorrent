@@ -49,7 +49,7 @@ class KNodeAIBasic extends KNodeAI {
   }
 
   startSearchPeer(KNode node, KId infoHash, int port, {getPeerOnly:false}) {
-    announceAI.startSearchPeer(node, infoHash, port);
+    return announceAI.startSearchPeer(node, infoHash, port);
   }
 
   researchSearchPeer(KNode node, KId infoHash) {
