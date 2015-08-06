@@ -21,12 +21,12 @@ class TrackerServer {
   List<TrackerPeerManager> _peerManagerList = new List();
 
   String trackerAnnounceAddressForTorrentFile = "";
-  
+
   bool _isStart = false;
   bool get isStart => _isStart;
   bool _isTorrentfile = true;
 
-  TrackerServer(HetiSocketBuilder socketBuilder,[bool isTorrentfile=true]) {
+  TrackerServer(HetiSocketBuilder socketBuilder, [bool isTorrentfile = true]) {
     _server = new HetiHttpServerHelper(socketBuilder);
     address = "0.0.0.0";
     port = 6969;
@@ -62,7 +62,7 @@ class TrackerServer {
     }
   }
 
-  async.Future addInfoHash(TorrentFile f) {
+  async.Future addTorrentFile(TorrentFile f) {
     return f.createInfoSha1().then((List<int> infoHash) {
       bool isManaged = false;
 
@@ -87,6 +87,32 @@ class TrackerServer {
     });
   }
 
+  async.Future addInfoHash(List<int> infoHash) {
+    return new async.Future(() {
+      bool isManaged = false;
+
+      for (TrackerPeerManager m in _peerManagerList) {
+        if (m.isManagedInfoHash(infoHash)) {
+          isManaged = true;
+        }
+      }
+
+      if (isManaged == true) {
+        if (outputLog) {
+          print("TrackerServer#add:###non: ${infoHash}");
+        }
+        return;
+      }
+
+      // todo
+      TrackerPeerManager peerManager = new TrackerPeerManager(infoHash, null);
+      _peerManagerList.add(peerManager);
+      if (outputLog) {
+        print("TrackerServer#add:###add: ${infoHash}");
+      }
+    });
+  }
+
   async.StreamSubscription res = null;
   async.Future<StartResult> start() {
     if (outputLog) {
@@ -104,7 +130,7 @@ class TrackerServer {
       c.completeError(e);
     });
     if (res == null) {
-        res = _server.onResponse.listen(onListen);
+      res = _server.onResponse.listen(onListen);
     }
 
     return c.future;
@@ -132,26 +158,30 @@ class TrackerServer {
         StringBuffer cont = new StringBuffer();
         for (TrackerPeerManager manager in _peerManagerList) {
           cont.writeln("""<div>[${PercentEncode.encode(manager.managedInfoHash)}]</div>""");
-          cont.writeln("""<div><a href="/your.torrent?infohash=${PercentEncode.encode(manager.managedInfoHash)}&mode=g">  global</a></div>""");
-          cont.writeln("""<div><a href="/your.torrent?infohash=${PercentEncode.encode(manager.managedInfoHash)}&mode=l">  local</a></div>""");
+          if (manager.torrentFile != null) {
+            cont.writeln("""<div><a href="/your.torrent?infohash=${PercentEncode.encode(manager.managedInfoHash)}&mode=g">  global</a></div>""");
+            cont.writeln("""<div><a href="/your.torrent?infohash=${PercentEncode.encode(manager.managedInfoHash)}&mode=l">  local</a></div>""");
+          }
         }
         _server.response(item.req, new HetimaBuilderToFile(new ArrayBuilder.fromList(UTF8.encode("<html><head></head><body><div>[managed hash]</div>${cont}</body></html>"))),
             contentType: "text/html");
-      } else if (item.path == "/your.torrent" &&  _isTorrentfile) {
+      } else if (item.path == "/your.torrent" && _isTorrentfile) {
         for (TrackerPeerManager manager in _peerManagerList) {
           if (PercentEncode.encode(manager.managedInfoHash) == parameter["infohash"]) {
-            String addr = trackerAnnounceAddressForTorrentFile;
-            if ((addr == null || addr.length == 0) || parameter["mode"] == "l") {
-              addr = "http://${address}:${port}/announce";
+            if (manager.torrentFile != null) {
+              String addr = trackerAnnounceAddressForTorrentFile;
+              if ((addr == null || addr.length == 0) || parameter["mode"] == "l") {
+                addr = "http://${address}:${port}/announce";
+              }
+              manager.torrentFile.announce = addr;
+              _server.response(item.req, new HetimaDataMemory(Bencode.encode(manager.torrentFile.mMetadata)));
+              return null;
             }
-            manager.torrentFile.announce = addr;
-            _server.response(item.req, new HetimaDataMemory(Bencode.encode(manager.torrentFile.mMetadata)));
-            return null;
           }
         }
         item.socket.close();
-      } else if (item.path == "/redirect"&&_isTorrentfile) {
-        _server.response(item.req, new HetimaDataMemory([]),statusCode:301,headerList:{"Location":"/announce?${qurey}"});
+      } else if (item.path == "/redirect" && _isTorrentfile) {
+        _server.response(item.req, new HetimaDataMemory([]), statusCode: 301, headerList: {"Location": "/announce?${qurey}"});
       } else if (infoHashAsString != null) {
         return item.socket.getSocketInfo().then((HetiSocketInfo info) {
           if (outputLog) {

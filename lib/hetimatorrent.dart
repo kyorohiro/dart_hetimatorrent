@@ -30,8 +30,6 @@ export 'src/client/torrentai.dart';
 export 'src/client/torrentai_basic.dart';
 export 'src/client/torrentclientmessage.dart';
 export 'src/client/torrentai_choke.dart';
-export 'src/extra/terminal.dart';
-
 export 'src/client/message/message.dart';
 
 export 'src/dht/message/krpcmessage.dart';
@@ -48,6 +46,7 @@ export 'src/dht/message/kgetpeernodes.dart';
 export 'src/dht/message/kgetpeervalue.dart';
 
 
-
+export 'src/extra/torrentengine.dart';
+export 'src/extra/torrentengineai.dart';
 
 

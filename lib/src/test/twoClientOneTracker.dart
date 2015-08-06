@@ -52,7 +52,7 @@ class TestCaseCreator2Client1Tracker {
       TrackerServer server = new TrackerServer(new HetiSocketBuilderChrome());
       server.address = localAddress;
       server.port = port;
-      server.addInfoHash(f);
+      server.addTorrentFile(f);
       return server.start().then((StartResult result) {
         return server;
       });
