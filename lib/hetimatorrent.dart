@@ -46,7 +46,7 @@ export 'src/dht/message/kgetpeernodes.dart';
 export 'src/dht/message/kgetpeervalue.dart';
 
 
-export 'src/extra/torrentengine.dart';
-export 'src/extra/torrentengineai.dart';
+export 'src/app/torrentengine.dart';
+export 'src/app/torrentengineai.dart';
 
 
