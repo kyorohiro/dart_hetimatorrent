@@ -24,17 +24,16 @@ class TorrentEngineAI extends TorrentAI {
 
   TorrentClient _torrent = null;
   TrackerClient _tracker = null;
+  TorrentClientManager _manager = null;
   UpnpPortMapHelper _upnpPortMapClient = null;
 
   StreamController<TorrentEngineProgress> _progressStream = new StreamController.broadcast();
   Stream<TorrentEngineProgress> get onProgress => _progressStream.stream;
   TorrentEngineProgress _progressCash = new TorrentEngineProgress();
 
-  TorrentEngineDHTMane _dhtmane = null;
-  TorrentEngineAI(TrackerClient tracker, UpnpPortMapHelper upnpPortMapClient, TorrentEngineDHTMane mane) {
+  TorrentEngineAI(TrackerClient tracker, UpnpPortMapHelper upnpPortMapClient) {
     this._tracker = tracker;
     this._upnpPortMapClient = upnpPortMapClient;
-    this._dhtmane = mane;
   }
 
   @override
@@ -44,7 +43,6 @@ class TorrentEngineAI extends TorrentAI {
         print("Empty AI receive : ${message.id}");
       });
     } else {
-      _dhtmane.onReceive(client, info, message);
       return basic.onReceive(client, info, message);
     }
   }
@@ -56,7 +54,6 @@ class TorrentEngineAI extends TorrentAI {
         print("Empty AI signal : ${signal.id}");
       });
     } else {
-      _dhtmane.onSignal(client, info, signal);
       return basic.onSignal(client, info, signal);
     }
   }
@@ -70,7 +67,6 @@ class TorrentEngineAI extends TorrentAI {
         print("Empty AI tick : ${client.peerId}");
       });
     } else {
-      _dhtmane.onTick(client);
       return basic.onTick(client);
     }
   }
@@ -81,16 +77,7 @@ class TorrentEngineAI extends TorrentAI {
       isGo = true;
       _upnpPortMapClient.clearSearchedRouterInfo();
 
-      return new Future(() {
-        if (useDht == true) {
-          return _dhtmane.startDHT(useUpnp: usePortMap).then((a) {
-            _dhtmane.startGetPeer(_torrent.infoHash, _torrent.globalPort);
-            return a;
-          });
-        }
-      }).then((_) {
-        _startTracker(1).catchError((e) {});
-      });
+      return  _startTracker(1).catchError((e) {});
     });
   }
 
@@ -98,11 +85,7 @@ class TorrentEngineAI extends TorrentAI {
     return this._torrent.stop().then((_) {
       isGo = false;
       if (usePortMap == true) {
-        return _upnpPortMapClient.deletePortMapFromAppIdDesc(reuseRouter: true).catchError((e) {}).then((_) {
-          return _dhtmane.stopDHT();
-        });
-      } else {
-        return _dhtmane.stopDHT();
+        return _upnpPortMapClient.deletePortMapFromAppIdDesc(reuseRouter: true).catchError((e) {});
       }
     }).then((_) {
       return _startTracker(0).catchError((e) {});

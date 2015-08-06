@@ -7,7 +7,6 @@ import 'package:hetimatorrent/hetimatorrent.dart';
 import '../client/torrentclient.dart';
 import '../tracker/trackerclient.dart';
 import 'torrentengineai.dart';
-import 'torrentengineaidht.dart';
 
 abstract class TorrentEngineCommand {
   Future<CommandResult> execute(TorrentEngine engine, {List<String> args: null});
@@ -63,7 +62,7 @@ class TorrentEngine {
       engine._torrentClientManager = new TorrentClientManager(builder);
       //
       engine._upnpPortMapClient = new UpnpPortMapHelper(builder, appid);
-      engine.ai = new TorrentEngineAI(engine._trackerClient, engine._upnpPortMapClient, new TorrentEngineDHTMane(builder, appid));
+      engine.ai = new TorrentEngineAI(engine._trackerClient, engine._upnpPortMapClient);
       engine.ai.baseLocalAddress = localIp;
       engine.ai.baseLocalPort = localPort;
       engine.ai.baseGlobalPort = globalPort;
@@ -129,77 +128,3 @@ class TorrentEngineProgress {
   }
 }
 
-class TorrentEngineDHTMane extends TorrentAI {
-  //
-  // dht is singleton
-  static TorrentEngineDHT _dht = null;
-
-  bool _startDHTIsNow = false;
-  HetiSocketBuilder _socketBuilder = null;
-  String _appId = "";
-  String get appId => "dht:${_appId}";
-
-  TorrentEngineDHTMane(HetiSocketBuilder socketBuilder, String appId) {
-    this._socketBuilder = socketBuilder;
-    this._appId = appId;
-  }
-
-  Future<TorrentEngineDHT> startDHT({String localIp: "0.0.0.0", int localPort: 38080, bool useUpnp: false}) {
-    if (_startDHTIsNow == true) {
-      throw {"error": "now starting DHT"};
-    }
-    if (_dht == null) {
-      _dht = new TorrentEngineDHT(_socketBuilder, appId, useUpnp: useUpnp);
-    }
-    return _dht.start().then((_) {
-      return _dht;
-    }).whenComplete(() {
-      _startDHTIsNow = true;
-    });
-  }
-
-  Future<TorrentEngineDHT> stopDHT() {
-    if (_startDHTIsNow == true) {
-      _startDHTIsNow = false;
-      return _dht.stop();
-    } else {
-      return new Future(() {});
-    }
-  }
-
-  Future<TorrentEngineDHT> startGetPeer(List<int> infoHash, int port) {
-    if (_startDHTIsNow == true) {
-      _startDHTIsNow = false;
-      return _dht.startSearchPeer(new KId(infoHash), port);
-    } else {
-      return new Future(() {});
-    }
-  }
-
-  @override
-  Future onReceive(TorrentClient client, TorrentClientPeerInfo info, TorrentMessage message) {
-    return new Future(() {
-      if (_dht != null) {
-        _dht.onReceive(client, info, message);
-      }
-    });
-  }
-
-  @override
-  Future onSignal(TorrentClient client, TorrentClientPeerInfo info, TorrentClientSignal message) {
-    return new Future(() {
-      if (_dht != null) {
-        _dht.onSignal(client, info, message);
-      }
-    });
-  }
-
-  @override
-  Future onTick(TorrentClient client) {
-    return new Future(() {
-      if (_dht != null) {
-        _dht.onTick(client);
-      }
-    });
-  }
-}
