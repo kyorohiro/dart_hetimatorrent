@@ -86,15 +86,6 @@ class TorrentEngineDHT extends TorrentAI {
   }
 
   @override
-  Future onRegistAI(TorrentClient client) {
-    return new Future(() {
-      List<int> reserved = client.reseved;
-      reserved[7] |= 0x05;
-      client.reseved = reserved;
-    });
-  }
-
-  @override
   Future onReceive(TorrentClient client, TorrentClientPeerInfo info, TorrentMessage message) {
     return new Future(() {
       if (message.id == TorrentMessage.DUMMY_SIGN_SHAKEHAND) {

@@ -57,21 +57,19 @@ class TorrentClient {
   TorrentClientPeerInfoList get rawPeerInfos => _peerInfos;
   List<int> _reseved = [0, 0, 0, 0, 0, 0, 0, 0];
   List<int> get reseved => new List.from(_reseved);
-  set reseved( List<int>  v) {
-    if(v.length != 8) {
-      throw {};
-    }
-    _reseved.clear();
-    _reseved.addAll(v);
-  }
 
-  static Future<TorrentClient> create(HetiSocketBuilder builder, List<int> peerId, TorrentFile file, HetimaData data, {TorrentAI ai: null,List<int>bitfield:null}) {
+
+  static Future<TorrentClient> create(HetiSocketBuilder builder, List<int> peerId, TorrentFile file, HetimaData data,
+      {TorrentAI ai: null,List<int>bitfield:null,List<int> reserved:null}) {
     return file.createInfoSha1().then((List<int> infoHash) {
-      return new TorrentClient(builder, peerId, infoHash, file.info.pieces, file.info.piece_length, file.info.files.dataSize, data, ai: ai,bitfield:bitfield);
+      return new TorrentClient(builder, peerId, infoHash, file.info.pieces, file.info.piece_length, 
+          file.info.files.dataSize, data, ai: ai,bitfield:bitfield,reserved:reserved);
     });
   }
 
-  TorrentClient(HetiSocketBuilder builder, List<int> peerId, List<int> infoHash, List<int> piece, int pieceLength, int fileSize, HetimaData data, {TorrentAI ai: null, haveAllData: false,List<int>bitfield:null}) {
+  TorrentClient(HetiSocketBuilder builder, List<int> peerId, List<int> infoHash, List<int> piece, 
+                int pieceLength, int fileSize, HetimaData data, {TorrentAI ai: null, haveAllData: false,
+                  List<int>bitfield:null,List<int> reserved:null}) {
     this._builder = builder;
     _peerInfos = new TorrentClientPeerInfoList();
     _infoHash.addAll(infoHash);
@@ -86,7 +84,12 @@ class TorrentClient {
     } else {
       this.ai = ai;
     }
-    this.ai.onRegistAI(this);
+    if(reserved == null) {
+      _reseved = [0,0,0,0,0,0,0,0];
+    } else {
+      _reseved.clear();
+      _reseved.addAll(reserved);
+    }
   }
 
   TorrentClientPeerInfo putTorrentPeerInfoFromTracker(String ip, int port) {

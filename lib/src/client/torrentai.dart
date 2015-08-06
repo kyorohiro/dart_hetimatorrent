@@ -11,7 +11,6 @@ abstract class TorrentAI {
   Future onReceive(TorrentClient client, TorrentClientPeerInfo info, TorrentMessage message);
   Future onSignal(TorrentClient client, TorrentClientPeerInfo info, TorrentClientSignal message);
   Future onTick(TorrentClient client);
-  Future onRegistAI(TorrentClient client);
 }
 
 class TorrenAIEmpty extends TorrentAI {
@@ -30,11 +29,6 @@ class TorrenAIEmpty extends TorrentAI {
   Future onTick(TorrentClient client) {
     return new Future(() {
       print("Empty AI signal : ${client.peerId}");
-    });
-  }
-  Future onRegistAI(TorrentClient client) {
-    return new Future(() {
-      print("Empty AI regist : ${client.peerId}");
     });
   }
 }

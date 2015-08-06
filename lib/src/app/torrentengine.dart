@@ -30,7 +30,6 @@ class CommandResult {
   }
 }
 
-
 class TorrentEngine {
   TorrentClient _torrentClient = null;
   TrackerClient _trackerClient = null;
@@ -56,30 +55,32 @@ class TorrentEngine {
 
   static Future<TorrentEngine> createTorrentEngine(HetiSocketBuilder builder, TorrentFile torrentfile, HetimaData downloadedData, {appid: "hetima_torrent_engine", haveAllData: false,
       int localPort: 18085, int globalPort: 18085, String globalIp: "0.0.0.0", String localIp: "0.0.0.0", int retryNum: 10, bool useUpnp: false, bool useDht: false, List<int> bitfield: null}) {
-    return new Future(() {
-      TorrentEngine engine = new TorrentEngine._empty();
-      return TrackerClient.createTrackerClient(builder, torrentfile).then((TrackerClient trackerClient) {
-        engine._builder = builder;
-        engine._trackerClient = trackerClient;
-        //
-        engine._upnpPortMapClient = new UpnpPortMapHelper(builder, appid);
-      //  engine._dhtMane = new TorrentEngineDHTMane(builder);
-        engine.ai = new TorrentEngineAI(engine._trackerClient, engine._upnpPortMapClient, new TorrentEngineDHTMane(builder, appid));
-        engine.ai.baseLocalAddress = localIp;
-        engine.ai.baseLocalPort = localPort;
-        engine.ai.baseGlobalPort = globalPort;
-        engine.ai.baseNumOfRetry = retryNum;
-        engine.ai.usePortMap = useUpnp;
-        engine.ai.useDht = useDht;
-        engine.ai.baseGlobalIp = globalIp;
-        //
-        engine._torrentClient = new TorrentClient(
-            builder, trackerClient.peerId, trackerClient.infoHash, torrentfile.info.pieces, 
-            torrentfile.info.piece_length, torrentfile.info.files.dataSize, downloadedData,
-            ai: engine.ai, haveAllData: haveAllData, bitfield: bitfield);
-        
-        return engine;
-      });
+    TorrentEngine engine = new TorrentEngine._empty();
+    return TrackerClient.createTrackerClient(builder, torrentfile).then((TrackerClient trackerClient) {
+      engine._builder = builder;
+      engine._trackerClient = trackerClient;
+      //
+      engine._upnpPortMapClient = new UpnpPortMapHelper(builder, appid);
+      engine.ai = new TorrentEngineAI(engine._trackerClient, engine._upnpPortMapClient, new TorrentEngineDHTMane(builder, appid));
+      engine.ai.baseLocalAddress = localIp;
+      engine.ai.baseLocalPort = localPort;
+      engine.ai.baseGlobalPort = globalPort;
+      engine.ai.baseNumOfRetry = retryNum;
+      engine.ai.usePortMap = useUpnp;
+      engine.ai.useDht = useDht;
+      engine.ai.baseGlobalIp = globalIp;
+
+      //
+      List<int> reserved = [0, 0, 0, 0, 0, 0, 0, 0];
+      if (useDht == true) {
+        reserved = [0, 0, 0, 0, 0, 0, 0, 0x01];
+      }
+
+      engine._torrentClient = new TorrentClient(
+          builder, trackerClient.peerId, trackerClient.infoHash, torrentfile.info.pieces, torrentfile.info.piece_length, torrentfile.info.files.dataSize, downloadedData,
+          ai: engine.ai, haveAllData: haveAllData, bitfield: bitfield, reserved: reserved);
+
+      return engine;
     });
   }
 
@@ -88,9 +89,9 @@ class TorrentEngine {
 
   Future start({usePortMap: false}) {
     ai.usePortMap = usePortMap;
-    return ai.start().then((v) {
+    return ai.start(_torrentClient).then((v) {
       _isGO = true;
-        return v;
+      return v;
     }).catchError((e) {
       throw e;
     });
@@ -135,6 +136,7 @@ class TorrentEngineDHTMane extends TorrentAI {
   HetiSocketBuilder _socketBuilder = null;
   String _appId = "";
   String get appId => "dht:${_appId}";
+
   TorrentEngineDHTMane(HetiSocketBuilder socketBuilder, String appId) {
     this._socketBuilder = socketBuilder;
     this._appId = appId;
@@ -144,8 +146,8 @@ class TorrentEngineDHTMane extends TorrentAI {
     if (_startDHTIsNow == true) {
       throw {"error": "now starting DHT"};
     }
-    if(_dht == null) {
-      _dht = new TorrentEngineDHT(_socketBuilder, appId, useUpnp:useUpnp);
+    if (_dht == null) {
+      _dht = new TorrentEngineDHT(_socketBuilder, appId, useUpnp: useUpnp);
     }
     return _dht.start().then((_) {
       return _dht;
@@ -159,7 +161,7 @@ class TorrentEngineDHTMane extends TorrentAI {
       _startDHTIsNow = false;
       return _dht.stop();
     } else {
-      return new Future((){});
+      return new Future(() {});
     }
   }
 
@@ -168,32 +170,23 @@ class TorrentEngineDHTMane extends TorrentAI {
       _startDHTIsNow = false;
       return _dht.startSearchPeer(new KId(infoHash), port);
     } else {
-      return new Future((){});
+      return new Future(() {});
     }
   }
 
   @override
   Future onReceive(TorrentClient client, TorrentClientPeerInfo info, TorrentMessage message) {
     return new Future(() {
-      if(_dht != null) {
+      if (_dht != null) {
         _dht.onReceive(client, info, message);
-      }      
-    });
-  }
-
-  @override
-  Future onRegistAI(TorrentClient client) {
-    return new Future(() {
-      if(_dht != null) {
-        _dht.onRegistAI(client);
-      }      
+      }
     });
   }
 
   @override
   Future onSignal(TorrentClient client, TorrentClientPeerInfo info, TorrentClientSignal message) {
     return new Future(() {
-      if(_dht != null) {
+      if (_dht != null) {
         _dht.onSignal(client, info, message);
       }
     });
@@ -202,7 +195,7 @@ class TorrentEngineDHTMane extends TorrentAI {
   @override
   Future onTick(TorrentClient client) {
     return new Future(() {
-      if(_dht != null) {
+      if (_dht != null) {
         _dht.onTick(client);
       }
     });

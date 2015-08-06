@@ -25,13 +25,6 @@ class TorrentAIBasic extends TorrentAI {
     _maxConnect = maxConnect;
   }
 
-  Future onRegistAI(TorrentClient client) {
-    _pieceTest = new PieceTest(client);
-    return new Future(() {
-      print("Basic AI regist : ${client.peerId}");
-    });
-  }
-
   Future onTick(TorrentClient client) {
     return new Future(() {
       {
@@ -110,6 +103,9 @@ class TorrentAIBasic extends TorrentAI {
        // targetBlock 'does not reflect. check ID_SET_PIECE_A_PART;
        // case TorrentMessage.SIGN_PIECE:
         case TorrentMessage.SIGN_UNCHOKE:
+          if(_pieceTest == null) {
+            _pieceTest = new PieceTest(client);
+          }
           _pieceTest.pieceTest(client, front);
           break;
       }
@@ -130,6 +126,9 @@ class TorrentAIBasic extends TorrentAI {
           break;
         case TorrentClientSignal.ID_SET_PIECE_A_PART:
         case TorrentClientSignal.ID_SET_PIECE:
+          if(_pieceTest == null) {
+            _pieceTest = new PieceTest(client);
+          }
           _pieceTest.pieceTest(client, info.front);
           break;
       }

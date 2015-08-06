@@ -37,14 +37,6 @@ class TorrentEngineAI extends TorrentAI {
   }
 
   @override
-  Future onRegistAI(TorrentClient client) {
-    this._torrent = client;
-    basic.onRegistAI(client);
-    _dhtmane.onRegistAI(client);
-    return new Future(() {});
-  }
-
-  @override
   Future onReceive(TorrentClient client, TorrentClientPeerInfo info, TorrentMessage message) {
     if (isGo != true) {
       return new Future(() {
@@ -82,7 +74,8 @@ class TorrentEngineAI extends TorrentAI {
     }
   }
 
-  Future start() {
+  Future start(TorrentClient torrentClient) {
+    this._torrent = torrentClient;
     return _startTorrent().then((_) {
       isGo = true;
       _upnpPortMapClient.clearSearchedRouterInfo();
@@ -90,7 +83,6 @@ class TorrentEngineAI extends TorrentAI {
       return new Future(() {
         if (useDht == true) {
           return _dhtmane.startDHT(useUpnp: usePortMap).then((a) {
-            _dhtmane.onRegistAI(_torrent);
             _dhtmane.startGetPeer(_torrent.infoHash, _torrent.globalPort);
             return a;
           });
