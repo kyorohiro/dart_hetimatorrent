@@ -15,6 +15,8 @@ A Torrent library for Dart developers.
 [mini sample]
  - torrent client
   - ./example/TorrentClient
+ - torrent dht
+  - ./example/TorrentDHT
  - torrent file creator
   - ./example/TorrentFileCreator
  - tracker url creator
