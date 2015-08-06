@@ -106,6 +106,37 @@ class TorrentClient {
     return ret;
   }
 
+  Future startWithoutSocket(String localAddress, int localPort, [String globalIp = null, int globalPort = null]) {
+    this._localAddress = localAddress;
+    this._localPort = localPort;
+    this.globalPort = globalPort;
+    this.globalIp = globalIp;
+    return new Future(() {
+      _isStart = true;
+      _tick();
+      return {};
+    });
+  }
+
+  Future onAccept(HetiSocket socket) {
+    return new Future(() {
+      if(false == _isStart) {
+        return null;
+      }
+      return socket.getSocketInfo().then((HetiSocketInfo socketInfo) {
+        print("accept: ${socketInfo.peerAddress}, ${socketInfo.peerPort}");
+        TorrentClientPeerInfo info = _putTorrentPeerInfoFromAccept(socketInfo.peerAddress, socketInfo.peerPort);
+        info.front = new TorrentClientFront(socket, socketInfo.peerAddress, socketInfo.peerPort, socket.buffer, this._targetBlock.bitSize, _infoHash, _peerId, _reseved);
+        _internalOnReceive(info.front, info);
+        info.front.startReceive();
+        TorrentClientSignal sig = new TorrentClientSignalWithPeerInfo(info, TorrentClientSignal.ID_ACCEPT, 0, "accepted");
+        _sendSignal(this, info, sig);
+      });
+    }).catchError((e) {
+      socket.close();
+    });
+  }
+
   Future start(String localAddress, int localPort, [String globalIp = null, int globalPort = null]) {
     this._localAddress = localAddress;
     this._localPort = localPort;
@@ -117,22 +148,7 @@ class TorrentClient {
     return _builder.startServer(localAddress, localPort).then((HetiServerSocket serverSocket) {
       _server = serverSocket;
       _server.onAccept().listen((HetiSocket socket) {
-        new Future(() {
-          if(false == _isStart) {
-            return null;
-          }
-          return socket.getSocketInfo().then((HetiSocketInfo socketInfo) {
-            print("accept: ${socketInfo.peerAddress}, ${socketInfo.peerPort}");
-            TorrentClientPeerInfo info = _putTorrentPeerInfoFromAccept(socketInfo.peerAddress, socketInfo.peerPort);
-            info.front = new TorrentClientFront(socket, socketInfo.peerAddress, socketInfo.peerPort, socket.buffer, this._targetBlock.bitSize, _infoHash, _peerId, _reseved);
-            _internalOnReceive(info.front, info);
-            info.front.startReceive();
-            TorrentClientSignal sig = new TorrentClientSignalWithPeerInfo(info, TorrentClientSignal.ID_ACCEPT, 0, "accepted");
-            _sendSignal(this, info, sig);
-          });
-        }).catchError((e) {
-          socket.close();
-        });
+        onAccept(socket);
       });
       TorrentClientSignal sig = new TorrentClientSignal(TorrentClientSignal.ID_STARTED_CLIENT, 0, "started client");
       _sendSignal(this, null, sig);
@@ -173,7 +189,9 @@ class TorrentClient {
     f = new Future(() {
       TorrentClientSignal sig = new TorrentClientSignal(TorrentClientSignal.ID_STOPPED_CLIENT, 0, "stopped client");
       _sendSignal(this, null, sig);
-      return _server.close();
+      if(_server != null) {
+        return _server.close();
+      }
     }).catchError((e) {
       ;
     });

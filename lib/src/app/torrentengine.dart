@@ -31,6 +31,7 @@ class CommandResult {
 }
 
 class TorrentEngine {
+  TorrentClientManager _torrentClientManager = null;
   TorrentClient _torrentClient = null;
   TrackerClient _trackerClient = null;
   UpnpPortMapHelper _upnpPortMapClient = null;
@@ -59,6 +60,7 @@ class TorrentEngine {
     return TrackerClient.createTrackerClient(builder, torrentfile).then((TrackerClient trackerClient) {
       engine._builder = builder;
       engine._trackerClient = trackerClient;
+      engine._torrentClientManager = new TorrentClientManager(builder);
       //
       engine._upnpPortMapClient = new UpnpPortMapHelper(builder, appid);
       engine.ai = new TorrentEngineAI(engine._trackerClient, engine._upnpPortMapClient, new TorrentEngineDHTMane(builder, appid));

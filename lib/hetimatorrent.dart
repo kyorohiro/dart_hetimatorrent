@@ -31,6 +31,7 @@ export 'src/client/torrentai_basic.dart';
 export 'src/client/torrentclientmessage.dart';
 export 'src/client/torrentai_choke.dart';
 export 'src/client/message/message.dart';
+export 'src/client_new/torrentclient_manager.dart';
 
 export 'src/dht/message/krpcmessage.dart';
 export 'src/dht/message/krpcping.dart';
