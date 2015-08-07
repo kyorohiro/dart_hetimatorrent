@@ -24,14 +24,16 @@ class TorrentEngineAIPortMap {
   int baseNumOfRetry = 10;
 
   TorrentClientManager _manager = null;
+  KNode _dhtClient = null;
   UpnpPortMapHelper _upnpPortMapClient = null;
 
   TorrentEngineAIPortMap(UpnpPortMapHelper upnpPortMapClient) {
     this._upnpPortMapClient = upnpPortMapClient;
   }
 
-  Future start(TorrentClientManager manager) {
+  Future start(TorrentClientManager manager, KNode dhtClient) {
     this._manager = manager;
+    this._dhtClient = dhtClient;
 
     return _startTorrent(this._manager).then((_) {
       isStart = true;
@@ -43,7 +45,10 @@ class TorrentEngineAIPortMap {
     return this._manager.stop().then((_) {
       isStart = false;
       if (usePortMap == true) {
-        return _upnpPortMapClient.deletePortMapFromAppIdDesc(reuseRouter: true).catchError((e) {});
+        List<Future> r = [];
+        r.add(_upnpPortMapClient.deletePortMapFromAppIdDesc(reuseRouter:true,newProtocol:UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_TCP));
+        r.add(_upnpPortMapClient.deletePortMapFromAppIdDesc(reuseRouter:true,newProtocol:UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_UDP));
+        return Future.wait(r);
       }
     });
   }
@@ -52,27 +57,38 @@ class TorrentEngineAIPortMap {
     int retry = 0;
     a(dynamic d) {
       return manager.start(baseLocalAddress, baseLocalPort + retry, baseGlobalIp, baseGlobalPort + retry).then((_) {
-        if (usePortMap == true) {
-          return _startPortMap().then((_) {
-            manager.globalPort = _upnpPortMapClient.externalPort;
-          }).catchError((e) {
-            manager.globalPort = manager.localPort;
-            throw e;
-          }).then((_) {
-            return _upnpPortMapClient.startGetExternalIp(reuseRouter: true).then((StartGetExternalIp ip) {
-              manager.globalIp = ip.externalIp;
+        return _dhtClient.start(ip:baseLocalAddress, port:baseLocalPort + retry).then((_){
+          if (usePortMap == true) {
+            return _startPortMap().then((_) {
+              manager.globalPort = _upnpPortMapClient.externalPort;
             }).catchError((e) {
-              ;
+              manager.globalPort = manager.localPort;
+              throw e;
+            }).then((_) {
+              return _upnpPortMapClient.startGetExternalIp(reuseRouter: true).then((StartGetExternalIp ip) {
+                manager.globalIp = ip.externalIp;
+              }).catchError((e) {
+                ;
+              });
             });
-          });
-        } else {
-          manager.globalPort = manager.localPort;
-        }
+          } else {
+            manager.globalPort = manager.localPort;
+          }
+        });
       }).catchError((e) {
         if (retry < baseNumOfRetry) {
           retry++;
+          List<Future> r = [];
           if (manager.isStart) {
-            return manager.stop().then(a);
+            r.add(manager.stop());
+          }
+          
+          if(_dhtClient.isStart) {
+            r.add(_dhtClient.stop());
+          }
+
+          if(r.length > 0) {
+            return Future.wait(r).then(a);
           } else {
             return a(0);
           }
@@ -89,6 +105,15 @@ class TorrentEngineAIPortMap {
     _upnpPortMapClient.basePort = _manager.localPort;
     _upnpPortMapClient.localAddress = _manager.localIp;
     _upnpPortMapClient.localPort = _manager.localPort;
-    return _upnpPortMapClient.startPortMap(reuseRouter: true);
+    return _upnpPortMapClient.startPortMap(reuseRouter: true,newProtocol:UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_TCP).then((StartPortMapResult r){
+      return _upnpPortMapClient.startPortMap(reuseRouter: true,newProtocol:UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_UDP);
+    }).catchError((e){
+      List<Future> r = [];
+      r.add(_upnpPortMapClient.deletePortMapFromAppIdDesc(reuseRouter:true,newProtocol:UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_TCP));
+      r.add(_upnpPortMapClient.deletePortMapFromAppIdDesc(reuseRouter:true,newProtocol:UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_UDP));
+      return Future.wait(r).then((_){
+        throw e;
+      });
+    });
   }
 }

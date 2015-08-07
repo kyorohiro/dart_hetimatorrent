@@ -54,6 +54,7 @@ class TorrentEngineTorrent {
 
 class TorrentEngine {
   TorrentClientManager _torrentClientManager = null;
+  KNode _dhtClient = null;
   UpnpPortMapHelper _upnpPortMapClient = null;
   HetiSocketBuilder _builder = null;
 
@@ -115,7 +116,7 @@ class TorrentEngine {
     this._portMapAI = new TorrentEngineAIPortMap(upnpPortMapClient);
     this._useUpnp = useUpnp;
     this._useDht = useDht;
-    
+    this._dhtClient = new KNode(builder);
   }
 
   bool _isGO = false;
@@ -123,7 +124,7 @@ class TorrentEngine {
 
   Future start() {
     _portMapAI.usePortMap = _useUpnp;
-    return _portMapAI.start(_torrentClientManager).then((_) {
+    return _portMapAI.start(_torrentClientManager, this._dhtClient).then((_) {
       _isGO = true;
     });
   }
