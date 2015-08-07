@@ -43,7 +43,8 @@ class HashItem {
       }
     }
   }
-  init(AppModel appModel, Tab tab, Dialog dialog) {
+  init(Tab tab, Dialog dialog) {
+    AppModel appModel = AppModel.getInstance();
     void stop() {
       String key = appModel.selectKey;
       loadServerBtn.style.display = "block";
@@ -104,7 +105,8 @@ class HashItem {
     });
   }
 
-  void contain(AppModel model, String key, Dialog dialog) {
+  void contain(String key, Dialog dialog) {
+    AppModel model = AppModel.getInstance();
     if (model.managedTorrentFile.containsKey(key)) {
       if (false == model.seedModels.containsKey(key)) {
         model.seedModels[key] = new ClientModel(key, model.managedTorrentFile[key]);

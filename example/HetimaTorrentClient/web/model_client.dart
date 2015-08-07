@@ -99,8 +99,6 @@ class ClientModel {
     return new Future(() {
       if (_engine != null) {
         return _engine.stop();
-      } else {
-        return new Future(() {});
       }
     });
   }

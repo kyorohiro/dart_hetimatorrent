@@ -53,7 +53,8 @@ class MainItem {
   }
 
 
-  void init(AppModel model, Tab tab, Dialog dialog, HashItem hitem) {
+  void init(Tab tab, Dialog dialog, HashItem hitem) {
+    AppModel model = AppModel.getInstance();
     fileInput.onChange.listen((html.Event e) {
       print("==");
       if (fileInput.files != null && fileInput.files.length > 0) {

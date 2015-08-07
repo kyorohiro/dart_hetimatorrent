@@ -17,7 +17,13 @@ class AppModel {
     bool useUpnp = false;
     Map<String, TorrentFile> managedTorrentFile = {};
     Map<String, ClientModel> seedModels = {};
+    
+    static AppModel instance = new AppModel();
+    static getInstance() {
+      return instance;
+    }
 }
+
 
 //
 //
@@ -26,21 +32,19 @@ void main() {
   Tab tab = new Tab({"#m00_clone": "#com-clone"});
   Dialog dialog = new Dialog();
 
-
-  AppModel model = new AppModel();
   HashItem item = null;
-  MainItem mainImte = null;
+  MainItem mainItem = null;
   print("hello world");
   tab.init();
   dialog.init();
   item = new HashItem();
-  mainImte = new MainItem();
-  item.init(model, tab, dialog);
-  mainImte.init(model, tab, dialog, item);
+  mainItem = new MainItem();
+  item.init(tab, dialog);
+  mainItem.init(tab, dialog, item);
 
   tab.onShow.listen((TabInfo info) {
     print("=t= ${info.cont}");
-    item.contain(model, info.key, dialog);
+    item.contain(info.key, dialog);
   });
 }
 
