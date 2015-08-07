@@ -20,13 +20,12 @@ class TorrentEngineTorrent {
   List<int> _infoHash = [];
   List<int> get infoHash => new List.from(_infoHash);
 
-  static Future<TorrentEngineTorrent> createEngioneTorrent(HetiSocketBuilder builder, TorrentFile torrentfile, HetimaData downloadedData,
+  static Future<TorrentEngineTorrent> createEngioneTorrent(TorrentEngine engine, TorrentFile torrentfile, HetimaData downloadedData,
       {haveAllData: false, int localPort: 18085, int globalPort: 18085, List<int> bitfield: null, useDht: false}) {
     TorrentEngineTorrent engineTorrent = new TorrentEngineTorrent._e();
-    return TrackerClient.createTrackerClient(builder, torrentfile).then((TrackerClient trackerClient) {
+    return TrackerClient.createTrackerClient(engine._builder, torrentfile).then((TrackerClient trackerClient) {
       engineTorrent._trackerClient = trackerClient;
-      engineTorrent.ai = new TorrentEngineAI(trackerClient);
-      engineTorrent.ai.useDht = useDht;
+      engineTorrent.ai = new TorrentEngineAI(trackerClient, engine._dhtClient, useDht);
 
       //
       List<int> reserved = [0, 0, 0, 0, 0, 0, 0, 0];
@@ -36,7 +35,7 @@ class TorrentEngineTorrent {
 
       engineTorrent._infoHash.addAll(trackerClient.infoHash);
       engineTorrent._torrentClient = new TorrentClient(
-          builder, trackerClient.peerId, trackerClient.infoHash, torrentfile.info.pieces, torrentfile.info.piece_length, torrentfile.info.files.dataSize, downloadedData,
+          engine._builder, trackerClient.peerId, trackerClient.infoHash, torrentfile.info.pieces, torrentfile.info.piece_length, torrentfile.info.files.dataSize, downloadedData,
           ai: engineTorrent.ai, haveAllData: haveAllData, bitfield: bitfield, reserved: reserved);
 
       return engineTorrent;
@@ -76,7 +75,7 @@ class TorrentEngine {
   Future<TorrentEngineTorrent> addTorrent(TorrentFile torrentfile, HetimaData downloadedData,
       {haveAllData: false, List<int> bitfield: null}) {
     return TorrentEngineTorrent
-        .createEngioneTorrent(_builder, torrentfile, downloadedData, haveAllData: haveAllData, localPort: localPort, globalPort: globalPort, bitfield: bitfield, useDht: _useDht)
+        .createEngioneTorrent(this, torrentfile, downloadedData, haveAllData: haveAllData, localPort: localPort, globalPort: globalPort, bitfield: bitfield, useDht: _useDht)
         .then((TorrentEngineTorrent engine) {
       if(null != getTorrent(engine._infoHash)) {
         throw {"message":"already add"};

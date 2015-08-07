@@ -9,11 +9,13 @@ import '../client/torrentclient.dart';
 import '../tracker/trackerclient.dart';
 import '../client/torrentclient_manager.dart';
 //import 'torrentengineai.dart';
+import '../dht/knode.dart';
+import '../dht/kid.dart';
 
 class TorrentEngineAI extends TorrentAI {
-  TorrentAIBasic basic = new TorrentAIBasic();
-  bool usePortMap = false;
-  bool useDht = false;
+  TorrentAIBasic basic = null;
+  bool _useDht = false;
+  bool get useDht => _useDht;
   bool isGo = false;
 
 //  int localPort = 18080;
@@ -21,13 +23,17 @@ class TorrentEngineAI extends TorrentAI {
 
   TorrentClient _torrent = null;
   TrackerClient _tracker = null;
+  KNode _dht = null;
 
   StreamController<TorrentEngineProgress> _progressStream = new StreamController.broadcast();
   Stream<TorrentEngineProgress> get onProgress => _progressStream.stream;
   TorrentEngineProgress _progressCash = new TorrentEngineProgress();
 
-  TorrentEngineAI(TrackerClient tracker) {
+  TorrentEngineAI(TrackerClient tracker,  KNode dhtClient, bool useDht) {
     this._tracker = tracker;
+    this._useDht = useDht;
+    this._dht = dhtClient;
+    this.basic = new TorrentAIBasic(useDht:useDht);
   }
 
   @override
@@ -37,6 +43,12 @@ class TorrentEngineAI extends TorrentAI {
         print("Empty AI receive : ${message.id}");
       });
     } else {
+      if(message.id == TorrentMessage.SIGN_PORT) {
+        if (useDht == true) {
+          MessagePort messagePort = message;
+          this._dht.addBootNode(info.ip, messagePort.port);
+        }
+      }
       return basic.onReceive(client, info, message);
     }
   }

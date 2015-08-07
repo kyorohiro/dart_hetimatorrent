@@ -20,9 +20,17 @@ class TorrentAIBasic extends TorrentAI {
   int _maxUnchoke = 8;
   int _maxConnect = 20;
 
-  TorrentAIBasic({maxUnchoke: 8, maxConnect: 20}) {
-    _maxUnchoke = maxUnchoke;
-    _maxConnect = maxConnect;
+  bool _useDht = false;
+  bool get useDht => _useDht;
+
+  int _dhtPort = null;
+  int get dhtPort => _dhtPort;
+
+  TorrentAIBasic({maxUnchoke: 8, maxConnect: 20, useDht: false, int dhtPort: null}) {
+    this._maxUnchoke = maxUnchoke;
+    this._maxConnect = maxConnect;
+    this._useDht = useDht;
+    this._dhtPort = dhtPort;
   }
 
   Future onTick(TorrentClient client) {
@@ -45,7 +53,7 @@ class TorrentAIBasic extends TorrentAI {
         // close
         //
         for (TorrentClientPeerInfo info in infos) {
-          new Future.delayed(new Duration(seconds:5)).then((_){
+          new Future.delayed(new Duration(seconds: 5)).then((_) {
             info.front.close();
           });
         }
@@ -60,10 +68,20 @@ class TorrentAIBasic extends TorrentAI {
       switch (message.id) {
         case TorrentMessage.DUMMY_SIGN_SHAKEHAND:
           {
+            MessageHandshake handshake = message;
             if (true == front.handshakeFromMe || info.amI == true) {
               return null;
             } else {
               return front.sendHandshake();
+            }
+            if (useDht == true) {
+              if (handshake.reserved[7] & 0x01 == 0x01) {
+                if (_dhtPort == null) {
+                  front.sendPort(client.globalPort);
+                } else {
+                  front.sendPort(_dhtPort);
+                }
+              }
             }
           }
           break;
@@ -99,15 +117,20 @@ class TorrentAIBasic extends TorrentAI {
           }
           break;
         case TorrentMessage.SIGN_BITFIELD:
-       //
-       // targetBlock 'does not reflect. check ID_SET_PIECE_A_PART;
-       // case TorrentMessage.SIGN_PIECE:
+        //
+        // targetBlock 'does not reflect. check ID_SET_PIECE_A_PART;
+        // case TorrentMessage.SIGN_PIECE:
         case TorrentMessage.SIGN_UNCHOKE:
-          if(_pieceTest == null) {
+          if (_pieceTest == null) {
             _pieceTest = new PieceTest(client);
           }
           _pieceTest.pieceTest(client, front);
           break;
+        case TorrentMessage.SIGN_PORT:
+        {
+
+        }
+        break;
       }
     });
   }
@@ -126,13 +149,12 @@ class TorrentAIBasic extends TorrentAI {
           break;
         case TorrentClientSignal.ID_SET_PIECE_A_PART:
         case TorrentClientSignal.ID_SET_PIECE:
-          if(_pieceTest == null) {
+          if (_pieceTest == null) {
             _pieceTest = new PieceTest(client);
           }
           _pieceTest.pieceTest(client, info.front);
           break;
       }
-
     });
   }
 }
