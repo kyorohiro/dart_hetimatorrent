@@ -14,13 +14,17 @@ class MainItem {
   html.InputElement fileInput = html.querySelector("#fileinput");
   html.DivElement fileList = html.querySelector("#com-files");
 
-  
- // html.InputElement managedfile = html.querySelector("#managedfile");
+  // setting 
+  html.InputElement globalAddress = html.querySelector("#torrent-input-globaladdress");
+  html.InputElement localAddress = html.querySelector("#torrent-input-localaddress");
+  html.InputElement localport = html.querySelector("#torrent-input-localport");
+  html.InputElement globalport = html.querySelector("#torrent-input-globalport");
+  html.ButtonElement startServerBtn = html.querySelector("#torrent-startserver");
+  html.ButtonElement stopServerBtn = html.querySelector("#torrent-stopserver");
+  html.ObjectElement loadServerBtn = html.querySelector("#torrent-loaderserver");
 
-  // setting view
-  html.InputElement inputLocalAddress = html.querySelector("#input-localaddress");
-  html.InputElement inputLocalPort = html.querySelector("#input-localport");
-  html.InputElement inputGlobalPort = html.querySelector("#input-globalport");
+  html.InputElement upnpUse = html.querySelector("#torrent-upnpon-use");
+  html.InputElement upnpUnuse = html.querySelector("#torrent-upnpon-unuse");
 
   cre(HetimaData d, Map<String, TorrentFile> managedTorrentFile, Tab tab, Dialog dialog, [html.File b=null]) {
     TorrentFile.createFromTorrentFile(new HetimaFileToBuilder(d)).then((TorrentFile f) {
@@ -48,7 +52,8 @@ class MainItem {
     });
   }
 
-  void init(AppModel model, Map<String, TorrentFile> managedTorrentFile, Tab tab, Dialog dialog, HashItem hitem) {
+
+  void init(AppModel model, Tab tab, Dialog dialog, HashItem hitem) {
     fileInput.onChange.listen((html.Event e) {
       print("==");
       if (fileInput.files != null && fileInput.files.length > 0) {
@@ -61,7 +66,7 @@ class MainItem {
           fileInput.style.display = "block";
           return;
         } else {
-          cre(new HetimaDataBlob(n), managedTorrentFile,  tab, dialog);
+          cre(new HetimaDataBlob(n), model.managedTorrentFile,  tab, dialog);
         }
       }
     });
@@ -83,7 +88,7 @@ class MainItem {
        c.children.add(new html.Element.html("<br>"));
        fileList.children.add(c);
        removeButton.onClick.listen((_){
-         if(managedTorrentFile.containsKey(key)) {
+         if(model.managedTorrentFile.containsKey(key)) {
            dialog.show("Failed to remove : you must to close tab");
            return;
          }
@@ -95,9 +100,34 @@ class MainItem {
          fileList.children.remove(c);
        });
        startButton.onClick.listen((_){
-         cre(new HetimaDataFS("${key}.torrent",persistent:false), managedTorrentFile,  tab, dialog);
+         cre(new HetimaDataFS("${key}.torrent",persistent:false), model.managedTorrentFile,  tab, dialog);
        });
      }
+    });
+    
+    // Adds a click event for each radio button in the group with name "gender"
+    html.querySelectorAll('[name="torrent-upnpon"]').forEach((html.InputElement radioButton) {
+      radioButton.onClick.listen((html.MouseEvent e) {
+        html.InputElement clicked = e.target;
+        print("The user is ${clicked.value}");
+        if (clicked.value == "Use") {
+          model.useUpnp = true;
+        } else {
+          model.useUpnp = false;
+        }
+      });
+    });
+
+    html.querySelectorAll('[name="torrent-dhton"]').forEach((html.InputElement radioButton) {
+      radioButton.onClick.listen((html.MouseEvent e) {
+        html.InputElement clicked = e.target;
+        print("The user is ${clicked.value}");
+        if (clicked.value == "Use") {
+          model.useDHT = true;
+        } else {
+          model.useDHT = false;
+        }
+      });
     });
   }
 }

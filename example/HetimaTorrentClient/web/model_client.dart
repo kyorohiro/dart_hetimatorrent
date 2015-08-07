@@ -49,6 +49,7 @@ class ClientModel {
 
   Future<int> getCurrentProgress() {
     return new Future(() {
+      /*
       if (_engine != null && _engine.isGo) {
         return _engine.torrentClient.targetBlock.rawHead.numOfOn(true);
       } else {
@@ -60,6 +61,7 @@ class ClientModel {
           });
         });
       }
+       */
     });
   }
 
@@ -67,6 +69,7 @@ class ClientModel {
     return this._bitfieldfile.getLength().then((int length) {
       return this._bitfieldfile.read(0, length);
     }).then((ReadResult re) {
+      /*
       return TorrentEngine
           .createTorrentEngine(new HetiSocketBuilderChrome(), torrentFile, seedfile,
               globalPort: globalPort, localPort: localPort, localIp: localIp,
@@ -90,7 +93,7 @@ class ClientModel {
             ..globalPort = globalPort
             ..globalIp = globalIp;
         });
-      });
+      });*/
     });
   }
 

@@ -12,6 +12,9 @@ import 'package:hetimacore/hetimacore_cl.dart';
 
 class AppModel {
     String selectKey = "";
+    bool useDHT = false;
+    bool useUpnp = false;
+    Map<String, TorrentFile> managedTorrentFile = {};
 }
 
 //
@@ -21,7 +24,7 @@ void main() {
   Tab tab = new Tab({"#m00_clone": "#com-clone"});
   Dialog dialog = new Dialog();
 
-  Map<String, TorrentFile> managedTorrentFile = {};
+
   AppModel model = new AppModel();
   HashItem item = null;
   MainItem mainImte = null;
@@ -30,12 +33,12 @@ void main() {
   dialog.init();
   item = new HashItem();
   mainImte = new MainItem();
-  item.init(model, managedTorrentFile, tab, dialog);
-  mainImte.init(model, managedTorrentFile, tab, dialog, item);
+  item.init(model, tab, dialog);
+  mainImte.init(model, tab, dialog, item);
 
   tab.onShow.listen((TabInfo info) {
     print("=t= ${info.cont}");
-    item.contain(model, managedTorrentFile, info.key, dialog);
+    item.contain(model, info.key, dialog);
   });
 }
 

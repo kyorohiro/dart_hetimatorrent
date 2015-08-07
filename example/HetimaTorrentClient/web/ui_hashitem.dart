@@ -16,16 +16,9 @@ class HashItem {
   html.SpanElement torrentHashSpan = html.querySelector("#torrent-hash");
   html.SpanElement torrentRemoveBtn = html.querySelector("#torrent-remove-btn");
 
-  html.InputElement globalAddress = html.querySelector("#torrent-input-globaladdress");
-  html.InputElement localAddress = html.querySelector("#torrent-input-localaddress");
-  html.InputElement localport = html.querySelector("#torrent-input-localport");
-  html.InputElement globalport = html.querySelector("#torrent-input-globalport");
   html.ButtonElement startServerBtn = html.querySelector("#torrent-startserver");
   html.ButtonElement stopServerBtn = html.querySelector("#torrent-stopserver");
   html.ObjectElement loadServerBtn = html.querySelector("#torrent-loaderserver");
-
-  html.InputElement upnpUse = html.querySelector("#torrent-upnpon-use");
-  html.InputElement upnpUnuse = html.querySelector("#torrent-upnpon-unuse");
 
   html.SpanElement torrentProgressSpan = html.querySelector("#torrent-progress");
 //
@@ -50,12 +43,9 @@ class HashItem {
       }
     }
   }
-  init(AppModel trackerModel, Map<String, TorrentFile> managedTorrentFile, Tab tab, Dialog dialog) {
-    //   SeederModel model = new SeederModel();
-
-
+  init(AppModel appModel, Tab tab, Dialog dialog) {
     void stop() {
-      String key = trackerModel.selectKey;
+      String key = appModel.selectKey;
       loadServerBtn.style.display = "block";
       stopServerBtn.style.display = "none";
       startServerBtn.style.display = "none";
@@ -75,22 +65,14 @@ class HashItem {
     }
 
     void start() {
-      String key = trackerModel.selectKey;
+      String key = appModel.selectKey;
       loadServerBtn.style.display = "block";
       stopServerBtn.style.display = "none";
       startServerBtn.style.display = "none";
       seedState[key] = 3; //loading
-      TorrentFile torrentFile = managedTorrentFile[trackerModel.selectKey];
-      seedModels[key].globalPort = int.parse(globalport.value);
-      seedModels[key].localPort = int.parse(localport.value);
-      seedModels[key].localIp = localAddress.value;
-      seedModels[key].globalIp = globalAddress.value;
+      TorrentFile torrentFile = appModel.managedTorrentFile[appModel.selectKey];
       seedModels[key].startEngine(torrentFile, onProgress).then((SeederModelStartResult ret) {
         seedState[key] = 2; //stop
-        localAddress.value = ret.localIp;
-        localport.value = "${ret.localPort}";
-        globalport.value = "${ret.globalPort}";
-        globalAddress.value = "${ret.globalIp}";
         stopServerBtn.style.display = "block";
         startServerBtn.style.display = "none";
         loadServerBtn.style.display = "none";
@@ -103,11 +85,11 @@ class HashItem {
       });
     }
     torrentRemoveBtn.onClick.listen((html.MouseEvent e) {
-      if (trackerModel.selectKey != null) {
+      if (appModel.selectKey != null) {
         stop();
-        tab.remove(trackerModel.selectKey);
-        managedTorrentFile.remove(trackerModel.selectKey);
-        trackerModel.selectKey = null;
+        tab.remove(appModel.selectKey);
+        appModel.managedTorrentFile.remove(appModel.selectKey);
+        appModel.selectKey = null;
       }
     });
 
@@ -120,53 +102,16 @@ class HashItem {
     stopServerBtn.onClick.listen((html.MouseEvent e) {
       stop();
     });
-
-    // Adds a click event for each radio button in the group with name "gender"
-    html.querySelectorAll('[name="torrent-upnpon"]').forEach((html.InputElement radioButton) {
-      radioButton.onClick.listen((html.MouseEvent e) {
-        String key = trackerModel.selectKey;
-        html.InputElement clicked = e.target;
-        print("The user is ${clicked.value}");
-        if (clicked.value == "Use") {
-          seedModels[key].useUpnp = true;
-        } else {
-          seedModels[key].useUpnp = false;
-        }
-      });
-    });
-
-    html.querySelectorAll('[name="torrent-dhton"]').forEach((html.InputElement radioButton) {
-      radioButton.onClick.listen((html.MouseEvent e) {
-        String key = trackerModel.selectKey;
-        html.InputElement clicked = e.target;
-        print("The user is ${clicked.value}");
-        if (clicked.value == "Use") {
-          seedModels[key].useDHT = true;
-        } else {
-          seedModels[key].useDHT = false;
-        }
-      });
-    });
-
-//    torrentOutput.onClick.listen((_) {
-//      print("click");
-//      String key = trackerModel.selectKey;
-//      saveFile(seedModels[key].seedfile);
-//    });
   }
 
-  void contain(AppModel model, Map<String, TorrentFile> managedTorrentFile, String key, Dialog dialog) {
-    if (managedTorrentFile.containsKey(key)) {
+  void contain(AppModel model, String key, Dialog dialog) {
+    if (model.managedTorrentFile.containsKey(key)) {
       if (false == seedModels.containsKey(key)) {
-        seedModels[key] = new ClientModel(key, managedTorrentFile[key]);
+        seedModels[key] = new ClientModel(key, model.managedTorrentFile[key]);
       }
 
       torrentHashSpan.setInnerHtml("${key}");
       model.selectKey = key;
-      localAddress.style.display = "block";
-      localport.style.display = "block";
-      globalAddress.style.display = "block";
-      globalport.style.display = "block";
 
       if (seedState.containsKey(key) == false || seedState[key] == 1) {
         //start
@@ -186,20 +131,9 @@ class HashItem {
       }
 
       //
-      globalAddress.value = seedModels[key].globalIp;
-      localAddress.value = seedModels[key].localIp;
-      localport.value = "${seedModels[key].localPort}";
-      globalport.value = "${seedModels[key].globalPort}";
-      if (seedModels[key].useUpnp) {
-        upnpUse.checked = true;
-      } else {
-        upnpUnuse.checked = true;
-      }
-
-      //
       //
       torrentOutputs.children.clear();
-      TorrentFile torrentFile = managedTorrentFile[key];
+      TorrentFile torrentFile = model.managedTorrentFile[key];
       for (TorrentFileFile file in torrentFile.info.files.files) {
         html.AnchorElement elm = new html.Element.html("<a href=\"dummy\">${file.pathAsString} :${file.fileSize}byte</a>");
         torrentOutputs.children.add(elm);
