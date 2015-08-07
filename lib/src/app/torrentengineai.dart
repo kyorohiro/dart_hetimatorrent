@@ -16,24 +16,18 @@ class TorrentEngineAI extends TorrentAI {
   bool useDht = false;
   bool isGo = false;
 
-  String baseLocalAddress = "0.0.0.0";
-  String baseGlobalIp = "0.0.0.0";
-  int baseLocalPort = 18080;
-  int baseGlobalPort = 18080;
-  int baseNumOfRetry = 10;
+//  int localPort = 18080;
+//  int globalPort = 18080;
 
   TorrentClient _torrent = null;
   TrackerClient _tracker = null;
-  TorrentClientManager _manager = null;
-  UpnpPortMapHelper _upnpPortMapClient = null;
 
   StreamController<TorrentEngineProgress> _progressStream = new StreamController.broadcast();
   Stream<TorrentEngineProgress> get onProgress => _progressStream.stream;
   TorrentEngineProgress _progressCash = new TorrentEngineProgress();
 
-  TorrentEngineAI(TrackerClient tracker, UpnpPortMapHelper upnpPortMapClient) {
+  TorrentEngineAI(TrackerClient tracker) {
     this._tracker = tracker;
-    this._upnpPortMapClient = upnpPortMapClient;
   }
 
   @override
@@ -71,71 +65,21 @@ class TorrentEngineAI extends TorrentAI {
     }
   }
 
-  Future start(TorrentClient torrentClient) {
+  Future start(TorrentClientManager manager, TorrentClient torrentClient) {
     this._torrent = torrentClient;
-    return _startTorrent().then((_) {
-      isGo = true;
-      _upnpPortMapClient.clearSearchedRouterInfo();
-
-      return  _startTracker(1).catchError((e) {});
-    });
+    _tracker.peerport = manager.globalPort;
+    torrentClient.startWithoutSocket(manager.localIp, manager.localPort, manager.globalIp, manager.globalPort);
+    manager.addTorrentClient(torrentClient);
+    isGo = true;
+    return _startTracker(1).catchError((e) {});
   }
 
   Future stop() {
     return this._torrent.stop().then((_) {
       isGo = false;
-      if (usePortMap == true) {
-        return _upnpPortMapClient.deletePortMapFromAppIdDesc(reuseRouter: true).catchError((e) {});
-      }
     }).then((_) {
       return _startTracker(0).catchError((e) {});
     });
-  }
-
-  Future _startTorrent() {
-    int retry = 0;
-    a() {
-      return this._torrent.start(baseLocalAddress, baseLocalPort + retry, baseGlobalIp, baseGlobalPort + retry).then((_) {
-        if (usePortMap == true) {
-          return _startPortMap().then((_) {
-            _torrent.globalPort = _upnpPortMapClient.externalPort;
-          }).catchError((e) {
-            _torrent.globalPort = _torrent.localPort;
-            throw e;
-          }).then((_) {
-            return _upnpPortMapClient.startGetExternalIp(reuseRouter: true).then((StartGetExternalIp ip) {
-              _torrent.globalIp = ip.externalIp;
-            }).catchError((e) {
-              ;
-            });
-          });
-        } else {
-          _torrent.globalPort = _torrent.localPort;
-        }
-      }).catchError((e) {
-        if (retry < baseNumOfRetry) {
-          retry++;
-          if (_torrent.isStart) {
-            return _torrent.stop().then((_) {
-              return a();
-            });
-          } else {
-            return a();
-          }
-        } else {
-          throw e;
-        }
-      });
-    }
-    return a();
-  }
-
-  Future _startPortMap() {
-    _upnpPortMapClient.numOfRetry = 0;
-    _upnpPortMapClient.basePort = _torrent.localPort;
-    _upnpPortMapClient.localAddress = _torrent.localAddress;
-    _upnpPortMapClient.localPort = _torrent.localPort;
-    return _upnpPortMapClient.startPortMap(reuseRouter: true);
   }
 
   bool localNetworkIp(String ip) {

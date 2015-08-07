@@ -14,15 +14,13 @@ import '../client/torrentclient.dart';
 
 class TorrentClientManager {
   String _localIp = "0.0.0.0";
-  String _globalIp = "0.0.0.0";
+  String globalIp = "0.0.0.0";
   int _localPort = 18080;
-  int _globalPort = 18080;
+  int globalPort = 18080;
 
   bool _isStart = false;
   String get localIp => _localIp;
-  String get globalIp => _globalIp;
   int get localPort => _localPort;
-  int get globalPort => _globalPort;
   bool get isStart => _isStart;
 
   HetiServerSocket _server = null;
@@ -53,20 +51,26 @@ class TorrentClientManager {
 
   TorrentClient getTorrentClient(List<int> infoHash) {
     for (TorrentClient c in clients) {
-      if (c.infoHash == infoHash) {
-        return c;
+      if (c.infoHash.length != infoHash.length) {
+        continue;
       }
+      for (int j = 0; j < infoHash.length; j++) {
+        if (c.infoHash[j] != infoHash[j]) {
+          continue;
+        }
+      }
+      return c;
     }
     return null;
   }
 
-  Future start(String localAddress, int localPort, [String globalIp = null, int globalPort = null]) {
+  Future start(String localAddress, int localPort, String globalIp, int globalPort) {
     this._localIp = localAddress;
     this._localPort = localPort;
-    this._globalPort = globalPort;
-    this._globalIp = globalIp;
-    if (this._globalPort == null) {
-      this._globalPort = localPort;
+    this.globalPort = globalPort;
+    this.globalIp = globalIp;
+    if (this.globalPort == null) {
+      this.globalPort = localPort;
     }
 
     return _builder.startServer(localAddress, localPort).then((HetiServerSocket serverSocket) {
