@@ -66,6 +66,9 @@ class TorrentEngine {
   int get globalPort => _torrentClientManager.globalPort;
   String get globalIp => _torrentClientManager.globalIp;
 
+  bool _useUpnp = false;
+  bool get useUpnp => _useUpnp;
+
   List<TorrentEngineTorrent> _torrents = [];
   Future<TorrentEngineTorrent> addTorrent(TorrentFile torrentfile, HetimaData downloadedData,
       {appid: "hetima_torrent_engine", haveAllData: false, int localPort: 18085, int globalPort: 18085, List<int> bitfield: null, bool useDht: false}) {
@@ -94,17 +97,20 @@ class TorrentEngine {
   }
 
   TorrentEngine(HetiSocketBuilder builder,
-      {appid: "hetima_torrent_engine", int localPort: 18085, int globalPort: 18085, String globalIp: "0.0.0.0", String localIp: "0.0.0.0", int retryNum: 10, bool useUpnp: false, bool useDht: false}) {
+      {appid: "hetima_torrent_engine", int localPort: 18085, int globalPort: 18085, String globalIp: "0.0.0.0", String localIp: "0.0.0.0", int retryNum: 10, 
+        bool useUpnp: false, bool useDht: false}) {
     this._builder = builder;
     this._torrentClientManager = new TorrentClientManager(builder);
     this._upnpPortMapClient = new UpnpPortMapHelper(builder, appid);
     this._portMapAI = new TorrentEngineAIPortMap(upnpPortMapClient);
+    this._useUpnp = useUpnp;
   }
 
   bool _isGO = false;
   bool get isGo => _isGO;
 
-  Future start({usePortMap: false}) {
+  Future start() {
+    _portMapAI.usePortMap = _useUpnp;
     return _portMapAI.start(_torrentClientManager).then((_) {
       _isGO = true;
     });

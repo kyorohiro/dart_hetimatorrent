@@ -16,10 +16,10 @@ Future startDownload(MouseEvent event) {
 
   bool isStop = false;
   return TorrentFile.createFromTorrentFile(new HetimaFileToBuilder(new HetimaDataBlob(selectedFile[0]))).then((TorrentFile torrentFile) {
-    TorrentEngine engine = new TorrentEngine(new HetiSocketBuilderChrome());
-    engine.addTorrent(torrentFile, new HetimaDataFS("save.dat")).then((TorrentEngineTorrent t) {
-      engine.start(usePortMap: false);
-      t.onProgress.listen((TorrentEngineProgress progress) {
+    TorrentEngine engine = new TorrentEngine(new HetiSocketBuilderChrome(), useUpnp: true);
+    engine.addTorrent(torrentFile, new HetimaDataFS("save.dat")).then((TorrentEngineTorrent enginetorrent) {
+      engine.start();
+      enginetorrent.onProgress.listen((TorrentEngineProgress progress) {
         print("${progress.toString()}");
         if (progress.downloadSize >= progress.fileSize && isStop == false) {
           isStop = true;
@@ -28,7 +28,7 @@ Future startDownload(MouseEvent event) {
           });
         }
       });
-      t.startTorrent(engine);
+      enginetorrent.startTorrent(engine);
     });
   });
 }
