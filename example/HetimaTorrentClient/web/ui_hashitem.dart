@@ -29,7 +29,7 @@ class HashItem {
   html.DivElement torrentOutputFailreReason = html.querySelector("#torrent-tracker-failurereason");
   
   Map<String, int> seedState = {};
-  Map<String, ClientModel> seedModels = {};
+
 //  html.File seedRawFile = null;
   onProgress(int x, int a, TorrentEngineProgress info) {
     torrentProgressSpan.setInnerHtml("${x}/${a} : ${100*x~/a}");
@@ -50,7 +50,7 @@ class HashItem {
       stopServerBtn.style.display = "none";
       startServerBtn.style.display = "none";
       seedState[key] = 3; //loading
-      seedModels[key].stopEngine().then((StopResult r) {
+      appModel.seedModels[key].stopEngine().then((StopResult r) {
         seedState[key] = 1; //start
         startServerBtn.style.display = "block";
         stopServerBtn.style.display = "none";
@@ -71,7 +71,7 @@ class HashItem {
       startServerBtn.style.display = "none";
       seedState[key] = 3; //loading
       TorrentFile torrentFile = appModel.managedTorrentFile[appModel.selectKey];
-      seedModels[key].startEngine(torrentFile, onProgress).then((SeederModelStartResult ret) {
+      appModel.seedModels[key].startEngine(torrentFile, onProgress).then((SeederModelStartResult ret) {
         seedState[key] = 2; //stop
         stopServerBtn.style.display = "block";
         startServerBtn.style.display = "none";
@@ -106,8 +106,8 @@ class HashItem {
 
   void contain(AppModel model, String key, Dialog dialog) {
     if (model.managedTorrentFile.containsKey(key)) {
-      if (false == seedModels.containsKey(key)) {
-        seedModels[key] = new ClientModel(key, model.managedTorrentFile[key]);
+      if (false == model.seedModels.containsKey(key)) {
+        model.seedModels[key] = new ClientModel(key, model.managedTorrentFile[key]);
       }
 
       torrentHashSpan.setInnerHtml("${key}");
@@ -144,7 +144,7 @@ class HashItem {
           String key = model.selectKey;
           torrentOutputs.style.display = "none";
           torrentOutputsLoading.style.display = "block";
-          saveFile(seedModels[key].seedfile, f.index, f.index + f.fileSize, f.path.last)
+          saveFile(model.seedModels[key].seedfile, f.index, f.index + f.fileSize, f.path.last)
           .then((e){
             torrentOutputs.style.display = "block";
             torrentOutputsLoading.style.display = "none";
@@ -156,7 +156,7 @@ class HashItem {
         });
       }
       
-      seedModels[key].getCurrentProgress().then((int progress) {
+      model.seedModels[key].getCurrentProgress().then((int progress) {
         int a = torrentFile.info.files.dataSize;
         int x = progress;
         onProgress(x, a, null);

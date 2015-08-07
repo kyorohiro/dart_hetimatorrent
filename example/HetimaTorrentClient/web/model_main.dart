@@ -4,6 +4,7 @@ import 'package:hetimatorrent/hetimatorrent.dart';
 import 'ui_dialog.dart';
 import 'ui_hashitem.dart';
 import 'ui_mainview.dart';
+import 'model_client.dart';
 import 'dart:async';
 import 'dart:html';
 import 'package:chrome/chrome_app.dart' as chrome;
@@ -15,6 +16,7 @@ class AppModel {
     bool useDHT = false;
     bool useUpnp = false;
     Map<String, TorrentFile> managedTorrentFile = {};
+    Map<String, ClientModel> seedModels = {};
 }
 
 //

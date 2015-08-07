@@ -48,10 +48,9 @@ class ClientModel {
   }
 
   Future<int> getCurrentProgress() {
-    return new Future(() {
-      /*
+    return _metadata.createInfoSha1().then((List<int> infoHash){
       if (_engine != null && _engine.isGo) {
-        return _engine.torrentClient.targetBlock.rawHead.numOfOn(true);
+        return _engine.getTorrent(infoHash).torrentClient.targetBlock.rawHead.numOfOn(true);
       } else {
         return _bitfieldfile.getLength().then((int len) {
           return _bitfieldfile.read(0, len).then((ReadResult result) {
@@ -61,7 +60,6 @@ class ClientModel {
           });
         });
       }
-       */
     });
   }
 
