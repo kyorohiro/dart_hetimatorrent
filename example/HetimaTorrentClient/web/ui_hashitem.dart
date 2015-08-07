@@ -197,22 +197,22 @@ class HashItem {
           if (end == null) {
             end = length;
           }
-          int d = 32 *1024 * 1024;
-          int b = begin;
-          int e = b + d;
+          num d = 32 *1024 * 1024;
+          num b = begin;
+          num e = b + d;
           DomJSHetiFile hetiCopyTo = new DomJSHetiFile.create(copyTo.jsProxy);
           hetiCopyTo.getHetimaFile().then((HetimaData data) {
             a() {
               copyFrom.read(b, e - b).then((ReadResult readResult) {
                 print("${b} ${e} ${readResult.buffer.length}");
-                data.write(readResult.buffer, b).then((WriteResult w) {
+                data.write(readResult.buffer, b-begin).then((WriteResult w) {
                   b = e;
                   e = b + d;
                   if (e > end) {
                     e = end;
                   }
                   if (b < end) {
-                    a();
+                    new Future.delayed(new Duration(seconds:1)).then((_){a();});
                   } else {
                     c.complete({});
                   }
