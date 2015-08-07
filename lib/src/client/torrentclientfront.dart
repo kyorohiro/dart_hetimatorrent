@@ -154,7 +154,6 @@ class TorrentClientFront {
   }
 
   Future sendBitfield(List<int> bitfield) {
-    bitfield[0] = 0x00;
     MessageBitfield message = new MessageBitfield(bitfield);
     return sendMessage(message);
   }

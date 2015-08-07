@@ -137,6 +137,9 @@ class KNodeAIAnnounceTask {
   }
 
   updateReceveGetPeerInfo(HetiReceiveUdpInfo info, KrpcGetPeersResponse getPeer) {
+    if(getPeer.tokenAsKId == null|| getPeer.tokenAsKId == null) {
+      return;
+    }
     KGetPeerNodes i = new KGetPeerNodes(info.remoteAddress, info.remotePort, getPeer.queriedNodesId, _infoHashId, getPeer.tokenAsKId);
     List<KGetPeerNodes> alreadyHave = KGetPeerNodes.extract(receiveGetPeerResponseNode, (KGetPeerNodes a) {
       return a.id == i.id;

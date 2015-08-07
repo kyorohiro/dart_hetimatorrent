@@ -70,6 +70,10 @@ class TorrentEngine {
   bool get useUpnp => _useUpnp;
   bool _useDht = false;
   bool get useDht => _useDht;
+  void resetFlag(bool useUpnp, bool useDht) {
+    _useUpnp = useUpnp;
+    _useDht = useDht;
+  }
   
   List<TorrentEngineTorrent> _torrents = [];
   Future<TorrentEngineTorrent> addTorrent(TorrentFile torrentfile, HetimaData downloadedData,

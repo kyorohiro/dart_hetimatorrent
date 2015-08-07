@@ -84,7 +84,11 @@ class ClientModel {
   Future stopEngine() {
     return _metadata.createInfoSha1().then((List<int> infoHash) {
       return AppModel.getInstance().get().then((TorrentEngine engine) {
-        return engine.getTorrent(infoHash).stopTorrent().then((_){
+        TorrentEngineTorrent t = engine.getTorrent(infoHash);
+        if(t == null) {
+          return {};
+        }
+        return t.stopTorrent().then((_){
           engine.removeTorrent(engine.getTorrent(infoHash));
           if(engine.numOfTorrent() == 0) {
             return engine.stop();

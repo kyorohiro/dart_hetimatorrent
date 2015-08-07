@@ -100,13 +100,14 @@ class MainItem {
     });
     
     HetimaDataFS.getFiles().then((List<String> files) {
+     fileList.children.clear();
      for(String f in files) {
        print("ifile : ${f}");
        if(!f.endsWith(".cont")) {
          continue;
        }
        String key = f.replaceAll(".cont", "");
-       fileList.children.clear();
+
        html.DivElement c = new html.Element.html("<div id=\"${key}\"></div>");
        html.InputElement startButton = new html.Element.html("<input type=\"button\" value=\"Open\">");
        html.InputElement removeButton = new html.Element.html("<input type=\"button\" value=\"X\">");
@@ -151,9 +152,9 @@ class MainItem {
         html.InputElement clicked = e.target;
         print("The user is ${clicked.value}");
         if (clicked.value == "Use") {
-          model.useDHT = true;
+          model.useDht = true;
         } else {
-          model.useDHT = false;
+          model.useDht = false;
         }
       });
     });

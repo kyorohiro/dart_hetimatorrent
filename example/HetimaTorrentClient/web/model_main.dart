@@ -17,7 +17,7 @@ class AppModel {
   //
   //
   String selectKey = "";
-  bool useDHT = false;
+  bool useDht = false;
   bool useUpnp = false;
   Map<String, TorrentFile> managedTorrentFile = {};
   Map<String, ClientModel> seedModels = {};
@@ -39,7 +39,7 @@ class AppModel {
     return new Future(() {
       if (_engine == null) {
         _engine = new TorrentEngine(new HetiSocketBuilderChrome(),
-            globalPort: globalPort, localPort: localPort, localIp: localIp, globalIp: globalIp, useUpnp: useUpnp, useDht: useDHT, appid: "hetimatorrentclient");
+            globalPort: globalPort, localPort: localPort, localIp: localIp, globalIp: globalIp, useUpnp: useUpnp, useDht: useDht, appid: "hetimatorrentclient");
       }
       return _engine;
     });
@@ -49,6 +49,7 @@ class AppModel {
     return get().then((TorrentEngine _engine) {
 
       if (false == _engine.isStart) {
+        _engine.resetFlag(useUpnp, useDht);
         return _engine.start().then((_) {
           _engine.addBootNode(mainItem.getBootIp(), mainItem.getBootPort());
           return _engine;
