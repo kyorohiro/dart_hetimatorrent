@@ -44,12 +44,15 @@ class TorrentEngineAIPortMap {
   Future stop() {
     return this._manager.stop().then((_) {
       isStart = false;
+      List<Future> r = [];
       if (usePortMap == true) {
-        List<Future> r = [];
         r.add(_upnpPortMapClient.deletePortMapFromAppIdDesc(reuseRouter:true,newProtocol:UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_TCP));
         r.add(_upnpPortMapClient.deletePortMapFromAppIdDesc(reuseRouter:true,newProtocol:UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_UDP));
-        return Future.wait(r);
       }
+      if (useDht == true) {
+        r.add(_dhtClient.stop());        
+      }
+      return Future.wait(r);
     });
   }
 
