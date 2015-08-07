@@ -7,7 +7,7 @@ import '../client/torrentai.dart';
 import '../client/torrentai_basic.dart';
 import '../client/torrentclient.dart';
 import '../tracker/trackerclient.dart';
-import '../client_new/torrentclient_manager.dart';
+import '../client/torrentclient_manager.dart';
 import 'torrentengineai_protmap.dart';
 
 //import 'torrentengineai.dart';

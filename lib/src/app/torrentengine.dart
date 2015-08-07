@@ -119,19 +119,19 @@ class TorrentEngine {
     this._dhtClient = new KNode(builder);
   }
 
-  bool _isGO = false;
-  bool get isGo => _isGO;
+  bool _isStart = false;
+  bool get isStart => _isStart;
 
   Future start() {
     _portMapAI.usePortMap = _useUpnp;
     return _portMapAI.start(_torrentClientManager, this._dhtClient).then((_) {
-      _isGO = true;
+      _isStart = true;
     });
   }
 
   Future stop() {
     return _portMapAI.stop().whenComplete(() {
-      _isGO = false;
+      _isStart = false;
     });
   }
 

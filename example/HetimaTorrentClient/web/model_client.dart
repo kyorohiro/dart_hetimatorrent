@@ -43,7 +43,7 @@ class ClientModel {
   Future<int> getCurrentProgress() {
     return _metadata.createInfoSha1().then((List<int> infoHash) {
       return AppModel.getInstance().get().then((TorrentEngine _engine) {
-        if (_engine != null && _engine.isGo) {
+        if (_engine != null && _engine.isStart) {
           return _engine.getTorrent(infoHash).torrentClient.targetBlock.rawHead.numOfOn(true);
         } else {
           return _bitfieldfile.getLength().then((int len) {

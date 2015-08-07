@@ -48,7 +48,7 @@ class AppModel {
   Future<TorrentEngine> start() {
     return get().then((TorrentEngine _engine) {
 
-      if (false == _engine.isGo) {
+      if (false == _engine.isStart) {
         return _engine.start().then((_) {
           return _engine;
         });
@@ -60,7 +60,7 @@ class AppModel {
 
   Future stop() {
     return new Future(() {
-      if (_engine != null && _engine.isGo == true) {
+      if (_engine != null && _engine.isStart == true) {
         _engine.stop();
       }
     });
