@@ -119,13 +119,21 @@ class TorrentEngine {
     this._portMapAI = new TorrentEngineAIPortMap(upnpPortMapClient);
     this._useUpnp = useUpnp;
     this._useDht = useDht;
-    this._dhtClient = new KNode(builder, verbose:true);
+    this._dhtClient = new KNode(builder, verbose:false);
     this._dhtClient.onGetPeerValue.listen((KGetPeerValue value) {
       TorrentEngineTorrent t = getTorrent(value.infoHash.id);
+      print("<=1==> ${value.ipAsString}:${value.port}");
       if(t != null) {
+        print("<=2==> ${value.ipAsString}:${value.port}");
         t._torrentClient.putTorrentPeerInfoFromTracker(value.ipAsString, value.port);
       }
     });
+  }
+
+  addBootNode(String ip, int port) {
+    if(ip != null && port != null) {
+      _dhtClient.addBootNode(ip, port);
+    }
   }
 
   bool _isStart = false;

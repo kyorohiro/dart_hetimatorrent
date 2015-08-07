@@ -50,6 +50,7 @@ class AppModel {
 
       if (false == _engine.isStart) {
         return _engine.start().then((_) {
+          _engine.addBootNode(mainItem.getBootIp(), mainItem.getBootPort());
           return _engine;
         });
       } else {

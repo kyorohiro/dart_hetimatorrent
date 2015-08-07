@@ -28,7 +28,23 @@ class MainItem {
   html.InputElement dhtUse = html.querySelector("#torrent-dht-use");
   html.InputElement dhtUnuse = html.querySelector("#torrent-dht-unuse");
 
+  // option 
+  html.InputElement bootIp = html.querySelector("#boot_ip");
+  html.InputElement bootPort = html.querySelector("#boot_port");
   
+  String getBootIp() {
+    if(bootIp.value == null || bootIp.value.length == 0) {
+      return null;
+    }
+    return bootIp.value;
+  }
+
+  int getBootPort() {
+    if(bootPort.value == null || bootPort.value.length == 0) {
+      return null;
+    }
+    return int.parse(bootPort.value);
+  }
   
   setStartState(bool status) {
       upnpUse.disabled = status;
@@ -36,6 +52,7 @@ class MainItem {
       dhtUse.disabled = status;
       dhtUnuse.disabled = status;
   }
+
   cre(HetimaData d, Map<String, TorrentFile> managedTorrentFile, Tab tab, Dialog dialog, [html.File b=null]) {
     TorrentFile.createFromTorrentFile(new HetimaFileToBuilder(d)).then((TorrentFile f) {
       return f.createInfoSha1().then((List<int> infoHash) {
