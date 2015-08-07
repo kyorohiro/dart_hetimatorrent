@@ -25,12 +25,14 @@ class KRootingTable {
 
   String toInfo() {
     StringBuffer buffer = new StringBuffer();
+    buffer.write("${amId.toString()}\n");
     for (int j = 0; j < _kBuckets.length; j++) {
         int bucketLength = _kBuckets[j].length();
         if(bucketLength == 0) {continue;}
         buffer.write("[${j}] len:${bucketLength}:## ");
         for(int i=0;i<bucketLength;i++){
           buffer.write(_kBuckets[j].getPeerInfo(i).toString());
+          buffer.write("(^_^)");
         }
         buffer.write("\n");
     }
