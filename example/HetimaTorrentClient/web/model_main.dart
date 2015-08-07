@@ -10,20 +10,62 @@ import 'dart:html';
 import 'package:chrome/chrome_app.dart' as chrome;
 import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimacore/hetimacore_cl.dart';
+import 'package:hetimanet/hetimanet_chrome.dart';
 
 class AppModel {
-    String selectKey = "";
-    bool useDHT = false;
-    bool useUpnp = false;
-    Map<String, TorrentFile> managedTorrentFile = {};
-    Map<String, ClientModel> seedModels = {};
-    
-    static AppModel instance = new AppModel();
-    static getInstance() {
-      return instance;
-    }
-}
 
+  //
+  //
+  String selectKey = "";
+  bool useDHT = false;
+  bool useUpnp = false;
+  Map<String, TorrentFile> managedTorrentFile = {};
+  Map<String, ClientModel> seedModels = {};
+  //
+  //
+  String globalIp = "0.0.0.0";
+  String localIp = "0.0.0.0";
+  int localPort = 18080;
+  int globalPort = 18080;
+
+  static AppModel instance = new AppModel();
+  static AppModel getInstance() {
+    return instance;
+  }
+
+  TorrentEngine _engine = null;
+
+  Future<TorrentEngine> get() {
+    return new Future(() {
+      if (_engine == null) {
+        _engine = new TorrentEngine(new HetiSocketBuilderChrome(),
+            globalPort: globalPort, localPort: localPort, localIp: localIp, globalIp: globalIp, useUpnp: useUpnp, useDht: useDHT, appid: "hetimatorrentclient");
+      }
+      return _engine;
+    });
+  }
+
+  Future<TorrentEngine> start() {
+    return get().then((TorrentEngine _engine) {
+
+      if (false == _engine.isGo) {
+        return _engine.start().then((_) {
+          return _engine;
+        });
+      } else {
+        return _engine;
+      }
+    });
+  }
+
+  Future stop() {
+    return new Future(() {
+      if (_engine != null && _engine.isGo == true) {
+        _engine.stop();
+      }
+    });
+  }
+}
 
 //
 //

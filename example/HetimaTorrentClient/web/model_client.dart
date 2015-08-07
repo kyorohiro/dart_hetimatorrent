@@ -7,16 +7,9 @@ import 'package:hetimatorrent/hetimatorrent.dart';
 import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimacore/hetimacore_cl.dart';
 import 'package:hetimafile/hetimafile_cl.dart';
+import 'model_main.dart';
 
 class ClientModel {
-  TorrentEngine _engine = null;
-
-  String globalIp = "0.0.0.0";
-  String localIp = "0.0.0.0";
-  int localPort = 18080;
-  int globalPort = 18080;
-  bool useUpnp = false;
-  bool useDHT = false;
   HetimaData _seedfile = null;
   HetimaData get seedfile => _seedfile;
   HetimaData _torrentfile = null;
@@ -48,18 +41,20 @@ class ClientModel {
   }
 
   Future<int> getCurrentProgress() {
-    return _metadata.createInfoSha1().then((List<int> infoHash){
-      if (_engine != null && _engine.isGo) {
-        return _engine.getTorrent(infoHash).torrentClient.targetBlock.rawHead.numOfOn(true);
-      } else {
-        return _bitfieldfile.getLength().then((int len) {
-          return _bitfieldfile.read(0, len).then((ReadResult result) {
-            Bitfield b = new Bitfield(Bitfield.calcbitSize(_metadata.info.pieces.length), clearIsOne: false);
-            b.writeBytes(result.buffer);
-            return b.numOfOn(true)*_metadata.info.piece_length;
+    return _metadata.createInfoSha1().then((List<int> infoHash) {
+      return AppModel.getInstance().get().then((TorrentEngine _engine) {
+        if (_engine != null && _engine.isGo) {
+          return _engine.getTorrent(infoHash).torrentClient.targetBlock.rawHead.numOfOn(true);
+        } else {
+          return _bitfieldfile.getLength().then((int len) {
+            return _bitfieldfile.read(0, len).then((ReadResult result) {
+              Bitfield b = new Bitfield(Bitfield.calcbitSize(_metadata.info.pieces.length), clearIsOne: false);
+              b.writeBytes(result.buffer);
+              return b.numOfOn(true) * _metadata.info.piece_length;
+            });
           });
-        });
-      }
+        }
+      });
     });
   }
 
@@ -67,40 +62,27 @@ class ClientModel {
     return this._bitfieldfile.getLength().then((int length) {
       return this._bitfieldfile.read(0, length);
     }).then((ReadResult re) {
-      /*
-      return TorrentEngine
-          .createTorrentEngine(new HetiSocketBuilderChrome(), torrentFile, seedfile,
-              globalPort: globalPort, localPort: localPort, localIp: localIp,
-              globalIp: globalIp, useUpnp: useUpnp, useDht: useDHT,appid: "hetimatorrentclient${clientModeId++}",bitfield:re.buffer)
-          .then((TorrentEngine engine) {
-        _engine = engine;
-        _engine.onProgress.listen((TorrentEngineProgress info) {
-          _bitfieldfile.write(_engine.torrentClient.targetBlock.rawHead.getBinary(), 0).catchError((e) {
-            ;
+      return AppModel.getInstance().start().then((TorrentEngine engine) {
+        return engine.addTorrent(torrentFile, seedfile, bitfield: re.buffer).then((TorrentEngineTorrent t) {
+          t.onProgress.listen((TorrentEngineProgress info) {
+            _bitfieldfile.write(t.torrentClient.targetBlock.rawHead.getBinary(), 0).catchError((e) {
+              ;
+            });
+            onProgress(info.downloadSize, info.fileSize, info);
           });
-          onProgress(info.downloadSize, info.fileSize, info);
-        });
-        return _engine.start(usePortMap: useUpnp).then((_) {
-          this.localIp = _engine.localIp;
-          this.globalPort = _engine.globalPort;
-          this.localPort = _engine.localPort;
-          this.globalIp = _engine.globalIp;
+          t.startTorrent(engine);
           return new SeederModelStartResult()
-            ..localIp = localIp
-            ..localPort = localPort
-            ..globalPort = globalPort
-            ..globalIp = globalIp;
+            ..localIp = engine.localIp
+            ..localPort = engine.localPort
+            ..globalPort = engine.globalPort
+            ..globalIp = engine.globalIp;
         });
-      });*/
+      });
     });
   }
 
   Future stopEngine() {
-    return new Future(() {
-      if (_engine != null) {
-        return _engine.stop();
-      }
-    });
+    return AppModel.getInstance().stop();
   }
 }
 

@@ -68,12 +68,14 @@ class TorrentEngine {
 
   bool _useUpnp = false;
   bool get useUpnp => _useUpnp;
-
+  bool _useDht = false;
+  bool get useDht => _useDht;
+  
   List<TorrentEngineTorrent> _torrents = [];
   Future<TorrentEngineTorrent> addTorrent(TorrentFile torrentfile, HetimaData downloadedData,
-      {appid: "hetima_torrent_engine", haveAllData: false, int localPort: 18085, int globalPort: 18085, List<int> bitfield: null, bool useDht: false}) {
+      {haveAllData: false, List<int> bitfield: null}) {
     return TorrentEngineTorrent
-        .createEngioneTorrent(_builder, torrentfile, downloadedData, haveAllData: haveAllData, localPort: localPort, globalPort: globalPort, bitfield: bitfield, useDht: useDht)
+        .createEngioneTorrent(_builder, torrentfile, downloadedData, haveAllData: haveAllData, localPort: localPort, globalPort: globalPort, bitfield: bitfield, useDht: _useDht)
         .then((TorrentEngineTorrent engine) {
       if(null != getTorrent(engine._infoHash)) {
         throw {"message":"already add"};
@@ -104,6 +106,8 @@ class TorrentEngine {
     this._upnpPortMapClient = new UpnpPortMapHelper(builder, appid);
     this._portMapAI = new TorrentEngineAIPortMap(upnpPortMapClient);
     this._useUpnp = useUpnp;
+    this._useDht = useDht;
+    
   }
 
   bool _isGO = false;
