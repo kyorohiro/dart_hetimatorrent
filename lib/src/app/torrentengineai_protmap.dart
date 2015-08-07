@@ -46,12 +46,12 @@ class TorrentEngineAIPortMap {
       isStart = false;
       List<Future> r = [];
       if (usePortMap == true) {
-        r.add(_upnpPortMapClient.deletePortMapFromAppIdDesc(reuseRouter:true,newProtocol:UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_TCP));
-        r.add(_upnpPortMapClient.deletePortMapFromAppIdDesc(reuseRouter:true,newProtocol:UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_UDP));
+        r.add(_upnpPortMapClient.deletePortMapFromAppIdDesc(reuseRouter:false,newProtocol:UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_TCP));
+        r.add(_upnpPortMapClient.deletePortMapFromAppIdDesc(reuseRouter:false,newProtocol:UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_UDP));
       }
-      if (useDht == true) {
+      //if (useDht == true) {
         r.add(_dhtClient.stop());        
-      }
+     // }
       return Future.wait(r);
     });
   }
@@ -112,8 +112,8 @@ class TorrentEngineAIPortMap {
       return _upnpPortMapClient.startPortMap(reuseRouter: true,newProtocol:UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_UDP);
     }).catchError((e){
       List<Future> r = [];
-      r.add(_upnpPortMapClient.deletePortMapFromAppIdDesc(reuseRouter:true,newProtocol:UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_TCP));
-      r.add(_upnpPortMapClient.deletePortMapFromAppIdDesc(reuseRouter:true,newProtocol:UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_UDP));
+      r.add(_upnpPortMapClient.deletePortMapFromAppIdDesc(reuseRouter:false,newProtocol:UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_TCP));
+      r.add(_upnpPortMapClient.deletePortMapFromAppIdDesc(reuseRouter:false,newProtocol:UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_UDP));
       return Future.wait(r).then((_){
         throw e;
       });
