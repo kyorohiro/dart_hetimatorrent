@@ -115,7 +115,7 @@ class TorrentEngine {
     this._portMapAI = new TorrentEngineAIPortMap(upnpPortMapClient);
     this._useUpnp = useUpnp;
     this._useDht = useDht;
-    this._dhtClient = new KNode(builder);
+    this._dhtClient = new KNode(builder, verbose:true);
   }
 
   bool _isStart = false;
