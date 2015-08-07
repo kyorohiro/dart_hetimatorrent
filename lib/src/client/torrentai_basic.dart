@@ -72,16 +72,17 @@ class TorrentAIBasic extends TorrentAI {
             if (true == front.handshakeFromMe || info.amI == true) {
               return null;
             } else {
-              return front.sendHandshake();
-            }
-            if (useDht == true) {
-              if (handshake.reserved[7] & 0x01 == 0x01) {
-                if (_dhtPort == null) {
-                  front.sendPort(client.globalPort);
-                } else {
-                  front.sendPort(_dhtPort);
+              return front.sendHandshake().then((_){
+                if (useDht == true) {
+                  if (handshake.reserved[7] & 0x01 == 0x01) {
+                    if (_dhtPort == null) {
+                      front.sendPort(client.globalPort);
+                    } else {
+                      front.sendPort(_dhtPort);
+                    }
+                  }
                 }
-              }
+              });
             }
           }
           break;
@@ -127,10 +128,8 @@ class TorrentAIBasic extends TorrentAI {
           _pieceTest.pieceTest(client, front);
           break;
         case TorrentMessage.SIGN_PORT:
-        {
-
-        }
-        break;
+          {}
+          break;
       }
     });
   }

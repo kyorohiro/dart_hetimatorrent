@@ -29,11 +29,11 @@ class TorrentEngineAI extends TorrentAI {
   Stream<TorrentEngineProgress> get onProgress => _progressStream.stream;
   TorrentEngineProgress _progressCash = new TorrentEngineProgress();
 
-  TorrentEngineAI(TrackerClient tracker,  KNode dhtClient, bool useDht) {
+  TorrentEngineAI(TrackerClient tracker, KNode dhtClient, bool useDht) {
     this._tracker = tracker;
     this._useDht = useDht;
     this._dht = dhtClient;
-    this.basic = new TorrentAIBasic(useDht:useDht);
+    this.basic = new TorrentAIBasic(useDht: useDht);
   }
 
   @override
@@ -43,7 +43,7 @@ class TorrentEngineAI extends TorrentAI {
         print("Empty AI receive : ${message.id}");
       });
     } else {
-      if(message.id == TorrentMessage.SIGN_PORT) {
+      if (message.id == TorrentMessage.SIGN_PORT) {
         if (useDht == true) {
           MessagePort messagePort = message;
           this._dht.addBootNode(info.ip, messagePort.port);
