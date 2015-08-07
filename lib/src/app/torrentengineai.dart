@@ -82,6 +82,10 @@ class TorrentEngineAI extends TorrentAI {
     _tracker.peerport = manager.globalPort;
     torrentClient.startWithoutSocket(manager.localIp, manager.localPort, manager.globalIp, manager.globalPort);
     manager.addTorrentClient(torrentClient);
+    if(useDht == true) {
+      _dht.startSearchValue(new KId(_tracker.infoHash), _torrent.globalPort);
+    }
+
     isGo = true;
     return _startTracker(1).catchError((e) {});
   }
@@ -89,6 +93,9 @@ class TorrentEngineAI extends TorrentAI {
   Future stop() {
     return this._torrent.stop().then((_) {
       isGo = false;
+      if(useDht == true) {
+        _dht.stopSearchPeer(new KId(_tracker.infoHash));
+      }
     }).then((_) {
       return _startTracker(0).catchError((e) {});
     });
