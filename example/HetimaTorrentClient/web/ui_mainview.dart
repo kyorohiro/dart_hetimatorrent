@@ -81,7 +81,7 @@ class MainItem {
        String key = f.replaceAll(".cont", "");
        fileList.children.clear();
        html.DivElement c = new html.Element.html("<div id=\"${key}\"></div>");
-       html.InputElement startButton = new html.Element.html("<input type=\"button\" value=\"Start\">");
+       html.InputElement startButton = new html.Element.html("<input type=\"button\" value=\"Open\">");
        html.InputElement removeButton = new html.Element.html("<input type=\"button\" value=\"X\">");
        c.children.add(startButton);
        c.children.add(removeButton);
