@@ -65,6 +65,11 @@ class AppModel {
       }
     });
   }
+  
+  //
+  //
+  HashItem hashItem = null;
+  MainItem mainItem = null;
 }
 
 //
@@ -79,8 +84,8 @@ void main() {
   print("hello world");
   tab.init();
   dialog.init();
-  item = new HashItem();
-  mainItem = new MainItem();
+  AppModel.getInstance().hashItem = item = new HashItem();
+  AppModel.getInstance().mainItem = mainItem = new MainItem();
   item.init(tab, dialog);
   mainItem.init(tab, dialog, item);
 

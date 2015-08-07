@@ -96,12 +96,16 @@ class TorrentEngine {
   TorrentEngineTorrent getTorrent(List<int> infoHash) {
     for (TorrentEngineTorrent tt in _torrents) {
       List<int> dd = tt.infoHash;
+      bool ok = true;
       for (int i = 0; i < infoHash.length; i++) {
         if (dd[i] != infoHash[i]) {
-          continue;
+          ok = false;
+          break;
         }
       }
-      return tt;
+      if(ok == true) {
+        return tt;
+      }
     }
     return null;
   }
@@ -116,6 +120,12 @@ class TorrentEngine {
     this._useUpnp = useUpnp;
     this._useDht = useDht;
     this._dhtClient = new KNode(builder, verbose:true);
+    this._dhtClient.onGetPeerValue.listen((KGetPeerValue value) {
+      TorrentEngineTorrent t = getTorrent(value.infoHash.id);
+      if(t != null) {
+        t._torrentClient.putTorrentPeerInfoFromTracker(value.ipAsString, value.port);
+      }
+    });
   }
 
   bool _isStart = false;

@@ -25,7 +25,17 @@ class MainItem {
 
   html.InputElement upnpUse = html.querySelector("#torrent-upnpon-use");
   html.InputElement upnpUnuse = html.querySelector("#torrent-upnpon-unuse");
+  html.InputElement dhtUse = html.querySelector("#torrent-dht-use");
+  html.InputElement dhtUnuse = html.querySelector("#torrent-dht-unuse");
 
+  
+  
+  setStartState(bool status) {
+      upnpUse.disabled = status;
+      upnpUnuse.disabled = status;
+      dhtUse.disabled = status;
+      dhtUnuse.disabled = status;
+  }
   cre(HetimaData d, Map<String, TorrentFile> managedTorrentFile, Tab tab, Dialog dialog, [html.File b=null]) {
     TorrentFile.createFromTorrentFile(new HetimaFileToBuilder(d)).then((TorrentFile f) {
       return f.createInfoSha1().then((List<int> infoHash) {

@@ -83,15 +83,14 @@ class ClientModel {
 
   Future stopEngine() {
     return _metadata.createInfoSha1().then((List<int> infoHash) {
-      AppModel.getInstance().get().then((TorrentEngine engine) {
-        engine.getTorrent(infoHash).stopTorrent().then((_){
+      return AppModel.getInstance().get().then((TorrentEngine engine) {
+        return engine.getTorrent(infoHash).stopTorrent().then((_){
           engine.removeTorrent(engine.getTorrent(infoHash));
           if(engine.numOfTorrent() == 0) {
             return engine.stop();
           }
         });
-      });
-      return AppModel.getInstance().stop();      
+      });  
     });
   }
 }

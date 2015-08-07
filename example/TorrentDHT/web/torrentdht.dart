@@ -11,6 +11,7 @@ Element loading = querySelector("#loadingButton");
 DivElement localIpContainer = querySelector("#localipContainer");
 InputElement localAddress = querySelector("#localAddress");
 InputElement localPort = querySelector("#localPort");
+
 DivElement messageContainer = querySelector("#messageContainer");
 InputElement initNodeIp = querySelector("#initNodeIp");
 InputElement initNodePort = querySelector("#initNodePort");
@@ -21,6 +22,8 @@ ButtonElement startSearchButton = querySelector("#startSearchButton");
 ButtonElement stopSearchButton = querySelector("#stopSearchButton");
 Element loadingSearchButton= querySelector("#loadingSearchButton");
 InputElement searchTarget = querySelector("#searchTarget");
+
+DivElement findNodeContainer = querySelector("#findNodeContainer");
 
 void main() {
   DHT dht = new DHT();
@@ -126,6 +129,7 @@ class DHT {
     return node.start(ip: ip, port: port).then((_) {
       node.onGetPeerValue.listen((KGetPeerValue v) {
         print("---onGetPeerValue ${v.ipAsString} ${v.port} ${v.infoHashAsString} ");
+        findNodeContainer.children.add(new Element.html("<div>${v.ipAsString}:${v.port} ${v.infoHashAsString}</div>"));
       });
     });
   }

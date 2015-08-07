@@ -62,6 +62,15 @@ class HashItem {
         stopServerBtn.style.display = "block";
         loadServerBtn.style.display = "none";
         dialog.show("Failed to stop torrent");
+      }).whenComplete((){
+        AppModel.getInstance().get().then((TorrentEngine e) {
+          AppModel mo = AppModel.getInstance();
+          if(e.numOfTorrent() > 0) {
+            mo.mainItem.setStartState(true);
+          } else {
+            mo.mainItem.setStartState(false);            
+          }
+        });
       });
     }
 
@@ -72,6 +81,8 @@ class HashItem {
       startServerBtn.style.display = "none";
       seedState[key] = 3; //loading
       TorrentFile torrentFile = appModel.managedTorrentFile[appModel.selectKey];
+      AppModel mo = AppModel.getInstance();
+      mo.mainItem.setStartState(true);
       appModel.seedModels[key].startEngine(torrentFile, onProgress).then((SeederModelStartResult ret) {
         seedState[key] = 2; //stop
         stopServerBtn.style.display = "block";
@@ -83,6 +94,13 @@ class HashItem {
         startServerBtn.style.display = "block";
         loadServerBtn.style.display = "none";
         dialog.show("Failed to start torrent");
+
+        if(e.numOfTorrent() > 0) {
+          mo.mainItem.setStartState(true);
+        } else {
+          mo.mainItem.setStartState(false);            
+        }
+
       });
     }
     torrentRemoveBtn.onClick.listen((html.MouseEvent e) {
