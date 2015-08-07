@@ -47,7 +47,7 @@ class TorrentEngineTorrent {
     return ai.start(engine._torrentClientManager, _torrentClient);
   }
 
-  Future stopTorrent(List<int> infoHash) {
+  Future stopTorrent() {
     return ai.stop();
   }
 }
@@ -83,6 +83,14 @@ class TorrentEngine {
       _torrents.add(engine);
       return engine;
     });
+  }
+
+  void removeTorrent(TorrentEngineTorrent t) {
+     _torrents.remove(t);
+  }
+
+  int numOfTorrent() {
+     return _torrents.length;
   }
 
   TorrentEngineTorrent getTorrent(List<int> infoHash) {
