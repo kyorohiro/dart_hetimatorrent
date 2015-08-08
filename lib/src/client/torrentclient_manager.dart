@@ -51,15 +51,19 @@ class TorrentClientManager {
 
   TorrentClient getTorrentClient(List<int> infoHash) {
     for (TorrentClient c in clients) {
+      bool isOk = true;
       if (c.infoHash.length != infoHash.length) {
         continue;
       }
       for (int j = 0; j < infoHash.length; j++) {
         if (c.infoHash[j] != infoHash[j]) {
-          continue;
+          isOk = false;
+          break;
         }
       }
-      return c;
+      if(isOk == true) {
+        return c;
+      }
     }
     return null;
   }

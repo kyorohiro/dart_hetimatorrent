@@ -28,9 +28,10 @@ class MainItem {
   html.InputElement inputGlobalPort = html.querySelector("#input-globalport");
   html.InputElement inputGlobalAddress = html.querySelector("#input-globaladdress");
   html.InputElement inputUPnPOn = html.querySelector("#input-upnpon");
-  html.InputElement inputUPnPOff = html.querySelector("#input-upnpoff");
-  
-  
+  html.InputElement inputUPnPOff = html.querySelector("#input-dhton");
+  html.InputElement inputDhtOn = html.querySelector("#input-dhton");
+  html.InputElement inputDhtOff = html.querySelector("#input-dhtoff");
+
   html.DivElement outputFileProgress = html.querySelector("#fileprogress");
  
   html.SpanElement outputLocalStageSpn = html.querySelector("#localstage");
@@ -107,6 +108,8 @@ class MainItem {
         inputLocalPort.readOnly = true;
         inputUPnPOn.disabled = true;
         inputUPnPOff.disabled = true;
+        inputDhtOn.disabled = true;
+        inputDhtOff.disabled = true;
       }).catchError((e) {
         stopServerBtn.style.display = "none";
         startServerBtn.style.display = "block";
@@ -130,6 +133,8 @@ class MainItem {
         inputLocalPort.readOnly = false;
         inputUPnPOn.disabled = false;
         inputUPnPOff.disabled = false;
+        inputDhtOn.disabled = false;
+        inputDhtOff.disabled = false;
       }).catchError((e) {
         startServerBtn.style.display = "none";
         stopServerBtn.style.display = "block";
