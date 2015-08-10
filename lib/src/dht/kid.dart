@@ -127,6 +127,8 @@ class KId {
     return buffer.toString();
   }
 
+  Iterator<int> get iterator => _id.iterator;
+
   static int _i =1000;
   static KId createIDAtRandom([List<int> op = null]) {
     List<int> ret = [];

@@ -1,23 +1,24 @@
 library hetimatorrent.dht.kbucket;
 
 import 'dart:core';
-import 'dart:async';
-import '../util/shufflelinkedlist.dart';
 import 'kpeerinfo.dart';
 
 class KBucket {
-  int _k = 20;
+  int _k = 8;
   int get k => _k;
 
-  ShuffleLinkedList<KPeerInfo> peerInfos = null;
-  KBucket(int k_bucketSize) {
-    this._k = _k;
-    this.peerInfos = new ShuffleLinkedList(k_bucketSize);
+  List<KPeerInfo> peerInfos = null;
+  KBucket(int kBucketSize) {
+    this._k = kBucketSize;
+    this.peerInfos = [];
   }
 
-  update(KPeerInfo peerInfo) {
-    peerInfos.addLast(peerInfo);
-    peerInfos.rawshuffled.sort((KPeerInfo a, KPeerInfo b) {
+  add(KPeerInfo peerInfo) {
+    if (peerInfos.contains(peerInfo) == true) {
+      peerInfos.remove(peerInfo);
+    }
+    peerInfos.add(peerInfo);
+    peerInfos.sort((KPeerInfo a, KPeerInfo b) {
       if (a.id == b.id) {
         return 0;
       } else if (a.id > b.id) {
@@ -26,13 +27,12 @@ class KBucket {
         return -1;
       }
     });
+    if (peerInfos.length > k) {
+      peerInfos.removeAt(0);
+    }
   }
 
-  int length() {
-    return peerInfos.length;
-  }
-
-  KPeerInfo getPeerInfo(int index) {
-    return peerInfos.getSequential(index);
-  }
+  int get length => peerInfos.length;
+  KPeerInfo operator[](int idx) => peerInfos[idx];
+  Iterator<KPeerInfo> get iterator => peerInfos.iterator;
 }

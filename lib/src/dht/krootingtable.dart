@@ -2,10 +2,8 @@ library hetimatorrent.dht.rootingtable;
 
 import 'dart:core';
 import 'dart:async';
-import '../util/shufflelinkedlist.dart';
 import 'kpeerinfo.dart';
 import 'kid.dart';
-import 'dart:typed_data';
 import 'kbucket.dart';
 
 // 161 table 0<=t<=160
@@ -27,11 +25,11 @@ class KRootingTable {
     StringBuffer buffer = new StringBuffer();
     buffer.write("${amId.toString()}\n");
     for (int j = 0; j < _kBuckets.length; j++) {
-        int bucketLength = _kBuckets[j].length();
+        int bucketLength = _kBuckets[j].length;
         if(bucketLength == 0) {continue;}
         buffer.write("[${j}] len:${bucketLength}:## ");
         for(int i=0;i<bucketLength;i++){
-          buffer.write(_kBuckets[j].getPeerInfo(i).toString());
+          buffer.write(_kBuckets[j][i].toString());
           buffer.write("(^_^)");
         }
         buffer.write("\n");
@@ -41,7 +39,7 @@ class KRootingTable {
 
   Future update(KPeerInfo info) {
     return new Future(() {
-      _kBuckets[_amId.xor(info.id).getRootingTabkeIndex()].update(info);
+      _kBuckets[_amId.xor(info.id).getRootingTabkeIndex()].add(info);
     });
   }
 
@@ -50,7 +48,7 @@ class KRootingTable {
       int targetIndex = id.xor(_amId).getRootingTabkeIndex();
       List<KPeerInfo> ret = [];
       for (int v in retrievePath(targetIndex)) {
-        for (KPeerInfo p in _kBuckets[v].peerInfos.sequential) {
+        for (KPeerInfo p in _kBuckets[v].peerInfos) {
           ret.add(p);
           if (ret.length >= _kBucketSize) {
             return ret;
