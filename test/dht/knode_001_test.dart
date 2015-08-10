@@ -22,7 +22,7 @@ void main() {
           knodes[i].addBootNode(kpeerInfos[i - 1].ipAsString, kpeerInfos[i - 1].port);
 //          knodes[i].addKPeerInfo(kpeerInfos[i - 1]);
         }
-        print("${i} : ${a.nodeId.getRootingTabkeIndex()}");
+        print("${i} : ${KRootingTable.getRootingTabkeIndex(a.nodeId)}");
       }
 
       for (int i = 0; i < numOfNode; i++) {

@@ -6,6 +6,7 @@ import 'package:hetimanet/hetimanet.dart';
 
 import '../message/krpcfindnode.dart';
 import '../kid.dart';
+import '../krootingtable.dart';
 import '../../util/shufflelinkedlist.dart';
 
 import '../message/krpcmessage.dart';
@@ -44,7 +45,7 @@ class KNodeAIFindNode {
           findNodesInfo.addLast(info);
           node.sendFindNodeQuery(info.ipAsString, info.port, node.nodeId.id).catchError((_){});
           if(node.verbose == true) {
-            print("<id_index>=${info.id.xor(node.nodeId).getRootingTabkeIndex()}");
+            print("<id_index>=${KRootingTable.getRootingTabkeIndex(info.id.xor(node.nodeId))}");
           }
         }
         //

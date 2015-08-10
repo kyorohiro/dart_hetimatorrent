@@ -21,20 +21,9 @@ class KId {
     this._values = new Uint8List.fromList(new List.filled(20, 0));
   }
 
-  int getRootingTabkeIndex() {
-    int ret = 0;
-    for (int i = 0, ret = 19; i < 20; i++, ret--) {
-      if (_values[i] != 0) {
-        for (int j = 0; j < 9; j++) {
-          if (_values[i] < (0x1 << j)) {
-            return (ret * 8) + j;
-          }
-        }
-        return i;
-      }
-    }
-    return 0;
-  }
+  int get length => _values.length;
+  int operator [](int idx) => _values[idx];
+  Iterator<int> get iterator => _values.iterator;
 
   static KId _optionTest = new KId(new List.filled(20, 0x7f));
   static List<int> createToken(KId infoHash, KId targetId, KId myId, [KId option = null]) {
@@ -108,9 +97,7 @@ class KId {
     return buffer.toString();
   }
 
-  Iterator<int> get iterator => _values.iterator;
-
-  static int _i = 1000;
+  static int _i = 10000;
   static KId createIDAtRandom([List<int> op = null]) {
     List<int> ret = [];
 

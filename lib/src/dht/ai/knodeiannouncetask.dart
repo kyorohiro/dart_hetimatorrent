@@ -5,6 +5,8 @@ import 'dart:async';
 import 'package:hetimanet/hetimanet.dart';
 import '../message/krpcgetpeers.dart';
 import '../kid.dart';
+import '../krootingtable.dart';
+
 import '../../util/shufflelinkedlist.dart';
 
 import '../message/krpcmessage.dart';
@@ -111,7 +113,7 @@ class KNodeAIAnnounceTask {
     {
       int count = 0;
       for (KGetPeerNodes i in receiveGetPeerResponseNode) {
-        print("Announce[${count}] distance=${i.id.xor(_infoHashId).getRootingTabkeIndex()}");
+        print("Announce[${count}] distance=${KRootingTable.getRootingTabkeIndex(i.id.xor(_infoHashId))}");
         if (++count > 20) {
           break;
         }
@@ -124,7 +126,7 @@ class KNodeAIAnnounceTask {
         _announcedPeers.add(i);
         if (node.verbose) {
           print(
-              "###########announce[${node.nodeDebugId}] ---${receiveGetPeerResponseNode.length} ${node.rawSearchResult.length}--${i.ipAsString}, ${i.port} >>${i.id.xor(_infoHashId).getRootingTabkeIndex()} ::: ${i.id.idAsString}");
+              "###########announce[${node.nodeDebugId}] ---${receiveGetPeerResponseNode.length} ${node.rawSearchResult.length}--${i.ipAsString}, ${i.port} >>${KRootingTable.getRootingTabkeIndex(i.id.xor(_infoHashId))} ::: ${i.id.idAsString}");
         }
       }
       if (++count > 8) {

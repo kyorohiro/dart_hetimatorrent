@@ -13,12 +13,27 @@ class KRootingTable {
   KId _amId = null;
   KId get amId => _amId;
 
+
   KRootingTable(int k_bucketSize, KId amId) {
     this._kBucketSize = k_bucketSize;
     for (int i = 0; i < 161; i++) {
       _kBuckets.add(new KBucket(k_bucketSize));
     }
     this._amId = amId;
+  }
+
+  static int getRootingTabkeIndex(KId v) {
+    for (int i = 0, ret = 19; i < 20; i++, ret--) {
+      if (v[i] != 0) {
+        for (int j = 0; j < 9; j++) {
+          if (v[i] < (0x1 << j)) {
+            return (ret * 8) + j;
+          }
+        }
+        return i;
+      }
+    }
+    return 0;
   }
 
   String toInfo() {
@@ -39,13 +54,13 @@ class KRootingTable {
 
   Future update(KPeerInfo info) {
     return new Future(() {
-      _kBuckets[_amId.xor(info.id).getRootingTabkeIndex()].add(info);
+      _kBuckets[KRootingTable.getRootingTabkeIndex(_amId.xor(info.id))].add(info);
     });
   }
 
   Future<List<KPeerInfo>> findNode(KId id) {
     return new Future(() {
-      int targetIndex = id.xor(_amId).getRootingTabkeIndex();
+      int targetIndex = KRootingTable.getRootingTabkeIndex(id.xor(_amId));
       List<KPeerInfo> ret = [];
       for (int v in retrievePath(targetIndex)) {
         for (KPeerInfo p in _kBuckets[v].peerInfos) {
