@@ -18,9 +18,6 @@ class KBucket {
       peerInfos.remove(peerInfo);
     }
     peerInfos.add(peerInfo);
-    peerInfos.sort((KPeerInfo a, KPeerInfo b) {
-      return (a.id == b.id ? 0 : (a.id > b.id ? 1 : -1));
-    });
     if (peerInfos.length > k) {
       peerInfos.removeAt(0);
     }
