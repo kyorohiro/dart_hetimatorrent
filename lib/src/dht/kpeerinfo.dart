@@ -67,7 +67,7 @@ class KPeerInfo {
 
   List<int> toCompactNodeInfo() {
     List<int> ret = [];
-    ret.addAll(_id.id);
+    ret.addAll(_id.value);
     ret.addAll(_ip);
     ret.addAll(ByteOrder.parseShortByte(port, ByteOrder.BYTEORDER_BIG_ENDIAN));
     return new Uint8List.fromList(ret);

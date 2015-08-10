@@ -100,7 +100,7 @@ class KNodeAIAnnounce extends KNodeAI {
           //print("## receive query");
           KrpcGetPeersQuery getPeer = query;
           List<KGetPeerValue> target = node.rawAnnounced.getWithFilter((KGetPeerValue i) {
-            List<int> a = i.infoHash.id;
+            List<int> a = i.infoHash.value;
             List<int> b = getPeer.infoHash;
             for (int i = 0; i < 20; i++) {
               if (a[i] != b[i]) {

@@ -43,7 +43,7 @@ class KNodeAIFindNode {
         if (!findNodesInfo.rawsequential.contains(info)) {
           count++;
           findNodesInfo.addLast(info);
-          node.sendFindNodeQuery(info.ipAsString, info.port, node.nodeId.id).catchError((_){});
+          node.sendFindNodeQuery(info.ipAsString, info.port, node.nodeId.value).catchError((_){});
           if(node.verbose == true) {
             print("<id_index>=${KRootingTable.getRootingTabkeIndex(info.id.xor(node.nodeId))}");
           }
@@ -69,7 +69,7 @@ class KNodeAIFindNode {
         if (!findNodesInfo.rawsequential.contains(info)) {
           count++;
           findNodesInfo.addLast(info);
-          node.sendFindNodeQuery(info.ipAsString, info.port, KId.createIDAtRandom().id);
+          node.sendFindNodeQuery(info.ipAsString, info.port, KId.createIDAtRandom().value);
         }
         if(count > 3) {
           break;
@@ -81,7 +81,7 @@ class KNodeAIFindNode {
   List mustTofindNode = [];
   onAddNodeFromIPAndPort(KNode node, String ip, int port) {
     if (node.rawUdoSocket != null) {
-      node.sendFindNodeQuery(ip, port, node.nodeId.id).catchError((_){});
+      node.sendFindNodeQuery(ip, port, node.nodeId.value).catchError((_){});
     } else {
       mustTofindNode.add([ip, port]);
     }
@@ -90,7 +90,7 @@ class KNodeAIFindNode {
   onTicket(KNode node) {
     updateP2PNetworkWithRandom(node);
     for (List l in mustTofindNode) {
-      node.sendFindNodeQuery(l[0], l[1], node.nodeId.id).catchError((_){});
+      node.sendFindNodeQuery(l[0], l[1], node.nodeId.value).catchError((_){});
     }
     mustTofindNode.clear();
   }

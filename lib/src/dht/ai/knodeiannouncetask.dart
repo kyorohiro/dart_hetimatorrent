@@ -74,7 +74,7 @@ class KNodeAIAnnounceTask {
           //node.sendFindNodeQuery(info.ipAsString, info.port, _infoHashId.id).catchError((e) {});
         } else {
           _findedNode.addLast(info);
-          node.sendGetPeersQuery(info.ipAsString, info.port, _infoHashId.id).catchError((e) {});
+          node.sendGetPeersQuery(info.ipAsString, info.port, _infoHashId.value).catchError((e) {});
         }
       }
     });
@@ -122,7 +122,7 @@ class KNodeAIAnnounceTask {
     int count = 0;
     for (KGetPeerNodes i in receiveGetPeerResponseNode) {
       if (false == _announcedPeers.contains(i)) {
-        node.sendAnnouncePeerQuery(i.ipAsString, i.port, 0, _infoHashId.id, this.port, i.token).catchError((_){});
+        node.sendAnnouncePeerQuery(i.ipAsString, i.port, 0, _infoHashId.value, this.port, i.token).catchError((_){});
         _announcedPeers.add(i);
         if (node.verbose) {
           print(
@@ -175,7 +175,7 @@ class KNodeAIAnnounceTask {
 
         if (getPeer.haveValue == true) {
           //print("announce set value");
-          for (KGetPeerValue i in getPeer.valuesAsKAnnounceInfo(_infoHashId.id)) {
+          for (KGetPeerValue i in getPeer.valuesAsKAnnounceInfo(_infoHashId.value)) {
             lastUpdateTime = new DateTime.now().millisecondsSinceEpoch;
             if (node.verbose == true && false == node.containSeardchResult(i)) {
               print("########### get peer value ${i.ipAsString} ${i.port}");
@@ -184,7 +184,7 @@ class KNodeAIAnnounceTask {
           }
           //
           // todo
-          node.sendFindNodeQuery(info.remoteAddress, info.remotePort, _infoHashId.id).catchError((e) {});
+          node.sendFindNodeQuery(info.remoteAddress, info.remotePort, _infoHashId.value).catchError((e) {});
         } else {
           //
           //
@@ -207,7 +207,7 @@ class KNodeAIAnnounceTask {
               KPeerInfo info = _findedNode.rawshuffled[i];
               if (true == candidate.contains(info)) {
                 lastUpdateTime = new DateTime.now().millisecondsSinceEpoch;
-                node.sendGetPeersQuery(info.ipAsString, info.port, _infoHashId.id).catchError((_){});
+                node.sendGetPeersQuery(info.ipAsString, info.port, _infoHashId.value).catchError((_){});
               }
             }
           }

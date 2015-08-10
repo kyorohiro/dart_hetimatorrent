@@ -7,7 +7,7 @@ import 'dart:typed_data';
 
 class KId {
   List<int> _values = null;
-  List<int> get id => new List.from(_values);
+  List<int> get value => new List.from(_values);
   String get idAsString => PercentEncode.encode(_values);
 
   KId(List<int> id) {

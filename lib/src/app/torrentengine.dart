@@ -125,7 +125,7 @@ class TorrentEngine {
     this._useDht = useDht;
     this._dhtClient = new KNode(builder, verbose:false);
     this._dhtClient.onGetPeerValue.listen((KGetPeerValue value) {
-      TorrentEngineTorrent t = getTorrent(value.infoHash.id);
+      TorrentEngineTorrent t = getTorrent(value.infoHash.value);
       print("<=1==> ${value.ipAsString}:${value.port}");
       if(t != null) {
         print("<=2==> ${value.ipAsString}:${value.port}");

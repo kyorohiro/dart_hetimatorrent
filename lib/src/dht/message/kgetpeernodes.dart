@@ -20,7 +20,7 @@ class KGetPeerNodes {
 
   KId _infoHash = null;
   KId get infoHash => _infoHash;
-  String get infoHashAsString => PercentEncode.encode(_infoHash.id);
+  String get infoHashAsString => PercentEncode.encode(_infoHash.value);
 
   List<int> _token = [];
   List<int> get token => _token;
