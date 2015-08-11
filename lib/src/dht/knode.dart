@@ -74,29 +74,7 @@ class KNode extends Object with KrpcResponseInfo {
     return _udpSocket.bind(ip, port, multicast: true).then((int v) {
       _udpSocket.onReceive().listen((HetiReceiveUdpInfo info) {
         KrpcMessage.decode(info.data, this).then((KrpcMessage message) {
-          if (verbose == true) {
-            print("--->receive[${nodeDebugId}] ${info.remoteAddress}:${info.remotePort} ${message}");
-          }
-          if (message is KrpcResponse) {
-            KSendInfo rm = removeQueryNameFromTransactionId(UTF8.decode(message.rawMessageMap["t"]));
-            this._ai.onReceiveResponse(this, info, message);
-            if (rm != null) {
-              rm.c.complete(message);
-            } else {
-              print("----> receive null : [${nodeDebugId}] ${info.remoteAddress} ${info.remotePort}");
-            }
-          } else if (message is KrpcQuery) {
-            this._ai.onReceiveQuery(this, info, message);
-          } else if (message is KrpcError) {
-            this._ai.onReceiveError(this, info, message);
-          } else {
-            this._ai.onReceiveUnknown(this, info, message);
-          }
-          for (KSendInfo i in clearTimeout(20000)) {
-            if (i.c.isCompleted == false) {
-              i.c.completeError({message: "timeout"});
-            }
-          }
+          onReceiveMessage(info, message);
         });
       });
       //////
@@ -104,6 +82,32 @@ class KNode extends Object with KrpcResponseInfo {
       _ai.start(this);
       ai.startTick(this);
     });
+  }
+
+  onReceiveMessage(HetiReceiveUdpInfo info, KrpcMessage message) {
+    if (verbose == true) {
+      print("--->receive[${nodeDebugId}] ${info.remoteAddress}:${info.remotePort} ${message}");
+    }
+    if (message is KrpcResponse) {
+      KSendInfo rm = removeQueryNameFromTransactionId(UTF8.decode(message.rawMessageMap["t"]));
+      this._ai.onReceiveResponse(this, info, message);
+      if (rm != null) {
+        rm.c.complete(message);
+      } else {
+        print("----> receive null : [${nodeDebugId}] ${info.remoteAddress} ${info.remotePort}");
+      }
+    } else if (message is KrpcQuery) {
+      this._ai.onReceiveQuery(this, info, message);
+    } else if (message is KrpcError) {
+      this._ai.onReceiveError(this, info, message);
+    } else {
+      this._ai.onReceiveUnknown(this, info, message);
+    }
+    for (KSendInfo i in clearTimeout(20000)) {
+      if (i.c.isCompleted == false) {
+        i.c.completeError({message: "timeout"});
+      }
+    }
   }
 
   Future stop() {
