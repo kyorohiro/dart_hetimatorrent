@@ -24,43 +24,6 @@ abstract class KNodeAI {
   onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcResponse response);
   onReceiveUnknown(KNode node, HetiReceiveUdpInfo info, KrpcMessage message);
   onTicket(KNode);
-  startParseLoop(KNode node, EasyParser parser, HetiReceiveUdpInfo info, String deleteKey) {
-    a() {
-      //
-      KrpcMessage.decode(parser, node).then((KrpcMessage message) {
-        if (node.verbose == true) {
-          print("--->receive[${node.nodeDebugId}] ${info.remoteAddress}:${info.remotePort} ${message}");
-        }
-        if (message is KrpcResponse) {
-          KSendInfo rm = node.removeQueryNameFromTransactionId(UTF8.decode(message.rawMessageMap["t"]));
-          this..onReceiveResponse(node, info, message);
-          if (rm != null) {
-            rm.c.complete(message);
-          } else {
-            print("----> receive null : [${node.nodeDebugId}] ${info.remoteAddress} ${info.remotePort}");
-          }
-        } else if (message is KrpcQuery) {
-          this.onReceiveQuery(node, info, message);
-        } else if (message is KrpcError) {
-          this.onReceiveError(node, info, message);
-        } else {
-          this.onReceiveUnknown(node, info, message);
-        }
-        for(KSendInfo i in node.clearTimeout(10000)) {
-          if(i.c.isCompleted == false) {
-            i.c.completeError({message:"timeout"});
-          }
-        }
-      }).then((_) {
-        a();
-      }).catchError((e) {
-        parser.resetIndex((parser.buffer as ArrayBuilder).size());
-        (parser.buffer as ArrayBuilder).clearInnerBuffer((parser.buffer as ArrayBuilder).size());
-        node.buffers.remove(deleteKey);
-      });
-    }
-    a();
-  }
 
   int _lastAnnouncedTIme = 0;
   startTick(KNode node) {

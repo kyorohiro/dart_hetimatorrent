@@ -13,6 +13,7 @@ import 'krpcannounce.dart';
 import 'dart:convert';
 import '../kid.dart';
 import 'dart:typed_data';
+import '../knode.dart';
 
 abstract class KrpcResponseInfo {
   String getQueryNameFromTransactionId(String transactionId);
@@ -65,14 +66,17 @@ class KrpcMessage {
 
   Map<String, Object> get rawMessageMap => _messageAsMap;
 
-  static Future<KrpcMessage> decode(EasyParser parser, KrpcResponseInfo info) {
-    parser.push();
-    return HetiBencode.decode(parser).then((Object v) {
-      if (!(v is Map)) {
-        throw {};
-      }
-      //print("##=+>${v}");
-      Map<String, Object> messageAsMap = v;
+  static Future<KrpcMessage> decode(List<int> data, KrpcResponseInfo info) async {
+    Map<String, Object> messageAsMap = null;
+    try {
+      Object v = Bencode.decode(data);
+      messageAsMap = v;
+    } catch (e) {
+      throw {};
+    }
+
+
+ 
       if (KrpcQuery.queryCheck(messageAsMap, null)) {
         KrpcMessage ret = null;
         String q = "";
@@ -98,8 +102,6 @@ class KrpcMessage {
             ret = new KrpcQuery.fromMap(messageAsMap);
             break;
         }
-
-        parser.pop();
         return ret;
       } else if (KrpcResponse.queryCheck(messageAsMap)) {
         KrpcMessage ret = null;
@@ -120,28 +122,15 @@ class KrpcMessage {
             ret = new KrpcResponse.fromMap(messageAsMap);
             break;
         }
-        parser.pop();
-        if(parser.stack.length == 0) {
-          parser.buffer.clearInnerBuffer(parser.index);
-        }
         return ret;
       } else if (KrpcError.queryCheck(messageAsMap)) {
         KrpcMessage ret = null;
         ret = new KrpcError.fromMap(messageAsMap);
-        parser.pop();
         return ret;
       } else {
         KrpcMessage ret = new KrpcMessage.fromMap(messageAsMap);
-        parser.pop();
         return ret;
       }
-    }).catchError((e) {
-      print("${parser.index}");
-      parser.back();
-      parser.pop();
-      print("${parser.index}");
-      throw e;
-    });
   }
 
   static Future<KrpcMessage> decodeTest(EasyParser parser, Function a) {

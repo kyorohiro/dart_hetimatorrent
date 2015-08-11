@@ -12,7 +12,7 @@ import 'message/krpcgetpeers.dart';
 import 'kid.dart';
 import 'dart:convert';
 import '../util/shufflelinkedlist.dart';
-
+import '../util/bencode.dart';
 import 'message/krpcmessage.dart';
 import 'message/krpcannounce.dart';
 import 'kpeerinfo.dart';
@@ -57,8 +57,7 @@ class KNode extends Object with KrpcResponseInfo {
   bool get verbose => _verbose;
 
   KNode(HetiSocketBuilder socketBuilder,
-      {int kBucketSize: 8, List<int> nodeIdAsList: null, KNodeAI ai: null, 
-        intervalSecondForMaintenance: 10, intervalSecondForAnnounce: 3 * 60, bool verbose: false}) {
+      {int kBucketSize: 8, List<int> nodeIdAsList: null, KNodeAI ai: null, intervalSecondForMaintenance: 10, intervalSecondForAnnounce: 3 * 60, bool verbose: false}) {
     this._verbose = verbose;
     this._intervalSecondForMaintenance = intervalSecondForMaintenance;
     this._intervalSecondForAnnounce = intervalSecondForAnnounce;
@@ -69,30 +68,41 @@ class KNode extends Object with KrpcResponseInfo {
     this._nodeDebugId = id++;
   }
 
-  Future start({String ip: "0.0.0.0", int port: 28080}) {
-    return new Future(() {
-      if (_isStart) {
-        throw {};
-      }
-      _udpSocket = this._socketBuilder.createUdpClient();
-      return _udpSocket.bind(ip, port, multicast: true).then((int v) {
-        _udpSocket.onReceive().listen((HetiReceiveUdpInfo info) {
-          if (!buffers.containsKey("${info.remoteAddress}:${info.remotePort}")) {
-            buffers["${info.remoteAddress}:${info.remotePort}"] = new EasyParser(new ArrayBuilder());
-            _ai.startParseLoop(this, buffers["${info.remoteAddress}:${info.remotePort}"], info, "${info.remoteAddress}:${info.remotePort}");
+  Future start({String ip: "0.0.0.0", int port: 28080}) async {
+    (_isStart != false ? throw "already started" : 0);
+    _udpSocket = this._socketBuilder.createUdpClient();
+    return _udpSocket.bind(ip, port, multicast: true).then((int v) {
+      _udpSocket.onReceive().listen((HetiReceiveUdpInfo info) {
+        KrpcMessage.decode(info.data, this).then((KrpcMessage message) {
+          if (verbose == true) {
+            print("--->receive[${nodeDebugId}] ${info.remoteAddress}:${info.remotePort} ${message}");
           }
-          EasyParser parser = buffers["${info.remoteAddress}:${info.remotePort}"];
-          (parser.buffer as ArrayBuilder).appendIntList(info.data);
+          if (message is KrpcResponse) {
+            KSendInfo rm = removeQueryNameFromTransactionId(UTF8.decode(message.rawMessageMap["t"]));
+            this._ai.onReceiveResponse(this, info, message);
+            if (rm != null) {
+              rm.c.complete(message);
+            } else {
+              print("----> receive null : [${nodeDebugId}] ${info.remoteAddress} ${info.remotePort}");
+            }
+          } else if (message is KrpcQuery) {
+            this._ai.onReceiveQuery(this, info, message);
+          } else if (message is KrpcError) {
+            this._ai.onReceiveError(this, info, message);
+          } else {
+            this._ai.onReceiveUnknown(this, info, message);
+          }
+          for (KSendInfo i in clearTimeout(20000)) {
+            if (i.c.isCompleted == false) {
+              i.c.completeError({message: "timeout"});
+            }
+          }
         });
-
-        //////
-        _isStart = true;
-        _ai.start(this);
-        ai.startTick(this);
       });
-    }).catchError((e) {
-      _isStart = false;
-      throw e;
+      //////
+      _isStart = true;
+      _ai.start(this);
+      ai.startTick(this);
     });
   }
 

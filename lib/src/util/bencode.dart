@@ -12,7 +12,7 @@ class Bencode {
     return _encoder.enode(obj);
   }
 
-  static Object decode(data.Uint8List buffer) {
+  static Object decode(List<int> buffer) {
     return _decoder.decode(buffer);
   }
 
@@ -91,12 +91,12 @@ class Bencode {
 
 class Bdecoder {
   int index;
-  Object decode(data.Uint8List buffer) {
+  Object decode(List<int> buffer) {
     index = 0;
     return decodeBenObject(buffer);
   }
 
-  Object decodeBenObject(data.Uint8List buffer) {
+  Object decodeBenObject(List<int> buffer) {
     if (0x30 <= buffer[index] && buffer[index] <= 0x39) {//0-9
       return decodeBytes(buffer);
     } else if (0x69 == buffer[index]) {// i
@@ -109,7 +109,7 @@ class Bdecoder {
     throw new BencodeParseError("benobject", buffer, index);
   }
 
-  Map decodeDiction(data.Uint8List buffer) {
+  Map decodeDiction(List<int> buffer) {
     Map ret = new Map();
     if (buffer[index++] != 0x64) {
       throw new BencodeParseError("bendiction", buffer, index);
@@ -123,7 +123,7 @@ class Bdecoder {
     return ret;
   }
 
-  Map decodeDictionElements(data.Uint8List buffer) {
+  Map decodeDictionElements(List<int> buffer) {
     Map ret = new Map();
     while (index < buffer.length && buffer[index] != 0x65) {
       data.Uint8List keyAsList = decodeBenObject(buffer);
@@ -133,7 +133,7 @@ class Bdecoder {
     return ret;
   }
 
-  List decodeList(data.Uint8List buffer) {
+  List decodeList(List<int> buffer) {
     List ret = new List();
     if (buffer[index++] != 0x6c) {
       throw new BencodeParseError("benlist", buffer, index);
@@ -145,7 +145,7 @@ class Bdecoder {
     return ret;
   }
 
-  List decodeListElemets(data.Uint8List buffer) {
+  List decodeListElemets(List<int> buffer) {
     List ret = new List();
     while (index < buffer.length && buffer[index] != 0x65) {
       ret.add(decodeBenObject(buffer));
@@ -153,7 +153,7 @@ class Bdecoder {
     return ret;
   }
 
-  num decodeNumber(data.Uint8List buffer) {
+  num decodeNumber(List<int> buffer) {
     if (buffer[index++] != 0x69) {
       throw new BencodeParseError("bennumber", buffer, index);
     }
@@ -170,7 +170,7 @@ class Bdecoder {
     return returnValue;
   }
 
-  data.Uint8List decodeBytes(data.Uint8List buffer) {
+  data.Uint8List decodeBytes(List<int> buffer) {
     int length = 0;
     while (index < buffer.length && buffer[index] != 0x3a) {
       if (!(0x30 <= buffer[index] && buffer[index] <= 0x39)) {

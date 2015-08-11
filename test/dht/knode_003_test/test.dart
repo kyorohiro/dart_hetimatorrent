@@ -15,6 +15,7 @@ void main() {
       List<KNode> knodes = [];
       List<KPeerInfo> kpeerInfos = [];
       int numOfNode = 4;
+      KRootingTable table = new KRootingTable(8, new KId(new List.filled(20, 0)));
       for (int i = 0; i < numOfNode; i++) {
         KNode a = new KNode(new HetiSocketBuilderChrome(),intervalSecondForMaintenance:1);
         knodes.add(a);
@@ -22,7 +23,7 @@ void main() {
         if (i != 0) {
           knodes[i].addKPeerInfo(kpeerInfos[i - 1]);
         }
-        print("${i} : ${a.nodeId.getRootingTabkeIndex()}");
+        print("${i} : ${table.getRootingTabkeIndex(a.nodeId)}");
       }
 
       for (int i = 0; i < numOfNode; i++) {
