@@ -113,7 +113,7 @@ class KNodeAIAnnounceTask {
     {
       int count = 0;
       for (KGetPeerNodes i in receiveGetPeerResponseNode) {
-        print("Announce[${count}] distance=${KRootingTable.getRootingTabkeIndex(i.id.xor(_infoHashId))}");
+        print("Announce[${count}] distance=${node.rootingtable.getRootingTabkeIndex(i.id.xor(_infoHashId))}");
         if (++count > 20) {
           break;
         }
@@ -126,7 +126,7 @@ class KNodeAIAnnounceTask {
         _announcedPeers.add(i);
         if (node.verbose) {
           print(
-              "###########announce[${node.nodeDebugId}] ---${receiveGetPeerResponseNode.length} ${node.rawSearchResult.length}--${i.ipAsString}, ${i.port} >>${KRootingTable.getRootingTabkeIndex(i.id.xor(_infoHashId))} ::: ${i.id.idAsString}");
+              "###########announce[${node.nodeDebugId}] ---${receiveGetPeerResponseNode.length} ${node.rawSearchResult.length}--${i.ipAsString}, ${i.port} >>${node.rootingtable.getRootingTabkeIndex(i.id.xor(_infoHashId))} ::: ${i.id.idAsString}");
         }
       }
       if (++count > 8) {

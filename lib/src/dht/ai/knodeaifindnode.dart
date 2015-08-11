@@ -45,7 +45,7 @@ class KNodeAIFindNode {
           findNodesInfo.addLast(info);
           node.sendFindNodeQuery(info.ipAsString, info.port, node.nodeId.value).catchError((_){});
           if(node.verbose == true) {
-            print("<id_index>=${KRootingTable.getRootingTabkeIndex(info.id.xor(node.nodeId))}");
+            print("<id_index>=${node.rootingtable.getRootingTabkeIndex(info.id)}");
           }
         }
         //
