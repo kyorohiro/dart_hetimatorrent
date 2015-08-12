@@ -20,9 +20,8 @@ class KRootingTable {
     this._ownerKId = ownerKId;
   }
 
-  
   void clear() {
-    for(KBucket k in _kBuckets) {
+    for (KBucket k in _kBuckets) {
       k.clear();
     }
   }
@@ -30,10 +29,8 @@ class KRootingTable {
     return v.getRootingTabkeIndex(_ownerKId);
   }
 
-  Future update(KPeerInfo info) {
-    return new Future(() {
-      _kBuckets[getRootingTabkeIndex(info.id)].add(info);
-    });
+  void update(KPeerInfo info) {
+    _kBuckets[getRootingTabkeIndex(info.id)].add(info);
   }
 
   String toInfo() {
