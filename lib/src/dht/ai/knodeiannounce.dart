@@ -111,12 +111,12 @@ class KNodeAIAnnounce extends KNodeAI {
             return node.sendGetPeersResponseWithPeers(info.remoteAddress, info.remotePort, query.transactionId, opaqueWriteToken, KGetPeerValue.toPeerInfoStrings(target)).catchError((_){}); //todo
           } else {
             return node.rootingtable.findNode(query.infoHashAsKId).then((List<KPeerInfo> infos) {
-              if(node.verbose == true) {
-                print("=>=send  ${node.nodeId.getRootingTabkeIndex(query.infoHashAsKId)}");
+          //    if(node.verbose == true) {
+                print("=>=send  ${node.nodeId.getRootingTabkeIndex(query.infoHashAsKId)}----------------------------===============================++++++");
 //                for(KPeerInfo i in infos) {
 //                 print("=>=send [${i}] ${i.id.getRootingTabkeIndex(query.infoHashAsKId)}");
 //                }
-              }
+           //   }
               return node.sendGetPeersResponseWithClosestNodes(info.remoteAddress, info.remotePort, query.transactionId, opaqueWriteToken, KPeerInfo.toCompactNodeInfos(infos)).catchError((_){});
             });
           }

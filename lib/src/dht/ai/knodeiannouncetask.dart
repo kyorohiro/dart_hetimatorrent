@@ -14,12 +14,30 @@ import '../message/kgetpeervalue.dart';
 import '../knode.dart';
 import '../message/kgetpeernodes.dart';
 
+class KPeetInfoPlus extends KPeerInfo {
+  bool requestIsDone = false;
+  KPeetInfoPlus(KPeerInfo base) : super(base.ipAsString, base.port, base.id) {}
+  static sort(List<KPeerInfo> findedPeers, KId _infoHashId) {
+    findedPeers.sort((KPeetInfoPlus a, KPeetInfoPlus b) {
+      if (a.id == b.id) {
+        return 0;
+      } else if (a.id.xor(_infoHashId) > b.id.xor(_infoHashId)) {
+        return 1;
+      } else {
+        return -1;
+      }
+    });
+  }
+}
+
 class KNodeAIAnnounceTask {
   bool _isStart = false;
-  ShuffleLinkedList<KPeerInfo> _findedNode = new ShuffleLinkedList(50);
+  //ShuffleLinkedList<KPeerInfo> _findedNode = new ShuffleLinkedList(50);
 
+  KRootingTable _ggggg = null;
   List<KGetPeerNodes> receiveGetPeerResponseNode = [];
   List<KGetPeerNodes> _announcedPeers = [];
+  List<KPeetInfoPlus> _getPeerNode = [];
 
   KId _infoHashId = null;
   bool get isStart => _isStart;
@@ -31,6 +49,7 @@ class KNodeAIAnnounceTask {
   KNodeAIAnnounceTask(KId infoHashId, int port) {
     this._infoHashId = infoHashId;
     this.port = port;
+    this._ggggg = new KRootingTable(4, infoHashId);
   }
 
   startSearchPeer(KNode node, KId infoHash, {getPeerOnly: false}) {
@@ -54,7 +73,7 @@ class KNodeAIAnnounceTask {
     if (node.verbose == true) {
       print("## _startSearch");
     }
-    _findedNode.clearAll();
+    _getPeerNode.clear();
     _announcedPeers.clear();
     _updateSearch(node);
   }
@@ -69,10 +88,10 @@ class KNodeAIAnnounceTask {
         return;
       }
       for (KPeerInfo info in infos) {
-        if (_findedNode.rawsequential.contains(info)) {
+        if (_getPeerNode.contains(info)) {
           //node.sendFindNodeQuery(info.ipAsString, info.port, _infoHashId.id).catchError((e) {});
         } else {
-          _findedNode.addLast(info);
+          _getPeerNode.add(new KPeetInfoPlus(info));
           node.sendGetPeersQuery(info.ipAsString, info.port, _infoHashId.value).catchError((e) {});
         }
       }
@@ -121,7 +140,7 @@ class KNodeAIAnnounceTask {
     int count = 0;
     for (KGetPeerNodes i in receiveGetPeerResponseNode) {
       if (false == _announcedPeers.contains(i)) {
-        node.sendAnnouncePeerQuery(i.ipAsString, i.port, 0, _infoHashId.value, this.port, i.token).catchError((_){});
+        node.sendAnnouncePeerQuery(i.ipAsString, i.port, 0, _infoHashId.value, this.port, i.token).catchError((_) {});
         _announcedPeers.add(i);
         if (node.verbose) {
           print(
@@ -138,7 +157,7 @@ class KNodeAIAnnounceTask {
   }
 
   updateReceveGetPeerInfo(HetiReceiveUdpInfo info, KrpcMessage getPeer) {
-    if(getPeer.tokenAsKId == null|| getPeer.tokenAsKId == null) {
+    if (getPeer.tokenAsKId == null || getPeer.tokenAsKId == null) {
       return;
     }
     KGetPeerNodes i = new KGetPeerNodes(info.remoteAddress, info.remotePort, getPeer.nodeIdAsKId, _infoHashId, getPeer.tokenAsKId);
@@ -188,28 +207,19 @@ class KNodeAIAnnounceTask {
           //
           List<KPeerInfo> candidate = [];
           for (KPeerInfo info in response.compactNodeInfoAsKPeerInfo) {
-            if (false == _findedNode.rawsequential.contains(info)) {
-              candidate.add(info);
-              _findedNode.addLast(info);
-              _findedNode.rawshuffled.sort((KPeerInfo a, KPeerInfo b) {
-                if (a.id == b.id) {
-                  return 0;
-                } else if (a.id.xor(_infoHashId) > b.id.xor(_infoHashId)) {
-                  return 1;
-                } else {
-                  return -1;
-                }
-              });
-            }
-            for (int i = 0; i < 8 && i < _findedNode.length; i++) {
-              KPeerInfo info = _findedNode.rawshuffled[i];
-              if (true == candidate.contains(info)) {
+            _ggggg.update(info);
+          }
+
+          _ggggg.findNode(_infoHashId).then((List<KPeerInfo> infos ) {
+            for(KPeerInfo i in infos) {
+              if(_getPeerNode.contains(i) == false) {
+                print("##===fin ==> ${i.id.getRootingTabkeIndex(_infoHashId)}-------------------asdfasdfasdfasdfasd");
+                _getPeerNode.add(i);
                 lastUpdateTime = new DateTime.now().millisecondsSinceEpoch;
-                node.sendGetPeersQuery(info.ipAsString, info.port, _infoHashId.value).catchError((_){});
+                node.sendGetPeersQuery(i.ipAsString, i.port, _infoHashId.value).catchError((_) {});
               }
             }
-          }
-          //
+          });
         }
       }
     });
