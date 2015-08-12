@@ -6,7 +6,6 @@ import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimanet/hetimanet.dart';
 import 'krootingtable.dart';
 
-import 'message/krpcfindnode.dart';
 import 'message/krpcgetpeers.dart';
 import 'kid.dart';
 import 'dart:convert';

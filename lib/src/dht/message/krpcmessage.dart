@@ -6,7 +6,6 @@ import 'dart:convert';
 import '../../util/bencode.dart';
 import '../../util/hetibencode.dart';
 import 'package:hetimacore/hetimacore.dart';
-import 'krpcfindnode.dart';
 import 'krpcgetpeers.dart';
 import 'krpcannounce.dart';
 import 'dart:convert';
@@ -58,15 +57,14 @@ class KrpcMessage {
         }
         return NONE_QUERY;
       case "r":
-        switch (queryAsString) {
-          case "ping":
+        if(transactionIdAsString.contains("pi")) {
             return PING_RESPONSE;
-          case "find_node":
-            return FIND_NODE_RESPONSE;
-          case "get_peers":
-            return GET_PEERS_RESPONSE;
-          case "announce_peer":
-            return ANNOUNCE_RESPONSE;
+        } else if(transactionIdAsString.contains("fi")) {
+          return FIND_NODE_RESPONSE;
+        } else if(transactionIdAsString.contains("ge")) {
+          return FIND_NODE_RESPONSE;
+        } else if(transactionIdAsString.contains("an")) {
+          return ANNOUNCE_RESPONSE;
         }
         return NONE_RESPONSE;
     }
@@ -115,8 +113,14 @@ class KrpcMessage {
   }
 
   String get nodeIdAsString => UTF8.decode(nodeId, allowMalformed: true);
-
   KId get nodeIdAsKId => new KId(nodeId);
+
+  List<int> get target {
+    Map<String, Object> queryCountainer = _messageAsMap["a"];
+    return (queryCountainer["target"] is String ? UTF8.encode(queryCountainer["target"]) : queryCountainer["target"]);
+  }
+  String get targetAsString => UTF8.decode(target, allowMalformed: true);
+  KId get targetAsKId => new KId(target);
 
   List<int> get compactNodeInfo {
     Map<String, Object> r = rawMessageMap["r"];
@@ -126,7 +130,7 @@ class KrpcMessage {
   List<KPeerInfo> get compactNodeInfoAsKPeerInfo {
     List<KPeerInfo> ret = [];
     List<int> infos = compactNodeInfo;
-    
+
     for (int i = 0; i < infos.length ~/ 26; i++) {
       ret.add(new KPeerInfo.fromBytes(infos, i * 26, 26));
     }

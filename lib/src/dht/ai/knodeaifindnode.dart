@@ -4,7 +4,6 @@ import 'dart:core';
 import 'dart:async';
 import 'package:hetimanet/hetimanet.dart';
 
-import '../message/krpcfindnode.dart';
 import '../kid.dart';
 import '../krootingtable.dart';
 import '../../util/shufflelinkedlist.dart';
@@ -96,20 +95,18 @@ class KNodeAIFindNode {
   }
 
   onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcMessage query) {
-    /*
     if (_isStart == false) {
       return null;
     }
     switch (query.messageSignature) {
       case KrpcMessage.FIND_NODE_QUERY:
-        return node.rootingtable.findNode(query.queryingNodesId).then((List<KPeerInfo> infos) {
+        return node.rootingtable.findNode(query.targetAsKId).then((List<KPeerInfo> infos) {
           return node.sendFindNodeResponse(info.remoteAddress, info.remotePort, query.transactionId, KPeerInfo.toCompactNodeInfos(infos)).catchError((_){});
         });
     }
-    node.rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, query.queryingNodesId)).then((_) {
+    node.rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, query.nodeIdAsKId)).then((_) {
       return updateP2PNetworkWithoutClear(node);
     });
-     */
   }
 
   onReceiveError(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {}
