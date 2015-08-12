@@ -64,9 +64,11 @@ class KNode extends Object with KrpcResponseInfo {
     this._nodeDebugId = id++;
   }
 
+  int port = 0;
   Future start({String ip: "0.0.0.0", int port: 28080}) async {
     (_isStart != false ? throw "already started" : 0);
     _udpSocket = this._socketBuilder.createUdpClient();
+    this.port = port;
     return _udpSocket.bind(ip, port, multicast: true).then((int v) {
       _udpSocket.onReceive().listen((HetiReceiveUdpInfo info) {
         KrpcMessage.decode(info.data, this).then((KrpcMessage message) {

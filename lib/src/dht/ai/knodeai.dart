@@ -39,6 +39,7 @@ abstract class KNodeAI {
       } else {
         int currentTime = new DateTime.now().millisecondsSinceEpoch;
         if (_lastAnnouncedTIme != 0 && (currentTime - _lastAnnouncedTIme) > node.intervalSecondForAnnounce * 1000) {
+          print("time=${(currentTime - _lastAnnouncedTIme)}");
           _lastAnnouncedTIme = currentTime;
           researchSearchPeer(node, null);
         }

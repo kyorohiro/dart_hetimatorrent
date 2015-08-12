@@ -20,19 +20,14 @@ class KRootingTable {
     this._ownerKId = ownerKId;
   }
 
-  int getRootingTabkeIndex(KId v) {
-    v = v.xor(_ownerKId);
-    for (int i = 0, ret = 19; i < 20; i++, ret--) {
-      if (v[i] != 0) {
-        for (int j = 0; j < 9; j++) {
-          if (v[i] < (0x1 << j)) {
-            return (ret * 8) + j;
-          }
-        }
-        return i;
-      }
+  
+  void clear() {
+    for(KBucket k in _kBuckets) {
+      k.clear();
     }
-    return 0;
+  }
+  int getRootingTabkeIndex(KId v) {
+    return v.getRootingTabkeIndex(_ownerKId);
   }
 
   Future update(KPeerInfo info) {

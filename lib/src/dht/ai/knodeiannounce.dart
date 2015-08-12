@@ -112,7 +112,7 @@ class KNodeAIAnnounce extends KNodeAI {
           } else {
             return node.rootingtable.findNode(query.infoHashAsKId).then((List<KPeerInfo> infos) {
           //    if(node.verbose == true) {
-                print("=>=send  ${node.nodeId.getRootingTabkeIndex(query.infoHashAsKId)}----------------------------===============================++++++");
+                print("=>=send  ${node.nodeId.getRootingTabkeIndex(query.infoHashAsKId)} - ${query.infoHashAsKId} ${node.nodeId} ${node.port}---------------------------===============================++++++");
 //                for(KPeerInfo i in infos) {
 //                 print("=>=send [${i}] ${i.id.getRootingTabkeIndex(query.infoHashAsKId)}");
 //                }
