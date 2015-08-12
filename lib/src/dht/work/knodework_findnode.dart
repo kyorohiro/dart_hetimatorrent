@@ -12,7 +12,7 @@ import '../message/krpcmessage_builder.dart';
 import '../kpeerinfo.dart';
 import '../knode.dart';
 
-class KNodeAIFindNode {
+class KNodeWorkFindNode {
   bool _isStart = false;
   ShuffleLinkedList<KPeerInfo> findNodesInfo = new ShuffleLinkedList(20);
   int startTime = 0;

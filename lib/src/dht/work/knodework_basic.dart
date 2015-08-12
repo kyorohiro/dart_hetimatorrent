@@ -7,15 +7,15 @@ import '../kid.dart';
 import '../message/krpcmessage.dart';
 import '../kpeerinfo.dart';
 import '../knode.dart';
-import 'knodeaifindnode.dart';
+import 'knodework_findnode.dart';
 import 'knodeiannounce.dart';
-import 'knodeai.dart';
+import 'knodework.dart';
 
-class KNodeAIBasic extends KNodeAI {
+class KNodeAIBasic extends KNodeWork {
   bool _isStart = false;
   bool get isStart => _isStart;
 
-  KNodeAIFindNode findNodeAI = new KNodeAIFindNode();
+  KNodeWorkFindNode findNodeAI = new KNodeWorkFindNode();
   KNodeAIAnnounce announceAI = new KNodeAIAnnounce();
 
   KNodeAIBasic({bool verbose: false}) {}

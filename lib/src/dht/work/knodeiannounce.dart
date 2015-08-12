@@ -9,10 +9,10 @@ import '../message/krpcmessage_builder.dart';
 import '../kpeerinfo.dart';
 import '../message/kgetpeervalue.dart';
 import '../knode.dart';
-import 'knodeai.dart';
+import 'knodework.dart';
 import 'knodeiannouncetask.dart';
 
-class KNodeAIAnnounce extends KNodeAI {
+class KNodeAIAnnounce extends KNodeWork {
   bool _isStart = false;
   bool get isStart => _isStart;
   Map<KId, KNodeAIAnnounceTask> taskList = {};

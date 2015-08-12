@@ -14,8 +14,8 @@ import 'message/krpcmessage.dart';
 import 'message/krpcmessage_builder.dart';
 import 'kpeerinfo.dart';
 import 'message/kgetpeervalue.dart';
-import 'ai/knodeai.dart';
-import 'ai/knodeaibasic.dart';
+import 'work/knodework.dart';
+import 'work/knodework_basic.dart';
 
 class KNode extends Object {
   HetiSocketBuilder _socketBuilder = null;
@@ -41,8 +41,8 @@ class KNode extends Object {
   static int id = 0;
 
   List<KSendInfo> queryInfo = [];
-  KNodeAI _ai = null;
-  KNodeAI get ai => _ai;
+  KNodeWork _ai = null;
+  KNodeWork get ai => _ai;
 
   StreamController<KGetPeerValue> _controller = new StreamController.broadcast();
   Stream<KGetPeerValue> get onGetPeerValue => _controller.stream;
@@ -60,7 +60,7 @@ class KNode extends Object {
   bool get verbose => _verbose;
 
   KNode(HetiSocketBuilder socketBuilder,
-      {int kBucketSize: 8, List<int> nodeIdAsList: null, KNodeAI ai: null, intervalSecondForMaintenance: 10, intervalSecondForAnnounce: 3 * 60, bool verbose: false}) {
+      {int kBucketSize: 8, List<int> nodeIdAsList: null, KNodeWork ai: null, intervalSecondForMaintenance: 10, intervalSecondForAnnounce: 3 * 60, bool verbose: false}) {
     this._verbose = verbose;
     this._intervalSecondForMaintenance = intervalSecondForMaintenance;
     this._intervalSecondForAnnounce = intervalSecondForAnnounce;

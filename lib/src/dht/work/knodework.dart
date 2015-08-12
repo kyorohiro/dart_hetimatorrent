@@ -10,12 +10,12 @@ import 'dart:convert';
 import '../message/krpcmessage.dart';
 import '../knode.dart';
 
-abstract class KNodeAI {
+abstract class KNodeWork {
   bool get isStart;
   start(KNode node);
   stop(KNode node);
   updateP2PNetwork(KNode node);
-  startSearchValue(KNode node, KId infoHash, int port, {getPeerOnly:false});
+  startSearchValue(KNode node, KId infoHash, int port, {getPeerOnly: false});
   researchSearchPeer(KNode node, KId infoHash);
   stopSearchValue(KNode node, KId infoHash);
   onAddNodeFromIPAndPort(KNode node, String ip, int port);
@@ -36,15 +36,16 @@ abstract class KNodeAI {
       } catch (e) {}
       if (_lastAnnouncedTIme == 0) {
         _lastAnnouncedTIme = new DateTime.now().millisecondsSinceEpoch;
-      } else {
-        int currentTime = new DateTime.now().millisecondsSinceEpoch;
-        if (_lastAnnouncedTIme != 0 && (currentTime - _lastAnnouncedTIme) > node.intervalSecondForAnnounce * 1000) {
-          print("time=${(currentTime - _lastAnnouncedTIme)}");
-          _lastAnnouncedTIme = currentTime;
-          researchSearchPeer(node, null);
-        }
+        return;
       }
+
+      int currentTime = new DateTime.now().millisecondsSinceEpoch;
+      if (_lastAnnouncedTIme != 0 && (currentTime - _lastAnnouncedTIme) > node.intervalSecondForAnnounce * 1000) {
+        _lastAnnouncedTIme = currentTime;
+        researchSearchPeer(node, null);
+      }
+    }).catchError((e) {}).whenComplete(() {
       startTick(node);
-    }).catchError((e) {});
+    });
   }
 }
