@@ -3,7 +3,6 @@ library hetimatorrent.dht.knodeai.announcetask;
 import 'dart:core';
 import 'dart:async';
 import 'package:hetimanet/hetimanet.dart';
-import '../message/krpcgetpeers.dart';
 import '../kid.dart';
 import '../krootingtable.dart';
 

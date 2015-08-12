@@ -2,11 +2,9 @@ library hetimatorrent.dht.knodeai.announce;
 
 import 'dart:core';
 import 'package:hetimanet/hetimanet.dart';
-import '../message/krpcgetpeers.dart';
 import '../kid.dart';
 
 import '../message/krpcmessage.dart';
-import '../message/krpcannounce.dart';
 import '../kpeerinfo.dart';
 import '../message/kgetpeervalue.dart';
 import '../knode.dart';

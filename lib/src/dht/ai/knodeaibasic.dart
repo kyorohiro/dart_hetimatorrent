@@ -6,14 +6,11 @@ import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimanet/hetimanet.dart';
 import '../krootingtable.dart';
 
-import '../message/krpcgetpeers.dart';
 import '../kid.dart';
 import 'dart:convert';
 import '../../util/shufflelinkedlist.dart';
 
 import '../message/krpcmessage.dart';
-import '../message/krpcgetpeers.dart';
-import '../message/krpcannounce.dart';
 import '../kpeerinfo.dart';
 import '../knode.dart';
 import 'knodeaifindnode.dart';

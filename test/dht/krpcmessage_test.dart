@@ -53,26 +53,24 @@ void main() {
     unit.test("'announce request", () {
       // announce_peers Query = {"t":"aa", "y":"q", "q":"announce_peer", "a": {"id":"abcdefghij0123456789", "implied_port": 1, "info_hash":"mnopqrstuvwxyz123456", "port": 6881, "token": "aoeusnth"}}
       // bencoded = d1:ad2:id20:abcdefghij01234567899:info_hash20:mnopqrstuvwxyz1234564:porti6881e5:token8:aoeusnthe1:q13:announce_peer1:t2:aa1:y1:qe
-      KrpcAnnouncePeerQuery query = new KrpcAnnouncePeerQuery.fromString("aa", "abcdefghij0123456789", 1, convert.UTF8.encode("mnopqrstuvwxyz123456"), 8080, "aoeusnth");
-      unit.expect("d1:ad2:id20:abcdefghij01234567899:info_hash20:mnopqrstuvwxyz12345612:implied_porti1e4:porti8080e5:token8:aoeusnthe1:q13:announce_peer1:t2:aa1:y1:qe",
-          convert.UTF8.decode(query.messageAsBencode));
+      KrpcMessage query = KrpcAnnounce.createQuery(convert.UTF8.encode("abcdefghij0123456789"), 1, convert.UTF8.encode("mnopqrstuvwxyz123456"), 8080, convert.UTF8.encode("aoeusnth"));
+      String expect = "d1:ad2:id20:abcdefghij01234567899:info_hash20:mnopqrstuvwxyz12345612:implied_porti1e4:porti8080e5:token8:aoeusnthe1:q13:announce_peer1:t${query.transactionIdAsString.length}:${query.transactionIdAsString}1:y1:qe";
+      unit.expect(expect, convert.UTF8.decode(query.messageAsBencode));
 
-      EasyParser parser = new EasyParser(new HetimaFileToBuilder(new HetimaDataMemory(query.messageAsBencode)));
-      return KrpcAnnouncePeerQuery.decode(parser).then((KrpcAnnouncePeerQuery q) {
-        unit.expect("d1:ad2:id20:abcdefghij01234567899:info_hash20:mnopqrstuvwxyz12345612:implied_porti1e4:porti8080e5:token8:aoeusnthe1:q13:announce_peer1:t2:aa1:y1:qe",
-            convert.UTF8.decode(q.messageAsBencode));
+      return KrpcMessage.decode(query.messageAsBencode, null).then((KrpcMessage q) {
+        unit.expect(expect, convert.UTF8.decode(q.messageAsBencode));
       });
     });
+
     //
     //
     unit.test("'announce response", () {
       //Response = {"t":"aa", "y":"r", "r": {"id":"mnopqrstuvwxyz123456"}}
       //bencoded = d1:rd2:id20:mnopqrstuvwxyz123456e1:t2:aa1:y1:re
-      KrpcAnnouncePeerResponse query = new KrpcAnnouncePeerResponse.fromString("aa", "mnopqrstuvwxyz123456");
+      KrpcMessage query = KrpcAnnounce.createResponse(convert.UTF8.encode("aa"), convert.UTF8.encode("mnopqrstuvwxyz123456"));
       unit.expect("d1:rd2:id20:mnopqrstuvwxyz123456e1:t2:aa1:y1:re", convert.UTF8.decode(query.messageAsBencode));
 
-      EasyParser parser = new EasyParser(new HetimaFileToBuilder(new HetimaDataMemory(query.messageAsBencode)));
-      return KrpcAnnouncePeerResponse.decode(parser).then((KrpcAnnouncePeerResponse q) {
+      return KrpcMessage.decode(query.messageAsBencode, null).then((KrpcMessage q) {
         unit.expect("d1:rd2:id20:mnopqrstuvwxyz123456e1:t2:aa1:y1:re", convert.UTF8.decode(q.messageAsBencode));
       });
     });
@@ -82,12 +80,13 @@ void main() {
     unit.test("'get peers request", () {
       //get_peers Query = {"t":"aa", "y":"q", "q":"get_peers", "a": {"id":"abcdefghij0123456789", "info_hash":"mnopqrstuvwxyz123456"}}
       //bencoded = d1:ad2:id20:abcdefghij01234567899:info_hash20:mnopqrstuvwxyz123456e1:q9:get_peers1:t2:aa1:y1:qe
-      KrpcGetPeersQuery query = new KrpcGetPeersQuery.fromString("aa", "abcdefghij0123456789", convert.UTF8.encode("mnopqrstuvwxyz123456"));
-      unit.expect("d1:ad2:id20:abcdefghij01234567899:info_hash20:mnopqrstuvwxyz123456e1:q9:get_peers1:t2:aa1:y1:qe", convert.UTF8.decode(query.messageAsBencode));
+      KrpcMessage query = KrpcGetPeers.createQuery(convert.UTF8.encode("abcdefghij0123456789"), convert.UTF8.encode("mnopqrstuvwxyz123456"));
+      String expect = "d1:ad2:id20:abcdefghij01234567899:info_hash20:mnopqrstuvwxyz123456e1:q9:get_peers1:t${query.transactionIdAsString.length}:${query.transactionIdAsString}1:y1:qe";
+      unit.expect(expect, convert.UTF8.decode(query.messageAsBencode));
 
       EasyParser parser = new EasyParser(new HetimaFileToBuilder(new HetimaDataMemory(query.messageAsBencode)));
-      return KrpcGetPeersQuery.decode(parser).then((KrpcGetPeersQuery q) {
-        unit.expect("d1:ad2:id20:abcdefghij01234567899:info_hash20:mnopqrstuvwxyz123456e1:q9:get_peers1:t2:aa1:y1:qe", convert.UTF8.decode(q.messageAsBencode));
+      return KrpcMessage.decode(query.messageAsBencode, null).then((KrpcMessage q) {
+        unit.expect(expect, convert.UTF8.decode(q.messageAsBencode));
       });
     });
 
@@ -96,21 +95,27 @@ void main() {
     unit.test("'get peers response A", () {
       // Response with peers = {"t":"aa", "y":"r", "r": {"id":"abcdefghij0123456789", "token":"aoeusnth", "values": ["axje.u", "idhtnm"]}}
       // bencoded = d1:rd2:id20:abcdefghij01234567895:token8:aoeusnth6:valuesl6:axje.u6:idhtnmee1:t2:aa1:y1:re
-      KrpcGetPeersResponse query = new KrpcGetPeersResponse.withPeersFromString("aa", "abcdefghij0123456789", "aoeusnth", ["axje.u", "idhtnm"]);
-      unit.expect("d1:rd2:id20:abcdefghij01234567895:token8:aoeusnth6:valuesl6:axje.u6:idhtnmee1:t2:aa1:y1:re", convert.UTF8.decode(query.messageAsBencode));
-      EasyParser parser = new EasyParser(new HetimaFileToBuilder(new HetimaDataMemory(query.messageAsBencode)));
-      return KrpcGetPeersResponse.decode(parser).then((KrpcGetPeersResponse q) {
-        unit.expect("d1:rd2:id20:abcdefghij01234567895:token8:aoeusnth6:valuesl6:axje.u6:idhtnmee1:t2:aa1:y1:re", convert.UTF8.decode(q.messageAsBencode));
+      KrpcMessage query = KrpcGetPeers.createResponseWithPeers(
+          convert.UTF8.encode("aa"), convert.UTF8.encode("abcdefghij0123456789"), convert.UTF8.encode("aoeusnth"),
+          [convert.UTF8.encode("axje.u"), convert.UTF8.encode("idhtnm")]);
+      String expect = "d1:rd2:id20:abcdefghij01234567895:token8:aoeusnth6:valuesl6:axje.u6:idhtnmee1:t${query.transactionIdAsString.length}:${query.transactionIdAsString}1:y1:re";
+
+      unit.expect(expect, convert.UTF8.decode(query.messageAsBencode));
+      return KrpcMessage.decode(query.messageAsBencode, null).then((KrpcMessage q) {
+        unit.expect(expect, convert.UTF8.decode(q.messageAsBencode));
       });
     });
 
     unit.test("'get peers response B", () {
       // Response with closest nodes = {"t":"aa", "y":"r", "r": {"id":"abcdefghij0123456789", "token":"aoeusnth", "nodes": "def456..."}}
       // bencoded = d1:rd2:id20:abcdefghij01234567895:nodes9:def456...5:token8:aoeusnthe1:t2:aa1:y1:re
-      KrpcGetPeersResponse query = new KrpcGetPeersResponse.withClosestNodesFromString("aa", "abcdefghij0123456789", "aoeusnth", new type.Uint8List.fromList(new List.filled(26, 0x61)));
+      KrpcMessage query = KrpcGetPeers.createResponseWithClosestNodes(
+          convert.UTF8.encode("aa"), 
+          convert.UTF8.encode("abcdefghij0123456789"), 
+          convert.UTF8.encode("aoeusnth"), new type.Uint8List.fromList(new List.filled(26, 0x61)));
       unit.expect("d1:rd2:id20:abcdefghij01234567895:nodes26:aaaaaaaaaaaaaaaaaaaaaaaaaa5:token8:aoeusnthe1:t2:aa1:y1:re", convert.UTF8.decode(query.messageAsBencode));
-      EasyParser parser = new EasyParser(new HetimaFileToBuilder(new HetimaDataMemory(query.messageAsBencode)));
-      return KrpcGetPeersResponse.decode(parser).then((KrpcGetPeersResponse q) {
+
+      return KrpcMessage.decode(query.messageAsBencode, null).then((KrpcMessage q) {
         unit.expect("d1:rd2:id20:abcdefghij01234567895:nodes26:aaaaaaaaaaaaaaaaaaaaaaaaaa5:token8:aoeusnthe1:t2:aa1:y1:re", convert.UTF8.decode(q.messageAsBencode));
       });
     });

@@ -6,13 +6,12 @@ import 'dart:convert';
 import '../../util/bencode.dart';
 import '../../util/hetibencode.dart';
 import 'package:hetimacore/hetimacore.dart';
-import 'krpcgetpeers.dart';
-import 'krpcannounce.dart';
 import 'dart:convert';
 import '../kid.dart';
 import 'dart:typed_data';
 import '../knode.dart';
 import '../kpeerinfo.dart';
+import 'kgetpeervalue.dart';
 
 abstract class KrpcResponseInfo {
   String getQueryNameFromTransactionId(String transactionId);
@@ -57,13 +56,13 @@ class KrpcMessage {
         }
         return NONE_QUERY;
       case "r":
-        if(transactionIdAsString.contains("pi")) {
-            return PING_RESPONSE;
-        } else if(transactionIdAsString.contains("fi")) {
+        if (transactionIdAsString.contains("pi")) {
+          return PING_RESPONSE;
+        } else if (transactionIdAsString.contains("fi")) {
           return FIND_NODE_RESPONSE;
-        } else if(transactionIdAsString.contains("ge")) {
+        } else if (transactionIdAsString.contains("ge")) {
           return FIND_NODE_RESPONSE;
-        } else if(transactionIdAsString.contains("an")) {
+        } else if (transactionIdAsString.contains("an")) {
           return ANNOUNCE_RESPONSE;
         }
         return NONE_RESPONSE;
@@ -119,6 +118,7 @@ class KrpcMessage {
     Map<String, Object> queryCountainer = _messageAsMap["a"];
     return (queryCountainer["target"] is String ? UTF8.encode(queryCountainer["target"]) : queryCountainer["target"]);
   }
+
   String get targetAsString => UTF8.decode(target, allowMalformed: true);
   KId get targetAsKId => new KId(target);
 
@@ -135,6 +135,59 @@ class KrpcMessage {
       ret.add(new KPeerInfo.fromBytes(infos, i * 26, 26));
     }
     return ret;
+  }
+
+  List<int> get infoHash {
+    Map<String, Object> a = messageAsMap["a"];
+    return a["info_hash"];
+  }
+
+  KId get infoHashAsKId => new KId(infoHash);
+
+  //
+  //
+  
+  bool get haveValue {
+    Map<String, Object> r = messageAsMap["r"];
+    if (((messageAsMap)["r"] as Map).containsKey("values") == true) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  List<KGetPeerValue> valuesAsKAnnounceInfo(List<int> infoHash) {
+    if(haveValue == false) {
+      return [];
+    }
+    Map<String, Object> r = messageAsMap["r"];
+    List<Uint8List> values = r["values"];
+    List<KGetPeerValue> ret = [];
+    for(Uint8List l in values) {
+      KGetPeerValue a = new KGetPeerValue.fromCompactIpPort(l, infoHash);
+      ret.add(a);
+    }
+    return ret;
+  }
+
+  List<int> get tokenAsKId {
+    Map<String, Object> r = messageAsMap["r"];
+    return r["token"];
+  }
+
+  List<int> get token {
+    Map<String, Object> a = messageAsMap["a"];
+    return a["token"];
+  }
+
+  int get impliedPort{
+    Map<String, Object> a = messageAsMap["a"];
+    return a["implied_port"];
+  }
+  
+  int get port{
+    Map<String, Object> a = messageAsMap["a"];
+    return a["port"];
   }
 
   KrpcMessage() {}
@@ -155,49 +208,9 @@ class KrpcMessage {
     }
     return new KrpcMessage.fromMap(messageAsMap);
   }
-
-  static Future<KrpcMessage> decodeTest(EasyParser parser, Function a) {
-    parser.push();
-    return HetiBencode.decode(parser).then((Object v) {
-      if (!(v is Map)) {
-        throw {};
-      }
-      KrpcMessage ret = a(v);
-      parser.pop();
-      return ret;
-    }).catchError((e) {
-      parser.back();
-      parser.pop();
-      throw e;
-    });
-  }
 }
 
-/*
-class KrpcQuery extends KrpcMessage {
-  KrpcQuery() {}
-
-  String get q {
-    if (rawMessageMap["q"] is String) {
-      return rawMessageMap["q"];
-    } else {
-      return UTF8.decode(rawMessageMap["q"]);
-    }
-  }
-
-  KId get queryingNodesId {
-    Map<String, Object> a = messageAsMap["a"];
-    return new KId(a["id"] as List<int>);
-  }
-
-  KrpcQuery.fromMap(Map map) {
-    _messageAsMap = map;
-  }
-
-  String toString() {
-    return "null_message@query:${this.rawMessageMap}";
-  }
-
+class KrpcQuery {
   static bool queryCheck(Map<String, Object> messageAsMap, String action) {
     if (!messageAsMap.containsKey("a")) {
       return false;
@@ -220,16 +233,7 @@ class KrpcQuery extends KrpcMessage {
   }
 }
 
-class KrpcResponse extends KrpcMessage {
-  KId get queriedNodesId {
-    Map<String, Object> r = messageAsMap["r"];
-    return new KId(r["id"] as List<int>);
-  }
-
-  KrpcResponse(int id) {}
-  KrpcResponse.fromMap(Map map) {
-    _messageAsMap = map;
-  }
+class KrpcResponse {
   static bool queryCheck(Map<String, Object> messageAsMap) {
     if (!messageAsMap.containsKey("r")) {
       return false;
@@ -244,7 +248,7 @@ class KrpcResponse extends KrpcMessage {
     return true;
   }
 }
-*/
+
 class KrpcError {
   static const int GENERIC_ERROR = 201;
   static const int SERVER_ERROR = 202;
@@ -285,7 +289,7 @@ class KrpcError {
 class KrpcPing {
   static int queryID = 0;
   static KrpcMessage createQuery(List<int> queryingNodesId) {
-    List<int> transactionId = UTF8.encode("ping${queryID++}");
+    List<int> transactionId = UTF8.encode("pi${queryID++}");
     return new KrpcMessage.fromMap({"a": {"id": queryingNodesId}, "q": "ping", "t": transactionId, "y": "q"});
   }
   static KrpcMessage createResponse(List<int> queryingNodesId, List<int> transactionId) {
@@ -297,11 +301,91 @@ class KrpcFindNode {
   static int queryID = 0;
 
   static KrpcMessage createQuery(List<int> queryingNodesId, List<int> targetNodeId) {
-    List<int> transactionId = UTF8.encode("findnodes${queryID++}");
+    List<int> transactionId = UTF8.encode("fi${queryID++}");
     return new KrpcMessage.fromMap({"a": {"id": queryingNodesId, "target": targetNodeId}, "q": "find_node", "t": transactionId, "y": "q"});
   }
 
   static KrpcMessage createResponse(List<int> compactNodeInfo, List<int> queryingNodesId, List<int> transactionId) {
     return new KrpcMessage.fromMap({"r": {"id": queryingNodesId, "nodes": compactNodeInfo}, "t": transactionId, "y": "r"});
   }
+}
+
+class KrpcGetPeers {
+  static int queryID = 0;
+  static KrpcMessage createQuery(List<int> queryingNodesId, List<int> infoHash) {
+    List<int> transactionId = UTF8.encode("ge${queryID++}");
+    return new KrpcMessage.fromMap({"a": {"id": queryingNodesId, "info_hash": infoHash}, "q": "get_peers", "t": transactionId, "y": "q"});
+  }
+  
+  static createResponseWithPeers(List<int> transactionId, List<int> queryingNodesId, List<int> opaqueWriteToken, List<List<int>> peerInfoStrings) {
+    if (!(transactionId is Uint8List)) {
+      transactionId = new Uint8List.fromList(transactionId);
+    }
+    if (!(queryingNodesId is Uint8List)) {
+      queryingNodesId = new Uint8List.fromList(queryingNodesId);
+    }
+    if (!(opaqueWriteToken is Uint8List)) {
+      opaqueWriteToken = new Uint8List.fromList(opaqueWriteToken);
+    }
+    for (int i = 0; i < peerInfoStrings.length; i++) {
+      if (!(peerInfoStrings[i] is Uint8List)) {
+        peerInfoStrings[i] = new Uint8List.fromList(peerInfoStrings[i]);
+      }
+    }
+    return new KrpcMessage.fromMap({"r": {"id": queryingNodesId, "token": opaqueWriteToken, "values": peerInfoStrings}, "t": transactionId, "y": "r"});
+  }
+
+  static createResponseWithClosestNodes(List<int> transactionId, List<int> queryingNodesId, List<int> opaqueWriteToken, List<int> compactNodeInfo) {
+    if (!(transactionId is Uint8List)) {
+      transactionId = new Uint8List.fromList(transactionId);
+    }
+    if (!(queryingNodesId is Uint8List)) {
+      queryingNodesId = new Uint8List.fromList(queryingNodesId);
+    }
+    if (!(opaqueWriteToken is Uint8List)) {
+      opaqueWriteToken = new Uint8List.fromList(opaqueWriteToken);
+    }
+    if (!(compactNodeInfo is Uint8List)) {
+      compactNodeInfo = new Uint8List.fromList(compactNodeInfo);
+    }
+    return new KrpcMessage.fromMap({"r": {"id": queryingNodesId, "nodes": compactNodeInfo, "token": opaqueWriteToken}, "t": transactionId, "y": "r"});
+  }
+}
+
+class KrpcAnnounce {
+  static int queryID = 0;
+  static KrpcMessage createQuery(List<int> queryingNodesId, int implied_port, List<int> infoHash, int port, List<int> opaqueToken) {
+    List<int> transactionId = UTF8.encode("ge${queryID++}");
+    if(!(queryingNodesId is Uint8List)) {
+      queryingNodesId = new Uint8List.fromList(queryingNodesId);
+    }
+    if(!(infoHash is Uint8List)) {
+      infoHash = new Uint8List.fromList(infoHash);
+    }
+    if(!(opaqueToken is Uint8List)) {
+      opaqueToken = new Uint8List.fromList(opaqueToken);
+    }
+    
+    return new KrpcMessage.fromMap({
+        "a": {"id": queryingNodesId, "info_hash": infoHash, "implied_port": implied_port, "port": port, "token": opaqueToken},
+        "q": "announce_peer", 
+        "t": transactionId,
+        "y": "q"
+        });
+  }
+  
+  static KrpcMessage createResponse(List<int> transactionId, List<int> queryingNodesId) {
+    if(!(transactionId is Uint8List)) {
+      transactionId = new Uint8List.fromList(transactionId);
+    }
+    if(!(queryingNodesId is Uint8List)) {
+      queryingNodesId = new Uint8List.fromList(queryingNodesId);
+    }
+    return new KrpcMessage.fromMap({
+      "r": {"id": queryingNodesId}, 
+      "t": transactionId,
+      "y": "r"});
+  }
+
+  
 }
