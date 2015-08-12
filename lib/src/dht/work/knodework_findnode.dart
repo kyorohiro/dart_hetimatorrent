@@ -14,7 +14,8 @@ import '../knode.dart';
 
 class KNodeWorkFindNode {
   bool _isStart = false;
-  ShuffleLinkedList<KPeerInfo> findNodesInfo = new ShuffleLinkedList(20);
+  List<List> _todoFineNodes = [];
+  ShuffleLinkedList<KPeerInfo> _findNodesInfo = new ShuffleLinkedList(20);
   int startTime = 0;
 
   start(KNode node) {
@@ -28,7 +29,7 @@ class KNodeWorkFindNode {
   }
 
   updateP2PNetwork(KNode node) {
-    findNodesInfo.clearAll();
+    _findNodesInfo.clearAll();
     updateP2PNetworkWithoutClear(node);
   }
 
@@ -39,9 +40,9 @@ class KNodeWorkFindNode {
       }
       int count = 0;
       for (KPeerInfo info in infos) {
-        if (!findNodesInfo.rawsequential.contains(info)) {
+        if (!_findNodesInfo.rawsequential.contains(info)) {
           count++;
-          findNodesInfo.addLast(info);
+          _findNodesInfo.addLast(info);
           node.sendFindNodeQuery(info.ipAsString, info.port, node.nodeId.value).catchError((_) {});
           if (node.verbose == true) {
             print("<id_index>=${node.rootingtable.getRootingTabkeIndex(info.id)}");
@@ -65,9 +66,9 @@ class KNodeWorkFindNode {
       }
       int count = 0;
       for (KPeerInfo info in infos) {
-        if (!findNodesInfo.rawsequential.contains(info)) {
+        if (!_findNodesInfo.rawsequential.contains(info)) {
           count++;
-          findNodesInfo.addLast(info);
+          _findNodesInfo.addLast(info);
           node.sendFindNodeQuery(info.ipAsString, info.port, KId.createIDAtRandom().value);
         }
         if (count > 3) {
@@ -77,21 +78,20 @@ class KNodeWorkFindNode {
     });
   }
 
-  List mustTofindNode = [];
   onAddNodeFromIPAndPort(KNode node, String ip, int port) {
     if (node.rawUdoSocket != null) {
       node.sendFindNodeQuery(ip, port, node.nodeId.value).catchError((_) {});
     } else {
-      mustTofindNode.add([ip, port]);
+      _todoFineNodes.add([ip, port]);
     }
   }
 
   onTicket(KNode node) {
     updateP2PNetworkWithRandom(node);
-    for (List l in mustTofindNode) {
+    for (List l in _todoFineNodes) {
       node.sendFindNodeQuery(l[0], l[1], node.nodeId.value).catchError((_) {});
     }
-    mustTofindNode.clear();
+    _todoFineNodes.clear();
   }
 
   onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcMessage query) {
@@ -108,8 +108,6 @@ class KNodeWorkFindNode {
       return updateP2PNetworkWithoutClear(node);
     });
   }
-
-  onReceiveError(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {}
 
   onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcMessage response) {
     new Future(() {
@@ -132,5 +130,6 @@ class KNodeWorkFindNode {
     });
   }
 
+  onReceiveError(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {}
   onReceiveUnknown(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {}
 }
