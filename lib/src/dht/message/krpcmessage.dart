@@ -40,26 +40,15 @@ class KrpcMessage {
   int _id = NONE_MESSAGE;
   int get messageSignature => _id;
 
-  List<int> get transactionId {
-    if( _messageAsMap["t"] is String) {
-      return UTF8.encode(_messageAsMap["t"]);
-    } else {
-      return _messageAsMap["t"];
-    }
-  }
-
-  String get transactionIdAsString  {
-    if( _messageAsMap["t"] is String) {
-      return _messageAsMap["t"];
-    } else {
-      return UTF8.decode(_messageAsMap["t"]);
-    }
-  }
+  List<int> get transactionId => (_messageAsMap["t"] is String ? UTF8.encode(_messageAsMap["t"]) : _messageAsMap["t"]);
+  String get transactionIdAsString => (_messageAsMap["t"] is String ? _messageAsMap["t"] : UTF8.decode(_messageAsMap["t"]));
+  List<int> get messageType => (_messageAsMap["y"] is String ? UTF8.encode(_messageAsMap["y"]) : _messageAsMap["y"]);
+  List<int> get messageTypeAsString => (_messageAsMap["y"] is String ? _messageAsMap["y"] : UTF8.decode(_messageAsMap["y"]));
 
   KrpcMessage(int id) {
     this._id = id;
   }
-  
+
   KrpcMessage.fromMap(Map map) {
     _messageAsMap = map;
   }
@@ -75,62 +64,60 @@ class KrpcMessage {
       throw {};
     }
 
-
- 
-      if (KrpcQuery.queryCheck(messageAsMap, null)) {
-        KrpcMessage ret = null;
-        String q = "";
-        if(messageAsMap["q"] is String) {
-           q = messageAsMap["q"];
-        } else {
-           q = UTF8.decode(messageAsMap["q"]);
-        }
-        switch (q) {
-          case "ping":
-            ret = new KrpcPingQuery.fromMap(messageAsMap);
-            break;
-          case "find_node":
-            ret = new KrpcFindNodeQuery.fromMap(messageAsMap);
-            break;
-          case "get_peers":
-            ret = new KrpcGetPeersQuery.fromMap(messageAsMap);
-            break;
-          case "announce_peer":
-            ret = new KrpcAnnouncePeerQuery.fromMap(messageAsMap);
-            break;
-          default:
-            ret = new KrpcQuery.fromMap(messageAsMap);
-            break;
-        }
-        return ret;
-      } else if (KrpcResponse.queryCheck(messageAsMap)) {
-        KrpcMessage ret = null;
-        switch (info.getQueryNameFromTransactionId(UTF8.decode(messageAsMap["t"]))) {
-          case "ping":
-            ret = new KrpcPingResponse.fromMap(messageAsMap);
-            break;
-          case "find_node":
-            ret = new KrpcFindNodeResponse.fromMap(messageAsMap);
-            break;
-          case "get_peers":
-            ret = new KrpcGetPeersResponse.FromMap(messageAsMap);
-            break;
-          case "announce_peer":
-            ret = new KrpcAnnouncePeerResponse.fromMap(messageAsMap);
-            break;
-          default:
-            ret = new KrpcResponse.fromMap(messageAsMap);
-            break;
-        }
-        return ret;
-      } else if (KrpcError.queryCheck(messageAsMap)) {
-        KrpcMessage ret = null;
-        ret = new KrpcError.fromMap(messageAsMap);
-        return ret;
+    if (KrpcQuery.queryCheck(messageAsMap, null)) {
+      KrpcMessage ret = null;
+      String q = "";
+      if (messageAsMap["q"] is String) {
+        q = messageAsMap["q"];
       } else {
-        KrpcMessage ret = new KrpcMessage.fromMap(messageAsMap);
-        return ret;
+        q = UTF8.decode(messageAsMap["q"]);
       }
+      switch (q) {
+        case "ping":
+          ret = new KrpcPingQuery.fromMap(messageAsMap);
+          break;
+        case "find_node":
+          ret = new KrpcFindNodeQuery.fromMap(messageAsMap);
+          break;
+        case "get_peers":
+          ret = new KrpcGetPeersQuery.fromMap(messageAsMap);
+          break;
+        case "announce_peer":
+          ret = new KrpcAnnouncePeerQuery.fromMap(messageAsMap);
+          break;
+        default:
+          ret = new KrpcQuery.fromMap(messageAsMap);
+          break;
+      }
+      return ret;
+    } else if (KrpcResponse.queryCheck(messageAsMap)) {
+      KrpcMessage ret = null;
+      switch (info.getQueryNameFromTransactionId(UTF8.decode(messageAsMap["t"]))) {
+        case "ping":
+          ret = new KrpcPingResponse.fromMap(messageAsMap);
+          break;
+        case "find_node":
+          ret = new KrpcFindNodeResponse.fromMap(messageAsMap);
+          break;
+        case "get_peers":
+          ret = new KrpcGetPeersResponse.FromMap(messageAsMap);
+          break;
+        case "announce_peer":
+          ret = new KrpcAnnouncePeerResponse.fromMap(messageAsMap);
+          break;
+        default:
+          ret = new KrpcResponse.fromMap(messageAsMap);
+          break;
+      }
+      return ret;
+    } else if (KrpcError.queryCheck(messageAsMap)) {
+      KrpcMessage ret = null;
+      ret = new KrpcError.fromMap(messageAsMap);
+      return ret;
+    } else {
+      KrpcMessage ret = new KrpcMessage.fromMap(messageAsMap);
+      return ret;
+    }
   }
 
   static Future<KrpcMessage> decodeTest(EasyParser parser, Function a) {
@@ -154,7 +141,7 @@ class KrpcQuery extends KrpcMessage {
   KrpcQuery(int id) : super(id) {}
 
   String get q {
-    if(rawMessageMap["q"] is String) {
+    if (rawMessageMap["q"] is String) {
       return rawMessageMap["q"];
     } else {
       return UTF8.decode(rawMessageMap["q"]);
@@ -243,10 +230,6 @@ class KrpcError extends KrpcMessage {
   }
 
   //  {"t":"aa", "y":"e", "e":[201, "A Generic Error Ocurred"]}
-  //
-  Map<String, Object> _messageAsMap = null;
-  Map<String, Object> get messageAsMap => new Map.from(_messageAsMap);
-  List<int> get messageAsBencode => Bencode.encode(_messageAsMap);
 
   static bool queryCheck(Map<String, Object> messageAsMap) {
     if (!messageAsMap.containsKey("e")) {
@@ -259,7 +242,7 @@ class KrpcError extends KrpcMessage {
     return true;
   }
 
-  KrpcError.fromString(String transactionIdAsString, int errorCode, [String errorMessageAsString=null]) : super(KrpcMessage.ERROR) {
+  KrpcError.fromString(String transactionIdAsString, int errorCode, [String errorMessageAsString = null]) : super(KrpcMessage.ERROR) {
     List<int> transactionId = UTF8.encode(transactionIdAsString);
     if (errorMessageAsString == null) {
       errorMessageAsString = KrpcError.errorDescription(errorCode);
@@ -271,7 +254,7 @@ class KrpcError extends KrpcMessage {
     _init(transactionId, errorCode, errorMessage);
   }
 
-  _init(List<int> transactionId, int errorCode, [List<int> errorMessage=null]) {
+  _init(List<int> transactionId, int errorCode, [List<int> errorMessage = null]) {
     if (!(transactionId is Uint8List)) {
       transactionId = new Uint8List.fromList(transactionId);
     }

@@ -110,10 +110,11 @@ class KNode extends Object with KrpcResponseInfo {
     }
   }
 
-  Future stop() {
-    return new Future(() {
-      return (_udpSocket == null ? null : _udpSocket.close());
-    }).whenComplete(() {
+  Future stop() async {
+    if (_isStart == false || _udpSocket == null) {
+      return null;
+    }
+    return _udpSocket.close().whenComplete(() {
       _isStart = false;
       _ai.stop(this);
     });
