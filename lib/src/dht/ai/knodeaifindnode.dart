@@ -8,6 +8,7 @@ import '../kid.dart';
 import '../../util/shufflelinkedlist.dart';
 
 import '../message/krpcmessage.dart';
+import '../message/krpcmessage_builder.dart';
 import '../kpeerinfo.dart';
 import '../knode.dart';
 
@@ -98,7 +99,8 @@ class KNodeAIFindNode {
       return null;
     }
     if (query.queryAsString == KrpcMessage.QUERY_FIND_NODE) {
-      return node.rootingtable.findNode(query.targetAsKId).then((List<KPeerInfo> infos) {
+      KrpcFindNode findNode = query.toFindNode();
+      return node.rootingtable.findNode(findNode.targetAsKId).then((List<KPeerInfo> infos) {
         return node.sendFindNodeResponse(info.remoteAddress, info.remotePort, query.transactionId, KPeerInfo.toCompactNodeInfos(infos)).catchError((_) {});
       });
     }
@@ -115,7 +117,8 @@ class KNodeAIFindNode {
         return null;
       }
       if (response.queryFromTransactionId == KrpcMessage.QUERY_FIND_NODE) {
-        List<KPeerInfo> peerInfo = response.compactNodeInfoAsKPeerInfo;
+        KrpcFindNode findNode = response.toFindNode();
+        List<KPeerInfo> peerInfo = findNode.compactNodeInfoAsKPeerInfo;
         List<Future> f = [];
         for (KPeerInfo info in peerInfo) {
           f.add(node.rootingtable.update(info));

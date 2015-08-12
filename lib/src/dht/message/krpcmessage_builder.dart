@@ -1,89 +1,20 @@
 library hetimatorrent.dht.krpcmessage.builder;
 
 import 'dart:core';
-import 'dart:async';
 import 'dart:convert';
-import '../../util/bencode.dart';
 import '../kid.dart';
 import 'dart:typed_data';
 import '../kpeerinfo.dart';
 import 'kgetpeervalue.dart';
 import 'krpcmessage.dart';
 
-class KrpcQuery {
-  static bool queryCheck(Map<String, Object> messageAsMap, String action) {
-    if (!messageAsMap.containsKey("a")) {
-      return false;
-    }
-    if (!(messageAsMap["a"] is Map)) {
-      return false;
-    }
-    Map<String, Object> a = messageAsMap["a"];
-    if (!(a is Map) || !a.containsKey("id") || !messageAsMap.containsKey("t") || !messageAsMap.containsKey("y")) {
-      return false;
-    }
-    if (messageAsMap["q"] is List) {
-      if (action != null && UTF8.decode(messageAsMap["q"]) != action) {
-        throw {};
-      }
-    } else if (action != null && messageAsMap["q"] != action) {
-      throw {};
-    }
-    return true;
-  }
-}
 
-class KrpcResponse {
-  static bool queryCheck(Map<String, Object> messageAsMap) {
-    if (!messageAsMap.containsKey("r")) {
-      return false;
-    }
-    if (!(messageAsMap["r"] is Map)) {
-      return false;
-    }
-    Map<String, Object> r = messageAsMap["r"];
-    if (!(r is Map) || !r.containsKey("id") || !messageAsMap.containsKey("t") || !messageAsMap.containsKey("y")) {
-      return false;
-    }
-    return true;
-  }
-}
+class KrpcPing  extends KrpcMessage{
 
-class KrpcError {
-
-  static KrpcMessage createResponse(List<int> transactionId, int errorCode) {
-    transactionId = (transactionId is Uint8List ? transactionId : new Uint8List.fromList(transactionId));
-    return new KrpcMessage.fromMap({"t": transactionId, "y": "e", "e": [errorCode, KrpcError.errorDescription(errorCode)]});
+  KrpcPing(KrpcMessage message) : super.fromMap(message.rawMessageAsMap) {
+    
   }
 
-  static String errorDescription(int errorCode) {
-    switch (errorCode) {
-      case 201:
-        return "Generic Error";
-      case 202:
-        return "Server Error";
-      case 203:
-        return "Protocol Error, such as a malformed packet, invalid arguments, or bad token";
-      case 204:
-        return "Method Unknown";
-      default:
-        return "Unknown";
-    }
-  }
-
-  static bool queryCheck(Map<String, Object> messageAsMap) {
-    if (!messageAsMap.containsKey("e")) {
-      return false;
-    }
-    Object e = messageAsMap["e"];
-    if (!(e is List) || (e as List).length < 2 || !messageAsMap.containsKey("t") || !messageAsMap.containsKey("y")) {
-      return false;
-    }
-    return true;
-  }
-}
-
-class KrpcPing {
   static int queryID = 0;
   static KrpcMessage createQuery(List<int> queryingNodesId) {
     List<int> transactionId = UTF8.encode("pi${queryID++}");
@@ -98,8 +29,36 @@ class KrpcPing {
   }
 }
 
-class KrpcFindNode {
+class KrpcFindNode extends KrpcMessage{
+
   static int queryID = 0;
+
+  KrpcFindNode(KrpcMessage message) : super.fromMap(message.rawMessageAsMap) {
+    
+  }
+
+  List<int> get target {
+    Map<String, Object> queryCountainer = rawMessageAsMap["a"];
+    return (queryCountainer["target"] is String ? UTF8.encode(queryCountainer["target"]) : queryCountainer["target"]);
+  }
+
+  String get targetAsString => UTF8.decode(target, allowMalformed: true);
+  KId get targetAsKId => new KId(target);
+
+  List<int> get compactNodeInfo {
+    Map<String, Object> r = rawMessageMap["r"];
+    return r["nodes"];
+  }
+
+  List<KPeerInfo> get compactNodeInfoAsKPeerInfo {
+    List<KPeerInfo> ret = [];
+    List<int> infos = compactNodeInfo;
+
+    for (int i = 0; i < infos.length ~/ 26; i++) {
+      ret.add(new KPeerInfo.fromBytes(infos, i * 26, 26));
+    }
+    return ret;
+  }
 
   static KrpcMessage createQuery(List<int> queryingNodesId, List<int> targetNodeId) {
     List<int> transactionId = UTF8.encode("fi${queryID++}");
@@ -117,7 +76,68 @@ class KrpcFindNode {
   }
 }
 
-class KrpcGetPeers {
+
+class KrpcGetPeers extends KrpcMessage {
+
+  KrpcGetPeers(KrpcMessage message) : super.fromMap(message.rawMessageAsMap) {
+    
+  }
+  
+  List<int> get compactNodeInfo {
+    Map<String, Object> r = rawMessageMap["r"];
+    return r["nodes"];
+  }
+
+  List<KPeerInfo> get compactNodeInfoAsKPeerInfo {
+    List<KPeerInfo> ret = [];
+    List<int> infos = compactNodeInfo;
+
+    for (int i = 0; i < infos.length ~/ 26; i++) {
+      ret.add(new KPeerInfo.fromBytes(infos, i * 26, 26));
+    }
+    return ret;
+  }
+
+  List<int> get infoHash {
+    Map<String, Object> a = messageAsMap["a"];
+    return a["info_hash"];
+  }
+
+  KId get infoHashAsKId => new KId(infoHash);
+  
+  bool get haveValue {
+    if (((messageAsMap)["r"] as Map).containsKey("values") == true) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  List<KGetPeerValue> valuesAsKAnnounceInfo(List<int> infoHash) {
+    if (haveValue == false) {
+      return [];
+    }
+    Map<String, Object> r = messageAsMap["r"];
+    List<Uint8List> values = r["values"];
+    List<KGetPeerValue> ret = [];
+    for (Uint8List l in values) {
+      KGetPeerValue a = new KGetPeerValue.fromCompactIpPort(l, infoHash);
+      ret.add(a);
+    }
+    return ret;
+  }
+
+  List<int> get tokenAsKId {
+    Map<String, Object> r = messageAsMap["r"];
+    return r["token"];
+  }
+
+  List<int> get token {
+    Map<String, Object> a = messageAsMap["a"];
+    return a["token"];
+  }
+
+
   static int queryID = 0;
   static KrpcMessage createQuery(List<int> queryingNodesId, List<int> infoHash) {
     List<int> transactionId = UTF8.encode("ge${queryID++}");
@@ -150,7 +170,38 @@ class KrpcGetPeers {
   }
 }
 
-class KrpcAnnounce {
+class KrpcAnnounce extends KrpcMessage{
+
+  KrpcAnnounce(KrpcMessage message) : super.fromMap(message.rawMessageAsMap) {
+    
+  }
+  List<int> get tokenAsKId {
+    Map<String, Object> r = messageAsMap["r"];
+    return r["token"];
+  }
+
+  List<int> get token {
+    Map<String, Object> a = messageAsMap["a"];
+    return a["token"];
+  }
+
+  int get impliedPort {
+    Map<String, Object> a = messageAsMap["a"];
+    return a["implied_port"];
+  }
+
+  int get port {
+    Map<String, Object> a = messageAsMap["a"];
+    return a["port"];
+  }
+  
+  List<int> get infoHash {
+    Map<String, Object> a = messageAsMap["a"];
+    return a["info_hash"];
+  }
+
+  KId get infoHashAsKId => new KId(infoHash);
+
   static int queryID = 0;
   static KrpcMessage createQuery(List<int> queryingNodesId, int implied_port, List<int> infoHash, int port, List<int> opaqueToken) {
     List<int> transactionId = UTF8.encode("an${queryID++}");

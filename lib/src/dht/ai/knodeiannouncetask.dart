@@ -9,6 +9,7 @@ import '../krootingtable.dart';
 import '../../util/shufflelinkedlist.dart';
 
 import '../message/krpcmessage.dart';
+import '../message/krpcmessage_builder.dart';
 import '../kpeerinfo.dart';
 import '../message/kgetpeervalue.dart';
 import '../knode.dart';
@@ -142,7 +143,7 @@ class KNodeAIAnnounceTask {
     }
   }
 
-  updateReceveGetPeerInfo(HetiReceiveUdpInfo info, KrpcMessage getPeer) {
+  updateReceveGetPeerInfo(HetiReceiveUdpInfo info, KrpcGetPeers getPeer) {    
     if (getPeer.tokenAsKId == null || getPeer.tokenAsKId == null) {
       return;
     }
@@ -169,11 +170,12 @@ class KNodeAIAnnounceTask {
 
       if (response.queryFromTransactionId == KrpcMessage.QUERY_GET_PEERS) {
      //   print("##===fin ==> ${response.nodeIdAsKId.getRootingTabkeIndex(_infoHashId)}-------------------ZZZZZZZZZZZ");
-        updateReceveGetPeerInfo(info, response);
+        KrpcGetPeers getpeers = response.toKrpcGetPeers();
+        updateReceveGetPeerInfo(info, getpeers);
 
-        if (response.haveValue == true) {
+        if (getpeers.haveValue == true) {
           //print("announce set value");
-          for (KGetPeerValue i in response.valuesAsKAnnounceInfo(_infoHashId.value)) {
+          for (KGetPeerValue i in getpeers.valuesAsKAnnounceInfo(_infoHashId.value)) {
             lastUpdateTime = new DateTime.now().millisecondsSinceEpoch;
             if (node.verbose == true && false == node.containSeardchResult(i)) {
               print("########### get peer value ${i.ipAsString} ${i.port}");
@@ -187,7 +189,7 @@ class KNodeAIAnnounceTask {
           //
           //
           List<KPeerInfo> candidate = [];
-          for (KPeerInfo info in response.compactNodeInfoAsKPeerInfo) {
+          for (KPeerInfo info in getpeers.compactNodeInfoAsKPeerInfo) {
             _ggggg.update(info);
           }
 
