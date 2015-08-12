@@ -68,8 +68,8 @@ class KNodeAIBasic extends KNodeAI {
     announceAI.onAddNodeFromIPAndPort(node, ip, port);
   }
 
-  onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcQuery query) {
-    node.rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, query.queryingNodesId));
+  onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcMessage query) {
+    node.rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, query.nodeIdAsKId));
     switch (query.messageSignature) {
       case KrpcMessage.PING_QUERY:
         return node.sendPingResponse(info.remoteAddress, info.remotePort, query.transactionId).catchError((_){});
@@ -86,7 +86,7 @@ class KNodeAIBasic extends KNodeAI {
     announceAI.onReceiveQuery(node, info, query);
   }
 
-  onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcResponse response) {
+  onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcMessage response) {
     findNodeAI.onReceiveResponse(node, info, response);
     announceAI.onReceiveResponse(node, info, response);
   }

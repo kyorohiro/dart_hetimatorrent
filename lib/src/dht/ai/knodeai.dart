@@ -19,9 +19,9 @@ abstract class KNodeAI {
   researchSearchPeer(KNode node, KId infoHash);
   stopSearchValue(KNode node, KId infoHash);
   onAddNodeFromIPAndPort(KNode node, String ip, int port);
-  onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcQuery query);
+  onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcMessage query);
   onReceiveError(KNode node, HetiReceiveUdpInfo info, KrpcMessage message);
-  onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcResponse response);
+  onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcMessage response);
   onReceiveUnknown(KNode node, HetiReceiveUdpInfo info, KrpcMessage message);
   onTicket(KNode);
 

@@ -67,7 +67,8 @@ class KNodeAIAnnounce extends KNodeAI {
     }
   }
 
-  onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcQuery query) {
+  onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcMessage query) {
+    /*
     for (KNodeAIAnnounceTask t in taskList.values) {
       if (t.isStart) {
         t.onReceiveQuery(node, info, query);
@@ -120,9 +121,10 @@ class KNodeAIAnnounce extends KNodeAI {
         }
         break;
     }
+     */
   }
 
-  onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcResponse response) {
+  onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcMessage response) {
     for (KNodeAIAnnounceTask t in taskList.values) {
       if (t.isStart) {
         t.onReceiveResponse(node, info, response);

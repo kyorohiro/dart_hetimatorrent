@@ -95,7 +95,8 @@ class KNodeAIFindNode {
     mustTofindNode.clear();
   }
 
-  onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcQuery query) {
+  onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcMessage query) {
+    /*
     if (_isStart == false) {
       return null;
     }
@@ -108,18 +109,19 @@ class KNodeAIFindNode {
     node.rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, query.queryingNodesId)).then((_) {
       return updateP2PNetworkWithoutClear(node);
     });
+     */
   }
 
   onReceiveError(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {}
 
-  onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcResponse response) {
+  onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcMessage response) {
     new Future(() {
       if (_isStart == false) {
         return null;
       }
       if (response.messageSignature == KrpcMessage.FIND_NODE_RESPONSE) {
-        KrpcFindNodeResponse findNode = response;
-        List<KPeerInfo> peerInfo = findNode.compactNodeInfoAsKPeerInfo;
+       // KrpcFindNodeResponse findNode = response;
+        List<KPeerInfo> peerInfo = response.compactNodeInfoAsKPeerInfo;
         List<Future> f = [];
         for (KPeerInfo info in peerInfo) {
           f.add(node.rootingtable.update(info));
@@ -127,7 +129,7 @@ class KNodeAIFindNode {
         return Future.wait(f);
       }
     }).then((e) {
-      node.rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, response.queriedNodesId)).then((_) {
+      node.rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, response.nodeIdAsKId)).then((_) {
         return updateP2PNetworkWithoutClear(node);
       });
     });

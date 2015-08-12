@@ -8,6 +8,7 @@ import 'krpcmessage.dart';
 import 'dart:typed_data';
 import 'dart:convert';
 
+/*
 class KrpcAnnouncePeerQuery extends KrpcQuery {
 
   List<int> get infoHash {
@@ -149,3 +150,4 @@ class KrpcAnnouncePeerResponse extends KrpcResponse {
     });
   }
 }
+*/

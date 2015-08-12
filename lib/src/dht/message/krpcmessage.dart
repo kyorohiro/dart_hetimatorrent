@@ -13,6 +13,7 @@ import 'dart:convert';
 import '../kid.dart';
 import 'dart:typed_data';
 import '../knode.dart';
+import '../kpeerinfo.dart';
 
 abstract class KrpcResponseInfo {
   String getQueryNameFromTransactionId(String transactionId);
@@ -35,6 +36,10 @@ class KrpcMessage {
   Map<String, Object> _messageAsMap = {};
   Map<String, Object> get messageAsMap => new Map.from(_messageAsMap);
   List<int> get messageAsBencode => Bencode.encode(_messageAsMap);
+
+  bool get isResonse => messageTypeAsString == "r";
+  bool get isQuery => messageTypeAsString == "q";
+  bool get isError => messageTypeAsString == "e";
 
   int get messageSignature {
     switch (messageTypeAsString) {
@@ -113,6 +118,21 @@ class KrpcMessage {
 
   KId get nodeIdAsKId => new KId(nodeId);
 
+  List<int> get compactNodeInfo {
+    Map<String, Object> r = rawMessageMap["r"];
+    return r["nodes"];
+  }
+
+  List<KPeerInfo> get compactNodeInfoAsKPeerInfo {
+    List<KPeerInfo> ret = [];
+    List<int> infos = compactNodeInfo;
+    
+    for (int i = 0; i < infos.length ~/ 26; i++) {
+      ret.add(new KPeerInfo.fromBytes(infos, i * 26, 26));
+    }
+    return ret;
+  }
+
   KrpcMessage() {}
 
   KrpcMessage.fromMap(Map map) {
@@ -129,58 +149,7 @@ class KrpcMessage {
     } catch (e) {
       throw {};
     }
-
-    if (KrpcQuery.queryCheck(messageAsMap, null)) {
-      KrpcMessage ret = null;
-      String q = "";
-      if (messageAsMap["q"] is String) {
-        q = messageAsMap["q"];
-      } else {
-        q = UTF8.decode(messageAsMap["q"]);
-      }
-      switch (q) {
-        case "ping":
-          ret = new KrpcMessage.fromMap(messageAsMap);
-          break;
-        case "find_node":
-          ret = new KrpcFindNodeQuery.fromMap(messageAsMap);
-          break;
-        case "get_peers":
-          ret = new KrpcGetPeersQuery.fromMap(messageAsMap);
-          break;
-        case "announce_peer":
-          ret = new KrpcAnnouncePeerQuery.fromMap(messageAsMap);
-          break;
-        default:
-          ret = new KrpcQuery.fromMap(messageAsMap);
-          break;
-      }
-      return ret;
-    } else if (KrpcResponse.queryCheck(messageAsMap)) {
-      KrpcMessage ret = null;
-      if (info == null) {
-        ret = new KrpcMessage.fromMap(messageAsMap);
-      } else {
-        switch (info.getQueryNameFromTransactionId(UTF8.decode(messageAsMap["t"]))) {
-          case "find_node":
-            ret = new KrpcFindNodeResponse.fromMap(messageAsMap);
-            break;
-          case "get_peers":
-            ret = new KrpcGetPeersResponse.FromMap(messageAsMap);
-            break;
-          case "announce_peer":
-            ret = new KrpcAnnouncePeerResponse.fromMap(messageAsMap);
-            break;
-          default:
-            ret = new KrpcResponse.fromMap(messageAsMap);
-            break;
-        }
-      }
-      return ret;
-    } else if (KrpcError.queryCheck(messageAsMap)) {
-      KrpcMessage ret = new KrpcMessage.fromMap(messageAsMap);
-      return ret;
-    }
+    return new KrpcMessage.fromMap(messageAsMap);
   }
 
   static Future<KrpcMessage> decodeTest(EasyParser parser, Function a) {
@@ -200,6 +169,7 @@ class KrpcMessage {
   }
 }
 
+/*
 class KrpcQuery extends KrpcMessage {
   KrpcQuery() {}
 
@@ -270,7 +240,7 @@ class KrpcResponse extends KrpcMessage {
     return true;
   }
 }
-
+*/
 class KrpcError {
   static const int GENERIC_ERROR = 201;
   static const int SERVER_ERROR = 202;
@@ -316,5 +286,18 @@ class KrpcPing {
   }
   static KrpcMessage createResponse(List<int> queryingNodesId, List<int> transactionId) {
     return new KrpcMessage.fromMap({"r": {"id": queryingNodesId}, "t": transactionId, "y": "r"});
+  }
+}
+
+class KrpcFindNode {
+  static int queryID = 0;
+
+  static KrpcMessage createQuery(List<int> queryingNodesId, List<int> targetNodeId) {
+    List<int> transactionId = UTF8.encode("findnodes${queryID++}");
+    return new KrpcMessage.fromMap({"a": {"id": queryingNodesId, "target": targetNodeId}, "q": "find_node", "t": transactionId, "y": "q"});
+  }
+
+  static KrpcMessage createResponse(List<int> compactNodeInfo, List<int> queryingNodesId, List<int> transactionId) {
+    return new KrpcMessage.fromMap({"r": {"id": queryingNodesId, "nodes": compactNodeInfo}, "t": transactionId, "y": "r"});
   }
 }

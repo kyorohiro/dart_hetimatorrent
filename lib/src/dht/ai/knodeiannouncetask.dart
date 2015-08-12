@@ -138,7 +138,8 @@ class KNodeAIAnnounceTask {
     }
   }
 
-  updateReceveGetPeerInfo(HetiReceiveUdpInfo info, KrpcGetPeersResponse getPeer) {
+  updateReceveGetPeerInfo(HetiReceiveUdpInfo info, KrpcMessage getPeer) {
+    /*
     if(getPeer.tokenAsKId == null|| getPeer.tokenAsKId == null) {
       return;
     }
@@ -152,9 +153,10 @@ class KNodeAIAnnounceTask {
     } else {
       receiveGetPeerResponseNode.add(i);
     }
+     */
   }
 
-  onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcQuery query) {
+  onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcMessage query) {
     if (_isStart == false) {
       return null;
     }
@@ -163,7 +165,8 @@ class KNodeAIAnnounceTask {
     });
   }
 
-  onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcResponse response) {
+  onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcMessage response) {
+    /*
     new Future(() {
       if (_isStart == false) {
         return null;
@@ -215,5 +218,6 @@ class KNodeAIAnnounceTask {
         }
       }
     });
+     */
   }
 }
