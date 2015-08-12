@@ -121,10 +121,10 @@ void main() {
     });
 
     unit.test("error response", () {
-      KrpcMessage response = KrpcError.createResponse(convert.UTF8.encode("aa"), KrpcError.GENERIC_ERROR);
-      unit.expect(response.errorCode, KrpcError.GENERIC_ERROR);
+      KrpcMessage response = KrpcError.createResponse(convert.UTF8.encode("aa"), KrpcMessage.GENERIC_ERROR);
+      unit.expect(response.errorCode, KrpcMessage.GENERIC_ERROR);
       unit.expect(response.transactionIdAsString, "aa");
-      unit.expect(response.errorMessageAsString, KrpcError.errorDescription(KrpcError.GENERIC_ERROR));
+      unit.expect(response.errorMessageAsString, KrpcError.errorDescription(KrpcMessage.GENERIC_ERROR));
     });
   });
 }

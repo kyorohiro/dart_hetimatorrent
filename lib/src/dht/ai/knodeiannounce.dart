@@ -72,8 +72,8 @@ class KNodeAIAnnounce extends KNodeAI {
         t.onReceiveQuery(node, info, query);
       }
     }
-    switch (query.messageSignature) {
-      case KrpcMessage.ANNOUNCE_QUERY:
+    switch (query.queryAsString) {
+      case KrpcMessage.QUERY_ANNOUNCE:
         {
           List<int> opaqueWriteTokenA = node.getOpaqueWriteToken(query.infoHashAsKId, query.nodeIdAsKId);
           List<int> opaqueWriteTokenB = query.token;
@@ -93,7 +93,7 @@ class KNodeAIAnnounce extends KNodeAI {
           return node.sendAnnouncePeerResponse(info.remoteAddress, info.remotePort, query.transactionId).catchError((_){});
         }
         break;
-      case KrpcMessage.GET_PEERS_QUERY:
+      case KrpcMessage.QUERY_GET_PEERS:
         {
           //print("## receive query");
           List<KGetPeerValue> target = node.rawAnnounced.getWithFilter((KGetPeerValue i) {
@@ -111,12 +111,6 @@ class KNodeAIAnnounce extends KNodeAI {
             return node.sendGetPeersResponseWithPeers(info.remoteAddress, info.remotePort, query.transactionId, opaqueWriteToken, KGetPeerValue.toPeerInfoStrings(target)).catchError((_){}); //todo
           } else {
             return node.rootingtable.findNode(query.infoHashAsKId).then((List<KPeerInfo> infos) {
-          //    if(node.verbose == true) {
-                print("=>=send  ${node.nodeId.getRootingTabkeIndex(query.infoHashAsKId)} - ${query.infoHashAsKId} ${node.nodeId} ${node.port}---------------------------===============================++++++");
-//                for(KPeerInfo i in infos) {
-//                 print("=>=send [${i}] ${i.id.getRootingTabkeIndex(query.infoHashAsKId)}");
-//                }
-           //   }
               return node.sendGetPeersResponseWithClosestNodes(info.remoteAddress, info.remotePort, query.transactionId, opaqueWriteToken, KPeerInfo.toCompactNodeInfos(infos)).catchError((_){});
             });
           }

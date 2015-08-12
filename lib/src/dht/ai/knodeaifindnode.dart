@@ -42,18 +42,18 @@ class KNodeAIFindNode {
         if (!findNodesInfo.rawsequential.contains(info)) {
           count++;
           findNodesInfo.addLast(info);
-          node.sendFindNodeQuery(info.ipAsString, info.port, node.nodeId.value).catchError((_){});
-          if(node.verbose == true) {
+          node.sendFindNodeQuery(info.ipAsString, info.port, node.nodeId.value).catchError((_) {});
+          if (node.verbose == true) {
             print("<id_index>=${node.rootingtable.getRootingTabkeIndex(info.id)}");
           }
         }
         //
-        // todo 
+        // todo
         int currentTime = new DateTime.now().millisecondsSinceEpoch;
-        if(currentTime-startTime > 30000 && count > 3) {
+        if (currentTime - startTime > 30000 && count > 3) {
           break;
-        } else if(currentTime-startTime > 5000 && count > 5){
-          break;          
+        } else if (currentTime - startTime > 5000 && count > 5) {
+          break;
         }
       }
     });
@@ -70,7 +70,7 @@ class KNodeAIFindNode {
           findNodesInfo.addLast(info);
           node.sendFindNodeQuery(info.ipAsString, info.port, KId.createIDAtRandom().value);
         }
-        if(count > 3) {
+        if (count > 3) {
           break;
         }
       }
@@ -80,7 +80,7 @@ class KNodeAIFindNode {
   List mustTofindNode = [];
   onAddNodeFromIPAndPort(KNode node, String ip, int port) {
     if (node.rawUdoSocket != null) {
-      node.sendFindNodeQuery(ip, port, node.nodeId.value).catchError((_){});
+      node.sendFindNodeQuery(ip, port, node.nodeId.value).catchError((_) {});
     } else {
       mustTofindNode.add([ip, port]);
     }
@@ -89,7 +89,7 @@ class KNodeAIFindNode {
   onTicket(KNode node) {
     updateP2PNetworkWithRandom(node);
     for (List l in mustTofindNode) {
-      node.sendFindNodeQuery(l[0], l[1], node.nodeId.value).catchError((_){});
+      node.sendFindNodeQuery(l[0], l[1], node.nodeId.value).catchError((_) {});
     }
     mustTofindNode.clear();
   }
@@ -98,11 +98,10 @@ class KNodeAIFindNode {
     if (_isStart == false) {
       return null;
     }
-    switch (query.messageSignature) {
-      case KrpcMessage.FIND_NODE_QUERY:
-        return node.rootingtable.findNode(query.targetAsKId).then((List<KPeerInfo> infos) {
-          return node.sendFindNodeResponse(info.remoteAddress, info.remotePort, query.transactionId, KPeerInfo.toCompactNodeInfos(infos)).catchError((_){});
-        });
+    if (query.queryAsString == KrpcMessage.QUERY_FIND_NODE) {
+      return node.rootingtable.findNode(query.targetAsKId).then((List<KPeerInfo> infos) {
+        return node.sendFindNodeResponse(info.remoteAddress, info.remotePort, query.transactionId, KPeerInfo.toCompactNodeInfos(infos)).catchError((_) {});
+      });
     }
     node.rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, query.nodeIdAsKId)).then((_) {
       return updateP2PNetworkWithoutClear(node);
@@ -116,8 +115,8 @@ class KNodeAIFindNode {
       if (_isStart == false) {
         return null;
       }
-      if (response.messageSignature == KrpcMessage.FIND_NODE_RESPONSE) {
-       // KrpcFindNodeResponse findNode = response;
+      if (response.queryFromTransactionId == KrpcMessage.QUERY_FIND_NODE) {
+        // KrpcFindNodeResponse findNode = response;
         List<KPeerInfo> peerInfo = response.compactNodeInfoAsKPeerInfo;
         List<Future> f = [];
         for (KPeerInfo info in peerInfo) {

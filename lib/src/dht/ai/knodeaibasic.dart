@@ -41,7 +41,7 @@ class KNodeAIBasic extends KNodeAI {
     announceAI.updateP2PNetwork(node);
   }
 
-  startSearchValue(KNode node, KId infoHash, int port, {getPeerOnly:false}) {
+  startSearchValue(KNode node, KId infoHash, int port, {getPeerOnly: false}) {
     return announceAI.startSearchValue(node, infoHash, port);
   }
 
@@ -65,17 +65,15 @@ class KNodeAIBasic extends KNodeAI {
 
   onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcMessage query) {
     node.rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, query.nodeIdAsKId));
-    switch (query.messageSignature) {
-      case KrpcMessage.PING_QUERY:
-        return node.sendPingResponse(info.remoteAddress, info.remotePort, query.transactionId).catchError((_){});
-      case KrpcMessage.FIND_NODE_QUERY:
+    switch (query.queryAsString) {
+      case KrpcMessage.QUERY_PING:
+        return node.sendPingResponse(info.remoteAddress, info.remotePort, query.transactionId).catchError((_) {});
+      case KrpcMessage.QUERY_FIND_NODE:
+      case KrpcMessage.QUERY_ANNOUNCE:
+      case KrpcMessage.QUERY_GET_PEERS:
         break;
-      case KrpcMessage.NONE_QUERY:
-        return node.sendErrorResponse(info.remoteAddress, info.remotePort, KrpcMessage.METHOD_ERROR, query.transactionId).catchError((_){});
-      case KrpcMessage.ANNOUNCE_QUERY:
-        break;
-      case KrpcMessage.GET_PEERS_QUERY:
-        break;
+      default:
+        return node.sendErrorResponse(info.remoteAddress, info.remotePort, KrpcMessage.METHOD_ERROR, query.transactionId).catchError((_) {});
     }
     findNodeAI.onReceiveQuery(node, info, query);
     announceAI.onReceiveQuery(node, info, query);

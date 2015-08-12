@@ -41,7 +41,7 @@ export 'src/dht/knode.dart';
 export 'src/dht/kbucket.dart';
 export 'src/dht/message/kgetpeernodes.dart';
 export 'src/dht/message/kgetpeervalue.dart';
-
+export 'src/dht/message/krpcmessage_builder.dart';
 
 export 'src/app/torrentengine.dart';
 export 'src/app/torrentengineai.dart';

@@ -167,7 +167,7 @@ class KNodeAIAnnounceTask {
         return null;
       }
 
-      if (response.messageSignature == KrpcMessage.GET_PEERS_RESPONSE) {
+      if (response.queryFromTransactionId == KrpcMessage.QUERY_GET_PEERS) {
      //   print("##===fin ==> ${response.nodeIdAsKId.getRootingTabkeIndex(_infoHashId)}-------------------ZZZZZZZZZZZ");
         updateReceveGetPeerInfo(info, response);
 

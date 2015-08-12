@@ -28,6 +28,11 @@ class KrpcMessage {
   static const int SERVER_ERROR = 202;
   static const int PROTOCOL_ERROR = 203;
   static const int METHOD_ERROR = 204;
+  //
+  static const String QUERY_PING = "ping";
+  static const String QUERY_FIND_NODE = "find_node";
+  static const String QUERY_GET_PEERS = "get_peers";
+  static const String QUERY_ANNOUNCE = "announce_peer";
 
   Map<String, Object> _messageAsMap = {};
   Map<String, Object> get messageAsMap => new Map.from(_messageAsMap);
@@ -37,35 +42,17 @@ class KrpcMessage {
   bool get isQuery => messageTypeAsString == "q";
   bool get isError => messageTypeAsString == "e";
 
-  int get messageSignature {
-    switch (messageTypeAsString) {
-      case "e":
-        return ERROR;
-      case "q":
-        switch (queryAsString) {
-          case "ping":
-            return PING_QUERY;
-          case "find_node":
-            return FIND_NODE_QUERY;
-          case "get_peers":
-            return GET_PEERS_QUERY;
-          case "announce_peer":
-            return ANNOUNCE_QUERY;
-        }
-        return NONE_QUERY;
-      case "r":
-        if (transactionIdAsString.contains("pi")) {
-          return PING_RESPONSE;
-        } else if (transactionIdAsString.contains("fi")) {
-          return FIND_NODE_RESPONSE;
-        } else if (transactionIdAsString.contains("ge")) {
-          return GET_PEERS_RESPONSE;
-        } else if (transactionIdAsString.contains("an")) {
-          return ANNOUNCE_RESPONSE;
-        }
-        return NONE_RESPONSE;
+  String get queryFromTransactionId {
+    if (transactionIdAsString.contains("pi")) {
+      return QUERY_PING;
+    } else if (transactionIdAsString.contains("fi")) {
+      return QUERY_FIND_NODE;
+    } else if (transactionIdAsString.contains("ge")) {
+      return QUERY_GET_PEERS;
+    } else if (transactionIdAsString.contains("an")) {
+      return QUERY_ANNOUNCE;
     }
-    return NONE_MESSAGE;
+    return "";
   }
 
   List<int> get transactionId => (_messageAsMap["t"] is String ? UTF8.encode(_messageAsMap["t"]) : _messageAsMap["t"]);
