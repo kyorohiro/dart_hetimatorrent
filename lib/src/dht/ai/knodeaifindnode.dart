@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:hetimanet/hetimanet.dart';
 
 import '../kid.dart';
-import '../krootingtable.dart';
 import '../../util/shufflelinkedlist.dart';
 
 import '../message/krpcmessage.dart';
@@ -116,7 +115,6 @@ class KNodeAIFindNode {
         return null;
       }
       if (response.queryFromTransactionId == KrpcMessage.QUERY_FIND_NODE) {
-        // KrpcFindNodeResponse findNode = response;
         List<KPeerInfo> peerInfo = response.compactNodeInfoAsKPeerInfo;
         List<Future> f = [];
         for (KPeerInfo info in peerInfo) {
