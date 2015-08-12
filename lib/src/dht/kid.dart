@@ -111,4 +111,20 @@ class KId {
     }
     return new KId(ret);
   }
+  
+  int getRootingTabkeIndex(KId root) {
+    KId v = this.xor(root);
+    for (int i = 0, ret = 19; i < 20; i++, ret--) {
+      if (v[i] != 0) {
+        for (int j = 0; j < 9; j++) {
+          if (v[i] < (0x1 << j)) {
+            return (ret * 8) + j;
+          }
+        }
+        return i;
+      }
+    }
+    return 0;
+  }
+
 }

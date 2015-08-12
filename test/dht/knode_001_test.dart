@@ -30,6 +30,7 @@ void main() {
 
       for (int i = 0; i < numOfNode; i++) {
         knodes[i].start(ip: kpeerInfos[i].ipAsString, port: kpeerInfos[i].port);
+
       }
 
       // return new Future.delayed(new Duration(seconds: 3)).then((_) {

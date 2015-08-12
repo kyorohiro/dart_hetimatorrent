@@ -61,7 +61,7 @@ class KrpcMessage {
         } else if (transactionIdAsString.contains("fi")) {
           return FIND_NODE_RESPONSE;
         } else if (transactionIdAsString.contains("ge")) {
-          return FIND_NODE_RESPONSE;
+          return GET_PEERS_RESPONSE;
         } else if (transactionIdAsString.contains("an")) {
           return ANNOUNCE_RESPONSE;
         }
@@ -148,7 +148,6 @@ class KrpcMessage {
   //
   
   bool get haveValue {
-    Map<String, Object> r = messageAsMap["r"];
     if (((messageAsMap)["r"] as Map).containsKey("values") == true) {
       return true;
     } else {
@@ -207,6 +206,37 @@ class KrpcMessage {
       throw {};
     }
     return new KrpcMessage.fromMap(messageAsMap);
+  }
+  
+  String toString() {
+      switch (messageTypeAsString) {
+        case "e":
+          return "ERROR";
+        case "q":
+          switch (queryAsString) {
+            case "ping":
+              return "q->PING_QUERY";
+            case "find_node":
+              return "q->FIND_NODE_QUERY";
+            case "get_peers":
+              return "q->GET_PEERS_QUERY";
+            case "announce_peer":
+              return "q->ANNOUNCE_QUERY";
+          }
+          return "q->NONE_QUERY";
+        case "r":
+          if (transactionIdAsString.contains("pi")) {
+            return "r->PING_RESPONSE";
+          } else if (transactionIdAsString.contains("fi")) {
+            return "r->FIND_NODE_RESPONSE";
+          } else if (transactionIdAsString.contains("ge")) {
+            return "r->GET_PEERS_RESPONSE";
+          } else if (transactionIdAsString.contains("an")) {
+            return "r->ANNOUNCE_RESPONSE";
+          }
+          return "r->NONE_RESPONSE";
+      }
+      return "?->NONE_MESSAGE";
   }
 }
 
@@ -355,7 +385,7 @@ class KrpcGetPeers {
 class KrpcAnnounce {
   static int queryID = 0;
   static KrpcMessage createQuery(List<int> queryingNodesId, int implied_port, List<int> infoHash, int port, List<int> opaqueToken) {
-    List<int> transactionId = UTF8.encode("ge${queryID++}");
+    List<int> transactionId = UTF8.encode("an${queryID++}");
     if(!(queryingNodesId is Uint8List)) {
       queryingNodesId = new Uint8List.fromList(queryingNodesId);
     }
