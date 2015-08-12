@@ -146,7 +146,7 @@ class KrpcMessage {
 
   //
   //
-  
+
   bool get haveValue {
     if (((messageAsMap)["r"] as Map).containsKey("values") == true) {
       return true;
@@ -156,13 +156,13 @@ class KrpcMessage {
   }
 
   List<KGetPeerValue> valuesAsKAnnounceInfo(List<int> infoHash) {
-    if(haveValue == false) {
+    if (haveValue == false) {
       return [];
     }
     Map<String, Object> r = messageAsMap["r"];
     List<Uint8List> values = r["values"];
     List<KGetPeerValue> ret = [];
-    for(Uint8List l in values) {
+    for (Uint8List l in values) {
       KGetPeerValue a = new KGetPeerValue.fromCompactIpPort(l, infoHash);
       ret.add(a);
     }
@@ -179,12 +179,12 @@ class KrpcMessage {
     return a["token"];
   }
 
-  int get impliedPort{
+  int get impliedPort {
     Map<String, Object> a = messageAsMap["a"];
     return a["implied_port"];
   }
-  
-  int get port{
+
+  int get port {
     Map<String, Object> a = messageAsMap["a"];
     return a["port"];
   }
@@ -207,36 +207,36 @@ class KrpcMessage {
     }
     return new KrpcMessage.fromMap(messageAsMap);
   }
-  
+
   String toString() {
-      switch (messageTypeAsString) {
-        case "e":
-          return "ERROR";
-        case "q":
-          switch (queryAsString) {
-            case "ping":
-              return "q->PING_QUERY";
-            case "find_node":
-              return "q->FIND_NODE_QUERY";
-            case "get_peers":
-              return "q->GET_PEERS_QUERY";
-            case "announce_peer":
-              return "q->ANNOUNCE_QUERY";
-          }
-          return "q->NONE_QUERY";
-        case "r":
-          if (transactionIdAsString.contains("pi")) {
-            return "r->PING_RESPONSE";
-          } else if (transactionIdAsString.contains("fi")) {
-            return "r->FIND_NODE_RESPONSE";
-          } else if (transactionIdAsString.contains("ge")) {
-            return "r->GET_PEERS_RESPONSE";
-          } else if (transactionIdAsString.contains("an")) {
-            return "r->ANNOUNCE_RESPONSE";
-          }
-          return "r->NONE_RESPONSE";
-      }
-      return "?->NONE_MESSAGE";
+    switch (messageTypeAsString) {
+      case "e":
+        return "ERROR";
+      case "q":
+        switch (queryAsString) {
+          case "ping":
+            return "q->PING_QUERY";
+          case "find_node":
+            return "q->FIND_NODE_QUERY";
+          case "get_peers":
+            return "q->GET_PEERS_QUERY";
+          case "announce_peer":
+            return "q->ANNOUNCE_QUERY";
+        }
+        return "q->NONE_QUERY";
+      case "r":
+        if (transactionIdAsString.contains("pi")) {
+          return "r->PING_RESPONSE";
+        } else if (transactionIdAsString.contains("fi")) {
+          return "r->FIND_NODE_RESPONSE";
+        } else if (transactionIdAsString.contains("ge")) {
+          return "r->GET_PEERS_RESPONSE";
+        } else if (transactionIdAsString.contains("an")) {
+          return "r->ANNOUNCE_RESPONSE";
+        }
+        return "r->NONE_RESPONSE";
+    }
+    return "?->NONE_MESSAGE";
   }
 }
 
@@ -285,7 +285,8 @@ class KrpcError {
   static const int PROTOCOL_ERROR = 203;
   static const int METHOD_ERROR = 204;
 
-  static KrpcMessage createMessage(List<int> transactionId, int errorCode) {
+  static KrpcMessage createResponse(List<int> transactionId, int errorCode) {
+    transactionId = (transactionId is Uint8List ? transactionId : new Uint8List.fromList(transactionId));
     return new KrpcMessage.fromMap({"t": transactionId, "y": "e", "e": [errorCode, KrpcError.errorDescription(errorCode)]});
   }
 
@@ -320,9 +321,13 @@ class KrpcPing {
   static int queryID = 0;
   static KrpcMessage createQuery(List<int> queryingNodesId) {
     List<int> transactionId = UTF8.encode("pi${queryID++}");
+    transactionId = (transactionId is Uint8List ? transactionId : new Uint8List.fromList(transactionId));
+    queryingNodesId = (queryingNodesId is Uint8List ? queryingNodesId : new Uint8List.fromList(queryingNodesId));
     return new KrpcMessage.fromMap({"a": {"id": queryingNodesId}, "q": "ping", "t": transactionId, "y": "q"});
   }
   static KrpcMessage createResponse(List<int> queryingNodesId, List<int> transactionId) {
+    transactionId = (transactionId is Uint8List ? transactionId : new Uint8List.fromList(transactionId));
+    queryingNodesId = (queryingNodesId is Uint8List ? queryingNodesId : new Uint8List.fromList(queryingNodesId));
     return new KrpcMessage.fromMap({"r": {"id": queryingNodesId}, "t": transactionId, "y": "r"});
   }
 }
@@ -332,10 +337,16 @@ class KrpcFindNode {
 
   static KrpcMessage createQuery(List<int> queryingNodesId, List<int> targetNodeId) {
     List<int> transactionId = UTF8.encode("fi${queryID++}");
+    transactionId = (transactionId is Uint8List ? transactionId : new Uint8List.fromList(transactionId));
+    queryingNodesId = (queryingNodesId is Uint8List ? queryingNodesId : new Uint8List.fromList(queryingNodesId));
+    targetNodeId = (targetNodeId is Uint8List ? targetNodeId : new Uint8List.fromList(targetNodeId));
     return new KrpcMessage.fromMap({"a": {"id": queryingNodesId, "target": targetNodeId}, "q": "find_node", "t": transactionId, "y": "q"});
   }
 
   static KrpcMessage createResponse(List<int> compactNodeInfo, List<int> queryingNodesId, List<int> transactionId) {
+    transactionId = (transactionId is Uint8List ? transactionId : new Uint8List.fromList(transactionId));
+    queryingNodesId = (queryingNodesId is Uint8List ? queryingNodesId : new Uint8List.fromList(queryingNodesId));
+    compactNodeInfo = (compactNodeInfo is Uint8List ? compactNodeInfo : new Uint8List.fromList(compactNodeInfo));
     return new KrpcMessage.fromMap({"r": {"id": queryingNodesId, "nodes": compactNodeInfo}, "t": transactionId, "y": "r"});
   }
 }
@@ -344,19 +355,17 @@ class KrpcGetPeers {
   static int queryID = 0;
   static KrpcMessage createQuery(List<int> queryingNodesId, List<int> infoHash) {
     List<int> transactionId = UTF8.encode("ge${queryID++}");
+    transactionId = (transactionId is Uint8List ? transactionId : new Uint8List.fromList(transactionId));
+    queryingNodesId = (queryingNodesId is Uint8List ? queryingNodesId : new Uint8List.fromList(queryingNodesId));
+    infoHash = (infoHash is Uint8List ? infoHash : new Uint8List.fromList(infoHash));
     return new KrpcMessage.fromMap({"a": {"id": queryingNodesId, "info_hash": infoHash}, "q": "get_peers", "t": transactionId, "y": "q"});
   }
-  
+
   static createResponseWithPeers(List<int> transactionId, List<int> queryingNodesId, List<int> opaqueWriteToken, List<List<int>> peerInfoStrings) {
-    if (!(transactionId is Uint8List)) {
-      transactionId = new Uint8List.fromList(transactionId);
-    }
-    if (!(queryingNodesId is Uint8List)) {
-      queryingNodesId = new Uint8List.fromList(queryingNodesId);
-    }
-    if (!(opaqueWriteToken is Uint8List)) {
-      opaqueWriteToken = new Uint8List.fromList(opaqueWriteToken);
-    }
+    transactionId = (transactionId is Uint8List ? transactionId : new Uint8List.fromList(transactionId));
+    queryingNodesId = (queryingNodesId is Uint8List ? queryingNodesId : new Uint8List.fromList(queryingNodesId));
+    opaqueWriteToken = (opaqueWriteToken is Uint8List ? opaqueWriteToken : new Uint8List.fromList(opaqueWriteToken));
+
     for (int i = 0; i < peerInfoStrings.length; i++) {
       if (!(peerInfoStrings[i] is Uint8List)) {
         peerInfoStrings[i] = new Uint8List.fromList(peerInfoStrings[i]);
@@ -366,18 +375,11 @@ class KrpcGetPeers {
   }
 
   static createResponseWithClosestNodes(List<int> transactionId, List<int> queryingNodesId, List<int> opaqueWriteToken, List<int> compactNodeInfo) {
-    if (!(transactionId is Uint8List)) {
-      transactionId = new Uint8List.fromList(transactionId);
-    }
-    if (!(queryingNodesId is Uint8List)) {
-      queryingNodesId = new Uint8List.fromList(queryingNodesId);
-    }
-    if (!(opaqueWriteToken is Uint8List)) {
-      opaqueWriteToken = new Uint8List.fromList(opaqueWriteToken);
-    }
-    if (!(compactNodeInfo is Uint8List)) {
-      compactNodeInfo = new Uint8List.fromList(compactNodeInfo);
-    }
+    transactionId = (transactionId is Uint8List ? transactionId : new Uint8List.fromList(transactionId));
+    queryingNodesId = (queryingNodesId is Uint8List ? queryingNodesId : new Uint8List.fromList(queryingNodesId));
+    opaqueWriteToken = (opaqueWriteToken is Uint8List ? opaqueWriteToken : new Uint8List.fromList(opaqueWriteToken));
+    compactNodeInfo = (compactNodeInfo is Uint8List ? compactNodeInfo : new Uint8List.fromList(compactNodeInfo));
+
     return new KrpcMessage.fromMap({"r": {"id": queryingNodesId, "nodes": compactNodeInfo, "token": opaqueWriteToken}, "t": transactionId, "y": "r"});
   }
 }
@@ -386,36 +388,18 @@ class KrpcAnnounce {
   static int queryID = 0;
   static KrpcMessage createQuery(List<int> queryingNodesId, int implied_port, List<int> infoHash, int port, List<int> opaqueToken) {
     List<int> transactionId = UTF8.encode("an${queryID++}");
-    if(!(queryingNodesId is Uint8List)) {
-      queryingNodesId = new Uint8List.fromList(queryingNodesId);
-    }
-    if(!(infoHash is Uint8List)) {
-      infoHash = new Uint8List.fromList(infoHash);
-    }
-    if(!(opaqueToken is Uint8List)) {
-      opaqueToken = new Uint8List.fromList(opaqueToken);
-    }
-    
-    return new KrpcMessage.fromMap({
-        "a": {"id": queryingNodesId, "info_hash": infoHash, "implied_port": implied_port, "port": port, "token": opaqueToken},
-        "q": "announce_peer", 
-        "t": transactionId,
-        "y": "q"
-        });
-  }
-  
-  static KrpcMessage createResponse(List<int> transactionId, List<int> queryingNodesId) {
-    if(!(transactionId is Uint8List)) {
-      transactionId = new Uint8List.fromList(transactionId);
-    }
-    if(!(queryingNodesId is Uint8List)) {
-      queryingNodesId = new Uint8List.fromList(queryingNodesId);
-    }
-    return new KrpcMessage.fromMap({
-      "r": {"id": queryingNodesId}, 
-      "t": transactionId,
-      "y": "r"});
+    transactionId = (transactionId is Uint8List ? transactionId : new Uint8List.fromList(transactionId));
+    queryingNodesId = (queryingNodesId is Uint8List ? queryingNodesId : new Uint8List.fromList(queryingNodesId));
+    infoHash = (infoHash is Uint8List ? infoHash : new Uint8List.fromList(infoHash));
+    opaqueToken = (opaqueToken is Uint8List ? opaqueToken : new Uint8List.fromList(opaqueToken));
+
+    return new KrpcMessage.fromMap(
+        {"a": {"id": queryingNodesId, "info_hash": infoHash, "implied_port": implied_port, "port": port, "token": opaqueToken}, "q": "announce_peer", "t": transactionId, "y": "q"});
   }
 
-  
+  static KrpcMessage createResponse(List<int> transactionId, List<int> queryingNodesId) {
+    transactionId = (transactionId is Uint8List ? transactionId : new Uint8List.fromList(transactionId));
+    queryingNodesId = (queryingNodesId is Uint8List ? queryingNodesId : new Uint8List.fromList(queryingNodesId));
+    return new KrpcMessage.fromMap({"r": {"id": queryingNodesId}, "t": transactionId, "y": "r"});
+  }
 }

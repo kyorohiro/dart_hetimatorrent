@@ -210,7 +210,7 @@ class KNode extends Object with KrpcResponseInfo {
   Future sendAnnouncePeerResponse(String ip, int port, List<int> transactionId) =>
    _sendMessage(ip, port, KrpcAnnounce.createResponse(transactionId, this._nodeId.value));
 
-  Future sendErrorResponse(String ip, int port, int errorCode, List<int> transactionId, [String errorDescription = null]) => _sendMessage(ip, port, KrpcError.createMessage(transactionId, errorCode));
+  Future sendErrorResponse(String ip, int port, int errorCode, List<int> transactionId, [String errorDescription = null]) => _sendMessage(ip, port, KrpcError.createResponse(transactionId, errorCode));
 
   Future _sendMessage(String ip, int port, KrpcMessage message) {
     Completer c = new Completer();
