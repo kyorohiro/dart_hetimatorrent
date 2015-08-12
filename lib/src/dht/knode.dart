@@ -21,26 +21,32 @@ class KNode extends Object {
   HetiSocketBuilder _socketBuilder = null;
   HetiUdpSocket _udpSocket = null;
   HetiUdpSocket get rawUdoSocket => _udpSocket;
+
   KRootingTable _rootingtable = null;
-  Map<String, EasyParser> buffers = {};
+  KRootingTable get rootingtable => _rootingtable;
+
   KId _nodeId = null;
   KId get nodeId => _nodeId;
-  List<KSendInfo> queryInfo = [];
-  KNodeAI _ai = null;
+  
   bool _isStart = false;
   bool get isStart => _isStart;
 
-  KRootingTable get rootingtable => _rootingtable;
-  KNodeAI get ai => _ai;
   ShuffleLinkedList<KGetPeerValue> _announced = new ShuffleLinkedList(300);
-  ShuffleLinkedList<KGetPeerValue> _searcResult = new ShuffleLinkedList(300);
   List<KGetPeerValue> get announcedPeer => _announced.sequential;
-  ShuffleLinkedList<KGetPeerValue> get rawSearchResult => _searcResult;
   ShuffleLinkedList<KGetPeerValue> get rawAnnounced => _announced;
+
+  ShuffleLinkedList<KGetPeerValue> _searcResult = new ShuffleLinkedList(300);
+  ShuffleLinkedList<KGetPeerValue> get rawSearchResult => _searcResult;
+
   static int id = 0;
+
+  List<KSendInfo> queryInfo = [];
+  KNodeAI _ai = null;
+  KNodeAI get ai => _ai;
 
   StreamController<KGetPeerValue> _controller = new StreamController.broadcast();
   Stream<KGetPeerValue> get onGetPeerValue => _controller.stream;
+
   int _nodeDebugId = 0;
   int get nodeDebugId => _nodeDebugId;
 
