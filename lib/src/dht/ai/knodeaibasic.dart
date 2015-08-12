@@ -71,7 +71,7 @@ class KNodeAIBasic extends KNodeAI {
       case KrpcMessage.FIND_NODE_QUERY:
         break;
       case KrpcMessage.NONE_QUERY:
-        return node.sendErrorResponse(info.remoteAddress, info.remotePort, KrpcError.METHOD_ERROR, query.transactionId).catchError((_){});
+        return node.sendErrorResponse(info.remoteAddress, info.remotePort, KrpcMessage.METHOD_ERROR, query.transactionId).catchError((_){});
       case KrpcMessage.ANNOUNCE_QUERY:
         break;
       case KrpcMessage.GET_PEERS_QUERY:

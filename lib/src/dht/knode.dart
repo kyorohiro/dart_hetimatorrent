@@ -11,6 +11,7 @@ import 'dart:convert';
 import '../util/shufflelinkedlist.dart';
 import '../util/bencode.dart';
 import 'message/krpcmessage.dart';
+import 'message/krpcmessage_builder.dart';
 import 'kpeerinfo.dart';
 import 'message/kgetpeervalue.dart';
 import 'ai/knodeai.dart';
@@ -211,7 +212,8 @@ class KNode extends Object {
   Future sendAnnouncePeerResponse(String ip, int port, List<int> transactionId) =>
    _sendMessage(ip, port, KrpcAnnounce.createResponse(transactionId, this._nodeId.value));
 
-  Future sendErrorResponse(String ip, int port, int errorCode, List<int> transactionId, [String errorDescription = null]) => _sendMessage(ip, port, KrpcError.createResponse(transactionId, errorCode));
+  Future sendErrorResponse(String ip, int port, int errorCode, List<int> transactionId, [String errorDescription = null]) =>
+      _sendMessage(ip, port, KrpcError.createResponse(transactionId, errorCode));
 
   Future _sendMessage(String ip, int port, KrpcMessage message) {
     Completer c = new Completer();
