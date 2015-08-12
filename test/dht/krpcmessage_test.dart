@@ -130,6 +130,14 @@ void main() {
           "d1:rd2:id20:abcdefghij01234567895:nodes26:aaaaaaaaaaaaaaaaaaaaaaaaaa5:token8:aoeusnthe1:t2:aa1:y1:re", convert.UTF8.decode(q.messageAsBencode));
       });
     });
+    
+    unit.test("error response", () {
+      KrpcMessage response = KrpcError.createMessage(convert.UTF8.encode("aa"), KrpcError.GENERIC_ERROR);
+      unit.expect(response.errorCode, KrpcError.GENERIC_ERROR);
+      unit.expect(response.transactionIdAsString, "aa");
+      unit.expect(response.errorMessageAsString, KrpcError.errorDescription(KrpcError.GENERIC_ERROR));
+    });
+    
   });
   
 }

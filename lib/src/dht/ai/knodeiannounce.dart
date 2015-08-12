@@ -130,7 +130,7 @@ class KNodeAIAnnounce extends KNodeAI {
     }
   }
 
-  onReceiveError(KNode node, HetiReceiveUdpInfo info, KrpcError message) {}
+  onReceiveError(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {}
 
   onReceiveUnknown(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {}
   

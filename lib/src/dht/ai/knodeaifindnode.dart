@@ -110,7 +110,7 @@ class KNodeAIFindNode {
     });
   }
 
-  onReceiveError(KNode node, HetiReceiveUdpInfo info, KrpcError message) {}
+  onReceiveError(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {}
 
   onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcResponse response) {
     new Future(() {

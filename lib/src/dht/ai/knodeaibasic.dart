@@ -93,7 +93,7 @@ class KNodeAIBasic extends KNodeAI {
     announceAI.onReceiveResponse(node, info, response);
   }
 
-  onReceiveError(KNode node, HetiReceiveUdpInfo info, KrpcError message) {
+  onReceiveError(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {
     findNodeAI.onReceiveError(node, info, message);
     announceAI.onReceiveError(node, info, message);
   }

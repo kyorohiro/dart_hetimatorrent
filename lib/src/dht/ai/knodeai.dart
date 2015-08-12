@@ -20,7 +20,7 @@ abstract class KNodeAI {
   stopSearchValue(KNode node, KId infoHash);
   onAddNodeFromIPAndPort(KNode node, String ip, int port);
   onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcQuery query);
-  onReceiveError(KNode node, HetiReceiveUdpInfo info, KrpcError message);
+  onReceiveError(KNode node, HetiReceiveUdpInfo info, KrpcMessage message);
   onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcResponse response);
   onReceiveUnknown(KNode node, HetiReceiveUdpInfo info, KrpcMessage message);
   onTicket(KNode);
