@@ -39,6 +39,7 @@ class KNodeWorkFindNode {
         return;
       }
       int count = 0;
+      int currentTime = new DateTime.now().millisecondsSinceEpoch;
       for (KPeerInfo info in infos) {
         if (!_findNodesInfo.rawsequential.contains(info)) {
           count++;
@@ -49,9 +50,7 @@ class KNodeWorkFindNode {
           }
         }
         //
-        // todo
-        int currentTime = new DateTime.now().millisecondsSinceEpoch;
-        if (currentTime - startTime > 30000 && count > 3) {
+        if (currentTime - startTime > 30000 && count > 2) {
           break;
         } else if (currentTime - startTime > 5000 && count > 5) {
           break;
@@ -65,13 +64,18 @@ class KNodeWorkFindNode {
         return;
       }
       int count = 0;
+      int currentTime = new DateTime.now().millisecondsSinceEpoch;
       for (KPeerInfo info in infos) {
         if (!_findNodesInfo.rawsequential.contains(info)) {
           count++;
           _findNodesInfo.addLast(info);
           node.sendFindNodeQuery(info.ipAsString, info.port, KId.createIDAtRandom().value);
         }
-        if (count > 3) {
+        //
+        //
+        if (currentTime - startTime > 30000 && count > 1) {
+          break;
+        } else if (currentTime - startTime > 5000 && count > 3) {
           break;
         }
       }
