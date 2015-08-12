@@ -20,15 +20,13 @@ class KrpcGetPeersQuery extends KrpcQuery {
     return a["info_hash"];
   }
 
-  KrpcGetPeersQuery.fromString(String transactionIdAsString, String queryingNodesIdAsString, List<int> infoHash)
-  :super(KrpcMessage.GET_PEERS_QUERY) {
+  KrpcGetPeersQuery.fromString(String transactionIdAsString, String queryingNodesIdAsString, List<int> infoHash) {
     List<int> transactionId = UTF8.encode(transactionIdAsString);
     List<int> queryingNodesId = UTF8.encode(queryingNodesIdAsString);
     _init(transactionId, queryingNodesId, infoHash);
   }
 
-  KrpcGetPeersQuery(List<int> transactionId, List<int> queryingNodesId, List<int> infoHash)
-  :super(KrpcMessage.GET_PEERS_QUERY){
+  KrpcGetPeersQuery(List<int> transactionId, List<int> queryingNodesId, List<int> infoHash) {
     _init(transactionId, queryingNodesId, infoHash);
   }
 
@@ -44,8 +42,7 @@ class KrpcGetPeersQuery extends KrpcQuery {
     }
     rawMessageMap.addAll({"a": {"id": queryingNodesId, "info_hash": infoHash}, "q": "get_peers", "t": transactionId, "y": "q"});
   }
-  KrpcGetPeersQuery.fromMap(Map<String, Object> messageAsMap)
-  :super(KrpcMessage.GET_PEERS_QUERY){
+  KrpcGetPeersQuery.fromMap(Map<String, Object> messageAsMap) {
     if (!KrpcQuery.queryCheck(messageAsMap, "get_peers")) {
       throw {};
     }

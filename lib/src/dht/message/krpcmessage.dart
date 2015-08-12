@@ -6,7 +6,6 @@ import 'dart:convert';
 import '../../util/bencode.dart';
 import '../../util/hetibencode.dart';
 import 'package:hetimacore/hetimacore.dart';
-import 'krpcping.dart';
 import 'krpcfindnode.dart';
 import 'krpcgetpeers.dart';
 import 'krpcannounce.dart';
@@ -37,29 +36,84 @@ class KrpcMessage {
   Map<String, Object> get messageAsMap => new Map.from(_messageAsMap);
   List<int> get messageAsBencode => Bencode.encode(_messageAsMap);
 
-  int _id = NONE_MESSAGE;
-  int get messageSignature => _id;
+  int get messageSignature {
+    switch (messageTypeAsString) {
+      case "e":
+        return ERROR;
+      case "q":
+        switch (queryAsString) {
+          case "ping":
+            return PING_QUERY;
+          case "find_node":
+            return FIND_NODE_QUERY;
+          case "get_peers":
+            return GET_PEERS_QUERY;
+          case "announce_peer":
+            return ANNOUNCE_QUERY;
+        }
+        return NONE_QUERY;
+      case "r":
+        switch (queryAsString) {
+          case "ping":
+            return PING_RESPONSE;
+          case "find_node":
+            return FIND_NODE_RESPONSE;
+          case "get_peers":
+            return GET_PEERS_RESPONSE;
+          case "announce_peer":
+            return ANNOUNCE_RESPONSE;
+        }
+        return NONE_RESPONSE;
+    }
+    return NONE_MESSAGE;
+  }
 
   List<int> get transactionId => (_messageAsMap["t"] is String ? UTF8.encode(_messageAsMap["t"]) : _messageAsMap["t"]);
   String get transactionIdAsString => UTF8.decode(transactionId);
   List<int> get messageType => (_messageAsMap["y"] is String ? UTF8.encode(_messageAsMap["y"]) : _messageAsMap["y"]);
   String get messageTypeAsString => UTF8.decode(messageType);
 
-  int get errorCode  {
+  List<int> get query => (_messageAsMap["q"] is String ? UTF8.encode(_messageAsMap["q"]) : _messageAsMap["q"]);
+  String get queryAsString => UTF8.decode(query);
+
+  int get errorCode {
     List<Object> errorCountainer = _messageAsMap["e"];
-    return (errorCountainer !=null && errorCountainer.length ==2 ?errorCountainer[0]:null);
+    return (errorCountainer != null && errorCountainer.length == 2 ? errorCountainer[0] : null);
   }
+
   List<int> get errorMessage {
     List<Object> errorCountainer = _messageAsMap["e"];
-    Object errorMessage = (errorCountainer !=null && errorCountainer.length ==2 ?errorCountainer[1]:null);
+    Object errorMessage = (errorCountainer != null && errorCountainer.length == 2 ? errorCountainer[1] : []);
     return (errorMessage is String ? UTF8.encode(errorMessage) : errorMessage);
   }
-  String get errorMessageAsString => UTF8.decode(errorMessage,allowMalformed: true);
 
-  
-  KrpcMessage(int id) {
-    this._id = id;
+  String get errorMessageAsString => UTF8.decode(errorMessage, allowMalformed: true);
+
+  List<int> get _queryingNodeId {
+    Map<String, Object> queryCountainer = _messageAsMap["a"];
+    return (queryCountainer["id"] is String ? UTF8.encode(queryCountainer["id"]) : queryCountainer["id"]);
   }
+
+  List<int> get _queriedNodesId {
+    Map<String, Object> responseCountainer = _messageAsMap["r"];
+    return (responseCountainer["id"] is String ? UTF8.encode(responseCountainer["id"]) : responseCountainer["id"]);
+  }
+
+  List<int> get nodeId {
+    switch (messageTypeAsString) {
+      case "q":
+        return _queryingNodeId;
+      case "r":
+        return _queriedNodesId;
+    }
+    return [];
+  }
+
+  String get nodeIdAsString => UTF8.decode(nodeId, allowMalformed: true);
+
+  KId get nodeIdAsKId => new KId(nodeId);
+
+  KrpcMessage() {}
 
   KrpcMessage.fromMap(Map map) {
     _messageAsMap = map;
@@ -86,7 +140,7 @@ class KrpcMessage {
       }
       switch (q) {
         case "ping":
-          ret = new KrpcPingQuery.fromMap(messageAsMap);
+          ret = new KrpcMessage.fromMap(messageAsMap);
           break;
         case "find_node":
           ret = new KrpcFindNodeQuery.fromMap(messageAsMap);
@@ -104,22 +158,23 @@ class KrpcMessage {
       return ret;
     } else if (KrpcResponse.queryCheck(messageAsMap)) {
       KrpcMessage ret = null;
-      switch (info.getQueryNameFromTransactionId(UTF8.decode(messageAsMap["t"]))) {
-        case "ping":
-          ret = new KrpcPingResponse.fromMap(messageAsMap);
-          break;
-        case "find_node":
-          ret = new KrpcFindNodeResponse.fromMap(messageAsMap);
-          break;
-        case "get_peers":
-          ret = new KrpcGetPeersResponse.FromMap(messageAsMap);
-          break;
-        case "announce_peer":
-          ret = new KrpcAnnouncePeerResponse.fromMap(messageAsMap);
-          break;
-        default:
-          ret = new KrpcResponse.fromMap(messageAsMap);
-          break;
+      if (info == null) {
+        ret = new KrpcMessage.fromMap(messageAsMap);
+      } else {
+        switch (info.getQueryNameFromTransactionId(UTF8.decode(messageAsMap["t"]))) {
+          case "find_node":
+            ret = new KrpcFindNodeResponse.fromMap(messageAsMap);
+            break;
+          case "get_peers":
+            ret = new KrpcGetPeersResponse.FromMap(messageAsMap);
+            break;
+          case "announce_peer":
+            ret = new KrpcAnnouncePeerResponse.fromMap(messageAsMap);
+            break;
+          default:
+            ret = new KrpcResponse.fromMap(messageAsMap);
+            break;
+        }
       }
       return ret;
     } else if (KrpcError.queryCheck(messageAsMap)) {
@@ -146,7 +201,7 @@ class KrpcMessage {
 }
 
 class KrpcQuery extends KrpcMessage {
-  KrpcQuery(int id) : super(id) {}
+  KrpcQuery() {}
 
   String get q {
     if (rawMessageMap["q"] is String) {
@@ -161,7 +216,7 @@ class KrpcQuery extends KrpcMessage {
     return new KId(a["id"] as List<int>);
   }
 
-  KrpcQuery.fromMap(Map map) : super(KrpcMessage.NONE_QUERY) {
+  KrpcQuery.fromMap(Map map) {
     _messageAsMap = map;
   }
 
@@ -197,8 +252,8 @@ class KrpcResponse extends KrpcMessage {
     return new KId(r["id"] as List<int>);
   }
 
-  KrpcResponse(int id) : super(id) {}
-  KrpcResponse.fromMap(Map map) : super(KrpcMessage.NONE_RESPONSE) {
+  KrpcResponse(int id) {}
+  KrpcResponse.fromMap(Map map) {
     _messageAsMap = map;
   }
   static bool queryCheck(Map<String, Object> messageAsMap) {
@@ -222,7 +277,7 @@ class KrpcError {
   static const int PROTOCOL_ERROR = 203;
   static const int METHOD_ERROR = 204;
 
-  static createMessage(List<int> transactionId, int errorCode) {
+  static KrpcMessage createMessage(List<int> transactionId, int errorCode) {
     return new KrpcMessage.fromMap({"t": transactionId, "y": "e", "e": [errorCode, KrpcError.errorDescription(errorCode)]});
   }
 
@@ -251,7 +306,15 @@ class KrpcError {
     }
     return true;
   }
+}
 
-
-
+class KrpcPing {
+  static int queryID = 0;
+  static KrpcMessage createQuery(List<int> queryingNodesId) {
+    List<int> transactionId = UTF8.encode("ping${queryID++}");
+    return new KrpcMessage.fromMap({"a": {"id": queryingNodesId}, "q": "ping", "t": transactionId, "y": "q"});
+  }
+  static KrpcMessage createResponse(List<int> queryingNodesId, List<int> transactionId) {
+    return new KrpcMessage.fromMap({"r": {"id": queryingNodesId}, "t": transactionId, "y": "r"});
+  }
 }

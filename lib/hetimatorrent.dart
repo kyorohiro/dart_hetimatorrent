@@ -34,7 +34,6 @@ export 'src/client/message/message.dart';
 export 'src/client/torrentclient_manager.dart';
 
 export 'src/dht/message/krpcmessage.dart';
-export 'src/dht/message/krpcping.dart';
 export 'src/dht/kid.dart';
 export 'src/dht/message/krpcfindnode.dart';
 export 'src/dht/message/krpcannounce.dart';

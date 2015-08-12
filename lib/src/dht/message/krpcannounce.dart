@@ -32,8 +32,7 @@ class KrpcAnnouncePeerQuery extends KrpcQuery {
 
   // find_node Query = {"t":"aa", "y":"q", "q":"find_node", "a": {"id":"abcdefghij0123456789", "target":"mnopqrstuvwxyz123456"}}
   // bencoded = d1:ad2:id20:abcdefghij01234567896:target20:mnopqrstuvwxyz123456e1:q9:find_node1:t2:aa1:y1:qe
-  KrpcAnnouncePeerQuery.fromString(String transactionIdAsString, String queryingNodesIdAsString, int implied_port, List<int> infoHash, int port, String opaqueTokenAsString) 
-  :super(KrpcMessage.ANNOUNCE_QUERY) {
+  KrpcAnnouncePeerQuery.fromString(String transactionIdAsString, String queryingNodesIdAsString, int implied_port, List<int> infoHash, int port, String opaqueTokenAsString) {
     List<int> transactionId = UTF8.encode(transactionIdAsString);
     List<int> queryingNodesId = UTF8.encode(queryingNodesIdAsString);
     List<int> opaqueToken = UTF8.encode(opaqueTokenAsString);
@@ -45,8 +44,7 @@ class KrpcAnnouncePeerQuery extends KrpcQuery {
       });
   }
 
-  KrpcAnnouncePeerQuery(List<int> transactionId, List<int> queryingNodesId, int implied_port, List<int> infoHash, int port, List<int> opaqueToken) 
-  :super(KrpcMessage.ANNOUNCE_QUERY){
+  KrpcAnnouncePeerQuery(List<int> transactionId, List<int> queryingNodesId, int implied_port, List<int> infoHash, int port, List<int> opaqueToken) {
     _init(transactionId, queryingNodesId, implied_port, infoHash, port, opaqueToken);
   }
 
@@ -76,8 +74,7 @@ class KrpcAnnouncePeerQuery extends KrpcQuery {
         });
   }
 
-  KrpcAnnouncePeerQuery.fromMap(Map<String, Object> messageAsMap) 
-  :super(KrpcMessage.ANNOUNCE_QUERY){
+  KrpcAnnouncePeerQuery.fromMap(Map<String, Object> messageAsMap) {
     if (!KrpcQuery.queryCheck(messageAsMap, "announce_peer")) {
       throw {};
     }

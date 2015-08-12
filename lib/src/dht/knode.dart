@@ -6,7 +6,6 @@ import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimanet/hetimanet.dart';
 import 'krootingtable.dart';
 
-import 'message/krpcping.dart';
 import 'message/krpcfindnode.dart';
 import 'message/krpcgetpeers.dart';
 import 'kid.dart';
@@ -189,7 +188,7 @@ class KNode extends Object with KrpcResponseInfo {
     return ret;
   }
 
-  Future sendPingQuery(String ip, int port) => _sendMessage(ip, port, new KrpcPingQuery(UTF8.encode("p_${id++}"), _nodeId.value));
+  Future sendPingQuery(String ip, int port) => _sendMessage(ip, port, KrpcPing.createQuery(_nodeId.value));
 
   Future sendFindNodeQuery(String ip, int port, List<int> targetNodeId) => _sendMessage(ip, port, new KrpcFindNodeQuery(UTF8.encode("p_${id++}"), _nodeId.value, targetNodeId));
 
@@ -198,7 +197,7 @@ class KNode extends Object with KrpcResponseInfo {
   Future sendAnnouncePeerQuery(String ip, int port, int implied_port, List<int> infoHash, int announcedPort, List<int> opaqueToken) =>
       _sendMessage(ip, port, new KrpcAnnouncePeerQuery(UTF8.encode("p_${id++}"), _nodeId.value, implied_port, infoHash, announcedPort, opaqueToken));
 
-  Future sendPingResponse(String ip, int port, List<int> transactionId) => _sendMessage(ip, port, new KrpcPingResponse(transactionId, _nodeId.value));
+  Future sendPingResponse(String ip, int port, List<int> transactionId) => _sendMessage(ip, port, KrpcPing.createResponse(_nodeId.value, transactionId));
 
   Future sendFindNodeResponse(String ip, int port, List<int> transactionId, List<int> compactNodeInfo) =>
       _sendMessage(ip, port, new KrpcFindNodeResponse(transactionId, this._nodeId.value, compactNodeInfo));

@@ -11,14 +11,14 @@ import 'dart:typed_data';
 class KrpcFindNodeQuery extends KrpcQuery {
   //find_node Query = {"t":"aa", "y":"q", "q":"find_node", "a": {"id":"abcdefghij0123456789", "target":"mnopqrstuvwxyz123456"}}
   //bencoded = d1:ad2:id20:abcdefghij01234567896:target20:mnopqrstuvwxyz123456e1:q9:find_node1:t2:aa1:y1:qe
-  KrpcFindNodeQuery.fromString(String transactionIdAsString, String queryingNodesIdAsString, String targetNodeIdAsString) : super(KrpcMessage.FIND_NODE_QUERY) {
+  KrpcFindNodeQuery.fromString(String transactionIdAsString, String queryingNodesIdAsString, String targetNodeIdAsString) {
     List<int> transactionId = UTF8.encode(transactionIdAsString);
     List<int> queryingNodesId = UTF8.encode(queryingNodesIdAsString);
     List<int> targetNodeId = UTF8.encode(targetNodeIdAsString);
     _init(transactionId, queryingNodesId, targetNodeId);
   }
 
-  KrpcFindNodeQuery(List<int> transactionId, List<int> queryingNodesId, List<int> targetNodeId) : super(KrpcMessage.FIND_NODE_QUERY) {
+  KrpcFindNodeQuery(List<int> transactionId, List<int> queryingNodesId, List<int> targetNodeId) {
     _init(transactionId, queryingNodesId, targetNodeId);
   }
 
@@ -39,7 +39,7 @@ class KrpcFindNodeQuery extends KrpcQuery {
     rawMessageMap.addAll({"a": {"id": queryingNodesId, "target": targetNodeId}, "q": "find_node", "t": transactionId, "y": "q"});
   }
 
-  KrpcFindNodeQuery.fromMap(Map<String, Object> messageAsMap) : super(KrpcMessage.FIND_NODE_QUERY) {
+  KrpcFindNodeQuery.fromMap(Map<String, Object> messageAsMap) {
     if (!KrpcQuery.queryCheck(messageAsMap, "find_node")) {
       throw {};
     }
