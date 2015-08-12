@@ -12,7 +12,7 @@ void main() {
       KrpcMessage query = KrpcPing.createQuery(convert.UTF8.encode("abcdefghij0123456789"));
       String expect = "d1:ad2:id20:abcdefghij0123456789e1:q4:ping1:t${query.transactionIdAsString.length}:${query.transactionIdAsString}1:y1:qe";
       unit.expect(expect, convert.UTF8.decode(query.messageAsBencode));
-      return KrpcMessage.decode(query.messageAsBencode, null).then((KrpcMessage q) {
+      return KrpcMessage.decode(query.messageAsBencode).then((KrpcMessage q) {
         unit.expect(expect, convert.UTF8.decode(q.messageAsBencode));
       });
     });
@@ -20,7 +20,7 @@ void main() {
     unit.test("ping response", () {
       KrpcMessage query = KrpcPing.createResponse(convert.UTF8.encode("mnopqrstuvwxyz123456"), convert.UTF8.encode("aa"));
       unit.expect("d1:rd2:id20:mnopqrstuvwxyz123456e1:t2:aa1:y1:re", convert.UTF8.decode(query.messageAsBencode));
-      return KrpcMessage.decode(query.messageAsBencode, null).then((KrpcMessage q) {
+      return KrpcMessage.decode(query.messageAsBencode).then((KrpcMessage q) {
         unit.expect("d1:rd2:id20:mnopqrstuvwxyz123456e1:t2:aa1:y1:re", convert.UTF8.decode(q.messageAsBencode));
       });
     });
@@ -32,7 +32,7 @@ void main() {
       String expect = "d1:ad2:id20:abcdefghij01234567896:target20:mnopqrstuvwxyz123456e1:q9:find_node1:t${query.transactionIdAsString.length}:${query.transactionIdAsString}1:y1:qe";
       unit.expect(expect, convert.UTF8.decode(query.messageAsBencode));
 
-      return KrpcMessage.decode(query.messageAsBencode, null).then((KrpcMessage q) {
+      return KrpcMessage.decode(query.messageAsBencode).then((KrpcMessage q) {
         unit.expect(expect, convert.UTF8.decode(q.messageAsBencode));
       });
     });
@@ -43,7 +43,7 @@ void main() {
       KrpcMessage query = KrpcFindNode.createResponse(new type.Uint8List.fromList(new List.filled(26, 0x61)), convert.UTF8.encode("0123456789abcdefghij"), convert.UTF8.encode("aa"));
       unit.expect("d1:rd2:id20:0123456789abcdefghij5:nodes26:aaaaaaaaaaaaaaaaaaaaaaaaaae1:t2:aa1:y1:re", convert.UTF8.decode(query.messageAsBencode));
 
-      return KrpcMessage.decode(query.messageAsBencode, null).then((KrpcMessage q) {
+      return KrpcMessage.decode(query.messageAsBencode).then((KrpcMessage q) {
         unit.expect("d1:rd2:id20:0123456789abcdefghij5:nodes26:aaaaaaaaaaaaaaaaaaaaaaaaaae1:t2:aa1:y1:re", convert.UTF8.decode(q.messageAsBencode));
       });
     });
@@ -57,7 +57,7 @@ void main() {
       String expect = "d1:ad2:id20:abcdefghij01234567899:info_hash20:mnopqrstuvwxyz12345612:implied_porti1e4:porti8080e5:token8:aoeusnthe1:q13:announce_peer1:t${query.transactionIdAsString.length}:${query.transactionIdAsString}1:y1:qe";
       unit.expect(expect, convert.UTF8.decode(query.messageAsBencode));
 
-      return KrpcMessage.decode(query.messageAsBencode, null).then((KrpcMessage q) {
+      return KrpcMessage.decode(query.messageAsBencode).then((KrpcMessage q) {
         unit.expect(expect, convert.UTF8.decode(q.messageAsBencode));
       });
     });
@@ -70,7 +70,7 @@ void main() {
       KrpcMessage query = KrpcAnnounce.createResponse(convert.UTF8.encode("aa"), convert.UTF8.encode("mnopqrstuvwxyz123456"));
       unit.expect("d1:rd2:id20:mnopqrstuvwxyz123456e1:t2:aa1:y1:re", convert.UTF8.decode(query.messageAsBencode));
 
-      return KrpcMessage.decode(query.messageAsBencode, null).then((KrpcMessage q) {
+      return KrpcMessage.decode(query.messageAsBencode).then((KrpcMessage q) {
         unit.expect("d1:rd2:id20:mnopqrstuvwxyz123456e1:t2:aa1:y1:re", convert.UTF8.decode(q.messageAsBencode));
       });
     });
@@ -85,7 +85,7 @@ void main() {
       unit.expect(expect, convert.UTF8.decode(query.messageAsBencode));
 
       EasyParser parser = new EasyParser(new HetimaFileToBuilder(new HetimaDataMemory(query.messageAsBencode)));
-      return KrpcMessage.decode(query.messageAsBencode, null).then((KrpcMessage q) {
+      return KrpcMessage.decode(query.messageAsBencode).then((KrpcMessage q) {
         unit.expect(expect, convert.UTF8.decode(q.messageAsBencode));
       });
     });
@@ -101,7 +101,7 @@ void main() {
       String expect = "d1:rd2:id20:abcdefghij01234567895:token8:aoeusnth6:valuesl6:axje.u6:idhtnmee1:t${query.transactionIdAsString.length}:${query.transactionIdAsString}1:y1:re";
 
       unit.expect(expect, convert.UTF8.decode(query.messageAsBencode));
-      return KrpcMessage.decode(query.messageAsBencode, null).then((KrpcMessage q) {
+      return KrpcMessage.decode(query.messageAsBencode).then((KrpcMessage q) {
         unit.expect(expect, convert.UTF8.decode(q.messageAsBencode));
       });
     });
@@ -115,7 +115,7 @@ void main() {
           convert.UTF8.encode("aoeusnth"), new type.Uint8List.fromList(new List.filled(26, 0x61)));
       unit.expect("d1:rd2:id20:abcdefghij01234567895:nodes26:aaaaaaaaaaaaaaaaaaaaaaaaaa5:token8:aoeusnthe1:t2:aa1:y1:re", convert.UTF8.decode(query.messageAsBencode));
 
-      return KrpcMessage.decode(query.messageAsBencode, null).then((KrpcMessage q) {
+      return KrpcMessage.decode(query.messageAsBencode).then((KrpcMessage q) {
         unit.expect("d1:rd2:id20:abcdefghij01234567895:nodes26:aaaaaaaaaaaaaaaaaaaaaaaaaa5:token8:aoeusnthe1:t2:aa1:y1:re", convert.UTF8.decode(q.messageAsBencode));
       });
     });

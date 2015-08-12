@@ -4,18 +4,10 @@ import 'dart:core';
 import 'dart:async';
 import 'dart:convert';
 import '../../util/bencode.dart';
-import '../../util/hetibencode.dart';
-import 'package:hetimacore/hetimacore.dart';
-import 'dart:convert';
 import '../kid.dart';
 import 'dart:typed_data';
-import '../knode.dart';
 import '../kpeerinfo.dart';
 import 'kgetpeervalue.dart';
-
-abstract class KrpcResponseInfo {
-  String getQueryNameFromTransactionId(String transactionId);
-}
 
 class KrpcMessage {
   static const int NONE_MESSAGE = 0;
@@ -197,7 +189,7 @@ class KrpcMessage {
 
   Map<String, Object> get rawMessageMap => _messageAsMap;
 
-  static Future<KrpcMessage> decode(List<int> data, KrpcResponseInfo info) async {
+  static Future<KrpcMessage> decode(List<int> data) async {
     Map<String, Object> messageAsMap = null;
     try {
       Object v = Bencode.decode(data);

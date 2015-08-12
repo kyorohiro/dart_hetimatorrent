@@ -16,7 +16,7 @@ import 'message/kgetpeervalue.dart';
 import 'ai/knodeai.dart';
 import 'ai/knodeaibasic.dart';
 
-class KNode extends Object with KrpcResponseInfo {
+class KNode extends Object {
   HetiSocketBuilder _socketBuilder = null;
   HetiUdpSocket _udpSocket = null;
   HetiUdpSocket get rawUdoSocket => _udpSocket;
@@ -71,7 +71,7 @@ class KNode extends Object with KrpcResponseInfo {
     this.port = port;
     return _udpSocket.bind(ip, port, multicast: true).then((int v) {
       _udpSocket.onReceive().listen((HetiReceiveUdpInfo info) {
-        KrpcMessage.decode(info.data, this).then((KrpcMessage message) {
+        KrpcMessage.decode(info.data).then((KrpcMessage message) {
           onReceiveMessage(info, message);
         });
       });
