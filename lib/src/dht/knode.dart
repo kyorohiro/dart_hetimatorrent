@@ -189,11 +189,12 @@ class KNode extends Object {
 
   Future sendPingQuery(String ip, int port) => _sendMessage(ip, port, KrpcPing.createQuery(_nodeId.value));
 
-  Future sendFindNodeQuery(String ip, int port, List<int> targetNodeId) => _sendMessage(ip, port, KrpcFindNode.createQuery(targetNodeId, _nodeId.value));
+  Future sendFindNodeQuery(String ip, int port, List<int> targetNodeId) => _sendMessage(ip, port, KrpcFindNode.createQuery(_nodeId.value,targetNodeId));
 
   Future sendGetPeersQuery(String ip, int port, List<int> infoHash) => _sendMessage(ip, port, KrpcGetPeers.createQuery(_nodeId.value, infoHash));
   
-  Future sendAnnouncePeerQuery(String ip, int port, int implied_port, List<int> infoHash, int announcedPort, List<int> opaqueToken) =>_sendMessage(ip, port, KrpcAnnounce.createQuery(_nodeId.value, implied_port, infoHash, announcedPort, opaqueToken));
+  Future sendAnnouncePeerQuery(String ip, int port, int implied_port, List<int> infoHash, int announcedPort, List<int> opaqueToken) 
+  =>_sendMessage(ip, port, KrpcAnnounce.createQuery(_nodeId.value, implied_port, infoHash, announcedPort, opaqueToken));
 
 
   Future sendPingResponse(String ip, int port, List<int> transactionId) => _sendMessage(ip, port, KrpcPing.createResponse(_nodeId.value, transactionId));

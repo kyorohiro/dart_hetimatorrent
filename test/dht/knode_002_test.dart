@@ -13,7 +13,7 @@ void main() {
     unit.test("retrive list 0", () {
       List<KNode> knodes = [];
       List<KPeerInfo> kpeerInfos = [];
-      int numOfNode = 50;
+      int numOfNode = 10;
       for (int i = 0; i < numOfNode; i++) {
         KNode a = new KNode(new HetiSocketBuilderSimu(),intervalSecondForMaintenance:1,intervalSecondForAnnounce:10, verbose:(i==2));
         print("[${i}] -> ${a.nodeId}");
