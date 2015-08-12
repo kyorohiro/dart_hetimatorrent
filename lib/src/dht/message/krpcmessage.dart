@@ -6,8 +6,6 @@ import 'dart:convert';
 import '../../util/bencode.dart';
 import '../kid.dart';
 import 'dart:typed_data';
-import '../kpeerinfo.dart';
-import 'kgetpeervalue.dart';
 import '../message/krpcmessage_builder.dart';
 
 class KrpcMessage {
@@ -31,6 +29,7 @@ class KrpcMessage {
   bool get isQuery => messageTypeAsString == "q";
   bool get isError => messageTypeAsString == "e";
 
+  
   String get queryFromTransactionId {
     if (transactionIdAsString.contains("pi")) {
       return QUERY_PING;
@@ -111,7 +110,7 @@ class KrpcMessage {
     } catch (e) {
       throw {};
     }
-    return new KrpcMessage.fromMap(messageAsMap);
+    return  new KrpcMessage.fromMap(messageAsMap);
   }
 
   KrpcPing toPing() {
@@ -128,37 +127,6 @@ class KrpcMessage {
 
   KrpcGetPeers toKrpcGetPeers() {
     return new KrpcGetPeers(this);
-  }
-
-  String toString() {
-    switch (messageTypeAsString) {
-      case "e":
-        return "ERROR";
-      case "q":
-        switch (queryAsString) {
-          case "ping":
-            return "q->PING_QUERY";
-          case "find_node":
-            return "q->FIND_NODE_QUERY";
-          case "get_peers":
-            return "q->GET_PEERS_QUERY";
-          case "announce_peer":
-            return "q->ANNOUNCE_QUERY";
-        }
-        return "q->NONE_QUERY";
-      case "r":
-        if (transactionIdAsString.contains("pi")) {
-          return "r->PING_RESPONSE";
-        } else if (transactionIdAsString.contains("fi")) {
-          return "r->FIND_NODE_RESPONSE";
-        } else if (transactionIdAsString.contains("ge")) {
-          return "r->GET_PEERS_RESPONSE";
-        } else if (transactionIdAsString.contains("an")) {
-          return "r->ANNOUNCE_RESPONSE";
-        }
-        return "r->NONE_RESPONSE";
-    }
-    return "?->NONE_MESSAGE";
   }
 }
 

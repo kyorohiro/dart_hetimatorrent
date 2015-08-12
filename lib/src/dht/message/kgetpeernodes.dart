@@ -1,13 +1,9 @@
 library hetimatorrent.dht.kpeerinfo.getpeerinfo;
 
 import 'dart:core';
-import 'dart:async';
-import 'dart:math';
-import '../../util/shufflelinkedlist.dart';
 import 'package:hetimanet/hetimanet.dart';
 import 'package:hetimacore/hetimacore.dart';
 import '../kid.dart';
-import 'dart:typed_data';
 
 
 class KGetPeerNodes {
