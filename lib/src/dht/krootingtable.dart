@@ -71,9 +71,12 @@ class KRootingTable {
     List<int> r = [];
     KId out = new KId(_ownerKId.value);
     for (int i = 0; i < 161; i++) {
-      int v = _ownerKId.getRootingTabkeIndex(kd.xorToThe(i,out));
-      if(r.contains(v) == false) {
-        r.add(v);
+      int v = _ownerKId.getRootingTabkeIndex(kd.xorToThe(i,out,false));
+      int w = _ownerKId.getRootingTabkeIndex(kd.xorToThe(i,out,true));
+      for(int j=v;j<=w;j++) {
+        if(r.contains(j) == false) {
+          r.add(j);
+        }
       }
     }
     return r;

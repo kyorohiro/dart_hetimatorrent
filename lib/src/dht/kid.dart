@@ -44,7 +44,7 @@ class KId implements Comparable<KId>{
     return output;
   }
 
-  KId xorToThe(int x, [KId output = null]) {
+  KId xorToThe(int x, [KId output = null, bool repeat=false]) {
     if (output == null) {
       output = new KId.zeroClear();
     }
@@ -59,8 +59,15 @@ class KId implements Comparable<KId>{
       x -= 1;
       int i = x ~/ 8;
       int v = x % 8;
-      output._values[19-i] = this._values[19-i] ^ (0x01 << v);
-
+      int d = 0;
+      if(repeat) {
+        for(int j=0;j<=v;j++) {
+          d |= (0x01 << j);      
+        }
+      } else {
+        d = (0x01 << v);
+      }
+      output._values[19-i] = this._values[19-i] ^ d;
       return output;
     }
   }
