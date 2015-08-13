@@ -5,9 +5,10 @@ import 'dart:math';
 import 'package:hetimacore/hetimacore.dart';
 import 'dart:typed_data';
 
-class KId {
+class KId implements Comparable<KId>{
   List<int> _values = null;
   List<int> get value => new List.from(_values);
+  List<int> get rawvalue => _values;
   String get idAsString => PercentEncode.encode(_values);
 
   KId(List<int> id) {
@@ -41,6 +42,27 @@ class KId {
       output._values[i] = this._values[i] ^ b._values[i];
     }
     return output;
+  }
+
+  KId xorToThe(int x, [KId output = null]) {
+    if (output == null) {
+      output = new KId.zeroClear();
+    }
+
+    for (int i = 0; i < this._values.length; i++) {
+      output._values[i] = this._values[i];
+    }
+
+    if (x == 0) {
+      return output;
+    } else {
+      x -= 1;
+      int i = x ~/ 8;
+      int v = x % 8;
+      output._values[19-i] = this._values[19-i] ^ (0x01 << v);
+
+      return output;
+    }
   }
 
   bool operator >(KId b) {
@@ -77,6 +99,16 @@ class KId {
     return (this == b ? true : (this > b ? false : true));
   }
 
+  int compareTo(KId other) {
+    if(this == other) {
+      return 0;
+    } else if(this > other) {
+      return 1;
+    } else {
+      return -1;
+    }
+  }
+
   int get hashCode {
     int v = 0;
     v = ByteOrder.parseLong(_values, 0, ByteOrder.BYTEORDER_BIG_ENDIAN);
@@ -111,7 +143,7 @@ class KId {
     }
     return new KId(ret);
   }
-  
+
   int getRootingTabkeIndex(KId root) {
     KId v = this.xor(root);
     for (int i = 0, ret = 19; i < 20; i++, ret--) {
@@ -126,5 +158,4 @@ class KId {
     }
     return 0;
   }
-
 }

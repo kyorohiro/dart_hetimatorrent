@@ -25,6 +25,7 @@ class KRootingTable {
       k.clear();
     }
   }
+
   int getRootingTabkeIndex(KId v) {
     return v.getRootingTabkeIndex(_ownerKId);
   }
@@ -53,9 +54,8 @@ class KRootingTable {
 
   Future<List<KPeerInfo>> findNode(KId id) {
     return new Future(() {
-      int targetIndex = getRootingTabkeIndex(id);
       List<KPeerInfo> ret = [];
-      for (int v in retrievePath(targetIndex)) {
+      for (int v in retrievePath(id)) {
         for (KPeerInfo p in _kBuckets[v].peerInfos) {
           ret.add(p);
           if (ret.length >= _kBucketSize) {
@@ -67,22 +67,15 @@ class KRootingTable {
     });
   }
 
-  List<int> retrievePath(int index) {
-    List<int> ret = [index];
-    int head = index - 1;
-    int tail = index + 1;
-    while (true) {
-      if (head >= 0) {
-        ret.add(head);
-        head--;
-      }
-      if (tail <= 160) {
-        ret.add(tail);
-        tail++;
-      }
-      if (head < 0 && tail > 160) {
-        return ret;
+  List<int> retrievePath(KId kd) {
+    List<int> r = [];
+    KId out = new KId(_ownerKId.value);
+    for (int i = 0; i < 161; i++) {
+      int v = _ownerKId.getRootingTabkeIndex(kd.xorToThe(i,out));
+      if(r.contains(v) == false) {
+        r.add(v);
       }
     }
+    return r;
   }
 }

@@ -101,6 +101,30 @@ void main() {
       KId idF = new KId(new List.filled(20, 0xff^0xf3));
       unit.expect(160, table.getRootingTabkeIndex(idE.xor(idF)));
     });
+    
+    //
+    //
+    unit.test("xor A", () {
+      KId idA = new KId(new List.filled(20, 0));
+      unit.expect(0x00, idA.xorToThe(0).value[19]);
+      unit.expect(0x01, idA.xorToThe(1).value[19]);
+      unit.expect(0x02, idA.xorToThe(2).value[19]);
+      unit.expect(0x04, idA.xorToThe(3).value[19]);
+      unit.expect(0x08, idA.xorToThe(4).value[19]);
+      unit.expect(0x10, idA.xorToThe(5).value[19]);
+      unit.expect(0x20, idA.xorToThe(6).value[19]);
+      unit.expect(0x40, idA.xorToThe(7).value[19]);
+      unit.expect(0x80, idA.xorToThe(8).value[19]);
+      unit.expect(0x01, idA.xorToThe(9).value[18]);
+      unit.expect(0x02, idA.xorToThe(10).value[18]);
+      unit.expect(0x04, idA.xorToThe(11).value[18]);
+      unit.expect(0x08, idA.xorToThe(12).value[18]);
+      unit.expect(0x10, idA.xorToThe(13).value[18]);
+      unit.expect(0x20, idA.xorToThe(14).value[18]);
+      unit.expect(0x40, idA.xorToThe(15).value[18]);
+      unit.expect(0x80, idA.xorToThe(16).value[18]);
+      unit.expect(0x80, idA.xorToThe(160).value[0]);
     //retrievePath(int index)
+    });
   });
 }

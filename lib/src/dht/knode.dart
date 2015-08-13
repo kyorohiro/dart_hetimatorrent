@@ -193,31 +193,31 @@ class KNode extends Object {
     return ret;
   }
 
-  Future sendPingQuery(String ip, int port) => _sendMessage(ip, port, KrpcPing.createQuery(_nodeId.value));
+  Future sendPingQuery(String ip, int port) => sendMessage(ip, port, KrpcPing.createQuery(_nodeId.value));
 
-  Future sendFindNodeQuery(String ip, int port, List<int> targetNodeId) => _sendMessage(ip, port, KrpcFindNode.createQuery(_nodeId.value, targetNodeId));
+  Future sendFindNodeQuery(String ip, int port, List<int> targetNodeId) => sendMessage(ip, port, KrpcFindNode.createQuery(_nodeId.value, targetNodeId));
 
-  Future sendGetPeersQuery(String ip, int port, List<int> infoHash) => _sendMessage(ip, port, KrpcGetPeers.createQuery(_nodeId.value, infoHash));
+  Future sendGetPeersQuery(String ip, int port, List<int> infoHash) => sendMessage(ip, port, KrpcGetPeers.createQuery(_nodeId.value, infoHash));
 
   Future sendAnnouncePeerQuery(String ip, int port, int implied_port, List<int> infoHash, int announcedPort, List<int> opaqueToken) =>
-      _sendMessage(ip, port, KrpcAnnounce.createQuery(_nodeId.value, implied_port, infoHash, announcedPort, opaqueToken));
+      sendMessage(ip, port, KrpcAnnounce.createQuery(_nodeId.value, implied_port, infoHash, announcedPort, opaqueToken));
 
-  Future sendPingResponse(String ip, int port, List<int> transactionId) => _sendMessage(ip, port, KrpcPing.createResponse(_nodeId.value, transactionId));
+  Future sendPingResponse(String ip, int port, List<int> transactionId) => sendMessage(ip, port, KrpcPing.createResponse(_nodeId.value, transactionId));
 
   Future sendFindNodeResponse(String ip, int port, List<int> transactionId, List<int> compactNodeInfo) =>
-      _sendMessage(ip, port, KrpcFindNode.createResponse(compactNodeInfo, this._nodeId.value, transactionId));
+      sendMessage(ip, port, KrpcFindNode.createResponse(compactNodeInfo, this._nodeId.value, transactionId));
 
   Future sendGetPeersResponseWithClosestNodes(String ip, int port, List<int> transactionId, List<int> opaqueWriteToken, List<int> compactNodeInfo) =>
-      _sendMessage(ip, port, KrpcGetPeers.createResponseWithClosestNodes(transactionId, this._nodeId.value, opaqueWriteToken, compactNodeInfo));
+      sendMessage(ip, port, KrpcGetPeers.createResponseWithClosestNodes(transactionId, this._nodeId.value, opaqueWriteToken, compactNodeInfo));
 
   Future sendGetPeersResponseWithPeers(String ip, int port, List<int> transactionId, List<int> opaqueWriteToken, List<List<int>> peerInfoStrings) =>
-      _sendMessage(ip, port, KrpcGetPeers.createResponseWithPeers(transactionId, this._nodeId.value, opaqueWriteToken, peerInfoStrings));
+      sendMessage(ip, port, KrpcGetPeers.createResponseWithPeers(transactionId, this._nodeId.value, opaqueWriteToken, peerInfoStrings));
 
-  Future sendAnnouncePeerResponse(String ip, int port, List<int> transactionId) => _sendMessage(ip, port, KrpcAnnounce.createResponse(transactionId, this._nodeId.value));
+  Future sendAnnouncePeerResponse(String ip, int port, List<int> transactionId) => sendMessage(ip, port, KrpcAnnounce.createResponse(transactionId, this._nodeId.value));
 
-  Future sendErrorResponse(String ip, int port, int errorCode, List<int> transactionId, [String errorDescription = null]) => _sendMessage(ip, port, KrpcError.createResponse(transactionId, errorCode));
+  Future sendErrorResponse(String ip, int port, int errorCode, List<int> transactionId, [String errorDescription = null]) => sendMessage(ip, port, KrpcError.createResponse(transactionId, errorCode));
 
-  Future _sendMessage(String ip, int port, KrpcMessage message) {
+  Future sendMessage(String ip, int port, KrpcMessage message) {
     Completer c = new Completer();
     new Future(() {
       if (message.isQuery) {
