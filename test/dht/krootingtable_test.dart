@@ -74,7 +74,7 @@ void main() {
       */
       {
         KId d = new KId(new List.filled(20, 0));
-        d.rawvalue[19] = 0x4;
+        d.rawvalue[19] = 0xff;
         print("${table.retrievePath(d)}");
       }
     });
