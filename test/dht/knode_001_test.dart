@@ -38,7 +38,7 @@ void main() {
       //  knodes[i].updatePeer();
       // }
       // }).then((_) {
-      return new Future.delayed(new Duration(seconds: 15)).then((_) {
+      return new Future.delayed(new Duration(seconds: 10)).then((_) {
         for (int i = 0; i < numOfNode; i++) {
           knodes[i].stop();
         }

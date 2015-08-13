@@ -73,8 +73,11 @@ void main() {
       }
       */
       {
+        KId base = new KId(new List.filled(20, 0));
+        //base.rawvalue[19] = 0x02; 
+        KRootingTable table = new KRootingTable(8,base);
         KId d = new KId(new List.filled(20, 0));
-        d.rawvalue[19] = 0xff;
+        d.rawvalue[19] = 0x8;
         print("${table.retrievePath(d)}");
       }
     });

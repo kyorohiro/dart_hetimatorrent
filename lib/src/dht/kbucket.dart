@@ -26,7 +26,7 @@ class KBucket {
   int get length => peerInfos.length;
   KPeerInfo operator [](int idx) => peerInfos[idx];
   Iterator<KPeerInfo> get iterator => peerInfos.iterator;
-  
+  Iterable<KPeerInfo> get iterable => peerInfos;
   clear() {
     peerInfos.clear();
   }

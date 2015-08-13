@@ -44,7 +44,7 @@ class KId implements Comparable<KId>{
     return output;
   }
 
-  KId xorToThe(int x, [KId output = null, bool repeat=false]) {
+  KId xorToThe(int x, {KId output:null, bool repeat:false}) {
     if (output == null) {
       output = new KId.zeroClear();
     }

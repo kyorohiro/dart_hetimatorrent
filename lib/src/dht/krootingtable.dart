@@ -53,14 +53,21 @@ class KRootingTable {
   }
 
   Future<List<KPeerInfo>> findNode(KId id) {
+    List<KPeerInfo> ids = [];
+    for (KBucket b in _kBuckets) {
+      for (KPeerInfo i in b.iterable) {
+        ids.add(i);
+      }
+    }
+    ids.sort((KPeerInfo a, KPeerInfo b) {
+      return a.id.xor(id).compareTo(b.id.xor(id));
+    });
     return new Future(() {
       List<KPeerInfo> ret = [];
-      for (int v in retrievePath(id)) {
-        for (KPeerInfo p in _kBuckets[v].peerInfos) {
-          ret.add(p);
-          if (ret.length >= _kBucketSize) {
-            return ret;
-          }
+      for (KPeerInfo p in ids) {
+        ret.add(p);
+        if (ret.length >= _kBucketSize) {
+          return ret;
         }
       }
       return ret;
@@ -68,26 +75,18 @@ class KRootingTable {
   }
 
   List<int> retrievePath(KId kd) {
-    List<int> r = [];
+    List<KId> d = [];
     KId out = new KId(_ownerKId.value);
     for (int i = 0; i < 161; i++) {
-      int v = _ownerKId.getRootingTabkeIndex(kd.xorToThe(i,out,false));
-      int w = _ownerKId.getRootingTabkeIndex(kd.xorToThe(i,out,true));
-      if(v<=w) {
-        for(int j=v;j<=w;j++) {
-          if(r.contains(j) == false) {
-            r.add(j);
-          }
-        }
-      } else {
-        for(int j=v;j>=w;j--) {
-          if(r.contains(j) == false) {
-            r.add(j);
-          }
-        }        
-      }
-
+      d.add(kd.xor(_ownerKId.xorToThe(i, repeat: true)));
     }
-    return r;
+    d.sort();
+    {
+      List<int> r = [];
+      for (int i = 0; i < 161; i++) {
+        r.add(_ownerKId.getRootingTabkeIndex(d[i].xor(kd)));
+      }
+      return r;
+    }
   }
 }
