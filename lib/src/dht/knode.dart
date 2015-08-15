@@ -2,14 +2,12 @@ library hetimatorrent.dht.knode;
 
 import 'dart:core';
 import 'dart:async';
-import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimanet/hetimanet.dart';
 import 'krootingtable.dart';
 
 import 'kid.dart';
 import 'dart:convert';
 import '../util/shufflelinkedlist.dart';
-import '../util/bencode.dart';
 import 'message/krpcmessage.dart';
 import 'message/krpcmessage_builder.dart';
 import 'kpeerinfo.dart';
@@ -60,7 +58,9 @@ class KNode extends Object {
   bool get verbose => _verbose;
 
   KNode(HetiSocketBuilder socketBuilder,
-      {int kBucketSize: 8, List<int> nodeIdAsList: null, KNodeWork ai: null, intervalSecondForMaintenance: 10, intervalSecondForAnnounce: 3 * 60, bool verbose: false}) {
+      {int kBucketSize: 8, List<int> nodeIdAsList: null, KNodeWork ai: null,
+      intervalSecondForMaintenance: 10, intervalSecondForAnnounce: 5 * 60, 
+      intervalSecondForFindNode: 10 * 60,bool verbose: false}) {
     this._verbose = verbose;
     this._intervalSecondForMaintenance = intervalSecondForMaintenance;
     this._intervalSecondForAnnounce = intervalSecondForAnnounce;

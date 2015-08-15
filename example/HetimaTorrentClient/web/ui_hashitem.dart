@@ -200,23 +200,34 @@ class HashItem {
           num d = 32 *1024 * 1024;
           num b = begin;
           num e = b + d;
+          int retry = 0;
           DomJSHetiFile hetiCopyTo = new DomJSHetiFile.create(copyTo.jsProxy);
           hetiCopyTo.getHetimaFile().then((HetimaData data) {
             a() {
               copyFrom.read(b, e - b).then((ReadResult readResult) {
                 print("${b} ${e} ${readResult.buffer.length}");
                 data.write(readResult.buffer, b-begin).then((WriteResult w) {
+                  retry = 0;
                   b = e;
                   e = b + d;
                   if (e > end) {
                     e = end;
                   }
                   if (b < end) {
-                    new Future.delayed(new Duration(seconds:1)).then((_){a();});
+//                    new Future.delayed(new Duration(microseconds:1)).then((_){a();});
+                    return a();
                   } else {
                     c.complete({});
                   }
-                }).catchError(c.completeError);
+                }).catchError((e) {
+                  if(retry >=5) {
+                    c.completeError(e);
+                  }
+                  return new Future.delayed(new Duration(seconds:1)).then((_){
+                    retry++;
+                    return a();
+                  });
+                });
               }).catchError(c.completeError);
             }
             a();

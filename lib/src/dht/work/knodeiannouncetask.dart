@@ -20,7 +20,7 @@ import '../message/kgetpeernodes.dart';
 class KNodeAIAnnounceTask {
   bool _isStart = false;
 
-  KRootingTable _ggggg = null;
+  KRootingTable _currentClosePeerStack = null;
   List<KGetPeerNodes> receiveGetPeerResponseNode = [];
   List<KGetPeerNodes> _announcedPeers = [];
   List<KPeerInfo> _getPeerNode = [];
@@ -35,7 +35,7 @@ class KNodeAIAnnounceTask {
   KNodeAIAnnounceTask(KId infoHashId, int port) {
     this._infoHashId = infoHashId;
     this.port = port;
-    this._ggggg = new KRootingTable(4, infoHashId);
+    this._currentClosePeerStack = new KRootingTable(4, infoHashId);
   }
 
   startSearchPeer(KNode node, KId infoHash, {getPeerOnly: false}) {
@@ -190,10 +190,10 @@ class KNodeAIAnnounceTask {
           //
           List<KPeerInfo> candidate = [];
           for (KPeerInfo info in getpeers.compactNodeInfoAsKPeerInfo) {
-            _ggggg.update(info);
+            _currentClosePeerStack.update(info);
           }
 
-          _ggggg.findNode(_infoHashId).then((List<KPeerInfo> infos ) {
+          _currentClosePeerStack.findNode(_infoHashId).then((List<KPeerInfo> infos ) {
             for(KPeerInfo i in infos) {
               if(_getPeerNode.contains(i) == false) {
                 print("##===fin ==> ${i.id.getRootingTabkeIndex(_infoHashId)}-- ${_infoHashId}- ${i.id}  ${i.port}-----------------asdfasdfasdfasdfasd");
