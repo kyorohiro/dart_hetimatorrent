@@ -65,7 +65,7 @@ class TorrentEngineTorrent {
     int end = start;
     int retry = 0;
     Future write() async {
-      if (end >= length) {
+      if (start >= length) {
         return {};
       }
       start = end;
@@ -76,6 +76,7 @@ class TorrentEngineTorrent {
       }
 
       return _downloadedData.write(buffer, start).then((_) {
+        start = end;
         retry = 0;
         return write();
       }).catchError((_) {
