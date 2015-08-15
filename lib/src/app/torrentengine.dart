@@ -68,12 +68,7 @@ class TorrentEngineTorrent {
       if (start >= length) {
         return {};
       }
-      start = end;
-      end += buffer.length;
-
-      if (end > length) {
-        end = length;
-      }
+      end = (start + buffer.length > length?length:start + buffer.length);
 
       return _downloadedData.write(buffer, start).then((_) {
         start = end;
