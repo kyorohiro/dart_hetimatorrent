@@ -14,7 +14,10 @@ class TorrentEngineTorrent {
   TrackerClient _trackerClient = null;
   TorrentClient get torrentClient => _torrentClient;
   TrackerClient get trackerClient => _trackerClient;
+  TorrentFile _torrentFile = null;
+  TorrentFile get torrentFile => _torrentFile;
   TorrentEngineAI ai = null;
+  HetimaData _downloadedData = null;
   Stream<TorrentEngineProgress> get onProgress => ai.onProgress;
   TorrentEngineTorrent._e() {}
   List<int> _infoHash = [];
@@ -37,17 +40,23 @@ class TorrentEngineTorrent {
       engineTorrent._torrentClient = new TorrentClient(
           engine._builder, trackerClient.peerId, trackerClient.infoHash, torrentfile.info.pieces, torrentfile.info.piece_length, torrentfile.info.files.dataSize, downloadedData,
           ai: engineTorrent.ai, haveAllData: haveAllData, bitfield: bitfield, reserved: reserved);
+      engineTorrent._torrentFile = torrentfile;
+      engineTorrent._downloadedData = downloadedData;
 
       return engineTorrent;
     });
   }
-  
+
   Future startTorrent(TorrentEngine engine) {
     return ai.start(engine._torrentClientManager, _torrentClient);
   }
 
   Future stopTorrent() {
     return ai.stop();
+  }
+
+  Future init() async{
+    int length = _torrentFile.info.files.dataSize;
   }
 }
 

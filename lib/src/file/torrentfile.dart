@@ -79,12 +79,12 @@ class TorrentFile {
     mMetadata[KEY_ANNOUNCE] = v;
   }
 
-  TorrentFileInfo mInfo = null;
+  TorrentFileInfo _mInfo = null;
   TorrentFileInfo get info {
-    if (mInfo == null) {
-      mInfo = new TorrentFileInfo(mMetadata);
+    if (_mInfo == null) {
+      _mInfo = new TorrentFileInfo(mMetadata);
     }
-    return mInfo;
+    return _mInfo;
   }
 
   async.Future<List<int>> createInfoSha1() {
