@@ -1,6 +1,7 @@
 library hetimatorrent.extra.torrentengine;
 
 import 'dart:async';
+import 'dart:typed_data';
 import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimanet/hetimanet.dart';
 import 'package:hetimatorrent/hetimatorrent.dart';
@@ -48,15 +49,46 @@ class TorrentEngineTorrent {
   }
 
   Future startTorrent(TorrentEngine engine) {
-    return ai.start(engine._torrentClientManager, _torrentClient);
+    return init().then((_) {
+      return ai.start(engine._torrentClientManager, _torrentClient);
+    });
   }
 
   Future stopTorrent() {
     return ai.stop();
   }
 
-  Future init() async{
+  Future init() async {
     int length = _torrentFile.info.files.dataSize;
+    Uint8List buffer = new Uint8List.fromList(new List.filled(16 * 1024 * 1024, 0));
+    int start = await _downloadedData.getLength();
+    int end = start;
+    int retry = 0;
+    Future write() async {
+      if (end >= length) {
+        return {};
+      }
+      start = end;
+      end += buffer.length;
+
+      if (end > length) {
+        end = length;
+      }
+
+      return _downloadedData.write(buffer, start).then((_) {
+        retry = 0;
+        return write();
+      }).catchError((_) {
+        retry++;
+        if (retry > 5) {
+          throw _;
+        }
+        return new Future.delayed(new Duration(seconds: 1)).then((_) {
+          return write();
+        });
+      });
+    }
+    return write();
   }
 }
 
@@ -83,15 +115,14 @@ class TorrentEngine {
     _useUpnp = useUpnp;
     _useDht = useDht;
   }
-  
+
   List<TorrentEngineTorrent> _torrents = [];
-  Future<TorrentEngineTorrent> addTorrent(TorrentFile torrentfile, HetimaData downloadedData,
-      {haveAllData: false, List<int> bitfield: null}) {
+  Future<TorrentEngineTorrent> addTorrent(TorrentFile torrentfile, HetimaData downloadedData, {haveAllData: false, List<int> bitfield: null}) {
     return TorrentEngineTorrent
         .createEngioneTorrent(this, torrentfile, downloadedData, haveAllData: haveAllData, localPort: localPort, globalPort: globalPort, bitfield: bitfield, useDht: _useDht)
         .then((TorrentEngineTorrent engine) {
-      if(null != getTorrent(engine._infoHash)) {
-        throw {"message":"already add"};
+      if (null != getTorrent(engine._infoHash)) {
+        throw {"message": "already add"};
       }
       _torrents.add(engine);
       return engine;
@@ -99,11 +130,11 @@ class TorrentEngine {
   }
 
   void removeTorrent(TorrentEngineTorrent t) {
-     _torrents.remove(t);
+    _torrents.remove(t);
   }
 
   int numOfTorrent() {
-     return _torrents.length;
+    return _torrents.length;
   }
 
   TorrentEngineTorrent getTorrent(List<int> infoHash) {
@@ -116,7 +147,7 @@ class TorrentEngine {
           break;
         }
       }
-      if(ok == true) {
+      if (ok == true) {
         return tt;
       }
     }
@@ -124,19 +155,18 @@ class TorrentEngine {
   }
 
   TorrentEngine(HetiSocketBuilder builder,
-      {appid: "hetima_torrent_engine", int localPort: 18085, int globalPort: 18085, String globalIp: "0.0.0.0", String localIp: "0.0.0.0", int retryNum: 10, 
-        bool useUpnp: false, bool useDht: false}) {
+      {appid: "hetima_torrent_engine", int localPort: 18085, int globalPort: 18085, String globalIp: "0.0.0.0", String localIp: "0.0.0.0", int retryNum: 10, bool useUpnp: false, bool useDht: false}) {
     this._builder = builder;
     this._torrentClientManager = new TorrentClientManager(builder);
     this._upnpPortMapClient = new UpnpPortMapHelper(builder, appid);
     this._portMapAI = new TorrentEngineAIPortMap(upnpPortMapClient);
     this._useUpnp = useUpnp;
     this._useDht = useDht;
-    this._dhtClient = new KNode(builder, verbose:false);
+    this._dhtClient = new KNode(builder, verbose: false);
     this._dhtClient.onGetPeerValue.listen((KGetPeerValue value) {
       TorrentEngineTorrent t = getTorrent(value.infoHash.value);
       print("<=1==> ${value.ipAsString}:${value.port}");
-      if(t != null) {
+      if (t != null) {
         print("<=2==> ${value.ipAsString}:${value.port}");
         t._torrentClient.putTorrentPeerInfoFromTracker(value.ipAsString, value.port);
       }
@@ -144,7 +174,7 @@ class TorrentEngine {
   }
 
   addBootNode(String ip, int port) {
-    if(ip != null && port != null) {
+    if (ip != null && port != null) {
       _dhtClient.addBootNode(ip, port);
     }
   }
@@ -164,7 +194,6 @@ class TorrentEngine {
       _isStart = false;
     });
   }
-
 }
 
 class TorrentEngineProgress {
