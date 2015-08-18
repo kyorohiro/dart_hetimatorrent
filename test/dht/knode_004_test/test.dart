@@ -12,7 +12,7 @@ import 'dart:async';
 void main() {
   unit.group('A group of tests', () {
     unit.test("retrive list 0", () {
-      KNode a = new KNode(new HetiSocketBuilderChrome(), intervalSecondForMaintenance: 1, verbose:true);
+      KNode a = new KNode(new HetimaSocketBuilderChrome(), intervalSecondForMaintenance: 1, verbose:true);
       a.addBootNode("192.168.1.26", 43611);
       a.addBootNode("192.168.1.26", 43611);
       a.start(ip:"192.168.1.26");

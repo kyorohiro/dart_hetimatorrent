@@ -16,9 +16,9 @@ import 'work/knodework.dart';
 import 'work/knodework_basic.dart';
 
 class KNode extends Object {
-  HetiSocketBuilder _socketBuilder = null;
-  HetiUdpSocket _udpSocket = null;
-  HetiUdpSocket get rawUdoSocket => _udpSocket;
+  HetimaSocketBuilder _socketBuilder = null;
+  HetimaUdpSocket _udpSocket = null;
+  HetimaUdpSocket get rawUdoSocket => _udpSocket;
 
   KRootingTable _rootingtable = null;
   KRootingTable get rootingtable => _rootingtable;
@@ -57,7 +57,7 @@ class KNode extends Object {
   bool _verbose = false;
   bool get verbose => _verbose;
 
-  KNode(HetiSocketBuilder socketBuilder,
+  KNode(HetimaSocketBuilder socketBuilder,
       {int kBucketSize: 8, List<int> nodeIdAsList: null, KNodeWork ai: null,
       intervalSecondForMaintenance: 10, intervalSecondForAnnounce: 5 * 60, 
       intervalSecondForFindNode: 10 * 60,bool verbose: false}) {
@@ -76,8 +76,8 @@ class KNode extends Object {
     (_isStart != false ? throw "already started" : 0);
     _udpSocket = this._socketBuilder.createUdpClient();
     this.port = port;
-    return _udpSocket.bind(ip, port, multicast: true).then((int v) {
-      _udpSocket.onReceive().listen((HetiReceiveUdpInfo info) {
+    return _udpSocket.bind(ip, port, multicast: true).then((HetimaBindResult v) {
+      _udpSocket.onReceive.listen((HetimaReceiveUdpInfo info) {
         KrpcMessage.decode(info.data).then((KrpcMessage message) {
           onReceiveMessage(info, message);
         });
@@ -88,7 +88,7 @@ class KNode extends Object {
     });
   }
 
-  onReceiveMessage(HetiReceiveUdpInfo info, KrpcMessage message) {
+  onReceiveMessage(HetimaReceiveUdpInfo info, KrpcMessage message) {
     if (verbose == true) {
       print("--->receive[${nodeDebugId}] ${info.remoteAddress}:${info.remotePort} ${message}");
     }

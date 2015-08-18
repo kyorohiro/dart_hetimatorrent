@@ -57,7 +57,7 @@ class KNodeAIBasic extends KNodeWork {
     announceAI.onAddNodeFromIPAndPort(node, ip, port);
   }
 
-  onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcMessage query) {
+  onReceiveQuery(KNode node, HetimaReceiveUdpInfo info, KrpcMessage query) {
     node.rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, query.nodeIdAsKId));
     switch (query.queryAsString) {
       case KrpcMessage.QUERY_PING:
@@ -73,17 +73,17 @@ class KNodeAIBasic extends KNodeWork {
     announceAI.onReceiveQuery(node, info, query);
   }
 
-  onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcMessage response) {
+  onReceiveResponse(KNode node, HetimaReceiveUdpInfo info, KrpcMessage response) {
     findNodeAI.onReceiveResponse(node, info, response);
     announceAI.onReceiveResponse(node, info, response);
   }
 
-  onReceiveError(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {
+  onReceiveError(KNode node, HetimaReceiveUdpInfo info, KrpcMessage message) {
     findNodeAI.onReceiveError(node, info, message);
     announceAI.onReceiveError(node, info, message);
   }
 
-  onReceiveUnknown(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {
+  onReceiveUnknown(KNode node, HetimaReceiveUdpInfo info, KrpcMessage message) {
     findNodeAI.onReceiveUnknown(node, info, message);
     announceAI.onReceiveUnknown(node, info, message);
   }

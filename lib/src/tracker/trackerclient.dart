@@ -15,18 +15,18 @@ class TrackerClient {
   static const String EVENT_STOPPED = TrackerUrl.VALUE_EVENT_STOPPED;
 
   TrackerUrl trackerUrl;
-  HetiSocketBuilder _socketBuilder = null;
+  HetimaSocketBuilder _socketBuilder = null;
 
   String _failedReason = "";
   String get failedReason => _failedReason;
   bool get isOK => _failedReason.length != 0;
 
-  TrackerClient._a(HetiSocketBuilder builder, TrackerUrl trackerUrl) {
+  TrackerClient._a(HetimaSocketBuilder builder, TrackerUrl trackerUrl) {
     this.trackerUrl = trackerUrl;
     _socketBuilder = builder;
   }
 
-  static async.Future<TrackerClient> createTrackerClient(HetiSocketBuilder builder, TorrentFile torrentfile, {List<int> peerId: null, int peerPort: 16969}) {
+  static async.Future<TrackerClient> createTrackerClient(HetimaSocketBuilder builder, TorrentFile torrentfile, {List<int> peerId: null, int peerPort: 16969}) {
     if (peerId == null) {
       peerId = PeerIdCreator.createPeerid("hetitor");
     }

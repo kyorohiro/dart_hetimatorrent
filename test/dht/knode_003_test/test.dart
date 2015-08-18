@@ -17,7 +17,7 @@ void main() {
       int numOfNode = 4;
       KRootingTable table = new KRootingTable(8, new KId(new List.filled(20, 0)));
       for (int i = 0; i < numOfNode; i++) {
-        KNode a = new KNode(new HetiSocketBuilderChrome(),intervalSecondForMaintenance:1);
+        KNode a = new KNode(new HetimaSocketBuilderChrome(),intervalSecondForMaintenance:1);
         knodes.add(a);
         kpeerInfos.add(new KPeerInfo("0.0.0.0", 8200+i, a.nodeId));
         if (i != 0) {

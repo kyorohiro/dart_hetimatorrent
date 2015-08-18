@@ -23,8 +23,8 @@ class TorrentClientManager {
   int get localPort => _localPort;
   bool get isStart => _isStart;
 
-  HetiServerSocket _server = null;
-  HetiSocketBuilder _builder = null;
+  HetimaServerSocket _server = null;
+  HetimaSocketBuilder _builder = null;
 
   StreamController<TorrentClientMessage> messageStream = new StreamController.broadcast();
   Stream<TorrentClientMessage> get onReceiveEvent => messageStream.stream;
@@ -37,7 +37,7 @@ class TorrentClientManager {
 
   List<TorrentClient> clients = [];
 
-  TorrentClientManager(HetiSocketBuilder builder) {
+  TorrentClientManager(HetimaSocketBuilder builder) {
     this._builder = builder;
 //    _peerId.addAll(peerId);
 //    _reserved.addAll(reserved);
@@ -77,17 +77,17 @@ class TorrentClientManager {
       this.globalPort = localPort;
     }
 
-    return _builder.startServer(localAddress, localPort).then((HetiServerSocket serverSocket) {
+    return _builder.startServer(localAddress, localPort).then((HetimaServerSocket serverSocket) {
       if (_isStart == true) {
         throw {"message": "already started"};
       }
       _server = serverSocket;
-      _server.onAccept().listen((HetiSocket socket) {
+      _server.onAccept().listen((HetimaSocket socket) {
         new Future(() {
           if (false == _isStart) {
             return null;
           }
-          return socket.getSocketInfo().then((HetiSocketInfo socketInfo) {
+          return socket.getSocketInfo().then((HetimaSocketInfo socketInfo) {
             print("accept: ${socketInfo.peerAddress}, ${socketInfo.peerPort}");
             return TorrentMessage.parseHandshake(new EasyParser(socket.buffer)).then((TorrentMessage message) {
               //

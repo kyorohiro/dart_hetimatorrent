@@ -26,7 +26,7 @@ class TrackerServer {
   bool get isStart => _isStart;
   bool _isTorrentfile = true;
 
-  TrackerServer(HetiSocketBuilder socketBuilder, [bool isTorrentfile = true]) {
+  TrackerServer(HetimaSocketBuilder socketBuilder, [bool isTorrentfile = true]) {
     _server = new HetiHttpServerHelper(socketBuilder);
     address = "0.0.0.0";
     port = 6969;
@@ -183,7 +183,7 @@ class TrackerServer {
       } else if (item.path == "/redirect" && _isTorrentfile) {
         _server.response(item.req, new HetimaDataMemory([]), statusCode: 301, headerList: {"Location": "/announce?${qurey}"});
       } else if (infoHashAsString != null) {
-        return item.socket.getSocketInfo().then((HetiSocketInfo info) {
+        return item.socket.getSocketInfo().then((HetimaSocketInfo info) {
           if (outputLog) {
             print("TrackerServer#onListen ${info.peerAddress} ${info.peerPort}");
           }

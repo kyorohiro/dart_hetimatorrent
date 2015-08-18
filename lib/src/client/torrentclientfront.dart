@@ -21,7 +21,7 @@ class TorrentClientFront {
   List<int> _targetProtocolId = [];
 
   EasyParser _parser = null;
-  HetiSocket _socket = null;
+  HetimaSocket _socket = null;
   bool handshaked = false;
 
   String _peerIp = "";
@@ -80,16 +80,16 @@ class TorrentClientFront {
     _reseved.addAll(v);
   }
 
-  static Future<TorrentClientFront> connect(HetiSocketBuilder _builder, TorrentClientPeerInfo info, int bitfieldSize, List<int> infoHash, {List<int> peerId:null,List<int> reseved:null}) {
+  static Future<TorrentClientFront> connect(HetimaSocketBuilder _builder, TorrentClientPeerInfo info, int bitfieldSize, List<int> infoHash, {List<int> peerId:null,List<int> reseved:null}) {
     return new Future(() {
-      HetiSocket socket = _builder.createClient();
-      return socket.connect(info.ip, info.portAcceptable).then((HetiSocket socket) {
+      HetimaSocket socket = _builder.createClient();
+      return socket.connect(info.ip, info.portAcceptable).then((HetimaSocket socket) {
         return new TorrentClientFront(socket, info.ip, info.portAcceptable, socket.buffer, bitfieldSize, infoHash, peerId, reseved);
       });
     });
   }
 
-  TorrentClientFront(HetiSocket socket, String peerIp, int peerPort, HetimaReader reader, int bitfieldSize, List<int> infoHash, List<int> peerId, List<int> reseved) {
+  TorrentClientFront(HetimaSocket socket, String peerIp, int peerPort, HetimaReader reader, int bitfieldSize, List<int> infoHash, List<int> peerId, List<int> reseved) {
     if (peerId == null) {
       _myPeerId.addAll(PeerIdCreator.createPeerid("heti69"));
     } else {
@@ -113,7 +113,7 @@ class TorrentClientFront {
     _handshakedToMe = false;
     _bitfieldToMe = new Bitfield(bitfieldSize, clearIsOne: false);
     _bitfieldFromMe = new Bitfield(bitfieldSize, clearIsOne: false);
-    _socket.onClose().listen((HetiCloseInfo info) {
+    _socket.onClose.listen((HetimaCloseInfo info) {
       TorrentClientFrontNerve.doClose(this, 0);
     });
   }
@@ -205,7 +205,7 @@ class TorrentClientFront {
 
   Future sendMessage(TorrentMessage message) {
     return message.encode().then((List<int> data) {
-      return _socket.send(data).then((HetiSendInfo info) {
+      return _socket.send(data).then((HetimaSendInfo info) {
         TorrentClientFrontNerve.doSendMessage(this, message);
         return {};
       });

@@ -66,7 +66,7 @@ class KNodeAIAnnounce extends KNodeWork {
     }
   }
 
-  onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcMessage query) {
+  onReceiveQuery(KNode node, HetimaReceiveUdpInfo info, KrpcMessage query) {
 
     for (KNodeAIAnnounceTask t in taskList.values) {
       if (t.isStart) {
@@ -122,7 +122,7 @@ class KNodeAIAnnounce extends KNodeWork {
     }
   }
 
-  onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcMessage response) {
+  onReceiveResponse(KNode node, HetimaReceiveUdpInfo info, KrpcMessage response) {
     for (KNodeAIAnnounceTask t in taskList.values) {
       if (t.isStart) {
         t.onReceiveResponse(node, info, response);
@@ -130,9 +130,9 @@ class KNodeAIAnnounce extends KNodeWork {
     }
   }
 
-  onReceiveError(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {}
+  onReceiveError(KNode node, HetimaReceiveUdpInfo info, KrpcMessage message) {}
 
-  onReceiveUnknown(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {}
+  onReceiveUnknown(KNode node, HetimaReceiveUdpInfo info, KrpcMessage message) {}
   
   onAddNodeFromIPAndPort(KNode node, String ip, int port) {}
 }

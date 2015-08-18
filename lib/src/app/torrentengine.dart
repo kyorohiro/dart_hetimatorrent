@@ -92,9 +92,9 @@ class TorrentEngine {
   TorrentClientManager _torrentClientManager = null;
   KNode _dhtClient = null;
   UpnpPortMapHelper _upnpPortMapClient = null;
-  HetiSocketBuilder _builder = null;
+  HetimaSocketBuilder _builder = null;
 
-  HetiSocketBuilder get socketBuilder => _builder;
+  HetimaSocketBuilder get socketBuilder => _builder;
   UpnpPortMapHelper get upnpPortMapClient => _upnpPortMapClient;
   TorrentEngineAIPortMap _portMapAI = null;
 
@@ -150,7 +150,7 @@ class TorrentEngine {
     return null;
   }
 
-  TorrentEngine(HetiSocketBuilder builder,
+  TorrentEngine(HetimaSocketBuilder builder,
       {appid: "hetima_torrent_engine", int localPort: 18085, int globalPort: 18085, String globalIp: "0.0.0.0", String localIp: "0.0.0.0", int retryNum: 10, bool useUpnp: false, bool useDht: false}) {
     this._builder = builder;
     this._torrentClientManager = new TorrentClientManager(builder);

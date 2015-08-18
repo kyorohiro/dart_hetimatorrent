@@ -17,8 +17,8 @@ import 'message/message.dart';
 import '../file/torrentfile.dart';
 
 class TorrentClient {
-  HetiServerSocket _server = null;
-  HetiSocketBuilder _builder = null;
+  HetimaServerSocket _server = null;
+  HetimaSocketBuilder _builder = null;
   List<int> _peerId = [];
   List<int> _infoHash = [];
   String _localAddress = "0.0.0.0";
@@ -59,7 +59,7 @@ class TorrentClient {
   List<int> get reseved => new List.from(_reseved);
 
 
-  static Future<TorrentClient> create(HetiSocketBuilder builder, List<int> peerId, TorrentFile file, HetimaData data,
+  static Future<TorrentClient> create(HetimaSocketBuilder builder, List<int> peerId, TorrentFile file, HetimaData data,
       {TorrentAI ai: null,List<int>bitfield:null,List<int> reserved:null}) {
     return file.createInfoSha1().then((List<int> infoHash) {
       return new TorrentClient(builder, peerId, infoHash, file.info.pieces, file.info.piece_length, 
@@ -67,7 +67,7 @@ class TorrentClient {
     });
   }
 
-  TorrentClient(HetiSocketBuilder builder, List<int> peerId, List<int> infoHash, List<int> piece, 
+  TorrentClient(HetimaSocketBuilder builder, List<int> peerId, List<int> infoHash, List<int> piece, 
                 int pieceLength, int fileSize, HetimaData data, {TorrentAI ai: null, haveAllData: false,
                   List<int>bitfield:null,List<int> reserved:null}) {
     this._builder = builder;
@@ -118,12 +118,12 @@ class TorrentClient {
     });
   }
 
-  Future onAccept(HetiSocket socket) {
+  Future onAccept(HetimaSocket socket) {
     return new Future(() {
       if(false == _isStart) {
         return null;
       }
-      return socket.getSocketInfo().then((HetiSocketInfo socketInfo) {
+      return socket.getSocketInfo().then((HetimaSocketInfo socketInfo) {
         print("accept: ${socketInfo.peerAddress}, ${socketInfo.peerPort}");
         TorrentClientPeerInfo info = _putTorrentPeerInfoFromAccept(socketInfo.peerAddress, socketInfo.peerPort);
         info.front = new TorrentClientFront(socket, socketInfo.peerAddress, socketInfo.peerPort, socket.buffer, this._targetBlock.bitSize, _infoHash, _peerId, _reseved);
@@ -145,9 +145,9 @@ class TorrentClient {
     if (this.globalPort == null) {
       this.globalPort = localPort;
     }
-    return _builder.startServer(localAddress, localPort).then((HetiServerSocket serverSocket) {
+    return _builder.startServer(localAddress, localPort).then((HetimaServerSocket serverSocket) {
       _server = serverSocket;
-      _server.onAccept().listen((HetiSocket socket) {
+      _server.onAccept().listen((HetimaSocket socket) {
         onAccept(socket);
       });
       TorrentClientSignal sig = new TorrentClientSignal(TorrentClientSignal.ID_STARTED_CLIENT, 0, "started client");

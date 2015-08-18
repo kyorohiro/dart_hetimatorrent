@@ -26,7 +26,7 @@ class TestCaseCreator2Client1Tracker {
     return new Future(() {
       HetimaDataMemory target = new HetimaDataMemory();
       List<int> peerId = new List.filled(20, 1);
-      return TorrentClient.create(new HetiSocketBuilderChrome(), peerId, torrentFile, target,ai:new TorrenAIEmpty()).then((TorrentClient client) {
+      return TorrentClient.create(new HetimaSocketBuilderChrome(), peerId, torrentFile, target,ai:new TorrenAIEmpty()).then((TorrentClient client) {
         return client.start(localAddress, port).then((_) {
           return client;
         });
@@ -49,7 +49,7 @@ class TestCaseCreator2Client1Tracker {
 
   Future<TrackerServer> _startTracker(int port, TorrentFile f) {
     return new Future(() {
-      TrackerServer server = new TrackerServer(new HetiSocketBuilderChrome());
+      TrackerServer server = new TrackerServer(new HetimaSocketBuilderChrome());
       server.address = localAddress;
       server.port = port;
       server.addTorrentFile(f);
@@ -75,13 +75,13 @@ class TestCaseCreator2Client1Tracker {
         return _startTracker(trackerPort, torrentFile);
       }).then((TrackerServer server) {
         tracker = server;
-        return TrackerClient.createTrackerClient(new HetiSocketBuilderChrome(), torrentFile);
+        return TrackerClient.createTrackerClient(new HetimaSocketBuilderChrome(), torrentFile);
       }).then((TrackerClient client) {
         trackerClientTmp = client;
         trackerClientTmp.peerport = clientAPort;
         return client.requestWithSupportRedirect();
       }).then((TrackerRequestResult result) {
-        return TrackerClient.createTrackerClient(new HetiSocketBuilderChrome(), torrentFile);
+        return TrackerClient.createTrackerClient(new HetimaSocketBuilderChrome(), torrentFile);
       }).then((TrackerClient client) {
         trackerClientTmp = client;
         trackerClientTmp.peerport = clientBPort;

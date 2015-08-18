@@ -19,10 +19,10 @@ abstract class KNodeWork {
   researchSearchPeer(KNode node, KId infoHash);
   stopSearchValue(KNode node, KId infoHash);
   onAddNodeFromIPAndPort(KNode node, String ip, int port);
-  onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcMessage query);
-  onReceiveError(KNode node, HetiReceiveUdpInfo info, KrpcMessage message);
-  onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcMessage response);
-  onReceiveUnknown(KNode node, HetiReceiveUdpInfo info, KrpcMessage message);
+  onReceiveQuery(KNode node, HetimaReceiveUdpInfo info, KrpcMessage query);
+  onReceiveError(KNode node, HetimaReceiveUdpInfo info, KrpcMessage message);
+  onReceiveResponse(KNode node, HetimaReceiveUdpInfo info, KrpcMessage response);
+  onReceiveUnknown(KNode node, HetimaReceiveUdpInfo info, KrpcMessage message);
   onTicket(KNode);
 
   int _lastAnnouncedTIme = 0;

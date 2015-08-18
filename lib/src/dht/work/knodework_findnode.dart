@@ -98,7 +98,7 @@ class KNodeWorkFindNode {
     _todoFineNodes.clear();
   }
 
-  onReceiveQuery(KNode node, HetiReceiveUdpInfo info, KrpcMessage query) {
+  onReceiveQuery(KNode node, HetimaReceiveUdpInfo info, KrpcMessage query) {
     if (_isStart == false) {
       return null;
     }
@@ -112,7 +112,7 @@ class KNodeWorkFindNode {
     updateP2PNetworkWithoutClear(node);
   }
 
-  onReceiveResponse(KNode node, HetiReceiveUdpInfo info, KrpcMessage response) {
+  onReceiveResponse(KNode node, HetimaReceiveUdpInfo info, KrpcMessage response) {
     if (_isStart == false) {
       return null;
     }
@@ -126,6 +126,6 @@ class KNodeWorkFindNode {
     updateP2PNetworkWithoutClear(node);
   }
 
-  onReceiveError(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {}
-  onReceiveUnknown(KNode node, HetiReceiveUdpInfo info, KrpcMessage message) {}
+  onReceiveError(KNode node, HetimaReceiveUdpInfo info, KrpcMessage message) {}
+  onReceiveUnknown(KNode node, HetimaReceiveUdpInfo info, KrpcMessage message) {}
 }
