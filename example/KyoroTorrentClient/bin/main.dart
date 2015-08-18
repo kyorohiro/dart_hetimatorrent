@@ -25,13 +25,20 @@ main(List<String> args) async {
       return;
     }
 
-    print("${lineparts}");
     String action = lineparts[0];
     List<String> args = [];
     if (lineparts.length > 1) {
       args.addAll(lineparts.sublist(1));
     }
-    print("${action} ${args}");
-    exit(0);
+    print(">> action:${action} args:${args}");
+    switch(action) {
+      case "exit":
+        print("..\ngoodbye!!\n..\n");
+        exit(0);
+        break;
+      case "hello":
+        print("hello");
+        break;
+    }
   });
 }
