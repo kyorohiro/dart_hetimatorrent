@@ -1,4 +1,6 @@
 import 'package:hetimatorrent/hetimatorrent.dart';
+import 'package:hetimanet/hetimanet.dart';
+import 'package:hetimanet/hetimanet_dartio.dart';
 import 'package:args/args.dart';
 import 'dart:io';
 import 'dart:async';
@@ -18,6 +20,7 @@ main(List<String> args) async {
   print("${result.rest} ${result['a']} ${result['b']} ${result['c']}");
 
   StreamSubscription s = null;
+  TorrentEngine engine = new TorrentEngine(new HetimaSocketBuilderDartIO());
   s = stdin.asBroadcastStream().listen((List<int> v) {
     String line = UTF8.decode(v);
     List<String> lineparts = line.split(new RegExp("[ ]+|\t|\r\n|\r|\n"));
@@ -31,7 +34,7 @@ main(List<String> args) async {
       args.addAll(lineparts.sublist(1));
     }
     print(">> action:${action} args:${args}");
-    switch(action) {
+    switch (action) {
       case "exit":
         print("..\ngoodbye!!\n..\n");
         exit(0);
