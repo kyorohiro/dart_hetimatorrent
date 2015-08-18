@@ -64,9 +64,9 @@ void main() {
     messageContainer.children.add(new Element.html("<div>${dht.log()}</dic>"));
   });
 
-  (new HetiSocketBuilderChrome()).getNetworkInterfaces().then((List<HetiNetworkInterface> interfaces) {
+  (new HetimaSocketBuilderChrome()).getNetworkInterfaces().then((List<HetimaNetworkInterface> interfaces) {
     localIpContainer.children.clear();
-    for (HetiNetworkInterface interface in interfaces) {
+    for (HetimaNetworkInterface interface in interfaces) {
       localIpContainer.children.add(new Element.html("<div>${interface.address} : ${interface.name}</div>"));
     }
   });
@@ -124,7 +124,7 @@ void main() {
 }
 
 class DHT {
-  KNode node = new KNode(new HetiSocketBuilderChrome(), verbose: true);
+  KNode node = new KNode(new HetimaSocketBuilderChrome(), verbose: true);
   Future start(String ip, int port) {
     return node.start(ip: ip, port: port).then((_) {
       node.onGetPeerValue.listen((KGetPeerValue v) {
