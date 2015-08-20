@@ -29,7 +29,6 @@ class KrpcMessage {
   bool get isQuery => messageTypeAsString == "q";
   bool get isError => messageTypeAsString == "e";
 
-  
   String get queryFromTransactionId {
     if (transactionIdAsString.contains("pi")) {
       return QUERY_PING;
@@ -93,7 +92,6 @@ class KrpcMessage {
   String get nodeIdAsString => UTF8.decode(nodeId, allowMalformed: true);
   KId get nodeIdAsKId => new KId(nodeId);
 
-
   KrpcMessage() {}
 
   KrpcMessage.fromMap(Map map) {
@@ -110,7 +108,7 @@ class KrpcMessage {
     } catch (e) {
       throw {};
     }
-    return  new KrpcMessage.fromMap(messageAsMap);
+    return new KrpcMessage.fromMap(messageAsMap);
   }
 
   KrpcPing toPing() {
@@ -127,6 +125,18 @@ class KrpcMessage {
 
   KrpcGetPeers toKrpcGetPeers() {
     return new KrpcGetPeers(this);
+  }
+
+  String toString() {
+    String sign = "null";
+    if (isError) {
+      sign = "error";
+    } else if (isQuery) {
+      sign = "query";
+    } else if (isResonse) {
+      sign = "response";
+    }
+    return sign;
   }
 }
 
@@ -170,7 +180,6 @@ class KrpcResponse {
 }
 
 class KrpcError {
-
   static KrpcMessage createResponse(List<int> transactionId, int errorCode) {
     transactionId = (transactionId is Uint8List ? transactionId : new Uint8List.fromList(transactionId));
     return new KrpcMessage.fromMap({"t": transactionId, "y": "e", "e": [errorCode, KrpcError.errorDescription(errorCode)]});

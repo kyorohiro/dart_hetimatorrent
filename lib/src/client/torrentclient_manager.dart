@@ -35,8 +35,12 @@ class TorrentClientManager {
 
   List<TorrentClient> clients = [];
 
+  bool _verbose = false;
+  bool get verbose => _verbose;
+
   TorrentClientManager(HetimaSocketBuilder builder,{bool verbose:false}) {
     this._builder = builder;
+    this._verbose = verbose;
   }
 
   void addTorrentClient(TorrentClient client) {
@@ -84,7 +88,7 @@ class TorrentClientManager {
             return null;
           }
           return socket.getSocketInfo().then((HetimaSocketInfo socketInfo) {
-            print("accept: ${socketInfo.peerAddress}, ${socketInfo.peerPort}");
+            log("accept: ${socketInfo.peerAddress}, ${socketInfo.peerPort}");
             return TorrentMessage.parseHandshake(new EasyParser(socket.buffer)).then((TorrentMessage message) {
               //
               MessageHandshake handshake = message;
@@ -120,5 +124,12 @@ class TorrentClientManager {
         return Future.wait(f);
       }
     });
+  }
+  
+  log(String message) {
+    if(_verbose) {
+      print("*+*${message}");
+    }
+    
   }
 }

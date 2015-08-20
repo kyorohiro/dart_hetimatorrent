@@ -90,7 +90,7 @@ class KNode extends Object {
 
   onReceiveMessage(HetimaReceiveUdpInfo info, KrpcMessage message) {
     if (verbose == true) {
-      print("--->receive[${nodeDebugId}] ${info.remoteAddress}:${info.remotePort} ${message}");
+      log("--->receive[${nodeDebugId}] ${info.remoteAddress}:${info.remotePort} ${message}");
     }
     if (message.isResonse) {
       KSendInfo rm = removeQueryNameFromTransactionId(UTF8.decode(message.rawMessageMap["t"]));
@@ -98,7 +98,7 @@ class KNode extends Object {
       if (rm != null) {
         rm.c.complete(message);
       } else {
-        print("----> receive null : [${nodeDebugId}] ${info.remoteAddress} ${info.remotePort}");
+        log("----> receive null : [${nodeDebugId}] ${info.remoteAddress} ${info.remotePort}");
       }
     } else if (message.isQuery) {
       this._ai.onReceiveQuery(this, info, message);
@@ -223,20 +223,16 @@ class KNode extends Object {
       if (message.isQuery) {
         queryInfo.add(new KSendInfo(message.transactionIdAsString, message.queryAsString, c));
       }
-      if (_verbose == true) {
-        String sign = "null";
-        if (message is KrpcError) {
-          sign = "error";
-        } else if (message.isQuery) {
-          sign = "query";
-        } else if (message.isResonse) {
-          sign = "response";
-        }
-        print("--->send ${sign}[${_nodeDebugId}] ${ip}:${port} ${message}");
-      }
+      log("--->send [${_nodeDebugId}] ${ip}:${port} ${message}");
       return _udpSocket.send(message.messageAsBencode, ip, port);
     }).catchError(c.completeError);
     return c.future;
+  }
+  
+  log(String message) {
+    if(_verbose) {
+      print(".n.:${message}");
+    }
   }
 }
 

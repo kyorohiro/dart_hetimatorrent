@@ -45,9 +45,7 @@ class KNodeWorkFindNode {
           count++;
           _findNodesInfo.addLast(info);
           node.sendFindNodeQuery(info.ipAsString, info.port, node.nodeId.value).catchError((_) {});
-          if (node.verbose == true) {
-            print("<id_index>=${node.rootingtable.getRootingTabkeIndex(info.id)}");
-          }
+          node.log("<id_index>=${node.rootingtable.getRootingTabkeIndex(info.id)}");
         }
         //
         if (currentTime - startTime > 30000 && count > 2) {

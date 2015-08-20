@@ -39,9 +39,7 @@ class KNodeAIAnnounceTask {
   }
 
   startSearchPeer(KNode node, KId infoHash, {getPeerOnly: false}) {
-    if (node.verbose == true) {
-      print("## startSearchPeer:${_getPeerOnly}");
-    }
+    node.log("## startSearchPeer:${_getPeerOnly}");
     _getPeerOnly = getPeerOnly;
     _isStart = true;
     lastUpdateTime = 0;
@@ -49,16 +47,12 @@ class KNodeAIAnnounceTask {
   }
 
   stopSearchPeer(KNode node, KId infoHash) {
-    if (node.verbose == true) {
-      print("## stopSearchPeer");
-    }
+    node.log("## stopSearchPeer");
     _isStart = false;
   }
 
   _startSearch(KNode node) {
-    if (node.verbose == true) {
-      print("## _startSearch");
-    }
+    node.log("## _startSearch");
     _getPeerNode.clear();
  //   _ggggg.clear();
     _announcedPeers.clear();
@@ -66,9 +60,7 @@ class KNodeAIAnnounceTask {
   }
 
   _updateSearch(KNode node) {
-    if (node.verbose == true) {
-      print("## _updateSearch");
-    }
+    node.log("## _updateSearch");
 
     node.rootingtable.findNode(_infoHashId).then((List<KPeerInfo> infos) {
       if (_isStart == false) {
@@ -99,9 +91,7 @@ class KNodeAIAnnounceTask {
   }
 
   requestAnnounce(KNode node) {
-    if (node.verbose == true) {
-      print("## requestAnnounce");
-    }
+    node.log("## requestAnnounce");
     if (_getPeerOnly == true) {
       return;
     }
@@ -118,7 +108,7 @@ class KNodeAIAnnounceTask {
     {
       int count = 0;
       for (KGetPeerNodes i in receiveGetPeerResponseNode) {
-        print("Announce[${count}] distance=${i.id.getRootingTabkeIndex(_infoHashId)}");
+        node.log("Announce[${count}] distance=${i.id.getRootingTabkeIndex(_infoHashId)}");
         if (++count > 20) {
           break;
         }
@@ -129,10 +119,8 @@ class KNodeAIAnnounceTask {
       if (false == _announcedPeers.contains(i)) {
         node.sendAnnouncePeerQuery(i.ipAsString, i.port, 0, _infoHashId.value, this.port, i.token).catchError((_) {});
         _announcedPeers.add(i);
-        if (node.verbose) {
-          print(
+        node.log(
               "###########announce[${node.nodeDebugId}] ---${receiveGetPeerResponseNode.length} ${node.rawSearchResult.length}--${i.ipAsString}, ${i.port} >>${i.id.getRootingTabkeIndex(_infoHashId)} ::: ${i.id.idAsString}");
-        }
       }
       if (++count > 8) {
         break;
@@ -177,8 +165,8 @@ class KNodeAIAnnounceTask {
           //print("announce set value");
           for (KGetPeerValue i in getpeers.valuesAsKAnnounceInfo(_infoHashId.value)) {
             lastUpdateTime = new DateTime.now().millisecondsSinceEpoch;
-            if (node.verbose == true && false == node.containSeardchResult(i)) {
-              print("########### get peer value ${i.ipAsString} ${i.port}");
+            if (false == node.containSeardchResult(i)) {
+              node.log("########### get peer value ${i.ipAsString} ${i.port}");
             }
             node.addSeardchResult(i);
           }
@@ -196,7 +184,7 @@ class KNodeAIAnnounceTask {
           _currentClosePeerStack.findNode(_infoHashId).then((List<KPeerInfo> infos ) {
             for(KPeerInfo i in infos) {
               if(_getPeerNode.contains(i) == false) {
-                print("##===fin ==> ${i.id.getRootingTabkeIndex(_infoHashId)}-- ${_infoHashId}- ${i.id}  ${i.port}-----------------asdfasdfasdfasdfasd");
+                node.log("##===fin ==> ${i.id.getRootingTabkeIndex(_infoHashId)}-- ${_infoHashId}- ${i.id}  ${i.port}-----------------asdfasdfasdfasdfasd");
                 _getPeerNode.add(i);
                 lastUpdateTime = new DateTime.now().millisecondsSinceEpoch;
                 node.sendGetPeersQuery(i.ipAsString, i.port, _infoHashId.value).catchError((_) {});
