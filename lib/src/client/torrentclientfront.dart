@@ -72,6 +72,10 @@ class TorrentClientFront {
   
   List<int> _reseved = [0, 0, 0, 0, 0, 0, 0, 0];
   List<int> get reseved => new List.from(_reseved);
+  
+  bool _verbose = false;
+  bool get verbose => _verbose;
+
   set reseved( List<int>  v) {
     if(v.length != 8) {
       throw {};
@@ -80,16 +84,18 @@ class TorrentClientFront {
     _reseved.addAll(v);
   }
 
-  static Future<TorrentClientFront> connect(HetimaSocketBuilder _builder, TorrentClientPeerInfo info, int bitfieldSize, List<int> infoHash, {List<int> peerId:null,List<int> reseved:null}) {
+  static Future<TorrentClientFront> connect(HetimaSocketBuilder _builder, TorrentClientPeerInfo info, int bitfieldSize, List<int> infoHash, 
+      {List<int> peerId:null,List<int> reseved:null, bool verbose:false}) {
     return new Future(() {
       HetimaSocket socket = _builder.createClient();
       return socket.connect(info.ip, info.portAcceptable).then((HetimaSocket socket) {
-        return new TorrentClientFront(socket, info.ip, info.portAcceptable, socket.buffer, bitfieldSize, infoHash, peerId, reseved);
+        return new TorrentClientFront(socket, info.ip, info.portAcceptable, socket.buffer, bitfieldSize, infoHash, peerId, reseved, verbose:verbose);
       });
     });
   }
 
-  TorrentClientFront(HetimaSocket socket, String peerIp, int peerPort, HetimaReader reader, int bitfieldSize, List<int> infoHash, List<int> peerId, List<int> reseved) {
+  TorrentClientFront(HetimaSocket socket, String peerIp, int peerPort, HetimaReader reader, int bitfieldSize,
+                     List<int> infoHash, List<int> peerId, List<int> reseved, {bool verbose:false}) {
     if (peerId == null) {
       _myPeerId.addAll(PeerIdCreator.createPeerid("heti69"));
     } else {
@@ -116,6 +122,7 @@ class TorrentClientFront {
     _socket.onClose.listen((HetimaCloseInfo info) {
       TorrentClientFrontNerve.doClose(this, 0);
     });
+    _verbose = verbose;
   }
 
   Future<TorrentMessage> parse() {
@@ -213,9 +220,15 @@ class TorrentClientFront {
   }
 
   void close() {
-    print("###[${_debugId}][${_peerIp}:${_peerPort}] close");
+    log("[${_debugId}][${_peerIp}:${_peerPort}] close");
     _socket.close();
     TorrentClientFrontNerve.doClose(this, 0);
+  }
+  
+  void log(String message) {
+    if(_verbose) {
+      print("...${message}");
+    }
   }
 }
 
@@ -232,7 +245,7 @@ class TorrentClientFrontNerve {
   }
 
   static void doReceiveMessage(TorrentClientFront front, TorrentMessage message) {
-    print("###[${front._debugId} ${front._peerIp}:${front._peerPort}] receive ${message.toString()}");
+    front.log("[${front._debugId} ${front._peerIp}:${front._peerPort}] receive ${message.toString()}");
     switch (message.id) {
       case TorrentMessage.DUMMY_SIGN_SHAKEHAND:
         front._handshakedToMe = true;
@@ -283,7 +296,7 @@ class TorrentClientFrontNerve {
   }
 
   static void doSendMessage(TorrentClientFront front, TorrentMessage message) {
-    print("###[${front._peerIp}:${front._peerPort} ${front.isClose}] send ${message.toString()}");
+    front.log("[${front._peerIp}:${front._peerPort} ${front.isClose}] send ${message.toString()}");
     switch (message.id) {
       case TorrentMessage.DUMMY_SIGN_SHAKEHAND:
         front._handshakedFromMe = true;

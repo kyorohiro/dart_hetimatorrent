@@ -130,7 +130,7 @@ class TorrentClient {
       return socket.getSocketInfo().then((HetimaSocketInfo socketInfo) {
         log("accept: ${socketInfo.peerAddress}, ${socketInfo.peerPort}");
         TorrentClientPeerInfo info = _putTorrentPeerInfoFromAccept(socketInfo.peerAddress, socketInfo.peerPort);
-        info.front = new TorrentClientFront(socket, socketInfo.peerAddress, socketInfo.peerPort, socket.buffer, this._targetBlock.bitSize, _infoHash, _peerId, _reseved);
+        info.front = new TorrentClientFront(socket, socketInfo.peerAddress, socketInfo.peerPort, socket.buffer, this._targetBlock.bitSize, _infoHash, _peerId, _reseved,verbose:_verbose);
         _internalOnReceive(info.front, info);
         info.front.startReceive();
         TorrentClientSignal sig = new TorrentClientSignalWithPeerInfo(info, TorrentClientSignal.ID_ACCEPT, 0, "accepted");
@@ -229,7 +229,7 @@ class TorrentClient {
       if(false == _isStart) {
         throw {};
       }
-      return TorrentClientFront.connect(_builder, info, this._targetBlock.bitSize, infoHash, peerId:peerId, reseved:_reseved).then((TorrentClientFront front) {
+      return TorrentClientFront.connect(_builder, info, this._targetBlock.bitSize, infoHash, peerId:peerId, reseved:_reseved, verbose:_verbose).then((TorrentClientFront front) {
         info.front = front;
         _internalOnReceive(front, info);
         front.startReceive();
