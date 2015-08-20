@@ -59,17 +59,20 @@ class TorrentClient {
   List<int> get reseved => new List.from(_reseved);
 
 
+  bool _verbose = false;
+  bool get verbose => _verbose;
+
   static Future<TorrentClient> create(HetimaSocketBuilder builder, List<int> peerId, TorrentFile file, HetimaData data,
-      {TorrentAI ai: null,List<int>bitfield:null,List<int> reserved:null}) {
+      {TorrentAI ai: null,List<int>bitfield:null,List<int> reserved:null, verbose:false}) {
     return file.createInfoSha1().then((List<int> infoHash) {
       return new TorrentClient(builder, peerId, infoHash, file.info.pieces, file.info.piece_length, 
-          file.info.files.dataSize, data, ai: ai,bitfield:bitfield,reserved:reserved);
+          file.info.files.dataSize, data, ai: ai,bitfield:bitfield,reserved:reserved, verbose:verbose);
     });
   }
 
   TorrentClient(HetimaSocketBuilder builder, List<int> peerId, List<int> infoHash, List<int> piece, 
                 int pieceLength, int fileSize, HetimaData data, {TorrentAI ai: null, haveAllData: false,
-                  List<int>bitfield:null,List<int> reserved:null}) {
+                  List<int>bitfield:null,List<int> reserved:null, verbose:false}) {
     this._builder = builder;
     _peerInfos = new TorrentClientPeerInfoList();
     _infoHash.addAll(infoHash);
@@ -90,6 +93,7 @@ class TorrentClient {
       _reseved.clear();
       _reseved.addAll(reserved);
     }
+    _verbose = verbose;
   }
 
   TorrentClientPeerInfo putTorrentPeerInfoFromTracker(String ip, int port) {
@@ -124,7 +128,7 @@ class TorrentClient {
         return null;
       }
       return socket.getSocketInfo().then((HetimaSocketInfo socketInfo) {
-        print("accept: ${socketInfo.peerAddress}, ${socketInfo.peerPort}");
+        log("accept: ${socketInfo.peerAddress}, ${socketInfo.peerPort}");
         TorrentClientPeerInfo info = _putTorrentPeerInfoFromAccept(socketInfo.peerAddress, socketInfo.peerPort);
         info.front = new TorrentClientFront(socket, socketInfo.peerAddress, socketInfo.peerPort, socket.buffer, this._targetBlock.bitSize, _infoHash, _peerId, _reseved);
         _internalOnReceive(info.front, info);
@@ -279,4 +283,10 @@ class TorrentClient {
     _ai = v;
   }
   TorrentAI get ai => _ai;
+  
+  log(String message) {
+    if(_verbose) {
+      print("**${message}");
+    }
+  }
 }

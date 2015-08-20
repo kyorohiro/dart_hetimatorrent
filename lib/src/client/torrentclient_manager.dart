@@ -32,15 +32,11 @@ class TorrentClientManager {
   StreamController<TorrentClientSignal> _signalStream = new StreamController.broadcast();
   Stream<TorrentClientSignal> get onReceiveSignal => _signalStream.stream;
 
-//  List<int> _peerId = [];
-//  List<int> _reserved = [];
 
   List<TorrentClient> clients = [];
 
-  TorrentClientManager(HetimaSocketBuilder builder) {
+  TorrentClientManager(HetimaSocketBuilder builder,{bool verbose:false}) {
     this._builder = builder;
-//    _peerId.addAll(peerId);
-//    _reserved.addAll(reserved);
   }
 
   void addTorrentClient(TorrentClient client) {

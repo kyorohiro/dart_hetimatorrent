@@ -2,15 +2,9 @@ library hetimatorrent.torrent.ai.connect;
 
 import 'dart:core';
 import 'dart:async';
-import 'message/message.dart';
-import 'package:hetimacore/hetimacore.dart';
 import 'torrentclient.dart';
 import 'torrentclientfront.dart';
 import 'torrentclientpeerinfo.dart';
-import 'torrentclientmessage.dart';
-import 'torrentai_choke.dart';
-import 'torrentai_piece.dart';
-import 'torrentai.dart';
 
 class ConnectTest {
   Future connectTest(TorrentClientPeerInfo info, TorrentClient client, int _maxConnect) {

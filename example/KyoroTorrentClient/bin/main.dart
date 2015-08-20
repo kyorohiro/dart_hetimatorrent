@@ -6,7 +6,6 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
 
-Completer c;
 main(List<String> args) async {
   String exec = Platform.executable;
   List<String> flags = Platform.executableArguments;
@@ -19,29 +18,54 @@ main(List<String> args) async {
   ArgResults result = parser.parse(args);
   print("${result.rest} ${result['a']} ${result['b']} ${result['c']}");
 
-  StreamSubscription s = null;
-  TorrentEngine engine = new TorrentEngine(new HetimaSocketBuilderDartIO());
-  s = stdin.asBroadcastStream().listen((List<int> v) {
-    String line = UTF8.decode(v);
-    List<String> lineparts = line.split(new RegExp("[ ]+|\t|\r\n|\r|\n"));
-    if (lineparts.length == 0) {
+  bool nowActing = false;
+  TorrentEngine engine = new TorrentEngine(new HetimaSocketBuilderDartIO(), localPort: 18080, globalPort: 18080, useUpnp: true, useDht: true);
+  stdin.asBroadcastStream().listen((List<int> v) {
+    if (nowActing == true) {
       return;
     }
-
-    String action = lineparts[0];
-    List<String> args = [];
-    if (lineparts.length > 1) {
-      args.addAll(lineparts.sublist(1));
-    }
-    print(">> action:${action} args:${args}");
-    switch (action) {
-      case "exit":
-        print("..\ngoodbye!!\n..\n");
-        exit(0);
-        break;
-      case "hello":
-        print("hello");
-        break;
-    }
+    nowActing = true;
+    b(engine, v).then((_) {
+      nowActing = false;
+      print("---ok!!");
+    }).catchError((_) {
+      nowActing = false;
+      print("---error!!");
+    });
   });
+}
+
+Future b(TorrentEngine engine, List<int> v) async {
+  String line = UTF8.decode(v);
+  List<String> lineparts = line.split(new RegExp("[ ]+|\t|\r\n|\r|\n"));
+  if (lineparts.length == 0) {
+    return;
+  }
+
+  String action = lineparts[0];
+  List<String> args = [];
+  if (lineparts.length > 1) {
+    args.addAll(lineparts.sublist(1));
+  }
+  a(engine, action, args);
+}
+
+Future a(TorrentEngine engine, String action, List<String> args) async {
+  print(">> action:${action} args:${args}");
+  switch (action) {
+    case "help":
+      print("..\ngoodbye!!\n..\n");
+      break;
+    case "exit":
+      print("..\ngoodbye!!\n..\n");
+      exit(0);
+      break;
+    case "hello":
+      print("hello");
+      break;
+    case "start":
+      return engine.start();
+    case "stop":
+      return engine.stop();
+  }
 }

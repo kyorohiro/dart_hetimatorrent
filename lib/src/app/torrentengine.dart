@@ -107,6 +107,9 @@ class TorrentEngine {
   bool get useUpnp => _useUpnp;
   bool _useDht = false;
   bool get useDht => _useDht;
+  bool _verbose = false;
+  bool get verbose => _verbose;
+
   void resetFlag(bool useUpnp, bool useDht) {
     _useUpnp = useUpnp;
     _useDht = useDht;
@@ -151,19 +154,20 @@ class TorrentEngine {
   }
 
   TorrentEngine(HetimaSocketBuilder builder,
-      {appid: "hetima_torrent_engine", int localPort: 18085, int globalPort: 18085, String globalIp: "0.0.0.0", String localIp: "0.0.0.0", int retryNum: 10, bool useUpnp: false, bool useDht: false}) {
+      {appid: "hetima_torrent_engine", int localPort: 18085, int globalPort: 18085, String globalIp: "0.0.0.0", String localIp: "0.0.0.0",
+       int retryNum: 10, bool useUpnp: false, bool useDht: false, bool verbose:false}) {
     this._builder = builder;
-    this._torrentClientManager = new TorrentClientManager(builder);
-    this._upnpPortMapClient = new UpnpPortMapHelper(builder, appid);
+    this._torrentClientManager = new TorrentClientManager(builder, verbose: verbose);
+    this._upnpPortMapClient = new UpnpPortMapHelper(builder, appid, verbose: verbose);
     this._portMapAI = new TorrentEngineAIPortMap(upnpPortMapClient);
     this._useUpnp = useUpnp;
     this._useDht = useDht;
-    this._dhtClient = new KNode(builder, verbose: false);
+    this._dhtClient = new KNode(builder, verbose: verbose);
+    this._verbose = verbose;
     this._dhtClient.onGetPeerValue.listen((KGetPeerValue value) {
       TorrentEngineTorrent t = getTorrent(value.infoHash.value);
-      print("<=1==> ${value.ipAsString}:${value.port}");
       if (t != null) {
-        print("<=2==> ${value.ipAsString}:${value.port}");
+        log("<=1==> ${value.ipAsString}:${value.port}");
         t._torrentClient.putTorrentPeerInfoFromTracker(value.ipAsString, value.port);
       }
     });
@@ -189,6 +193,12 @@ class TorrentEngine {
     return _portMapAI.stop().whenComplete(() {
       _isStart = false;
     });
+  }
+  
+  void log(String message) {
+    if(_verbose) {
+       print("## message");
+     }
   }
 }
 
