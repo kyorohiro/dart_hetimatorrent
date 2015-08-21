@@ -39,7 +39,7 @@ Future b(TorrentEngine engine, List<int> v) async {
   String line = UTF8.decode(v);
   List<String> lineparts = line.split(new RegExp("[ ]+|\t|\r\n|\r|\n"));
   if (lineparts.length == 0) {
-    return;
+    return null;
   }
 
   String action = lineparts[0];
@@ -47,7 +47,7 @@ Future b(TorrentEngine engine, List<int> v) async {
   if (lineparts.length > 1) {
     args.addAll(lineparts.sublist(1));
   }
-  a(engine, action, args);
+  return a(engine, action, args);
 }
 
 Future a(TorrentEngine engine, String action, List<String> args) async {
