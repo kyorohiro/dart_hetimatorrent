@@ -1,14 +1,12 @@
 library hetimatorrent.extra.torrentengine.ai;
 
 import 'dart:async';
-import 'package:hetimanet/hetimanet.dart';
 import 'package:hetimatorrent/hetimatorrent.dart';
 import '../client/torrentai.dart';
 import '../client/torrentai_basic.dart';
 import '../client/torrentclient.dart';
 import '../tracker/trackerclient.dart';
 import '../client/torrentclient_manager.dart';
-//import 'torrentengineai.dart';
 import '../dht/knode.dart';
 import '../dht/kid.dart';
 
@@ -17,9 +15,6 @@ class TorrentEngineAI extends TorrentAI {
   bool _useDht = false;
   bool get useDht => _useDht;
   bool isGo = false;
-
-//  int localPort = 18080;
-//  int globalPort = 18080;
 
   TorrentClient _torrent = null;
   TrackerClient _tracker = null;
@@ -37,12 +32,8 @@ class TorrentEngineAI extends TorrentAI {
   }
 
   @override
-  Future onReceive(TorrentClient client, TorrentClientPeerInfo info, TorrentMessage message) {
-    if (isGo != true) {
-      return new Future(() {
-        print("Empty AI receive : ${message.id}");
-      });
-    } else {
+  Future onReceive(TorrentClient client, TorrentClientPeerInfo info, TorrentMessage message) async {
+    if (isGo == true) {
       if (message.id == TorrentMessage.SIGN_PORT) {
         if (useDht == true) {
           MessagePort messagePort = message;
@@ -54,25 +45,17 @@ class TorrentEngineAI extends TorrentAI {
   }
 
   @override
-  Future onSignal(TorrentClient client, TorrentClientPeerInfo info, TorrentClientSignal signal) {
-    if (isGo != true) {
-      return new Future(() {
-        print("Empty AI signal : ${signal.id}");
-      });
-    } else {
+  Future onSignal(TorrentClient client, TorrentClientPeerInfo info, TorrentClientSignal signal) async {
+    if (isGo == true) {
       return basic.onSignal(client, info, signal);
     }
   }
 
   @override
-  Future onTick(TorrentClient client) {
+  Future onTick(TorrentClient client) async {
     _progressCash.update(_tracker, _torrent);
     _progressStream.add(_progressCash);
-    if (isGo != true) {
-      return new Future(() {
-        print("Empty AI tick : ${client.peerId}");
-      });
-    } else {
+    if (isGo == true) {
       return basic.onTick(client);
     }
   }
@@ -82,7 +65,7 @@ class TorrentEngineAI extends TorrentAI {
     _tracker.peerport = manager.globalPort;
     torrentClient.startWithoutSocket(manager.localIp, manager.localPort, manager.globalIp, manager.globalPort);
     manager.addTorrentClient(torrentClient);
-    if(useDht == true) {
+    if (useDht == true) {
       _dht.startSearchValue(new KId(_tracker.infoHash), _torrent.globalPort);
     }
 
@@ -90,15 +73,13 @@ class TorrentEngineAI extends TorrentAI {
     return _startTracker(1).catchError((e) {});
   }
 
-  Future stop() {
-    return this._torrent.stop().then((_) {
-      isGo = false;
-      if(useDht == true) {
-        return _dht.stopSearchPeer(new KId(_tracker.infoHash));
-      }
-    }).then((_) {
-      return _startTracker(0).catchError((e) {});
-    });
+  Future stop() async {
+    await this._torrent.stop();
+    isGo = false;
+    if (useDht == true) {
+      await _dht.stopSearchPeer(new KId(_tracker.infoHash)).catchError((e) {});
+    }
+    return await _startTracker(0).catchError((e) {});
   }
 
   bool localNetworkIp(String ip) {
@@ -109,38 +90,36 @@ class TorrentEngineAI extends TorrentAI {
     }
   }
 
-  Future _startTracker(int intervalSec) {
-    return new Future.delayed(new Duration(seconds: intervalSec)).then((_) {
-      if (false == isGo) {
-        _tracker.event = TrackerClient.EVENT_STOPPED;
-      } else if (_torrent.targetBlock.haveAll()) {
-        _tracker.event = TrackerClient.EVENT_COMPLETED;
-      } else {
-        _tracker.event = TrackerClient.EVENT_STARTED;
-      }
+  Future _startTracker(int intervalSec) async {
+    await new Future.delayed(new Duration(seconds: intervalSec));
+    if (false == isGo) {
+      _tracker.event = TrackerClient.EVENT_STOPPED;
+    } else if (_torrent.targetBlock.haveAll()) {
+      _tracker.event = TrackerClient.EVENT_COMPLETED;
+    } else {
+      _tracker.event = TrackerClient.EVENT_STARTED;
+    }
 
-      _tracker.peerport = _torrent.globalPort;
-      if (localNetworkIp(_torrent.globalIp)) {
-        _tracker.optIp = null;
-      } else {
-        _tracker.optIp = _torrent.globalIp;
+    _tracker.peerport = _torrent.globalPort;
+    if (localNetworkIp(_torrent.globalIp)) {
+      _tracker.optIp = null;
+    } else {
+      _tracker.optIp = _torrent.globalIp;
+    }
+    _tracker.downloaded = _torrent.downloaded;
+    _tracker.uploaded = _torrent.uploaded;
+    try {
+      TrackerRequestResult r = await _tracker.requestWithSupportRedirect();
+      for (TrackerPeerInfo info in r.response.peers) {
+        _torrent.putTorrentPeerInfoFromTracker(info.ipAsString, info.port);
       }
-      _tracker.downloaded = _torrent.downloaded;
-      _tracker.uploaded = _torrent.uploaded;
-      return _tracker.requestWithSupportRedirect().then((TrackerRequestResult r) {
-        for (TrackerPeerInfo info in r.response.peers) {
-          _torrent.putTorrentPeerInfoFromTracker(info.ipAsString, info.port);
-        }
-        if (isGo == true && r.response.interval != null) {
-          _startTracker(r.response.interval);
-        }
-      }).catchError((e) {
-        //
-        // todo
-        if (isGo == true) {
-          _startTracker(30 * 5);
-        }
-      });
-    });
+      if (isGo == true && r.response.interval != null) {
+        _startTracker(r.response.interval);
+      }
+    } catch (e) {
+      if (isGo == true) {
+        _startTracker(60 * 5);
+      }
+    }
   }
 }
