@@ -3,12 +3,7 @@ library hetimatorrent.extra.torrentengine.ai.portmap;
 import 'dart:async';
 import 'package:hetimanet/hetimanet.dart';
 import 'package:hetimatorrent/hetimatorrent.dart';
-import '../client/torrentai.dart';
-import '../client/torrentai_basic.dart';
-import '../client/torrentclient.dart';
-import '../tracker/trackerclient.dart';
 import '../client/torrentclient_manager.dart';
-import 'torrentengineai_protmap.dart';
 
 //import 'torrentengineai.dart';
 
