@@ -67,5 +67,7 @@ Future a(TorrentEngine engine, String action, List<String> args) async {
       return engine.start();
     case "stop":
       return engine.stop();
+    default:
+      throw "commmand not found";
   }
 }

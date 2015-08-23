@@ -38,7 +38,7 @@ class AppModel {
   Future<TorrentEngine> get() {
     return new Future(() {
       if (_engine == null) {
-        _engine = new TorrentEngine(new HetiSocketBuilderChrome(),
+        _engine = new TorrentEngine(new HetimaSocketBuilderChrome(),
             globalPort: globalPort, localPort: localPort, localIp: localIp, globalIp: globalIp, useUpnp: useUpnp, useDht: useDht, appid: "hetimatorrentclient");
       }
       return _engine;

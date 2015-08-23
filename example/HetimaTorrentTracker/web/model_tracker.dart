@@ -12,8 +12,8 @@ class TrackerModel {
   String selectKey = null;
 
 ///
-  TrackerServer trackerServer = new TrackerServer(new HetiSocketBuilderChrome());
-  UpnpPortMapHelper portMapHelder = new UpnpPortMapHelper(new HetiSocketBuilderChrome(), "HetimaTorrentTracker");
+  TrackerServer trackerServer = new TrackerServer(new HetimaSocketBuilderChrome());
+  UpnpPortMapHelper portMapHelder = new UpnpPortMapHelper(new HetimaSocketBuilderChrome(), "HetimaTorrentTracker");
 
   void removeInfoHashFromTracker(List<int> removeHash) {
     trackerServer.removeInfoHash(PercentEncode.decode(selectKey));
@@ -28,7 +28,8 @@ class TrackerModel {
     trackerServer.trackerAnnounceAddressForTorrentFile = "";
     portMapHelder.clearSearchedRouterInfo();
     List<Future> v = new List(2);
-    v[0] = portMapHelder.getPortMapInfo(target: portMapHelder.appid, reuseRouter: true).then((GetPortMapInfoResult r) {
+    v[0] = portMapHelder.getPortMapInfo(target: portMapHelder.appid, reuseRouter: true).then((List<GetPortMapInfoResult> rs) {
+      GetPortMapInfoResult r = rs.first;
       if (r.infos.length > 0 && r.infos[0].externalPort.length != 0) {
         int port = int.parse(r.infos[0].externalPort);
         portMapHelder.deleteAllPortMap([port], reuseRouter: true);
@@ -48,7 +49,7 @@ class TrackerModel {
       if (upnpIsUse == true) {
         portMapHelder.basePort = globalPort;
         portMapHelder.numOfRetry = 0;
-        portMapHelder.localAddress = localIP;
+        portMapHelder.localIp = localIP;
         portMapHelder.localPort = localPort;
 
         portMapHelder.clearSearchedRouterInfo();
@@ -76,7 +77,7 @@ class TrackerModel {
 }
 
 a() {
-  TrackerServer trackerServer = new TrackerServer(new HetiSocketBuilderChrome())
+  TrackerServer trackerServer = new TrackerServer(new HetimaSocketBuilderChrome())
     ..address = "0.0.0.0"
     ..port = 6969;
 
@@ -95,7 +96,7 @@ b() {
   // ..
   
   
-  TrackerClient.createTrackerClient(new HetiSocketBuilderChrome(), torrentfile).then((TrackerClient client) {
+  TrackerClient.createTrackerClient(new HetimaSocketBuilderChrome(), torrentfile).then((TrackerClient client) {
     client.downloaded = 0;
     client.uploaded = 0;
     client.event = TrackerClient.EVENT_STARTED;

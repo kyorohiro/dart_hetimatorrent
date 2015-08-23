@@ -23,7 +23,7 @@ class SeederModel {
   static TorrentEngine _rawengine = null;
   TorrentEngine getEngine() {
     if (_rawengine == null) {
-      _rawengine = new TorrentEngine(new HetiSocketBuilderChrome(),
+      _rawengine = new TorrentEngine(new HetimaSocketBuilderChrome(),
           appid: "hetima_tracker_seeder", globalPort: globalPort, localPort: localPort, localIp: localIp, globalIp: globalIp, useUpnp: useUpnp, useDht: useDht);
     }
     return _rawengine;
