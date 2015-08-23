@@ -1,16 +1,13 @@
 library hetimatorrent.extra.torrentengine;
 
 import 'dart:async';
-import 'dart:typed_data';
 import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimanet/hetimanet.dart';
 import 'package:hetimatorrent/hetimatorrent.dart';
 import '../client/torrentclient.dart';
 import '../tracker/trackerclient.dart';
-import 'torrentengineai.dart';
 import 'torrentengineai_protmap.dart';
-import 'torrentenginetorrent.dart';
-
+import 'torrentengine_torrent.dart';
 
 class TorrentEngine {
   UpnpPortMapHelper _upnpPortMapClient = null;
@@ -19,12 +16,15 @@ class TorrentEngine {
 
   HetimaSocketBuilder get socketBuilder => _builder;
   UpnpPortMapHelper get upnpPortMapClient => _upnpPortMapClient;
-  
+
   TorrentClientManager _torrentClientManager = null;
   TorrentClientManager get torrentClientManager => _torrentClientManager;
 
   KNode _dhtClient = null;
   KNode get dhtClient => _dhtClient;
+  List<TorrentEngineTorrent> _torrents = [];
+  List<TorrentEngineTorrent> get torrents => new List.from(_torrents);
+
 
   TorrentEngineAIPortMap _portMapAI = null;
 
@@ -40,12 +40,36 @@ class TorrentEngine {
   bool _verbose = false;
   bool get verbose => _verbose;
 
+
+  TorrentEngine(HetimaSocketBuilder builder, 
+      {appid: "hetima_torrent_engine", 
+       int localPort: 18085, int globalPort: 18085,
+       String globalIp: "0.0.0.0", String localIp: "0.0.0.0", 
+       int retryNum: 5, bool useUpnp: false, bool useDht: false, 
+       bool verbose: false}) {
+    this._builder = builder;
+    this._torrentClientManager = new TorrentClientManager(builder, verbose: verbose);
+    this._upnpPortMapClient = new UpnpPortMapHelper(builder, appid, verbose: verbose);
+    this._portMapAI = new TorrentEngineAIPortMap(upnpPortMapClient);
+    this._useUpnp = useUpnp;
+    this._useDht = useDht;
+    this._dhtClient = new KNode(builder, verbose: verbose);
+    this._verbose = verbose;
+    this._dhtClient.onGetPeerValue.listen((KGetPeerValue value) {
+      TorrentEngineTorrent t = getTorrent(value.infoHash.value);
+      if (t != null) {
+        log("<=1==> ${value.ipAsString}:${value.port}");
+        t.torrentClient.putTorrentPeerInfoFromTracker(value.ipAsString, value.port);
+      }
+    });
+  }
+
   void resetFlag(bool useUpnp, bool useDht) {
     _useUpnp = useUpnp;
     _useDht = useDht;
   }
 
-  List<TorrentEngineTorrent> _torrents = [];
+
   Future<TorrentEngineTorrent> addTorrent(TorrentFile torrentfile, HetimaData downloadedData, {haveAllData: false, List<int> bitfield: null}) {
     return TorrentEngineTorrent
         .createEngioneTorrent(this, torrentfile, downloadedData, haveAllData: haveAllData, localPort: localPort, globalPort: globalPort, bitfield: bitfield, useDht: _useDht)
@@ -83,25 +107,6 @@ class TorrentEngine {
     return null;
   }
 
-  TorrentEngine(HetimaSocketBuilder builder,
-      {appid: "hetima_torrent_engine", int localPort: 18085, int globalPort: 18085, String globalIp: "0.0.0.0", String localIp: "0.0.0.0",
-       int retryNum: 10, bool useUpnp: false, bool useDht: false, bool verbose:false}) {
-    this._builder = builder;
-    this._torrentClientManager = new TorrentClientManager(builder, verbose: verbose);
-    this._upnpPortMapClient = new UpnpPortMapHelper(builder, appid, verbose: verbose);
-    this._portMapAI = new TorrentEngineAIPortMap(upnpPortMapClient);
-    this._useUpnp = useUpnp;
-    this._useDht = useDht;
-    this._dhtClient = new KNode(builder, verbose: verbose);
-    this._verbose = verbose;
-    this._dhtClient.onGetPeerValue.listen((KGetPeerValue value) {
-      TorrentEngineTorrent t = getTorrent(value.infoHash.value);
-      if (t != null) {
-        log("<=1==> ${value.ipAsString}:${value.port}");
-        t.torrentClient.putTorrentPeerInfoFromTracker(value.ipAsString, value.port);
-      }
-    });
-  }
 
   addBootNode(String ip, int port) {
     if (ip != null && port != null) {
@@ -124,11 +129,11 @@ class TorrentEngine {
       _isStart = false;
     });
   }
-  
+
   void log(String message) {
-    if(_verbose) {
-       print("## message");
-     }
+    if (_verbose) {
+      print("## message");
+    }
   }
 }
 

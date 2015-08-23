@@ -9,7 +9,7 @@ import '../client/torrentclient.dart';
 import '../tracker/trackerclient.dart';
 import 'torrentengineai.dart';
 import 'torrentengineai_protmap.dart';
-import 'torrentenginetorrent.dart';
+import 'torrentengine.dart';
 
 class TorrentEngineTorrent {
   TorrentClient _torrentClient = null;
