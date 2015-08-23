@@ -57,6 +57,13 @@ class TorrentEngineAIPortMap {
 
   Future _startTorrent(TorrentClientManager manager, bool usePortMap_t) async {
     int retry = 0;
+    if (usePortMap_t) {
+      List<UpnpDeviceInfo> routers = await _upnpPortMapClient.searchRoutder(reuseRouter: false);
+      if (routers == null || routers.length == 0) {
+        throw "not found router";
+      }
+    }
+
     while (retry <= baseNumOfRetry) {
       try {
         await manager.start(baseLocalAddress, baseLocalPort + retry, baseGlobalIp, baseGlobalPort + retry);
