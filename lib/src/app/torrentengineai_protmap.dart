@@ -45,29 +45,30 @@ class TorrentEngineAIPortMap {
     return Future.wait(r);
   }
 
-  Future _startTorrent(TorrentClientManager manager) {
+  Future _startTorrent(TorrentClientManager manager) async {
     int retry = 0;
-    a(dynamic d) {
-      return manager.start(baseLocalAddress, baseLocalPort + retry, baseGlobalIp, baseGlobalPort + retry).then((_) {
-        return _dhtClient.start(ip: baseLocalAddress, port: baseLocalPort + retry).then((_) {
-          if (usePortMap == true) {
-            return _startPortMap().then((_) {
-              manager.globalPort = _upnpPortMapClient.externalPort;
-            }).catchError((e) {
-              manager.globalPort = manager.localPort;
-              throw e;
-            }).then((_) {
-              return _upnpPortMapClient.startGetExternalIp(reuseRouter: true).then((List<StartGetExternalIp> ips) {
-                manager.globalIp = ips.first.externalIp;
-              }).catchError((e) {
-                ;
-              });
-            });
-          } else {
+
+    while (true) {
+      try {
+        await manager.start(baseLocalAddress, baseLocalPort + retry, baseGlobalIp, baseGlobalPort + retry);
+        await _dhtClient.start(ip: baseLocalAddress, port: baseLocalPort + retry);
+        if (usePortMap == true) {
+          try {
+            await _startPortMap();
+            manager.globalPort = _upnpPortMapClient.externalPort;
+          } catch (e) {
             manager.globalPort = manager.localPort;
+            throw e;
           }
-        });
-      }).catchError((e) {
+          try {
+            List<StartGetExternalIp> ips = await _upnpPortMapClient.startGetExternalIp(reuseRouter: true);
+            manager.globalIp = ips.first.externalIp;
+          } catch (e) {}
+        } else {
+          manager.globalPort = manager.localPort;
+        }
+        break;
+      } catch (e) {
         if (retry < baseNumOfRetry) {
           retry++;
           List<Future> r = [];
@@ -80,16 +81,13 @@ class TorrentEngineAIPortMap {
           }
 
           if (r.length > 0) {
-            return Future.wait(r).then(a);
-          } else {
-            return a(0);
+            await Future.wait(r);
           }
         } else {
           throw e;
         }
-      });
+      }
     }
-    return a(0);
   }
 
   Future _startPortMap() async {

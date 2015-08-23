@@ -44,6 +44,7 @@ export 'src/dht/message/kgetpeervalue.dart';
 export 'src/dht/message/krpcmessage_builder.dart';
 
 export 'src/app/torrentengine.dart';
+export 'src/app/torrentengine_torrent.dart';
 export 'src/app/torrentengineai.dart';
 
 

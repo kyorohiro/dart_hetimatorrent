@@ -1,4 +1,4 @@
-library hetimatorrent.extra.torrentengine;
+library hetimatorrent.extra.torrentengine.torrent;
 
 import 'dart:async';
 import 'dart:typed_data';
