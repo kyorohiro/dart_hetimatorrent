@@ -109,7 +109,7 @@ class TorrentEngine {
 
 
   addBootNode(String ip, int port) {
-    if (ip != null && port != null) {
+    if (ip != null && port != null && useDht == true) {
       _dhtClient.addBootNode(ip, port);
     }
   }
