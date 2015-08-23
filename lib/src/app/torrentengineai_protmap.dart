@@ -5,8 +5,6 @@ import 'package:hetimanet/hetimanet.dart';
 import 'package:hetimatorrent/hetimatorrent.dart';
 import '../client/torrentclient_manager.dart';
 
-//import 'torrentengineai.dart';
-
 class TorrentEngineAIPortMap {
   bool usePortMap = false;
   bool useDht = false;
@@ -26,11 +24,23 @@ class TorrentEngineAIPortMap {
     this._upnpPortMapClient = upnpPortMapClient;
   }
 
-  Future start(TorrentClientManager manager, KNode dhtClient) async {
+  Future<bool> start(TorrentClientManager manager, KNode dhtClient) async {
     this._manager = manager;
     this._dhtClient = dhtClient;
-    await _startTorrent(this._manager);
+    bool usePortMapIsOk = usePortMap;
+    try {
+      await _startTorrent(this._manager, usePortMap);
+      isStart = true;
+      return usePortMapIsOk;
+    } catch (e) {
+      if (usePortMap == false) {
+        throw e;
+      }
+    }
+
+    await _startTorrent(this._manager, false);
     isStart = true;
+    return false;
   }
 
   Future stop() async {
@@ -45,49 +55,36 @@ class TorrentEngineAIPortMap {
     return Future.wait(r);
   }
 
-  Future _startTorrent(TorrentClientManager manager) async {
+  Future _startTorrent(TorrentClientManager manager, bool usePortMap_t) async {
     int retry = 0;
-
-    while (true) {
+    while (retry <= baseNumOfRetry) {
       try {
         await manager.start(baseLocalAddress, baseLocalPort + retry, baseGlobalIp, baseGlobalPort + retry);
         await _dhtClient.start(ip: baseLocalAddress, port: baseLocalPort + retry);
-        if (usePortMap == true) {
-          try {
-            await _startPortMap();
-            manager.globalPort = _upnpPortMapClient.externalPort;
-          } catch (e) {
-            manager.globalPort = manager.localPort;
-            throw e;
-          }
-          try {
-            List<StartGetExternalIp> ips = await _upnpPortMapClient.startGetExternalIp(reuseRouter: true);
-            manager.globalIp = ips.first.externalIp;
-          } catch (e) {}
-        } else {
-          manager.globalPort = manager.localPort;
-        }
-        break;
-      } catch (e) {
-        if (retry < baseNumOfRetry) {
-          retry++;
-          List<Future> r = [];
-          if (manager.isStart) {
-            r.add(manager.stop());
-          }
+        manager.globalPort = manager.localPort;
+        if (usePortMap_t == true) {
+          await _startPortMap();
+          manager.globalPort = _upnpPortMapClient.externalPort;
 
-          if (_dhtClient.isStart) {
-            r.add(_dhtClient.stop());
-          }
-
-          if (r.length > 0) {
-            await Future.wait(r);
-          }
-        } else {
-          throw e;
+          List<StartGetExternalIp> ips = await _upnpPortMapClient.startGetExternalIp(reuseRouter: true);
+          manager.globalIp = ips.first.externalIp;
         }
+        return;
+      } catch (e) {}
+      retry++;
+
+      List<Future> r = [];
+      if (manager.isStart) {
+        r.add(manager.stop());
+      }
+      if (_dhtClient.isStart) {
+        r.add(_dhtClient.stop());
+      }
+      if (r.length > 0) {
+        await Future.wait(r);
       }
     }
+    throw "";
   }
 
   Future _startPortMap() async {
