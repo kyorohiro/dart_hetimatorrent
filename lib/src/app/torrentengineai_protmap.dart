@@ -68,8 +68,8 @@ class TorrentEngineAIPortMap {
               manager.globalPort = manager.localPort;
               throw e;
             }).then((_) {
-              return _upnpPortMapClient.startGetExternalIp(reuseRouter: true).then((StartGetExternalIp ip) {
-                manager.globalIp = ip.externalIp;
+              return _upnpPortMapClient.startGetExternalIp(reuseRouter: true).then((List<StartGetExternalIp> ips) {
+                manager.globalIp = ips.first.externalIp;
               }).catchError((e) {
                 ;
               });
@@ -106,7 +106,7 @@ class TorrentEngineAIPortMap {
   Future _startPortMap() {
     _upnpPortMapClient.numOfRetry = 0;
     _upnpPortMapClient.basePort = _manager.localPort;
-    _upnpPortMapClient.localAddress = _manager.localIp;
+    _upnpPortMapClient.localIp = _manager.localIp;
     _upnpPortMapClient.localPort = _manager.localPort;
     return _upnpPortMapClient.startPortMap(reuseRouter: true,newProtocol:UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_TCP).then((StartPortMapResult r){
       return _upnpPortMapClient.startPortMap(reuseRouter: true,newProtocol:UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_UDP);
