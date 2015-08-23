@@ -14,7 +14,7 @@ class TorrentEngineAIPortMap {
   String baseGlobalIp = "0.0.0.0";
   int baseLocalPort = 18080;
   int baseGlobalPort = 18080;
-  int baseNumOfRetry = 10;
+  int baseNumOfRetry = 3;
 
   TorrentClientManager _manager = null;
   KNode _dhtClient = null;
@@ -93,15 +93,9 @@ class TorrentEngineAIPortMap {
     _upnpPortMapClient.localIp = _manager.localIp;
     _upnpPortMapClient.localPort = _manager.localPort;
 
-    try {
-      await _upnpPortMapClient.startPortMap(reuseRouter: true, newProtocol: UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_TCP);
-      return _upnpPortMapClient.startPortMap(reuseRouter: true, newProtocol: UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_UDP);
-    } catch (e) {
-      List<Future> r = [];
-      r.add(_upnpPortMapClient.deletePortMapFromAppIdDesc(reuseRouter: false, newProtocol: UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_TCP));
-      r.add(_upnpPortMapClient.deletePortMapFromAppIdDesc(reuseRouter: false, newProtocol: UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_UDP));
-      await Future.wait(r);
-      throw e;
-    }
+    List<Future> f = new List(2);
+    f[0] = _upnpPortMapClient.startPortMap(reuseRouter: true, newProtocol: UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_TCP);
+    f[1] = _upnpPortMapClient.startPortMap(reuseRouter: true, newProtocol: UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_UDP);
+    return Future.wait(f);
   }
 }
