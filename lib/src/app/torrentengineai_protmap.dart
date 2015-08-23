@@ -26,36 +26,30 @@ class TorrentEngineAIPortMap {
     this._upnpPortMapClient = upnpPortMapClient;
   }
 
-  Future start(TorrentClientManager manager, KNode dhtClient) {
+  Future start(TorrentClientManager manager, KNode dhtClient) async {
     this._manager = manager;
     this._dhtClient = dhtClient;
-
-    return _startTorrent(this._manager).then((_) {
-      isStart = true;
-      _upnpPortMapClient.clearSearchedRouterInfo();
-    });
+    await _startTorrent(this._manager);
+    isStart = true;
   }
 
-  Future stop() {
-    return this._manager.stop().then((_) {
-      isStart = false;
-      List<Future> r = [];
-      if (usePortMap == true) {
-        r.add(_upnpPortMapClient.deletePortMapFromAppIdDesc(reuseRouter:false,newProtocol:UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_TCP));
-        r.add(_upnpPortMapClient.deletePortMapFromAppIdDesc(reuseRouter:false,newProtocol:UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_UDP));
-      }
-      //if (useDht == true) {
-        r.add(_dhtClient.stop());        
-     // }
-      return Future.wait(r);
-    });
+  Future stop() async {
+    await this._manager.stop();
+    isStart = false;
+    List<Future> r = [];
+    if (usePortMap == true) {
+      r.add(_upnpPortMapClient.deletePortMapFromAppIdDesc(reuseRouter: false, newProtocol: UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_TCP));
+      r.add(_upnpPortMapClient.deletePortMapFromAppIdDesc(reuseRouter: false, newProtocol: UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_UDP));
+    }
+    r.add(_dhtClient.stop());
+    return Future.wait(r);
   }
 
   Future _startTorrent(TorrentClientManager manager) {
     int retry = 0;
     a(dynamic d) {
       return manager.start(baseLocalAddress, baseLocalPort + retry, baseGlobalIp, baseGlobalPort + retry).then((_) {
-        return _dhtClient.start(ip:baseLocalAddress, port:baseLocalPort + retry).then((_){
+        return _dhtClient.start(ip: baseLocalAddress, port: baseLocalPort + retry).then((_) {
           if (usePortMap == true) {
             return _startPortMap().then((_) {
               manager.globalPort = _upnpPortMapClient.externalPort;
@@ -80,12 +74,12 @@ class TorrentEngineAIPortMap {
           if (manager.isStart) {
             r.add(manager.stop());
           }
-          
-          if(_dhtClient.isStart) {
+
+          if (_dhtClient.isStart) {
             r.add(_dhtClient.stop());
           }
 
-          if(r.length > 0) {
+          if (r.length > 0) {
             return Future.wait(r).then(a);
           } else {
             return a(0);
@@ -98,20 +92,21 @@ class TorrentEngineAIPortMap {
     return a(0);
   }
 
-  Future _startPortMap() {
+  Future _startPortMap() async {
     _upnpPortMapClient.numOfRetry = 0;
     _upnpPortMapClient.basePort = _manager.localPort;
     _upnpPortMapClient.localIp = _manager.localIp;
     _upnpPortMapClient.localPort = _manager.localPort;
-    return _upnpPortMapClient.startPortMap(reuseRouter: true,newProtocol:UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_TCP).then((StartPortMapResult r){
-      return _upnpPortMapClient.startPortMap(reuseRouter: true,newProtocol:UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_UDP);
-    }).catchError((e){
+
+    try {
+      await _upnpPortMapClient.startPortMap(reuseRouter: true, newProtocol: UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_TCP);
+      return _upnpPortMapClient.startPortMap(reuseRouter: true, newProtocol: UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_UDP);
+    } catch (e) {
       List<Future> r = [];
-      r.add(_upnpPortMapClient.deletePortMapFromAppIdDesc(reuseRouter:false,newProtocol:UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_TCP));
-      r.add(_upnpPortMapClient.deletePortMapFromAppIdDesc(reuseRouter:false,newProtocol:UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_UDP));
-      return Future.wait(r).then((_){
-        throw e;
-      });
-    });
+      r.add(_upnpPortMapClient.deletePortMapFromAppIdDesc(reuseRouter: false, newProtocol: UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_TCP));
+      r.add(_upnpPortMapClient.deletePortMapFromAppIdDesc(reuseRouter: false, newProtocol: UpnpPPPDevice.VALUE_PORT_MAPPING_PROTOCOL_UDP));
+      await Future.wait(r);
+      throw e;
+    }
   }
 }

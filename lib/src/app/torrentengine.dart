@@ -124,6 +124,9 @@ class TorrentEngine {
     });
   }
 
+  int get port => _torrentClientManager.localPort;
+  bool get portMapIsOk => false;
+
   Future stop() {
     return _portMapAI.stop().whenComplete(() {
       _isStart = false;
