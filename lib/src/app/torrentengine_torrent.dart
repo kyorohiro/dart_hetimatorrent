@@ -8,7 +8,7 @@ import 'package:hetimatorrent/hetimatorrent.dart';
 import '../client/torrentclient.dart';
 import '../tracker/trackerclient.dart';
 import 'torrentengineai.dart';
-import 'torrentengineai_protmap.dart';
+import 'torrentengineai_boot.dart';
 import 'torrentengine.dart';
 
 class TorrentEngineTorrent {

@@ -6,7 +6,7 @@ import 'package:hetimanet/hetimanet.dart';
 import 'package:hetimatorrent/hetimatorrent.dart';
 import '../client/torrentclient.dart';
 import '../tracker/trackerclient.dart';
-import 'torrentengineai_protmap.dart';
+import 'torrentengineai_boot.dart';
 import 'torrentengine_torrent.dart';
 
 class TorrentEngine {
