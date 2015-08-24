@@ -63,7 +63,8 @@ class TorrentEngineTorrent {
     int start = await _downloadedData.getLength();
     int end = start;
     int retry = 0;
-    while (start >= length) {
+    //print("NNNNNnnnn ${start} >= ${length}");
+    while (start <= length) {
       end = (start + buffer.length > length ? length : start + buffer.length);
       try {
         await _downloadedData.write(buffer, start);
