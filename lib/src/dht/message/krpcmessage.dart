@@ -100,7 +100,7 @@ class KrpcMessage {
 
   Map<String, Object> get rawMessageMap => _messageAsMap;
 
-  static Future<KrpcMessage> decode(List<int> data) async {
+  static Future<KrpcMessage> decode(List<int> data, {errorWithThrow:true}) async {
     Map<String, Object> messageAsMap = null;
     try {
       Object v = Bencode.decode(data);

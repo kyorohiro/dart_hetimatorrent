@@ -87,7 +87,9 @@ class BlockData {
       if (begin+length > _blockSize || _head.lengthPerBit()-1 < blockNum ) {
           throw  {};
       }
+      print("####piece[CC] ${length}, ${blockNum * _blockSize + begin}");
       return _data.write(data.sublist(0,length), blockNum * _blockSize + begin).then((WriteResult result) {
+        print("####piece[CD] ${length}, ${blockNum * _blockSize + begin}");
         {
           //
           //

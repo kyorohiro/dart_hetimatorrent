@@ -80,6 +80,8 @@ class KNode extends Object {
       _udpSocket.onReceive.listen((HetimaReceiveUdpInfo info) {
         KrpcMessage.decode(info.data).then((KrpcMessage message) {
           onReceiveMessage(info, message);
+        }).catchError((e){
+          ;
         });
       });
       _isStart = true;
@@ -95,7 +97,7 @@ class KNode extends Object {
     if (message.isResonse) {
       KSendInfo rm = removeQueryNameFromTransactionId(UTF8.decode(message.rawMessageMap["t"]));
       this._ai.onReceiveResponse(this, info, message);
-      if (rm != null) {
+      if (rm != null && rm.c != null) {
         rm.c.complete(message);
       } else {
         log("----> receive null : [${nodeDebugId}] ${info.remoteAddress} ${info.remotePort}");
@@ -108,7 +110,7 @@ class KNode extends Object {
       this._ai.onReceiveUnknown(this, info, message);
     }
     for (KSendInfo i in clearTimeout(20000)) {
-      if (i.c.isCompleted == false) {
+      if (i.c != null && i.c.isCompleted == false) {
         i.c.completeError({message: "timeout"});
       }
     }
@@ -193,14 +195,14 @@ class KNode extends Object {
     return ret;
   }
 
-  Future sendPingQuery(String ip, int port) => sendMessage(ip, port, KrpcPing.createQuery(_nodeId.value));
+  Future sendPingQuery(String ip, int port, {waitByResponse:false}) => sendMessage(ip, port, KrpcPing.createQuery(_nodeId.value), waitByResponse:waitByResponse);
 
-  Future sendFindNodeQuery(String ip, int port, List<int> targetNodeId) => sendMessage(ip, port, KrpcFindNode.createQuery(_nodeId.value, targetNodeId));
+  Future sendFindNodeQuery(String ip, int port, List<int> targetNodeId, {waitByResponse:false}) => sendMessage(ip, port, KrpcFindNode.createQuery(_nodeId.value, targetNodeId), waitByResponse:waitByResponse);
 
-  Future sendGetPeersQuery(String ip, int port, List<int> infoHash) => sendMessage(ip, port, KrpcGetPeers.createQuery(_nodeId.value, infoHash));
+  Future sendGetPeersQuery(String ip, int port, List<int> infoHash, {waitByResponse:false}) => sendMessage(ip, port, KrpcGetPeers.createQuery(_nodeId.value, infoHash), waitByResponse:waitByResponse);
 
-  Future sendAnnouncePeerQuery(String ip, int port, int implied_port, List<int> infoHash, int announcedPort, List<int> opaqueToken) =>
-      sendMessage(ip, port, KrpcAnnounce.createQuery(_nodeId.value, implied_port, infoHash, announcedPort, opaqueToken));
+  Future sendAnnouncePeerQuery(String ip, int port, int implied_port, List<int> infoHash, int announcedPort, List<int> opaqueToken, {waitByResponse:false}) =>
+      sendMessage(ip, port, KrpcAnnounce.createQuery(_nodeId.value, implied_port, infoHash, announcedPort, opaqueToken), waitByResponse:waitByResponse);
 
   Future sendPingResponse(String ip, int port, List<int> transactionId) => sendMessage(ip, port, KrpcPing.createResponse(_nodeId.value, transactionId));
 
@@ -217,11 +219,17 @@ class KNode extends Object {
 
   Future sendErrorResponse(String ip, int port, int errorCode, List<int> transactionId, [String errorDescription = null]) => sendMessage(ip, port, KrpcError.createResponse(transactionId, errorCode));
 
-  Future sendMessage(String ip, int port, KrpcMessage message) {
+  Future sendMessage(String ip, int port, KrpcMessage message, {waitByResponse:false}) {
     Completer c = new Completer();
     new Future(() {
       if (message.isQuery) {
+        if(waitByResponse == false) {
+          c.complete({});
+          c = null;
+        }
         queryInfo.add(new KSendInfo(message.transactionIdAsString, message.queryAsString, c));
+      } else {
+        c.complete({});
       }
       log("--->send [${_nodeDebugId}] ${ip}:${port} ${message}");
       return _udpSocket.send(message.messageAsBencode, ip, port);
