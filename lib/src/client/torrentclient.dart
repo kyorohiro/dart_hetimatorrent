@@ -252,6 +252,7 @@ class TorrentClient {
         print("####piece[A] ${piece.index}, ${piece.begin}, ${piece.content.length}");
         _targetBlock.writePartBlock(piece.content, piece.index, piece.begin, piece.content.length).then((WriteResult w) {
           print("####piece[B]  ${piece.index}, ${piece.begin}, ${piece.content.length}");
+          ///*
           if (_targetBlock.have(piece.index)) {
             _sendSignal(this, info, new TorrentClientSignal(TorrentClientSignal.ID_SET_PIECE, piece.index, "set piece : index:${piece.index}"));
           } else {
@@ -259,7 +260,7 @@ class TorrentClient {
           }
           if (_targetBlock.haveAll()) {
             _sendSignal(this, null, new TorrentClientSignal(TorrentClientSignal.ID_SET_PIECE_ALL, piece.index, "set piece all"));
-          }
+          }//*/
         }).catchError((e){
           print("####ERROR ${e}");
         });

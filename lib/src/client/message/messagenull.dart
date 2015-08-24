@@ -21,10 +21,21 @@ class MessageNull extends TorrentMessage {
     Completer c = new Completer();
     MessageNull message = null;
     int messageLength = 0;
+
+
+
     parser.push();
     parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN).then((int size) {
       messageLength = size;
       print("##size= ${size}");
+      /*
+      {
+        int end = 50;
+        if((parser.buffer as ArrayBuilder).rawbuffer8.rawbuffer8.length < parser.index-4 + 50) {
+          end = (parser.buffer as ArrayBuilder).rawbuffer8.rawbuffer8.length;
+        }
+        print("----->${(parser.buffer as ArrayBuilder).rawbuffer8.rawbuffer8.sublist(parser.index-4,parser.index-4+end)}");
+      }*/
       if(size >= maxOfMessageSize) {
         throw "";
       }
@@ -40,6 +51,7 @@ class MessageNull extends TorrentMessage {
       }
       return parser.nextBuffer(messageLength);
     }).then((List<int> v) {
+      print("##size, length= ${messageLength} ${v.length}");
       message._mMessageContent.addAll(v);
       parser.pop();
       c.complete(message);

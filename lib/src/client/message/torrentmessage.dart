@@ -68,6 +68,7 @@ class TorrentMessage {
     parser.push();
         
     return new Future(() {
+      print("###-XXXXXXXXXXXXXXXX [1] ->${parser.getInedx()}");
       return MessageNull.decode(parser, maxOfMessageSize:maxOfMessageSize).then((MessageNull nullMessage) {
         parser.back();
         switch (nullMessage._id) {
@@ -103,6 +104,7 @@ class TorrentMessage {
       parser.back();
       throw e;
     }).whenComplete(() {
+      print("###-XXXXXXXXXXXXXXXX [2] ->${parser.getInedx()}");
       parser.buffer.clearInnerBuffer(parser.getInedx());
       parser.pop();
     });

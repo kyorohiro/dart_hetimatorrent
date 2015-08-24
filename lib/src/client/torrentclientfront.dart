@@ -127,11 +127,13 @@ class TorrentClientFront {
 
   Future<TorrentMessage> parse() {
     if (handshaked == false) {
+      print("### handshake --");
       return TorrentMessage.parseHandshake(_parser).then((TorrentMessage message) {
         handshaked = true;
         return message;
       });
     } else {
+      print("### basic --");
       return TorrentMessage.parseBasic(_parser);
     }
   }
