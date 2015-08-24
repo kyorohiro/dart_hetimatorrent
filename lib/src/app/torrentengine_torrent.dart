@@ -48,42 +48,36 @@ class TorrentEngineTorrent {
     });
   }
 
-  Future startTorrent(TorrentEngine engine) {
-    return init().then((_) {
-      return ai.start(engine.torrentClientManager, _torrentClient);
-    });
+  Future startTorrent(TorrentEngine engine) async {
+    await createBaseFile();
+    return await ai.start(engine.torrentClientManager, _torrentClient);
   }
 
   Future stopTorrent() {
     return ai.stop();
   }
 
-  Future init() async {
+  Future createBaseFile() async {
     int length = _torrentFile.info.files.dataSize;
     Uint8List buffer = new Uint8List.fromList(new List.filled(16 * 1024 * 1024, 0));
     int start = await _downloadedData.getLength();
     int end = start;
     int retry = 0;
-    Future write() async {
-      if (start >= length) {
-        return {};
-      }
-      end = (start + buffer.length > length?length:start + buffer.length);
-
-      return _downloadedData.write(buffer, start).then((_) {
+    while (start >= length) {
+      end = (start + buffer.length > length ? length : start + buffer.length);
+      try {
+        await _downloadedData.write(buffer, start);
         start = end;
         retry = 0;
-        return write();
-      }).catchError((_) {
+      } catch (e) {
         retry++;
         if (retry > 5) {
-          throw _;
+          throw e;
         }
-        return new Future.delayed(new Duration(seconds: 1)).then((_) {
-          return write();
-        });
-      });
+        //
+        // chrome file api need to wait , when write into file with giga bytes data. 
+        await new Future.delayed(new Duration(seconds: 1));
+      }
     }
-    return write();
   }
 }
