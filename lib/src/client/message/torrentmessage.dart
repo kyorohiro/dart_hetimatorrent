@@ -64,11 +64,11 @@ class TorrentMessage {
     });    
   }
 
-  static  Future<TorrentMessage> parseBasic(EasyParser parser, [int maxOfMessageSize = 256 * 1024]) {
+  static  Future<TorrentMessage> parseBasic(EasyParser parser, [int maxOfMessageSize = 64 * 1024]) {
     parser.push();
         
     return new Future(() {
-      return MessageNull.decode(parser).then((MessageNull nullMessage) {
+      return MessageNull.decode(parser, maxOfMessageSize:maxOfMessageSize).then((MessageNull nullMessage) {
         parser.back();
         switch (nullMessage._id) {
           case TorrentMessage.SIGN_BITFIELD:

@@ -17,13 +17,17 @@ class MessageNull extends TorrentMessage {
     _mMessageContent.addAll(cont);
   }
 
-  static Future<MessageNull> decode(EasyParser parser) {
+  static Future<MessageNull> decode(EasyParser parser, {int maxOfMessageSize:2*1024*1024}) {
     Completer c = new Completer();
     MessageNull message = null;
     int messageLength = 0;
     parser.push();
     parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN).then((int size) {
       messageLength = size;
+      print("##size= ${size}");
+      if(size >= maxOfMessageSize) {
+        throw "";
+      }
       if (size == 0) {
         return TorrentMessage.DUMMY_SIGN_KEEPALIVE;
       } else {

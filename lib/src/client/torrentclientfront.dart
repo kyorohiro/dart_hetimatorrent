@@ -139,12 +139,14 @@ class TorrentClientFront {
   void startReceive() {
     a() {
       new Future(() {
-        parse().then((TorrentMessage message) {
+        return parse().then((TorrentMessage message) {
+          print("###${message}");
           TorrentClientFrontNerve.doReceiveMessage(this, message);
           stream.add(message);
           a();
         });
       }).catchError((e) {
+        print("###catch error");
         stream.addError(e);
         close();
       });
