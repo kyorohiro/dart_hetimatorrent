@@ -72,7 +72,9 @@ class TorrentClientFront {
   
   List<int> _reseved = [0, 0, 0, 0, 0, 0, 0, 0];
   List<int> get reseved => new List.from(_reseved);
-  
+
+  int requestedMaxPieceSize = 16*1024;
+
   bool _verbose = false;
   bool get verbose => _verbose;
 
@@ -134,7 +136,7 @@ class TorrentClientFront {
       });
     } else {
       print("### basic --");
-      return TorrentMessage.parseBasic(_parser);
+      return TorrentMessage.parseBasic(_parser , maxOfMessageSize:requestedMaxPieceSize+20);
     }
   }
 
@@ -210,6 +212,9 @@ class TorrentClientFront {
   }
 
   Future sendRequest(int index, int begin, int length) {
+    if(requestedMaxPieceSize < length) {
+      requestedMaxPieceSize = length;
+    }
     MessageRequest message = new MessageRequest(index, begin, length);
     return sendMessage(message);
   }
