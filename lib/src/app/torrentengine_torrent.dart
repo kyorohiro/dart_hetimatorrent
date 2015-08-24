@@ -25,27 +25,27 @@ class TorrentEngineTorrent {
   List<int> get rawinfoHash => _infoHash;
 
   static Future<TorrentEngineTorrent> createEngioneTorrent(TorrentEngine engine, TorrentFile torrentfile, HetimaData downloadedData,
-      {haveAllData: false, int localPort: 18085, int globalPort: 18085, List<int> bitfield: null, useDht: false}) {
+      {haveAllData: false, int localPort: 18085, int globalPort: 18085, List<int> bitfield: null, useDht: false}) async {
     TorrentEngineTorrent engineTorrent = new TorrentEngineTorrent._e();
-    return TrackerClient.createTrackerClient(engine.builder, torrentfile).then((TrackerClient trackerClient) {
-      engineTorrent._trackerClient = trackerClient;
-      engineTorrent.ai = new TorrentEngineAI(trackerClient, engine.dhtClient, useDht);
+    TrackerClient trackerClient = await TrackerClient.createTrackerClient(engine.builder, torrentfile);
+    engineTorrent._trackerClient = trackerClient;
+    engineTorrent.ai = new TorrentEngineAI(trackerClient, engine.dhtClient, useDht);
 
-      //
-      List<int> reserved = [0, 0, 0, 0, 0, 0, 0, 0];
-      if (useDht == true) {
-        reserved = [0, 0, 0, 0, 0, 0, 0, 0x01];
-      }
+    //
+    List<int> reserved = [0, 0, 0, 0, 0, 0, 0, 0];
+    if (useDht == true) {
+      reserved = [0, 0, 0, 0, 0, 0, 0, 0x01];
+    }
 
-      engineTorrent._infoHash.addAll(trackerClient.infoHash);
-      engineTorrent._torrentClient = new TorrentClient(
-          engine.builder, trackerClient.peerId, trackerClient.infoHash, torrentfile.info.pieces, torrentfile.info.piece_length, torrentfile.info.files.dataSize, downloadedData,
-          ai: engineTorrent.ai, haveAllData: haveAllData, bitfield: bitfield, reserved: reserved);
-      engineTorrent._torrentFile = torrentfile;
-      engineTorrent._downloadedData = downloadedData;
+    engineTorrent._infoHash.addAll(trackerClient.infoHash);
+    engineTorrent._torrentClient = new TorrentClient(
+        engine.builder, trackerClient.peerId, trackerClient.infoHash, torrentfile.info.pieces, 
+        torrentfile.info.piece_length, torrentfile.info.files.dataSize, downloadedData,
+        ai: engineTorrent.ai, haveAllData: haveAllData, bitfield: bitfield, reserved: reserved);
+    engineTorrent._torrentFile = torrentfile;
+    engineTorrent._downloadedData = downloadedData;
 
-      return engineTorrent;
-    });
+    return engineTorrent;
   }
 
   Future startTorrent(TorrentEngine engine) async {
@@ -75,7 +75,7 @@ class TorrentEngineTorrent {
           throw e;
         }
         //
-        // chrome file api need to wait , when write into file with giga bytes data. 
+        // chrome file api need to wait , when write into file with giga bytes data.
         await new Future.delayed(new Duration(seconds: 1));
       }
     }
