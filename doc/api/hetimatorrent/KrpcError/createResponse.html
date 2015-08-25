@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>createResponse method - KrpcError class - hetimatorrent library - Dart API</title>
+    <!-- required because all the links are pseudo-absolute -->
+    <base href="../..">
+
+    <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro|Roboto:500,400italic,300,400' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="static-assets/prettify.css">
+    <link rel="stylesheet" href="static-assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static-assets/styles.css">
+
+    <meta name="description" content="API docs for the createResponse method from the KrpcError class, for the Dart programming language.">
+    <link rel="icon" href="static-assets/favicon.png">
+
+    <!-- Do not remove placeholder -->
+    <!-- Header Placeholder -->
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header class="container-fluid" id="title">
+    <nav class="navbar navbar-fixed-top">
+        <div class="container">
+            <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+            <ol class="breadcrumbs gt-separated hidden-xs">
+                <li><a href="index.html">hetimatorrent</a></li>
+                <li><a href="hetimatorrent/hetimatorrent-library.html">hetimatorrent</a></li>
+                <li><a href="hetimatorrent/KrpcError-class.html">KrpcError</a></li>
+                <li class="self-crumb">createResponse</li>
+            </ol>
+            <div class="self-name">createResponse</div>
+        </div>
+    </nav>
+    <div class="container masthead">
+        <ol class="breadcrumbs gt-separated visible-xs">
+            <li><a href="index.html">hetimatorrent</a></li>
+            <li><a href="hetimatorrent/hetimatorrent-library.html">hetimatorrent</a></li>
+            <li><a href="hetimatorrent/KrpcError-class.html">KrpcError</a></li>
+            <li class="self-crumb">createResponse</li>
+        </ol>
+        <div class="title-description">
+            <h1 class="title">
+                <div class="kind">method</div> createResponse
+            </h1>
+            <!-- p class="subtitle">
+                
+            </p -->
+        </div>
+        <ul class="subnav">
+            <li><a href="hetimatorrent/KrpcError/createResponse.html#source">Source</a></li>
+        </ul>
+    </div>
+</header>
+
+<div class="container body">
+
+  <div class="col-xs-6 col-sm-3 sidebar sidebar-offcanvas-left">
+    <h5><a href="index.html">hetimatorrent</a></h5>
+    <h5><a href="hetimatorrent/hetimatorrent-library.html">hetimatorrent</a></h5>
+    <h5><a href="hetimatorrent/KrpcError-class.html">KrpcError</a></h5>
+
+    <ol>
+    
+    
+      <li class="section-title"><a href="hetimatorrent/KrpcError-class.html#static-methods">Static methods</a></li>
+      <li><a href="hetimatorrent/KrpcError/createResponse.html">createResponse</a></li>
+      <li><a href="hetimatorrent/KrpcError/errorDescription.html">errorDescription</a></li>
+      <li><a href="hetimatorrent/KrpcError/queryCheck.html">queryCheck</a></li>
+    
+    
+      <li class="section-title"><a href="hetimatorrent/KrpcError-class.html#constructors">Constructors</a></li>
+      <li><a href="hetimatorrent/KrpcError/KrpcError.html">KrpcError</a></li>
+    
+    
+    </ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+  <div class="col-xs-12 col-sm-9 col-md-6 main-content">
+
+    <section class="multi-line-signature">
+            <span class="returntype"><a href="hetimatorrent/KrpcMessage-class.html">KrpcMessage</a></span>
+            <span class="name ">createResponse</span>(
+            <br>
+            <div class="parameters">
+                <span class="parameter" id="createResponse-param-transactionId"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">transactionId</span></span>,<br><span class="parameter" id="createResponse-param-errorCode"><span class="type-annotation">int</span> <span class="parameter-name">errorCode</span></span>
+            </div>
+            )    </section>
+
+    <section class="desc markdown">
+    
+          <p class="no-docs">Not documented.</p>
+    
+    </section>
+
+    <section class="summary source-code" id="source">
+      <h2>Source</h2>
+      <pre><code class="prettyprint lang-dart">static KrpcMessage createResponse(List&lt;int&gt; transactionId, int errorCode) {
+  transactionId = (transactionId is Uint8List ? transactionId : new Uint8List.fromList(transactionId));
+  return new KrpcMessage.fromMap({&quot;t&quot;: transactionId, &quot;y&quot;: &quot;e&quot;, &quot;e&quot;: [errorCode, KrpcError.errorDescription(errorCode)]});
+}</code></pre>
+    </section>
+
+  </div> <!-- /.main-content -->
+
+</div> <!-- container -->
+
+<footer>
+    <div class="container-fluid">
+        <div class="container">
+            <p class="text-center">
+                <span class="no-break">
+                  hetimatorrent 0.0.1 api docs
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="https://www.dartlang.org">
+                    <img src="static-assets/favicon.png" alt="Dart" title="Dart"width="16" height="16">
+                  </a>
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="http://creativecommons.org/licenses/by-sa/4.0/">cc license</a>
+                </span>
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script src="static-assets/prettify.js"></script>
+<script src="static-assets/script.js"></script>
+<!-- Do not remove placeholder -->
+<!-- Footer Placeholder -->
+</body>
+
+</html>

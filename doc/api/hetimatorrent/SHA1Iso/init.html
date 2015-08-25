@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>init method - SHA1Iso class - hetimatorrent library - Dart API</title>
+    <!-- required because all the links are pseudo-absolute -->
+    <base href="../..">
+
+    <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro|Roboto:500,400italic,300,400' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="static-assets/prettify.css">
+    <link rel="stylesheet" href="static-assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static-assets/styles.css">
+
+    <meta name="description" content="API docs for the init method from the SHA1Iso class, for the Dart programming language.">
+    <link rel="icon" href="static-assets/favicon.png">
+
+    <!-- Do not remove placeholder -->
+    <!-- Header Placeholder -->
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header class="container-fluid" id="title">
+    <nav class="navbar navbar-fixed-top">
+        <div class="container">
+            <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+            <ol class="breadcrumbs gt-separated hidden-xs">
+                <li><a href="index.html">hetimatorrent</a></li>
+                <li><a href="hetimatorrent/hetimatorrent-library.html">hetimatorrent</a></li>
+                <li><a href="hetimatorrent/SHA1Iso-class.html">SHA1Iso</a></li>
+                <li class="self-crumb">init</li>
+            </ol>
+            <div class="self-name">init</div>
+        </div>
+    </nav>
+    <div class="container masthead">
+        <ol class="breadcrumbs gt-separated visible-xs">
+            <li><a href="index.html">hetimatorrent</a></li>
+            <li><a href="hetimatorrent/hetimatorrent-library.html">hetimatorrent</a></li>
+            <li><a href="hetimatorrent/SHA1Iso-class.html">SHA1Iso</a></li>
+            <li class="self-crumb">init</li>
+        </ol>
+        <div class="title-description">
+            <h1 class="title">
+                <div class="kind">method</div> init
+            </h1>
+            <!-- p class="subtitle">
+                
+            </p -->
+        </div>
+        <ul class="subnav">
+            <li><a href="hetimatorrent/SHA1Iso/init.html#source">Source</a></li>
+        </ul>
+    </div>
+</header>
+
+<div class="container body">
+
+  <div class="col-xs-6 col-sm-3 sidebar sidebar-offcanvas-left">
+    <h5><a href="index.html">hetimatorrent</a></h5>
+    <h5><a href="hetimatorrent/hetimatorrent-library.html">hetimatorrent</a></h5>
+    <h5><a href="hetimatorrent/SHA1Iso-class.html">SHA1Iso</a></h5>
+
+    <ol>
+    
+    
+    
+      <li class="section-title"><a href="hetimatorrent/SHA1Iso-class.html#instance-properties">Properties</a></li>
+      <li><a href="hetimatorrent/SHA1Iso/receivePort.html">receivePort</a>
+</li>
+    
+      <li class="section-title"><a href="hetimatorrent/SHA1Iso-class.html#constructors">Constructors</a></li>
+      <li><a href="hetimatorrent/SHA1Iso/SHA1Iso.html">SHA1Iso</a></li>
+    
+    
+      <li class="section-title"><a href="hetimatorrent/SHA1Iso-class.html#methods">Methods</a></li>
+      <li><a href="hetimatorrent/SHA1Iso/init.html">init</a>
+</li>
+      <li><a href="hetimatorrent/SHA1Iso/requestSingle.html">requestSingle</a>
+</li>
+      <li><a href="hetimatorrent/SHA1Iso/requestSingleWait.html">requestSingleWait</a>
+</li>
+    </ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+  <div class="col-xs-12 col-sm-9 col-md-6 main-content">
+
+    <section class="multi-line-signature">
+            <span class="returntype">Future</span>
+            <span class="name ">init</span>(
+            <br>
+            <div class="parameters">
+                {<span class="parameter" id="init-param-path"><span class="type-annotation">String</span> <span class="parameter-name">path</span>: <span class="default-value">"sha1Isolate.dart"</span></span>}
+            </div>
+            )    </section>
+
+    <section class="desc markdown">
+    
+          <p class="no-docs">Not documented.</p>
+    
+    </section>
+
+    <section class="summary source-code" id="source">
+      <h2>Source</h2>
+      <pre><code class="prettyprint lang-dart">Future init({String path: &quot;sha1Isolate.dart&quot;}) {
+  Completer c = new Completer();
+  int count = 0;
+  for (int ii =0;ii&lt; receivePort.length;ii++) {
+    int id = ii;
+    SHA1IsoInfo info = receivePort[id];
+    ReceivePort port = info.receivePort;
+    info.streanSubscription = port.listen((message) {
+      //print(&quot;### receice ${id}&quot;);
+
+      if (message is SendPort) {
+        count++;
+        info.sendPort = message;
+        //cancel.cancel();
+        if (count &gt;= receivePort.length &amp;&amp; !c.isCompleted) {
+          c.complete();
+        }
+      }
+      else if (message is List &amp;&amp; message.length == 20) {
+        List&lt;List&lt;int&gt;&gt; ret = [];
+        ret.add(message);
+     //   print(&quot;receice ${id} ${receivePort[id].c.isCompleted} ${receivePort[id].accessTicket.isCompleted} ${ret}&quot;);
+        //if(receivePort[id].c.isCompleted == false) {
+          receivePort[id].c.complete(ret);
+        //}
+        //if(receivePort[id].accessTicket == false) {
+          receivePort[id].accessTicket.complete({});
+        //}
+      }
+      else {
+       print(&quot;a${message}&quot;);
+      }
+    });
+    Isolate.spawnUri(new Uri.file(path), [], port.sendPort);
+  }
+  return c.future;
+}</code></pre>
+    </section>
+
+  </div> <!-- /.main-content -->
+
+</div> <!-- container -->
+
+<footer>
+    <div class="container-fluid">
+        <div class="container">
+            <p class="text-center">
+                <span class="no-break">
+                  hetimatorrent 0.0.1 api docs
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="https://www.dartlang.org">
+                    <img src="static-assets/favicon.png" alt="Dart" title="Dart"width="16" height="16">
+                  </a>
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="http://creativecommons.org/licenses/by-sa/4.0/">cc license</a>
+                </span>
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script src="static-assets/prettify.js"></script>
+<script src="static-assets/script.js"></script>
+<!-- Do not remove placeholder -->
+<!-- Footer Placeholder -->
+</body>
+
+</html>

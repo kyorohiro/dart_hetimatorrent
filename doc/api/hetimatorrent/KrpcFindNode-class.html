@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>KrpcFindNode class - hetimatorrent library - Dart API</title>
+    <!-- required because all the links are pseudo-absolute -->
+    <base href="..">
+
+    <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro|Roboto:500,400italic,300,400' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="static-assets/prettify.css">
+    <link rel="stylesheet" href="static-assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static-assets/styles.css">
+
+    <meta name="description" content="API docs for the KrpcFindNode class from the hetimatorrent library, for the Dart programming language.">
+    <link rel="icon" href="static-assets/favicon.png">
+
+    <!-- Do not remove placeholder -->
+    <!-- Header Placeholder -->
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header class="container-fluid" id="title">
+    <nav class="navbar navbar-fixed-top">
+        <div class="container">
+            <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+            <ol class="breadcrumbs gt-separated hidden-xs">
+                <li><a href="index.html">hetimatorrent</a></li>
+                <li><a href="hetimatorrent/hetimatorrent-library.html">hetimatorrent</a></li>
+                <li class="self-crumb">KrpcFindNode</li>
+            </ol>
+            <div class="self-name">KrpcFindNode</div>
+        </div>
+    </nav>
+    <div class="container masthead">
+        <ol class="breadcrumbs gt-separated visible-xs">
+            <li><a href="index.html">hetimatorrent</a></li>
+            <li><a href="hetimatorrent/hetimatorrent-library.html">hetimatorrent</a></li>
+            <li class="self-crumb">KrpcFindNode</li>
+        </ol>
+        <div class="title-description">
+            <h1 class="title">
+                <div class="kind">class</div> KrpcFindNode
+            </h1>
+            <!-- p class="subtitle">
+                
+            </p -->
+        </div>
+        <ul class="subnav">
+            <li><a href="hetimatorrent/KrpcFindNode-class.html#static-properties">Static Properties</a></li>
+            <li><a href="hetimatorrent/KrpcFindNode-class.html#static-methods">Static Methods</a></li>
+            <li><a href="hetimatorrent/KrpcFindNode-class.html#instance-properties">Properties</a></li>
+            <li><a href="hetimatorrent/KrpcFindNode-class.html#constructors">Constructors</a></li>
+        </ul>
+    </div>
+</header>
+
+<div class="container body">
+
+  <div class="col-xs-6 col-sm-3 col-md-3 sidebar sidebar-offcanvas-left">
+    <h5><a href="index.html">hetimatorrent</a></h5>
+    <h5><a href="hetimatorrent/hetimatorrent-library.html">hetimatorrent</a></h5>
+
+    <ol>
+    
+    
+    
+      <li class="section-title"><a href="hetimatorrent/hetimatorrent-library.html#functions">Functions</a></li>
+      <li><a href="hetimatorrent/objectToString.html">objectToString</a></li>
+    
+    
+      <li class="section-title"><a href="hetimatorrent/hetimatorrent-library.html#classes">Classes</a></li>
+      <li><a href="hetimatorrent/Bdecoder-class.html">Bdecoder</a></li>
+      <li><a href="hetimatorrent/Bencode-class.html">Bencode</a></li>
+      <li><a href="hetimatorrent/Bencoder-class.html">Bencoder</a></li>
+      <li><a href="hetimatorrent/Bitfield-class.html">Bitfield</a></li>
+      <li><a href="hetimatorrent/BitfieldInter-class.html">BitfieldInter</a></li>
+      <li><a href="hetimatorrent/BlockData-class.html">BlockData</a></li>
+      <li><a href="hetimatorrent/ChokeTest-class.html">ChokeTest</a></li>
+      <li><a href="hetimatorrent/CreatePieceHashResult-class.html">CreatePieceHashResult</a></li>
+      <li><a href="hetimatorrent/DDBitfield-class.html">DDBitfield</a></li>
+      <li><a href="hetimatorrent/HetiBdecoder-class.html">HetiBdecoder</a></li>
+      <li><a href="hetimatorrent/HetiBencode-class.html">HetiBencode</a></li>
+      <li><a href="hetimatorrent/HetimaDataFSDebug-class.html">HetimaDataFSDebug</a></li>
+      <li><a href="hetimatorrent/HetimaDataFSDebugBuilder-class.html">HetimaDataFSDebugBuilder</a></li>
+      <li><a href="hetimatorrent/KBucket-class.html">KBucket</a></li>
+      <li><a href="hetimatorrent/KGetPeerNodes-class.html">KGetPeerNodes</a></li>
+      <li><a href="hetimatorrent/KGetPeerValue-class.html">KGetPeerValue</a></li>
+      <li><a href="hetimatorrent/KId-class.html">KId</a></li>
+      <li><a href="hetimatorrent/KNode-class.html">KNode</a></li>
+      <li><a href="hetimatorrent/KPeerInfo-class.html">KPeerInfo</a></li>
+      <li><a href="hetimatorrent/KRootingTable-class.html">KRootingTable</a></li>
+      <li><a href="hetimatorrent/KrpcAnnounce-class.html">KrpcAnnounce</a></li>
+      <li><a href="hetimatorrent/KrpcError-class.html">KrpcError</a></li>
+      <li><a href="hetimatorrent/KrpcFindNode-class.html">KrpcFindNode</a></li>
+      <li><a href="hetimatorrent/KrpcGetPeers-class.html">KrpcGetPeers</a></li>
+      <li><a href="hetimatorrent/KrpcMessage-class.html">KrpcMessage</a></li>
+      <li><a href="hetimatorrent/KrpcPing-class.html">KrpcPing</a></li>
+      <li><a href="hetimatorrent/KrpcQuery-class.html">KrpcQuery</a></li>
+      <li><a href="hetimatorrent/KrpcResponse-class.html">KrpcResponse</a></li>
+      <li><a href="hetimatorrent/KSendInfo-class.html">KSendInfo</a></li>
+      <li><a href="hetimatorrent/MessageBitfield-class.html">MessageBitfield</a></li>
+      <li><a href="hetimatorrent/MessageCancel-class.html">MessageCancel</a></li>
+      <li><a href="hetimatorrent/MessageChoke-class.html">MessageChoke</a></li>
+      <li><a href="hetimatorrent/MessageHandshake-class.html">MessageHandshake</a></li>
+      <li><a href="hetimatorrent/MessageHave-class.html">MessageHave</a></li>
+      <li><a href="hetimatorrent/MessageInterested-class.html">MessageInterested</a></li>
+      <li><a href="hetimatorrent/MessageKeepAlive-class.html">MessageKeepAlive</a></li>
+      <li><a href="hetimatorrent/MessageNotInterested-class.html">MessageNotInterested</a></li>
+      <li><a href="hetimatorrent/MessageNull-class.html">MessageNull</a></li>
+      <li><a href="hetimatorrent/MessagePiece-class.html">MessagePiece</a></li>
+      <li><a href="hetimatorrent/MessagePort-class.html">MessagePort</a></li>
+      <li><a href="hetimatorrent/MessageRequest-class.html">MessageRequest</a></li>
+      <li><a href="hetimatorrent/MessageUnchoke-class.html">MessageUnchoke</a></li>
+      <li><a href="hetimatorrent/PeerIdCreator-class.html">PeerIdCreator</a></li>
+      <li><a href="hetimatorrent/PieceInfo-class.html">PieceInfo</a></li>
+      <li><a href="hetimatorrent/PieceInfoList-class.html">PieceInfoList</a></li>
+      <li><a href="hetimatorrent/RequestSingleWaitReturn-class.html">RequestSingleWaitReturn</a></li>
+      <li><a href="hetimatorrent/SHA1Iso-class.html">SHA1Iso</a></li>
+      <li><a href="hetimatorrent/SHA1IsoInfo-class.html">SHA1IsoInfo</a></li>
+      <li><a href="hetimatorrent/SHA1IsoSub-class.html">SHA1IsoSub</a></li>
+      <li><a href="hetimatorrent/ShuffleLinkedList-class.html">ShuffleLinkedList</a></li>
+      <li><a href="hetimatorrent/StartResult-class.html">StartResult</a></li>
+      <li><a href="hetimatorrent/StopResult-class.html">StopResult</a></li>
+      <li><a href="hetimatorrent/TorrenAIEmpty-class.html">TorrenAIEmpty</a></li>
+      <li><a href="hetimatorrent/TorrentAI-class.html">TorrentAI</a></li>
+      <li><a href="hetimatorrent/TorrentAIBasic-class.html">TorrentAIBasic</a></li>
+      <li><a href="hetimatorrent/TorrentClient-class.html">TorrentClient</a></li>
+      <li><a href="hetimatorrent/TorrentClientFront-class.html">TorrentClientFront</a></li>
+      <li><a href="hetimatorrent/TorrentClientFrontNerve-class.html">TorrentClientFrontNerve</a></li>
+      <li><a href="hetimatorrent/TorrentClientManager-class.html">TorrentClientManager</a></li>
+      <li><a href="hetimatorrent/TorrentClientMessage-class.html">TorrentClientMessage</a></li>
+      <li><a href="hetimatorrent/TorrentClientPeerInfo-class.html">TorrentClientPeerInfo</a></li>
+      <li><a href="hetimatorrent/TorrentClientPeerInfoList-class.html">TorrentClientPeerInfoList</a></li>
+      <li><a href="hetimatorrent/TorrentClientSignal-class.html">TorrentClientSignal</a></li>
+      <li><a href="hetimatorrent/TorrentClientSignalWithFront-class.html">TorrentClientSignalWithFront</a></li>
+      <li><a href="hetimatorrent/TorrentClientSignalWithPeerInfo-class.html">TorrentClientSignalWithPeerInfo</a></li>
+      <li><a href="hetimatorrent/TorrentEngine-class.html">TorrentEngine</a></li>
+      <li><a href="hetimatorrent/TorrentEngineAI-class.html">TorrentEngineAI</a></li>
+      <li><a href="hetimatorrent/TorrentEngineProgress-class.html">TorrentEngineProgress</a></li>
+      <li><a href="hetimatorrent/TorrentEngineTorrent-class.html">TorrentEngineTorrent</a></li>
+      <li><a href="hetimatorrent/TorrentFile-class.html">TorrentFile</a></li>
+      <li><a href="hetimatorrent/TorrentFileCreator-class.html">TorrentFileCreator</a></li>
+      <li><a href="hetimatorrent/TorrentFileCreatorResult-class.html">TorrentFileCreatorResult</a></li>
+      <li><a href="hetimatorrent/TorrentFileFile-class.html">TorrentFileFile</a></li>
+      <li><a href="hetimatorrent/TorrentFileFiles-class.html">TorrentFileFiles</a></li>
+      <li><a href="hetimatorrent/TorrentFileInfo-class.html">TorrentFileInfo</a></li>
+      <li><a href="hetimatorrent/TorrentInfoHashCreator-class.html">TorrentInfoHashCreator</a></li>
+      <li><a href="hetimatorrent/TorrentMessage-class.html">TorrentMessage</a></li>
+      <li><a href="hetimatorrent/TorrentPieceHashCreator-class.html">TorrentPieceHashCreator</a></li>
+      <li><a href="hetimatorrent/TrackerClient-class.html">TrackerClient</a></li>
+      <li><a href="hetimatorrent/TrackerPeerInfo-class.html">TrackerPeerInfo</a></li>
+      <li><a href="hetimatorrent/TrackerPeerManager-class.html">TrackerPeerManager</a></li>
+      <li><a href="hetimatorrent/TrackerRequest-class.html">TrackerRequest</a></li>
+      <li><a href="hetimatorrent/TrackerRequestResult-class.html">TrackerRequestResult</a></li>
+      <li><a href="hetimatorrent/TrackerResponse-class.html">TrackerResponse</a></li>
+      <li><a href="hetimatorrent/TrackerServer-class.html">TrackerServer</a></li>
+      <li><a href="hetimatorrent/TrackerUrl-class.html">TrackerUrl</a></li>
+    
+      <li class="section-title"><a href="hetimatorrent/hetimatorrent-library.html#exceptions">Exceptions</a></li>
+      <li><a href="hetimatorrent/BencodeParseError-class.html">BencodeParseError</a></li>
+      <li><a href="hetimatorrent/HetiBencodeParseError-class.html">HetiBencodeParseError</a></li>
+    </ol>
+  </div>
+
+  <div class="col-xs-12 col-sm-9 col-md-6 main-content">
+
+    <section class="desc markdown">
+    
+          <p class="no-docs">Not documented.</p>
+    
+    </section>
+
+    <section>
+        <dl class="dl-horizontal">
+
+        <dt>Extends</dt>
+        <dd><ul class="gt-separated dark class-relationships">
+            <li>Object</li>
+            <li><a href="hetimatorrent/KrpcMessage-class.html">KrpcMessage</a></li>
+            <li>KrpcFindNode</li>
+        </ul></dd>
+
+
+
+        </dl>
+    </section>
+
+
+    <section class="summary" id="static-properties">
+        <h2>Static Properties</h2>
+
+        <dl class="properties">
+            <dt id="queryID" class="property">
+                <span class="top-level-variable-type">int</span>
+                <a href="hetimatorrent/KrpcFindNode/queryID.html">queryID</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read / write
+    </div>
+    
+            </dd>
+        </dl>
+    </section>
+
+    <section class="summary" id="static-methods">
+        <h2>Static Methods</h2>
+        <dl class="callables">
+            <dt id="createQuery" class="callable">
+                <a href="hetimatorrent/KrpcFindNode/createQuery.html"><span class="name ">createQuery</span></a><span class="signature">(<wbr><span class="parameter" id="createQuery-param-queryingNodesId"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">queryingNodesId</span></span>, <span class="parameter" id="createQuery-param-targetNodeId"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">targetNodeId</span></span>)
+                    &#8594;
+                    <span class="returntype"><a href="hetimatorrent/KrpcMessage-class.html">KrpcMessage</a></span>
+                </span>
+            </dt>
+            <dd>
+                
+            </dd>
+            <dt id="createResponse" class="callable">
+                <a href="hetimatorrent/KrpcFindNode/createResponse.html"><span class="name ">createResponse</span></a><span class="signature">(<wbr><span class="parameter" id="createResponse-param-compactNodeInfo"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">compactNodeInfo</span></span>, <span class="parameter" id="createResponse-param-queryingNodesId"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">queryingNodesId</span></span>, <span class="parameter" id="createResponse-param-transactionId"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">transactionId</span></span>)
+                    &#8594;
+                    <span class="returntype"><a href="hetimatorrent/KrpcMessage-class.html">KrpcMessage</a></span>
+                </span>
+            </dt>
+            <dd>
+                
+            </dd>
+        </dl>
+    </section>
+
+    <section class="summary" id="instance-properties">
+        <h2>Properties</h2>
+
+        <dl class="properties">
+            <dt id="compactNodeInfo" class="property">
+                <span class="top-level-variable-type">List&lt;int&gt;</span>
+                <a href="hetimatorrent/KrpcFindNode/compactNodeInfo.html">compactNodeInfo</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="compactNodeInfoAsKPeerInfo" class="property">
+                <span class="top-level-variable-type">List&lt;<a href="hetimatorrent.dht.kpeerinfo/KPeerInfo-class.html">KPeerInfo</a>&gt;</span>
+                <a href="hetimatorrent/KrpcFindNode/compactNodeInfoAsKPeerInfo.html">compactNodeInfoAsKPeerInfo</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="errorCode" class="property">
+                <span class="top-level-variable-type">int</span>
+                <span class="name ">errorCode</span>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only, <span class="is-inherited">inherited</span>
+    </div>
+    
+            </dd>
+            <dt id="errorMessage" class="property">
+                <span class="top-level-variable-type">List&lt;int&gt;</span>
+                <span class="name ">errorMessage</span>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only, <span class="is-inherited">inherited</span>
+    </div>
+    
+            </dd>
+            <dt id="errorMessageAsString" class="property">
+                <span class="top-level-variable-type">String</span>
+                <span class="name ">errorMessageAsString</span>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only, <span class="is-inherited">inherited</span>
+    </div>
+    
+            </dd>
+            <dt id="isError" class="property">
+                <span class="top-level-variable-type">bool</span>
+                <span class="name ">isError</span>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only, <span class="is-inherited">inherited</span>
+    </div>
+    
+            </dd>
+            <dt id="isQuery" class="property">
+                <span class="top-level-variable-type">bool</span>
+                <span class="name ">isQuery</span>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only, <span class="is-inherited">inherited</span>
+    </div>
+    
+            </dd>
+            <dt id="isResonse" class="property">
+                <span class="top-level-variable-type">bool</span>
+                <span class="name ">isResonse</span>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only, <span class="is-inherited">inherited</span>
+    </div>
+    
+            </dd>
+            <dt id="messageAsBencode" class="property">
+                <span class="top-level-variable-type">List&lt;int&gt;</span>
+                <span class="name ">messageAsBencode</span>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only, <span class="is-inherited">inherited</span>
+    </div>
+    
+            </dd>
+            <dt id="messageAsMap" class="property">
+                <span class="top-level-variable-type">Map&lt;String,Object&gt;</span>
+                <span class="name ">messageAsMap</span>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only, <span class="is-inherited">inherited</span>
+    </div>
+    
+            </dd>
+            <dt id="messageType" class="property">
+                <span class="top-level-variable-type">List&lt;int&gt;</span>
+                <span class="name ">messageType</span>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only, <span class="is-inherited">inherited</span>
+    </div>
+    
+            </dd>
+            <dt id="messageTypeAsString" class="property">
+                <span class="top-level-variable-type">String</span>
+                <span class="name ">messageTypeAsString</span>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only, <span class="is-inherited">inherited</span>
+    </div>
+    
+            </dd>
+            <dt id="nodeId" class="property">
+                <span class="top-level-variable-type">List&lt;int&gt;</span>
+                <span class="name ">nodeId</span>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only, <span class="is-inherited">inherited</span>
+    </div>
+    
+            </dd>
+            <dt id="nodeIdAsKId" class="property">
+                <span class="top-level-variable-type"><a href="hetimatorrent/KId-class.html">KId</a></span>
+                <span class="name ">nodeIdAsKId</span>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only, <span class="is-inherited">inherited</span>
+    </div>
+    
+            </dd>
+            <dt id="nodeIdAsString" class="property">
+                <span class="top-level-variable-type">String</span>
+                <span class="name ">nodeIdAsString</span>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only, <span class="is-inherited">inherited</span>
+    </div>
+    
+            </dd>
+            <dt id="query" class="property">
+                <span class="top-level-variable-type">List&lt;int&gt;</span>
+                <span class="name ">query</span>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only, <span class="is-inherited">inherited</span>
+    </div>
+    
+            </dd>
+            <dt id="queryAsString" class="property">
+                <span class="top-level-variable-type">String</span>
+                <span class="name ">queryAsString</span>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only, <span class="is-inherited">inherited</span>
+    </div>
+    
+            </dd>
+            <dt id="queryFromTransactionId" class="property">
+                <span class="top-level-variable-type">String</span>
+                <span class="name ">queryFromTransactionId</span>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only, <span class="is-inherited">inherited</span>
+    </div>
+    
+            </dd>
+            <dt id="rawMessageAsMap" class="property">
+                <span class="top-level-variable-type">Map&lt;String,Object&gt;</span>
+                <span class="name ">rawMessageAsMap</span>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only, <span class="is-inherited">inherited</span>
+    </div>
+    
+            </dd>
+            <dt id="rawMessageMap" class="property">
+                <span class="top-level-variable-type">Map&lt;String,Object&gt;</span>
+                <span class="name ">rawMessageMap</span>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only, <span class="is-inherited">inherited</span>
+    </div>
+    
+            </dd>
+            <dt id="target" class="property">
+                <span class="top-level-variable-type">List&lt;int&gt;</span>
+                <a href="hetimatorrent/KrpcFindNode/target.html">target</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="targetAsKId" class="property">
+                <span class="top-level-variable-type"><a href="hetimatorrent/KId-class.html">KId</a></span>
+                <a href="hetimatorrent/KrpcFindNode/targetAsKId.html">targetAsKId</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="targetAsString" class="property">
+                <span class="top-level-variable-type">String</span>
+                <a href="hetimatorrent/KrpcFindNode/targetAsString.html">targetAsString</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="transactionId" class="property">
+                <span class="top-level-variable-type">List&lt;int&gt;</span>
+                <span class="name ">transactionId</span>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only, <span class="is-inherited">inherited</span>
+    </div>
+    
+            </dd>
+            <dt id="transactionIdAsString" class="property">
+                <span class="top-level-variable-type">String</span>
+                <span class="name ">transactionIdAsString</span>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only, <span class="is-inherited">inherited</span>
+    </div>
+    
+            </dd>
+        </dl>
+    </section>
+
+    <section class="summary" id="constructors">
+        <h2>Constructors</h2>
+
+        <dl class="constructor-summary-list">
+            <dt id="KrpcFindNode" class="callable">
+                <span class="name"><a href="hetimatorrent/KrpcFindNode/KrpcFindNode.html">KrpcFindNode</a></span><span class="signature">(<span class="parameter" id="-param-message"><span class="type-annotation"><a href="hetimatorrent/KrpcMessage-class.html">KrpcMessage</a></span> <span class="parameter-name">message</span></span>)</span>
+            </dt>
+            <dd>
+                
+            </dd>
+        </dl>
+      </section>
+
+
+      <section class="summary" id="instance-methods">
+          <h2>Methods</h2>
+          <dl class="callables">
+              <dt id="toAnnounce" class="callable">
+                  <span class="name ">toAnnounce</span><span class="signature">(<wbr>)
+                      &#8594;
+                      <span class="returntype"><a href="hetimatorrent.dht.krpcmessage/KrpcAnnounce-class.html">KrpcAnnounce</a></span>
+                  </span>
+              </dt>
+              <dd>
+                  <div>
+                    <span class="is-inherited">inherited</span>
+                  </div>
+                  
+              </dd>
+              <dt id="toFindNode" class="callable">
+                  <span class="name ">toFindNode</span><span class="signature">(<wbr>)
+                      &#8594;
+                      <span class="returntype"><a href="hetimatorrent.dht.krpcmessage/KrpcFindNode-class.html">KrpcFindNode</a></span>
+                  </span>
+              </dt>
+              <dd>
+                  <div>
+                    <span class="is-inherited">inherited</span>
+                  </div>
+                  
+              </dd>
+              <dt id="toKrpcGetPeers" class="callable">
+                  <span class="name ">toKrpcGetPeers</span><span class="signature">(<wbr>)
+                      &#8594;
+                      <span class="returntype"><a href="hetimatorrent.dht.krpcmessage/KrpcGetPeers-class.html">KrpcGetPeers</a></span>
+                  </span>
+              </dt>
+              <dd>
+                  <div>
+                    <span class="is-inherited">inherited</span>
+                  </div>
+                  
+              </dd>
+              <dt id="toPing" class="callable">
+                  <span class="name ">toPing</span><span class="signature">(<wbr>)
+                      &#8594;
+                      <span class="returntype"><a href="hetimatorrent.dht.krpcmessage/KrpcPing-class.html">KrpcPing</a></span>
+                  </span>
+              </dt>
+              <dd>
+                  <div>
+                    <span class="is-inherited">inherited</span>
+                  </div>
+                  
+              </dd>
+              <dt id="toString" class="callable">
+                  <span class="name ">toString</span><span class="signature">(<wbr>)
+                      &#8594;
+                      <span class="returntype">String</span>
+                  </span>
+              </dt>
+              <dd>
+                  <div>
+                    <span class="is-inherited">inherited</span>
+                  </div>
+                  Returns a string representation of this object.
+              </dd>
+          </dl>
+      </section>
+
+    </div> <!-- /.main-content -->
+
+  <div class="col-xs-6 col-sm-6 col-md-3 sidebar sidebar-offcanvas-right">
+    <h5>KrpcFindNode</h5>
+    <ol>
+    
+      <li class="section-title"><a href="hetimatorrent/KrpcFindNode-class.html#static-properties">Static properties</a></li>
+      <li><a href="hetimatorrent/KrpcFindNode/queryID.html">queryID</a></li>
+    
+      <li class="section-title"><a href="hetimatorrent/KrpcFindNode-class.html#static-methods">Static methods</a></li>
+      <li><a href="hetimatorrent/KrpcFindNode/createQuery.html">createQuery</a></li>
+      <li><a href="hetimatorrent/KrpcFindNode/createResponse.html">createResponse</a></li>
+    
+      <li class="section-title"><a href="hetimatorrent/KrpcFindNode-class.html#instance-properties">Properties</a></li>
+      <li><a href="hetimatorrent/KrpcFindNode/compactNodeInfo.html">compactNodeInfo</a>
+</li>
+      <li><a href="hetimatorrent/KrpcFindNode/compactNodeInfoAsKPeerInfo.html">compactNodeInfoAsKPeerInfo</a>
+</li>
+      <li>errorCode
+</li>
+      <li>errorMessage
+</li>
+      <li>errorMessageAsString
+</li>
+      <li>isError
+</li>
+      <li>isQuery
+</li>
+      <li>isResonse
+</li>
+      <li>messageAsBencode
+</li>
+      <li>messageAsMap
+</li>
+      <li>messageType
+</li>
+      <li>messageTypeAsString
+</li>
+      <li>nodeId
+</li>
+      <li>nodeIdAsKId
+</li>
+      <li>nodeIdAsString
+</li>
+      <li>query
+</li>
+      <li>queryAsString
+</li>
+      <li>queryFromTransactionId
+</li>
+      <li>rawMessageAsMap
+</li>
+      <li>rawMessageMap
+</li>
+      <li><a href="hetimatorrent/KrpcFindNode/target.html">target</a>
+</li>
+      <li><a href="hetimatorrent/KrpcFindNode/targetAsKId.html">targetAsKId</a>
+</li>
+      <li><a href="hetimatorrent/KrpcFindNode/targetAsString.html">targetAsString</a>
+</li>
+      <li>transactionId
+</li>
+      <li>transactionIdAsString
+</li>
+    
+      <li class="section-title"><a href="hetimatorrent/KrpcFindNode-class.html#constructors">Constructors</a></li>
+      <li><a href="hetimatorrent/KrpcFindNode/KrpcFindNode.html">KrpcFindNode</a></li>
+    
+    
+      <li class="section-title"><a href="hetimatorrent/KrpcFindNode-class.html#methods">Methods</a></li>
+      <li>toAnnounce
+</li>
+      <li>toFindNode
+</li>
+      <li>toKrpcGetPeers
+</li>
+      <li>toPing
+</li>
+      <li>toString
+</li>
+    </ol>
+  </div><!--/.sidebar-offcanvas-->
+
+</div> <!-- container -->
+
+<footer>
+    <div class="container-fluid">
+        <div class="container">
+            <p class="text-center">
+                <span class="no-break">
+                  hetimatorrent 0.0.1 api docs
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="https://www.dartlang.org">
+                    <img src="static-assets/favicon.png" alt="Dart" title="Dart"width="16" height="16">
+                  </a>
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="http://creativecommons.org/licenses/by-sa/4.0/">cc license</a>
+                </span>
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script src="static-assets/prettify.js"></script>
+<script src="static-assets/script.js"></script>
+<!-- Do not remove placeholder -->
+<!-- Footer Placeholder -->
+</body>
+
+</html>

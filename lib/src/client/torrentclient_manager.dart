@@ -5,13 +5,13 @@ import 'dart:async';
 import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimanet/hetimanet.dart';
 
-import 'torrentclientfront.dart';
-import 'torrentclientpeerinfo.dart';
-import 'torrentai.dart';
 import 'torrentclientmessage.dart';
 import 'message/message.dart';
 import 'torrentclient.dart';
 
+/**
+ * 
+ */
 class TorrentClientManager {
   String _localIp = "0.0.0.0";
   String globalIp = "0.0.0.0";

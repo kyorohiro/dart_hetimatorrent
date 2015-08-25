@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>startReceive method - TorrentClientFront class - hetimatorrent library - Dart API</title>
+    <!-- required because all the links are pseudo-absolute -->
+    <base href="../..">
+
+    <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro|Roboto:500,400italic,300,400' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="static-assets/prettify.css">
+    <link rel="stylesheet" href="static-assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static-assets/styles.css">
+
+    <meta name="description" content="API docs for the startReceive method from the TorrentClientFront class, for the Dart programming language.">
+    <link rel="icon" href="static-assets/favicon.png">
+
+    <!-- Do not remove placeholder -->
+    <!-- Header Placeholder -->
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header class="container-fluid" id="title">
+    <nav class="navbar navbar-fixed-top">
+        <div class="container">
+            <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+            <ol class="breadcrumbs gt-separated hidden-xs">
+                <li><a href="index.html">hetimatorrent</a></li>
+                <li><a href="hetimatorrent/hetimatorrent-library.html">hetimatorrent</a></li>
+                <li><a href="hetimatorrent/TorrentClientFront-class.html">TorrentClientFront</a></li>
+                <li class="self-crumb">startReceive</li>
+            </ol>
+            <div class="self-name">startReceive</div>
+        </div>
+    </nav>
+    <div class="container masthead">
+        <ol class="breadcrumbs gt-separated visible-xs">
+            <li><a href="index.html">hetimatorrent</a></li>
+            <li><a href="hetimatorrent/hetimatorrent-library.html">hetimatorrent</a></li>
+            <li><a href="hetimatorrent/TorrentClientFront-class.html">TorrentClientFront</a></li>
+            <li class="self-crumb">startReceive</li>
+        </ol>
+        <div class="title-description">
+            <h1 class="title">
+                <div class="kind">method</div> startReceive
+            </h1>
+            <!-- p class="subtitle">
+                
+            </p -->
+        </div>
+        <ul class="subnav">
+            <li><a href="hetimatorrent/TorrentClientFront/startReceive.html#source">Source</a></li>
+        </ul>
+    </div>
+</header>
+
+<div class="container body">
+
+  <div class="col-xs-6 col-sm-3 sidebar sidebar-offcanvas-left">
+    <h5><a href="index.html">hetimatorrent</a></h5>
+    <h5><a href="hetimatorrent/hetimatorrent-library.html">hetimatorrent</a></h5>
+    <h5><a href="hetimatorrent/TorrentClientFront-class.html">TorrentClientFront</a></h5>
+
+    <ol>
+      <li class="section-title"><a href="hetimatorrent/TorrentClientFront-class.html#constants">Constants</a></li>
+      <li><a href="hetimatorrent/TorrentClientFront/STATE_NONE.html">STATE_NONE</a></li>
+      <li><a href="hetimatorrent/TorrentClientFront/STATE_OFF.html">STATE_OFF</a></li>
+      <li><a href="hetimatorrent/TorrentClientFront/STATE_ON.html">STATE_ON</a></li>
+    
+      <li class="section-title"><a href="hetimatorrent/TorrentClientFront-class.html#static-properties">Static properties</a></li>
+      <li><a href="hetimatorrent/TorrentClientFront/debugIdSeed.html">debugIdSeed</a></li>
+    
+      <li class="section-title"><a href="hetimatorrent/TorrentClientFront-class.html#static-methods">Static methods</a></li>
+      <li><a href="hetimatorrent/TorrentClientFront/connect.html">connect</a></li>
+    
+      <li class="section-title"><a href="hetimatorrent/TorrentClientFront-class.html#instance-properties">Properties</a></li>
+      <li><a href="hetimatorrent/TorrentClientFront/amI.html">amI</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/bitfieldFromMe.html">bitfieldFromMe</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/bitfieldToMe.html">bitfieldToMe</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/chokedFromMe.html">chokedFromMe</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/chokedToMe.html">chokedToMe</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/currentRequesting.html">currentRequesting</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/downloadedBytesFromMe.html">downloadedBytesFromMe</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/handshaked.html">handshaked</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/handshakeFromMe.html">handshakeFromMe</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/handshakeToMe.html">handshakeToMe</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/interestedFromMe.html">interestedFromMe</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/interestedToMe.html">interestedToMe</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/isClose.html">isClose</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/lastRequestIndex.html">lastRequestIndex</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/onReceiveEvent.html">onReceiveEvent</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/onReceiveSignal.html">onReceiveSignal</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/requestedMaxPieceSize.html">requestedMaxPieceSize</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/reseved.html">reseved</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/speed.html">speed</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/stream.html">stream</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/targetPeerId.html">targetPeerId</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/tmpForAI.html">tmpForAI</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/unchokedStartTime.html">unchokedStartTime</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/uploadedBytesToMe.html">uploadedBytesToMe</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/uploadSpeedFromUnchokeFromMe.html">uploadSpeedFromUnchokeFromMe</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/verbose.html">verbose</a>
+</li>
+    
+      <li class="section-title"><a href="hetimatorrent/TorrentClientFront-class.html#constructors">Constructors</a></li>
+      <li><a href="hetimatorrent/TorrentClientFront/TorrentClientFront.html">TorrentClientFront</a></li>
+    
+    
+      <li class="section-title"><a href="hetimatorrent/TorrentClientFront-class.html#methods">Methods</a></li>
+      <li><a href="hetimatorrent/TorrentClientFront/close.html">close</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/log.html">log</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/parse.html">parse</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/sendBitfield.html">sendBitfield</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/sendCancel.html">sendCancel</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/sendChoke.html">sendChoke</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/sendHandshake.html">sendHandshake</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/sendHave.html">sendHave</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/sendInterested.html">sendInterested</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/sendMessage.html">sendMessage</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/sendNotInterested.html">sendNotInterested</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/sendPiece.html">sendPiece</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/sendPort.html">sendPort</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/sendRequest.html">sendRequest</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/sendUnchoke.html">sendUnchoke</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/startReceive.html">startReceive</a>
+</li>
+    </ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+  <div class="col-xs-12 col-sm-9 col-md-6 main-content">
+
+    <section class="multi-line-signature">
+            <span class="returntype">void</span>
+            <span class="name ">startReceive</span>(
+            )    </section>
+
+    <section class="desc markdown">
+    
+          <p class="no-docs">Not documented.</p>
+    
+    </section>
+
+    <section class="summary source-code" id="source">
+      <h2>Source</h2>
+      <pre><code class="prettyprint lang-dart">void startReceive() {
+  a() {
+    new Future(() {
+      return parse().then((TorrentMessage message) {
+        print(&quot;###${message}&quot;);
+        TorrentClientFrontNerve.doReceiveMessage(this, message);
+        stream.add(message);
+        a();
+      });
+    }).catchError((e) {
+      print(&quot;###catch error&quot;);
+      stream.addError(e);
+      close();
+    });
+  }
+  a();
+}</code></pre>
+    </section>
+
+  </div> <!-- /.main-content -->
+
+</div> <!-- container -->
+
+<footer>
+    <div class="container-fluid">
+        <div class="container">
+            <p class="text-center">
+                <span class="no-break">
+                  hetimatorrent 0.0.1 api docs
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="https://www.dartlang.org">
+                    <img src="static-assets/favicon.png" alt="Dart" title="Dart"width="16" height="16">
+                  </a>
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="http://creativecommons.org/licenses/by-sa/4.0/">cc license</a>
+                </span>
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script src="static-assets/prettify.js"></script>
+<script src="static-assets/script.js"></script>
+<!-- Do not remove placeholder -->
+<!-- Footer Placeholder -->
+</body>
+
+</html>

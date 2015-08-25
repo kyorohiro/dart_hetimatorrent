@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>KNode class - hetimatorrent library - Dart API</title>
+    <!-- required because all the links are pseudo-absolute -->
+    <base href="..">
+
+    <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro|Roboto:500,400italic,300,400' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="static-assets/prettify.css">
+    <link rel="stylesheet" href="static-assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static-assets/styles.css">
+
+    <meta name="description" content="API docs for the KNode class from the hetimatorrent library, for the Dart programming language.">
+    <link rel="icon" href="static-assets/favicon.png">
+
+    <!-- Do not remove placeholder -->
+    <!-- Header Placeholder -->
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header class="container-fluid" id="title">
+    <nav class="navbar navbar-fixed-top">
+        <div class="container">
+            <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+            <ol class="breadcrumbs gt-separated hidden-xs">
+                <li><a href="index.html">hetimatorrent</a></li>
+                <li><a href="hetimatorrent/hetimatorrent-library.html">hetimatorrent</a></li>
+                <li class="self-crumb">KNode</li>
+            </ol>
+            <div class="self-name">KNode</div>
+        </div>
+    </nav>
+    <div class="container masthead">
+        <ol class="breadcrumbs gt-separated visible-xs">
+            <li><a href="index.html">hetimatorrent</a></li>
+            <li><a href="hetimatorrent/hetimatorrent-library.html">hetimatorrent</a></li>
+            <li class="self-crumb">KNode</li>
+        </ol>
+        <div class="title-description">
+            <h1 class="title">
+                <div class="kind">class</div> KNode
+            </h1>
+            <!-- p class="subtitle">
+                
+            </p -->
+        </div>
+        <ul class="subnav">
+            <li><a href="hetimatorrent/KNode-class.html#static-properties">Static Properties</a></li>
+            <li><a href="hetimatorrent/KNode-class.html#instance-properties">Properties</a></li>
+            <li><a href="hetimatorrent/KNode-class.html#constructors">Constructors</a></li>
+            <li><a href="hetimatorrent/KNode-class.html#instance-methods">Methods</a></li>
+        </ul>
+    </div>
+</header>
+
+<div class="container body">
+
+  <div class="col-xs-6 col-sm-3 col-md-3 sidebar sidebar-offcanvas-left">
+    <h5><a href="index.html">hetimatorrent</a></h5>
+    <h5><a href="hetimatorrent/hetimatorrent-library.html">hetimatorrent</a></h5>
+
+    <ol>
+    
+    
+    
+      <li class="section-title"><a href="hetimatorrent/hetimatorrent-library.html#functions">Functions</a></li>
+      <li><a href="hetimatorrent/objectToString.html">objectToString</a></li>
+    
+    
+      <li class="section-title"><a href="hetimatorrent/hetimatorrent-library.html#classes">Classes</a></li>
+      <li><a href="hetimatorrent/Bdecoder-class.html">Bdecoder</a></li>
+      <li><a href="hetimatorrent/Bencode-class.html">Bencode</a></li>
+      <li><a href="hetimatorrent/Bencoder-class.html">Bencoder</a></li>
+      <li><a href="hetimatorrent/Bitfield-class.html">Bitfield</a></li>
+      <li><a href="hetimatorrent/BitfieldInter-class.html">BitfieldInter</a></li>
+      <li><a href="hetimatorrent/BlockData-class.html">BlockData</a></li>
+      <li><a href="hetimatorrent/ChokeTest-class.html">ChokeTest</a></li>
+      <li><a href="hetimatorrent/CreatePieceHashResult-class.html">CreatePieceHashResult</a></li>
+      <li><a href="hetimatorrent/DDBitfield-class.html">DDBitfield</a></li>
+      <li><a href="hetimatorrent/HetiBdecoder-class.html">HetiBdecoder</a></li>
+      <li><a href="hetimatorrent/HetiBencode-class.html">HetiBencode</a></li>
+      <li><a href="hetimatorrent/HetimaDataFSDebug-class.html">HetimaDataFSDebug</a></li>
+      <li><a href="hetimatorrent/HetimaDataFSDebugBuilder-class.html">HetimaDataFSDebugBuilder</a></li>
+      <li><a href="hetimatorrent/KBucket-class.html">KBucket</a></li>
+      <li><a href="hetimatorrent/KGetPeerNodes-class.html">KGetPeerNodes</a></li>
+      <li><a href="hetimatorrent/KGetPeerValue-class.html">KGetPeerValue</a></li>
+      <li><a href="hetimatorrent/KId-class.html">KId</a></li>
+      <li><a href="hetimatorrent/KNode-class.html">KNode</a></li>
+      <li><a href="hetimatorrent/KPeerInfo-class.html">KPeerInfo</a></li>
+      <li><a href="hetimatorrent/KRootingTable-class.html">KRootingTable</a></li>
+      <li><a href="hetimatorrent/KrpcAnnounce-class.html">KrpcAnnounce</a></li>
+      <li><a href="hetimatorrent/KrpcError-class.html">KrpcError</a></li>
+      <li><a href="hetimatorrent/KrpcFindNode-class.html">KrpcFindNode</a></li>
+      <li><a href="hetimatorrent/KrpcGetPeers-class.html">KrpcGetPeers</a></li>
+      <li><a href="hetimatorrent/KrpcMessage-class.html">KrpcMessage</a></li>
+      <li><a href="hetimatorrent/KrpcPing-class.html">KrpcPing</a></li>
+      <li><a href="hetimatorrent/KrpcQuery-class.html">KrpcQuery</a></li>
+      <li><a href="hetimatorrent/KrpcResponse-class.html">KrpcResponse</a></li>
+      <li><a href="hetimatorrent/KSendInfo-class.html">KSendInfo</a></li>
+      <li><a href="hetimatorrent/MessageBitfield-class.html">MessageBitfield</a></li>
+      <li><a href="hetimatorrent/MessageCancel-class.html">MessageCancel</a></li>
+      <li><a href="hetimatorrent/MessageChoke-class.html">MessageChoke</a></li>
+      <li><a href="hetimatorrent/MessageHandshake-class.html">MessageHandshake</a></li>
+      <li><a href="hetimatorrent/MessageHave-class.html">MessageHave</a></li>
+      <li><a href="hetimatorrent/MessageInterested-class.html">MessageInterested</a></li>
+      <li><a href="hetimatorrent/MessageKeepAlive-class.html">MessageKeepAlive</a></li>
+      <li><a href="hetimatorrent/MessageNotInterested-class.html">MessageNotInterested</a></li>
+      <li><a href="hetimatorrent/MessageNull-class.html">MessageNull</a></li>
+      <li><a href="hetimatorrent/MessagePiece-class.html">MessagePiece</a></li>
+      <li><a href="hetimatorrent/MessagePort-class.html">MessagePort</a></li>
+      <li><a href="hetimatorrent/MessageRequest-class.html">MessageRequest</a></li>
+      <li><a href="hetimatorrent/MessageUnchoke-class.html">MessageUnchoke</a></li>
+      <li><a href="hetimatorrent/PeerIdCreator-class.html">PeerIdCreator</a></li>
+      <li><a href="hetimatorrent/PieceInfo-class.html">PieceInfo</a></li>
+      <li><a href="hetimatorrent/PieceInfoList-class.html">PieceInfoList</a></li>
+      <li><a href="hetimatorrent/RequestSingleWaitReturn-class.html">RequestSingleWaitReturn</a></li>
+      <li><a href="hetimatorrent/SHA1Iso-class.html">SHA1Iso</a></li>
+      <li><a href="hetimatorrent/SHA1IsoInfo-class.html">SHA1IsoInfo</a></li>
+      <li><a href="hetimatorrent/SHA1IsoSub-class.html">SHA1IsoSub</a></li>
+      <li><a href="hetimatorrent/ShuffleLinkedList-class.html">ShuffleLinkedList</a></li>
+      <li><a href="hetimatorrent/StartResult-class.html">StartResult</a></li>
+      <li><a href="hetimatorrent/StopResult-class.html">StopResult</a></li>
+      <li><a href="hetimatorrent/TorrenAIEmpty-class.html">TorrenAIEmpty</a></li>
+      <li><a href="hetimatorrent/TorrentAI-class.html">TorrentAI</a></li>
+      <li><a href="hetimatorrent/TorrentAIBasic-class.html">TorrentAIBasic</a></li>
+      <li><a href="hetimatorrent/TorrentClient-class.html">TorrentClient</a></li>
+      <li><a href="hetimatorrent/TorrentClientFront-class.html">TorrentClientFront</a></li>
+      <li><a href="hetimatorrent/TorrentClientFrontNerve-class.html">TorrentClientFrontNerve</a></li>
+      <li><a href="hetimatorrent/TorrentClientManager-class.html">TorrentClientManager</a></li>
+      <li><a href="hetimatorrent/TorrentClientMessage-class.html">TorrentClientMessage</a></li>
+      <li><a href="hetimatorrent/TorrentClientPeerInfo-class.html">TorrentClientPeerInfo</a></li>
+      <li><a href="hetimatorrent/TorrentClientPeerInfoList-class.html">TorrentClientPeerInfoList</a></li>
+      <li><a href="hetimatorrent/TorrentClientSignal-class.html">TorrentClientSignal</a></li>
+      <li><a href="hetimatorrent/TorrentClientSignalWithFront-class.html">TorrentClientSignalWithFront</a></li>
+      <li><a href="hetimatorrent/TorrentClientSignalWithPeerInfo-class.html">TorrentClientSignalWithPeerInfo</a></li>
+      <li><a href="hetimatorrent/TorrentEngine-class.html">TorrentEngine</a></li>
+      <li><a href="hetimatorrent/TorrentEngineAI-class.html">TorrentEngineAI</a></li>
+      <li><a href="hetimatorrent/TorrentEngineProgress-class.html">TorrentEngineProgress</a></li>
+      <li><a href="hetimatorrent/TorrentEngineTorrent-class.html">TorrentEngineTorrent</a></li>
+      <li><a href="hetimatorrent/TorrentFile-class.html">TorrentFile</a></li>
+      <li><a href="hetimatorrent/TorrentFileCreator-class.html">TorrentFileCreator</a></li>
+      <li><a href="hetimatorrent/TorrentFileCreatorResult-class.html">TorrentFileCreatorResult</a></li>
+      <li><a href="hetimatorrent/TorrentFileFile-class.html">TorrentFileFile</a></li>
+      <li><a href="hetimatorrent/TorrentFileFiles-class.html">TorrentFileFiles</a></li>
+      <li><a href="hetimatorrent/TorrentFileInfo-class.html">TorrentFileInfo</a></li>
+      <li><a href="hetimatorrent/TorrentInfoHashCreator-class.html">TorrentInfoHashCreator</a></li>
+      <li><a href="hetimatorrent/TorrentMessage-class.html">TorrentMessage</a></li>
+      <li><a href="hetimatorrent/TorrentPieceHashCreator-class.html">TorrentPieceHashCreator</a></li>
+      <li><a href="hetimatorrent/TrackerClient-class.html">TrackerClient</a></li>
+      <li><a href="hetimatorrent/TrackerPeerInfo-class.html">TrackerPeerInfo</a></li>
+      <li><a href="hetimatorrent/TrackerPeerManager-class.html">TrackerPeerManager</a></li>
+      <li><a href="hetimatorrent/TrackerRequest-class.html">TrackerRequest</a></li>
+      <li><a href="hetimatorrent/TrackerRequestResult-class.html">TrackerRequestResult</a></li>
+      <li><a href="hetimatorrent/TrackerResponse-class.html">TrackerResponse</a></li>
+      <li><a href="hetimatorrent/TrackerServer-class.html">TrackerServer</a></li>
+      <li><a href="hetimatorrent/TrackerUrl-class.html">TrackerUrl</a></li>
+    
+      <li class="section-title"><a href="hetimatorrent/hetimatorrent-library.html#exceptions">Exceptions</a></li>
+      <li><a href="hetimatorrent/BencodeParseError-class.html">BencodeParseError</a></li>
+      <li><a href="hetimatorrent/HetiBencodeParseError-class.html">HetiBencodeParseError</a></li>
+    </ol>
+  </div>
+
+  <div class="col-xs-12 col-sm-9 col-md-6 main-content">
+
+    <section class="desc markdown">
+    
+          <p class="no-docs">Not documented.</p>
+    
+    </section>
+
+
+
+    <section class="summary" id="static-properties">
+        <h2>Static Properties</h2>
+
+        <dl class="properties">
+            <dt id="id" class="property">
+                <span class="top-level-variable-type">int</span>
+                <a href="hetimatorrent/KNode/id.html">id</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read / write
+    </div>
+    
+            </dd>
+        </dl>
+    </section>
+
+
+    <section class="summary" id="instance-properties">
+        <h2>Properties</h2>
+
+        <dl class="properties">
+            <dt id="ai" class="property">
+                <span class="top-level-variable-type">KNodeWork</span>
+                <a href="hetimatorrent/KNode/ai.html">ai</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="announcedPeer" class="property">
+                <span class="top-level-variable-type">List&lt;<a href="hetimatorrent.dht.getpeervalue/KGetPeerValue-class.html">KGetPeerValue</a>&gt;</span>
+                <a href="hetimatorrent/KNode/announcedPeer.html">announcedPeer</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="intervalSecondForAnnounce" class="property">
+                <span class="top-level-variable-type">int</span>
+                <a href="hetimatorrent/KNode/intervalSecondForAnnounce.html">intervalSecondForAnnounce</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="intervalSecondForMaintenance" class="property">
+                <span class="top-level-variable-type">int</span>
+                <a href="hetimatorrent/KNode/intervalSecondForMaintenance.html">intervalSecondForMaintenance</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="isStart" class="property">
+                <span class="top-level-variable-type">bool</span>
+                <a href="hetimatorrent/KNode/isStart.html">isStart</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="nodeDebugId" class="property">
+                <span class="top-level-variable-type">int</span>
+                <a href="hetimatorrent/KNode/nodeDebugId.html">nodeDebugId</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="nodeId" class="property">
+                <span class="top-level-variable-type"><a href="hetimatorrent/KId-class.html">KId</a></span>
+                <a href="hetimatorrent/KNode/nodeId.html">nodeId</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="onGetPeerValue" class="property">
+                <span class="top-level-variable-type">Stream&lt;<a href="hetimatorrent.dht.getpeervalue/KGetPeerValue-class.html">KGetPeerValue</a>&gt;</span>
+                <a href="hetimatorrent/KNode/onGetPeerValue.html">onGetPeerValue</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="port" class="property">
+                <span class="top-level-variable-type">int</span>
+                <a href="hetimatorrent/KNode/port.html">port</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read / write
+    </div>
+    
+            </dd>
+            <dt id="queryInfo" class="property">
+                <span class="top-level-variable-type">List&lt;<a href="hetimatorrent.dht.knode/KSendInfo-class.html">KSendInfo</a>&gt;</span>
+                <a href="hetimatorrent/KNode/queryInfo.html">queryInfo</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read / write
+    </div>
+    
+            </dd>
+            <dt id="rawAnnounced" class="property">
+                <span class="top-level-variable-type"><a href="hetimatorrent/ShuffleLinkedList-class.html">ShuffleLinkedList</a>&lt;<a href="hetimatorrent.dht.getpeervalue/KGetPeerValue-class.html">KGetPeerValue</a>&gt;</span>
+                <a href="hetimatorrent/KNode/rawAnnounced.html">rawAnnounced</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="rawSearchResult" class="property">
+                <span class="top-level-variable-type"><a href="hetimatorrent/ShuffleLinkedList-class.html">ShuffleLinkedList</a>&lt;<a href="hetimatorrent.dht.getpeervalue/KGetPeerValue-class.html">KGetPeerValue</a>&gt;</span>
+                <a href="hetimatorrent/KNode/rawSearchResult.html">rawSearchResult</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="rawUdoSocket" class="property">
+                <span class="top-level-variable-type">HetimaUdpSocket</span>
+                <a href="hetimatorrent/KNode/rawUdoSocket.html">rawUdoSocket</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="rootingtable" class="property">
+                <span class="top-level-variable-type"><a href="hetimatorrent/KRootingTable-class.html">KRootingTable</a></span>
+                <a href="hetimatorrent/KNode/rootingtable.html">rootingtable</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="verbose" class="property">
+                <span class="top-level-variable-type">bool</span>
+                <a href="hetimatorrent/KNode/verbose.html">verbose</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+        </dl>
+    </section>
+
+    <section class="summary" id="constructors">
+        <h2>Constructors</h2>
+
+        <dl class="constructor-summary-list">
+            <dt id="KNode" class="callable">
+                <span class="name"><a href="hetimatorrent/KNode/KNode.html">KNode</a></span><span class="signature">(<span class="parameter" id="-param-socketBuilder"><span class="type-annotation">HetimaSocketBuilder</span> <span class="parameter-name">socketBuilder</span></span>, {<span class="parameter" id="-param-kBucketSize"><span class="type-annotation">int</span> <span class="parameter-name">kBucketSize</span>: <span class="default-value">8</span></span>, <span class="parameter" id="-param-nodeIdAsList"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">nodeIdAsList</span>: <span class="default-value">null</span></span>, <span class="parameter" id="-param-ai"><span class="type-annotation">KNodeWork</span> <span class="parameter-name">ai</span>: <span class="default-value">null</span></span>, <span class="parameter" id="-param-intervalSecondForMaintenance"><span class="parameter-name">intervalSecondForMaintenance</span>: <span class="default-value">10</span></span>, <span class="parameter" id="-param-intervalSecondForAnnounce"><span class="parameter-name">intervalSecondForAnnounce</span>: <span class="default-value">5 * 60</span></span>, <span class="parameter" id="-param-intervalSecondForFindNode"><span class="parameter-name">intervalSecondForFindNode</span>: <span class="default-value">10 * 60</span></span>, <span class="parameter" id="-param-verbose"><span class="type-annotation">bool</span> <span class="parameter-name">verbose</span>: <span class="default-value">false</span></span>})</span>
+            </dt>
+            <dd>
+                
+            </dd>
+        </dl>
+      </section>
+
+
+      <section class="summary" id="instance-methods">
+          <h2>Methods</h2>
+          <dl class="callables">
+              <dt id="addBootNode" class="callable">
+                  <a href="hetimatorrent/KNode/addBootNode.html"><span class="name ">addBootNode</span></a><span class="signature">(<wbr><span class="parameter" id="addBootNode-param-ip"><span class="type-annotation">String</span> <span class="parameter-name">ip</span></span>, <span class="parameter" id="addBootNode-param-port"><span class="type-annotation">int</span> <span class="parameter-name">port</span></span>)
+                      &#8594;
+                      <span class="returntype">dynamic</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="addKPeerInfo" class="callable">
+                  <a href="hetimatorrent/KNode/addKPeerInfo.html"><span class="name ">addKPeerInfo</span></a><span class="signature">(<wbr><span class="parameter" id="addKPeerInfo-param-info"><span class="type-annotation"><a href="hetimatorrent/KPeerInfo-class.html">KPeerInfo</a></span> <span class="parameter-name">info</span></span>)
+                      &#8594;
+                      <span class="returntype">dynamic</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="addSeardchResult" class="callable">
+                  <a href="hetimatorrent/KNode/addSeardchResult.html"><span class="name ">addSeardchResult</span></a><span class="signature">(<wbr><span class="parameter" id="addSeardchResult-param-info"><span class="type-annotation"><a href="hetimatorrent/KGetPeerValue-class.html">KGetPeerValue</a></span> <span class="parameter-name">info</span></span>)
+                      &#8594;
+                      <span class="returntype">dynamic</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="clearTimeout" class="callable">
+                  <a href="hetimatorrent/KNode/clearTimeout.html"><span class="name ">clearTimeout</span></a><span class="signature">(<wbr><span class="parameter" id="clearTimeout-param-timeout"><span class="type-annotation">int</span> <span class="parameter-name">timeout</span></span>)
+                      &#8594;
+                      <span class="returntype">List&lt;<a href="hetimatorrent.dht.knode/KSendInfo-class.html">KSendInfo</a>&gt;</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="containSeardchResult" class="callable">
+                  <a href="hetimatorrent/KNode/containSeardchResult.html"><span class="name ">containSeardchResult</span></a><span class="signature">(<wbr><span class="parameter" id="containSeardchResult-param-info"><span class="type-annotation"><a href="hetimatorrent/KGetPeerValue-class.html">KGetPeerValue</a></span> <span class="parameter-name">info</span></span>)
+                      &#8594;
+                      <span class="returntype">bool</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="getOpaqueWriteToken" class="callable">
+                  <a href="hetimatorrent/KNode/getOpaqueWriteToken.html"><span class="name ">getOpaqueWriteToken</span></a><span class="signature">(<wbr><span class="parameter" id="getOpaqueWriteToken-param-infoHash"><span class="type-annotation"><a href="hetimatorrent/KId-class.html">KId</a></span> <span class="parameter-name">infoHash</span></span>, <span class="parameter" id="getOpaqueWriteToken-param-nodeID"><span class="type-annotation"><a href="hetimatorrent/KId-class.html">KId</a></span> <span class="parameter-name">nodeID</span></span>)
+                      &#8594;
+                      <span class="returntype">List&lt;int&gt;</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="getQueryNameFromTransactionId" class="callable">
+                  <a href="hetimatorrent/KNode/getQueryNameFromTransactionId.html"><span class="name ">getQueryNameFromTransactionId</span></a><span class="signature">(<wbr><span class="parameter" id="getQueryNameFromTransactionId-param-transactionId"><span class="type-annotation">String</span> <span class="parameter-name">transactionId</span></span>)
+                      &#8594;
+                      <span class="returntype">String</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="log" class="callable">
+                  <a href="hetimatorrent/KNode/log.html"><span class="name ">log</span></a><span class="signature">(<wbr><span class="parameter" id="log-param-message"><span class="type-annotation">String</span> <span class="parameter-name">message</span></span>)
+                      &#8594;
+                      <span class="returntype">dynamic</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="onReceiveMessage" class="callable">
+                  <a href="hetimatorrent/KNode/onReceiveMessage.html"><span class="name ">onReceiveMessage</span></a><span class="signature">(<wbr><span class="parameter" id="onReceiveMessage-param-info"><span class="type-annotation">HetimaReceiveUdpInfo</span> <span class="parameter-name">info</span></span>, <span class="parameter" id="onReceiveMessage-param-message"><span class="type-annotation"><a href="hetimatorrent/KrpcMessage-class.html">KrpcMessage</a></span> <span class="parameter-name">message</span></span>)
+                      &#8594;
+                      <span class="returntype">dynamic</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="removeQueryNameFromTransactionId" class="callable">
+                  <a href="hetimatorrent/KNode/removeQueryNameFromTransactionId.html"><span class="name ">removeQueryNameFromTransactionId</span></a><span class="signature">(<wbr><span class="parameter" id="removeQueryNameFromTransactionId-param-transactionId"><span class="type-annotation">String</span> <span class="parameter-name">transactionId</span></span>)
+                      &#8594;
+                      <span class="returntype"><a href="hetimatorrent/KSendInfo-class.html">KSendInfo</a></span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="researchSearchPeer" class="callable">
+                  <a href="hetimatorrent/KNode/researchSearchPeer.html"><span class="name ">researchSearchPeer</span></a><span class="signature">(<wbr>[<span class="parameter" id="researchSearchPeer-param-infoHash"><span class="type-annotation"><a href="hetimatorrent/KId-class.html">KId</a></span> <span class="parameter-name">infoHash</span> = <span class="default-value">null</span></span>])
+                      &#8594;
+                      <span class="returntype">dynamic</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="sendAnnouncePeerQuery" class="callable">
+                  <a href="hetimatorrent/KNode/sendAnnouncePeerQuery.html"><span class="name ">sendAnnouncePeerQuery</span></a><span class="signature">(<wbr><span class="parameter" id="sendAnnouncePeerQuery-param-ip"><span class="type-annotation">String</span> <span class="parameter-name">ip</span></span>, <span class="parameter" id="sendAnnouncePeerQuery-param-port"><span class="type-annotation">int</span> <span class="parameter-name">port</span></span>, <span class="parameter" id="sendAnnouncePeerQuery-param-implied_port"><span class="type-annotation">int</span> <span class="parameter-name">implied_port</span></span>, <span class="parameter" id="sendAnnouncePeerQuery-param-infoHash"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">infoHash</span></span>, <span class="parameter" id="sendAnnouncePeerQuery-param-announcedPort"><span class="type-annotation">int</span> <span class="parameter-name">announcedPort</span></span>, <span class="parameter" id="sendAnnouncePeerQuery-param-opaqueToken"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">opaqueToken</span></span>, {<span class="parameter" id="sendAnnouncePeerQuery-param-waitByResponse"><span class="parameter-name">waitByResponse</span>: <span class="default-value">false</span></span>})
+                      &#8594;
+                      <span class="returntype">Future</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="sendAnnouncePeerResponse" class="callable">
+                  <a href="hetimatorrent/KNode/sendAnnouncePeerResponse.html"><span class="name ">sendAnnouncePeerResponse</span></a><span class="signature">(<wbr><span class="parameter" id="sendAnnouncePeerResponse-param-ip"><span class="type-annotation">String</span> <span class="parameter-name">ip</span></span>, <span class="parameter" id="sendAnnouncePeerResponse-param-port"><span class="type-annotation">int</span> <span class="parameter-name">port</span></span>, <span class="parameter" id="sendAnnouncePeerResponse-param-transactionId"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">transactionId</span></span>)
+                      &#8594;
+                      <span class="returntype">Future</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="sendErrorResponse" class="callable">
+                  <a href="hetimatorrent/KNode/sendErrorResponse.html"><span class="name ">sendErrorResponse</span></a><span class="signature">(<wbr><span class="parameter" id="sendErrorResponse-param-ip"><span class="type-annotation">String</span> <span class="parameter-name">ip</span></span>, <span class="parameter" id="sendErrorResponse-param-port"><span class="type-annotation">int</span> <span class="parameter-name">port</span></span>, <span class="parameter" id="sendErrorResponse-param-errorCode"><span class="type-annotation">int</span> <span class="parameter-name">errorCode</span></span>, <span class="parameter" id="sendErrorResponse-param-transactionId"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">transactionId</span></span>, [<span class="parameter" id="sendErrorResponse-param-errorDescription"><span class="type-annotation">String</span> <span class="parameter-name">errorDescription</span> = <span class="default-value">null</span></span>])
+                      &#8594;
+                      <span class="returntype">Future</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="sendFindNodeQuery" class="callable">
+                  <a href="hetimatorrent/KNode/sendFindNodeQuery.html"><span class="name ">sendFindNodeQuery</span></a><span class="signature">(<wbr><span class="parameter" id="sendFindNodeQuery-param-ip"><span class="type-annotation">String</span> <span class="parameter-name">ip</span></span>, <span class="parameter" id="sendFindNodeQuery-param-port"><span class="type-annotation">int</span> <span class="parameter-name">port</span></span>, <span class="parameter" id="sendFindNodeQuery-param-targetNodeId"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">targetNodeId</span></span>, {<span class="parameter" id="sendFindNodeQuery-param-waitByResponse"><span class="parameter-name">waitByResponse</span>: <span class="default-value">false</span></span>})
+                      &#8594;
+                      <span class="returntype">Future</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="sendFindNodeResponse" class="callable">
+                  <a href="hetimatorrent/KNode/sendFindNodeResponse.html"><span class="name ">sendFindNodeResponse</span></a><span class="signature">(<wbr><span class="parameter" id="sendFindNodeResponse-param-ip"><span class="type-annotation">String</span> <span class="parameter-name">ip</span></span>, <span class="parameter" id="sendFindNodeResponse-param-port"><span class="type-annotation">int</span> <span class="parameter-name">port</span></span>, <span class="parameter" id="sendFindNodeResponse-param-transactionId"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">transactionId</span></span>, <span class="parameter" id="sendFindNodeResponse-param-compactNodeInfo"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">compactNodeInfo</span></span>)
+                      &#8594;
+                      <span class="returntype">Future</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="sendGetPeersQuery" class="callable">
+                  <a href="hetimatorrent/KNode/sendGetPeersQuery.html"><span class="name ">sendGetPeersQuery</span></a><span class="signature">(<wbr><span class="parameter" id="sendGetPeersQuery-param-ip"><span class="type-annotation">String</span> <span class="parameter-name">ip</span></span>, <span class="parameter" id="sendGetPeersQuery-param-port"><span class="type-annotation">int</span> <span class="parameter-name">port</span></span>, <span class="parameter" id="sendGetPeersQuery-param-infoHash"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">infoHash</span></span>, {<span class="parameter" id="sendGetPeersQuery-param-waitByResponse"><span class="parameter-name">waitByResponse</span>: <span class="default-value">false</span></span>})
+                      &#8594;
+                      <span class="returntype">Future</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="sendGetPeersResponseWithClosestNodes" class="callable">
+                  <a href="hetimatorrent/KNode/sendGetPeersResponseWithClosestNodes.html"><span class="name ">sendGetPeersResponseWithClosestNodes</span></a><span class="signature">(<wbr><span class="parameter" id="sendGetPeersResponseWithClosestNodes-param-ip"><span class="type-annotation">String</span> <span class="parameter-name">ip</span></span>, <span class="parameter" id="sendGetPeersResponseWithClosestNodes-param-port"><span class="type-annotation">int</span> <span class="parameter-name">port</span></span>, <span class="parameter" id="sendGetPeersResponseWithClosestNodes-param-transactionId"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">transactionId</span></span>, <span class="parameter" id="sendGetPeersResponseWithClosestNodes-param-opaqueWriteToken"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">opaqueWriteToken</span></span>, <span class="parameter" id="sendGetPeersResponseWithClosestNodes-param-compactNodeInfo"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">compactNodeInfo</span></span>)
+                      &#8594;
+                      <span class="returntype">Future</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="sendGetPeersResponseWithPeers" class="callable">
+                  <a href="hetimatorrent/KNode/sendGetPeersResponseWithPeers.html"><span class="name ">sendGetPeersResponseWithPeers</span></a><span class="signature">(<wbr><span class="parameter" id="sendGetPeersResponseWithPeers-param-ip"><span class="type-annotation">String</span> <span class="parameter-name">ip</span></span>, <span class="parameter" id="sendGetPeersResponseWithPeers-param-port"><span class="type-annotation">int</span> <span class="parameter-name">port</span></span>, <span class="parameter" id="sendGetPeersResponseWithPeers-param-transactionId"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">transactionId</span></span>, <span class="parameter" id="sendGetPeersResponseWithPeers-param-opaqueWriteToken"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">opaqueWriteToken</span></span>, <span class="parameter" id="sendGetPeersResponseWithPeers-param-peerInfoStrings"><span class="type-annotation">List&lt;List&lt;int&gt;&gt;</span> <span class="parameter-name">peerInfoStrings</span></span>)
+                      &#8594;
+                      <span class="returntype">Future</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="sendMessage" class="callable">
+                  <a href="hetimatorrent/KNode/sendMessage.html"><span class="name ">sendMessage</span></a><span class="signature">(<wbr><span class="parameter" id="sendMessage-param-ip"><span class="type-annotation">String</span> <span class="parameter-name">ip</span></span>, <span class="parameter" id="sendMessage-param-port"><span class="type-annotation">int</span> <span class="parameter-name">port</span></span>, <span class="parameter" id="sendMessage-param-message"><span class="type-annotation"><a href="hetimatorrent/KrpcMessage-class.html">KrpcMessage</a></span> <span class="parameter-name">message</span></span>, {<span class="parameter" id="sendMessage-param-waitByResponse"><span class="parameter-name">waitByResponse</span>: <span class="default-value">false</span></span>})
+                      &#8594;
+                      <span class="returntype">Future</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="sendPingQuery" class="callable">
+                  <a href="hetimatorrent/KNode/sendPingQuery.html"><span class="name ">sendPingQuery</span></a><span class="signature">(<wbr><span class="parameter" id="sendPingQuery-param-ip"><span class="type-annotation">String</span> <span class="parameter-name">ip</span></span>, <span class="parameter" id="sendPingQuery-param-port"><span class="type-annotation">int</span> <span class="parameter-name">port</span></span>, {<span class="parameter" id="sendPingQuery-param-waitByResponse"><span class="parameter-name">waitByResponse</span>: <span class="default-value">false</span></span>})
+                      &#8594;
+                      <span class="returntype">Future</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="sendPingResponse" class="callable">
+                  <a href="hetimatorrent/KNode/sendPingResponse.html"><span class="name ">sendPingResponse</span></a><span class="signature">(<wbr><span class="parameter" id="sendPingResponse-param-ip"><span class="type-annotation">String</span> <span class="parameter-name">ip</span></span>, <span class="parameter" id="sendPingResponse-param-port"><span class="type-annotation">int</span> <span class="parameter-name">port</span></span>, <span class="parameter" id="sendPingResponse-param-transactionId"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">transactionId</span></span>)
+                      &#8594;
+                      <span class="returntype">Future</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="start" class="callable">
+                  <a href="hetimatorrent/KNode/start.html"><span class="name ">start</span></a><span class="signature">(<wbr>{<span class="parameter" id="start-param-ip"><span class="type-annotation">String</span> <span class="parameter-name">ip</span>: <span class="default-value">"0.0.0.0"</span></span>, <span class="parameter" id="start-param-port"><span class="type-annotation">int</span> <span class="parameter-name">port</span>: <span class="default-value">28080</span></span>})
+                      &#8594;
+                      <span class="returntype">Future</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="startSearchValue" class="callable">
+                  <a href="hetimatorrent/KNode/startSearchValue.html"><span class="name ">startSearchValue</span></a><span class="signature">(<wbr><span class="parameter" id="startSearchValue-param-infoHash"><span class="type-annotation"><a href="hetimatorrent/KId-class.html">KId</a></span> <span class="parameter-name">infoHash</span></span>, <span class="parameter" id="startSearchValue-param-port"><span class="type-annotation">int</span> <span class="parameter-name">port</span></span>, {<span class="parameter" id="startSearchValue-param-getPeerOnly"><span class="parameter-name">getPeerOnly</span>: <span class="default-value">false</span></span>})
+                      &#8594;
+                      <span class="returntype">Future</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="stop" class="callable">
+                  <a href="hetimatorrent/KNode/stop.html"><span class="name ">stop</span></a><span class="signature">(<wbr>)
+                      &#8594;
+                      <span class="returntype">Future</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="stopSearchPeer" class="callable">
+                  <a href="hetimatorrent/KNode/stopSearchPeer.html"><span class="name ">stopSearchPeer</span></a><span class="signature">(<wbr><span class="parameter" id="stopSearchPeer-param-infoHash"><span class="type-annotation"><a href="hetimatorrent/KId-class.html">KId</a></span> <span class="parameter-name">infoHash</span></span>)
+                      &#8594;
+                      <span class="returntype">Future</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="updateP2PNetwork" class="callable">
+                  <a href="hetimatorrent/KNode/updateP2PNetwork.html"><span class="name ">updateP2PNetwork</span></a><span class="signature">(<wbr>)
+                      &#8594;
+                      <span class="returntype">dynamic</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+          </dl>
+      </section>
+
+    </div> <!-- /.main-content -->
+
+  <div class="col-xs-6 col-sm-6 col-md-3 sidebar sidebar-offcanvas-right">
+    <h5>KNode</h5>
+    <ol>
+    
+      <li class="section-title"><a href="hetimatorrent/KNode-class.html#static-properties">Static properties</a></li>
+      <li><a href="hetimatorrent/KNode/id.html">id</a></li>
+    
+    
+      <li class="section-title"><a href="hetimatorrent/KNode-class.html#instance-properties">Properties</a></li>
+      <li><a href="hetimatorrent/KNode/ai.html">ai</a>
+</li>
+      <li><a href="hetimatorrent/KNode/announcedPeer.html">announcedPeer</a>
+</li>
+      <li><a href="hetimatorrent/KNode/intervalSecondForAnnounce.html">intervalSecondForAnnounce</a>
+</li>
+      <li><a href="hetimatorrent/KNode/intervalSecondForMaintenance.html">intervalSecondForMaintenance</a>
+</li>
+      <li><a href="hetimatorrent/KNode/isStart.html">isStart</a>
+</li>
+      <li><a href="hetimatorrent/KNode/nodeDebugId.html">nodeDebugId</a>
+</li>
+      <li><a href="hetimatorrent/KNode/nodeId.html">nodeId</a>
+</li>
+      <li><a href="hetimatorrent/KNode/onGetPeerValue.html">onGetPeerValue</a>
+</li>
+      <li><a href="hetimatorrent/KNode/port.html">port</a>
+</li>
+      <li><a href="hetimatorrent/KNode/queryInfo.html">queryInfo</a>
+</li>
+      <li><a href="hetimatorrent/KNode/rawAnnounced.html">rawAnnounced</a>
+</li>
+      <li><a href="hetimatorrent/KNode/rawSearchResult.html">rawSearchResult</a>
+</li>
+      <li><a href="hetimatorrent/KNode/rawUdoSocket.html">rawUdoSocket</a>
+</li>
+      <li><a href="hetimatorrent/KNode/rootingtable.html">rootingtable</a>
+</li>
+      <li><a href="hetimatorrent/KNode/verbose.html">verbose</a>
+</li>
+    
+      <li class="section-title"><a href="hetimatorrent/KNode-class.html#constructors">Constructors</a></li>
+      <li><a href="hetimatorrent/KNode/KNode.html">KNode</a></li>
+    
+    
+      <li class="section-title"><a href="hetimatorrent/KNode-class.html#methods">Methods</a></li>
+      <li><a href="hetimatorrent/KNode/addBootNode.html">addBootNode</a>
+</li>
+      <li><a href="hetimatorrent/KNode/addKPeerInfo.html">addKPeerInfo</a>
+</li>
+      <li><a href="hetimatorrent/KNode/addSeardchResult.html">addSeardchResult</a>
+</li>
+      <li><a href="hetimatorrent/KNode/clearTimeout.html">clearTimeout</a>
+</li>
+      <li><a href="hetimatorrent/KNode/containSeardchResult.html">containSeardchResult</a>
+</li>
+      <li><a href="hetimatorrent/KNode/getOpaqueWriteToken.html">getOpaqueWriteToken</a>
+</li>
+      <li><a href="hetimatorrent/KNode/getQueryNameFromTransactionId.html">getQueryNameFromTransactionId</a>
+</li>
+      <li><a href="hetimatorrent/KNode/log.html">log</a>
+</li>
+      <li><a href="hetimatorrent/KNode/onReceiveMessage.html">onReceiveMessage</a>
+</li>
+      <li><a href="hetimatorrent/KNode/removeQueryNameFromTransactionId.html">removeQueryNameFromTransactionId</a>
+</li>
+      <li><a href="hetimatorrent/KNode/researchSearchPeer.html">researchSearchPeer</a>
+</li>
+      <li><a href="hetimatorrent/KNode/sendAnnouncePeerQuery.html">sendAnnouncePeerQuery</a>
+</li>
+      <li><a href="hetimatorrent/KNode/sendAnnouncePeerResponse.html">sendAnnouncePeerResponse</a>
+</li>
+      <li><a href="hetimatorrent/KNode/sendErrorResponse.html">sendErrorResponse</a>
+</li>
+      <li><a href="hetimatorrent/KNode/sendFindNodeQuery.html">sendFindNodeQuery</a>
+</li>
+      <li><a href="hetimatorrent/KNode/sendFindNodeResponse.html">sendFindNodeResponse</a>
+</li>
+      <li><a href="hetimatorrent/KNode/sendGetPeersQuery.html">sendGetPeersQuery</a>
+</li>
+      <li><a href="hetimatorrent/KNode/sendGetPeersResponseWithClosestNodes.html">sendGetPeersResponseWithClosestNodes</a>
+</li>
+      <li><a href="hetimatorrent/KNode/sendGetPeersResponseWithPeers.html">sendGetPeersResponseWithPeers</a>
+</li>
+      <li><a href="hetimatorrent/KNode/sendMessage.html">sendMessage</a>
+</li>
+      <li><a href="hetimatorrent/KNode/sendPingQuery.html">sendPingQuery</a>
+</li>
+      <li><a href="hetimatorrent/KNode/sendPingResponse.html">sendPingResponse</a>
+</li>
+      <li><a href="hetimatorrent/KNode/start.html">start</a>
+</li>
+      <li><a href="hetimatorrent/KNode/startSearchValue.html">startSearchValue</a>
+</li>
+      <li><a href="hetimatorrent/KNode/stop.html">stop</a>
+</li>
+      <li><a href="hetimatorrent/KNode/stopSearchPeer.html">stopSearchPeer</a>
+</li>
+      <li><a href="hetimatorrent/KNode/updateP2PNetwork.html">updateP2PNetwork</a>
+</li>
+    </ol>
+  </div><!--/.sidebar-offcanvas-->
+
+</div> <!-- container -->
+
+<footer>
+    <div class="container-fluid">
+        <div class="container">
+            <p class="text-center">
+                <span class="no-break">
+                  hetimatorrent 0.0.1 api docs
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="https://www.dartlang.org">
+                    <img src="static-assets/favicon.png" alt="Dart" title="Dart"width="16" height="16">
+                  </a>
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="http://creativecommons.org/licenses/by-sa/4.0/">cc license</a>
+                </span>
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script src="static-assets/prettify.js"></script>
+<script src="static-assets/script.js"></script>
+<!-- Do not remove placeholder -->
+<!-- Footer Placeholder -->
+</body>
+
+</html>

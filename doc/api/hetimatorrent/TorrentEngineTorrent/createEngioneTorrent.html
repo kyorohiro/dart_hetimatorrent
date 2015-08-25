@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>createEngioneTorrent method - TorrentEngineTorrent class - hetimatorrent library - Dart API</title>
+    <!-- required because all the links are pseudo-absolute -->
+    <base href="../..">
+
+    <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro|Roboto:500,400italic,300,400' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="static-assets/prettify.css">
+    <link rel="stylesheet" href="static-assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static-assets/styles.css">
+
+    <meta name="description" content="API docs for the createEngioneTorrent method from the TorrentEngineTorrent class, for the Dart programming language.">
+    <link rel="icon" href="static-assets/favicon.png">
+
+    <!-- Do not remove placeholder -->
+    <!-- Header Placeholder -->
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header class="container-fluid" id="title">
+    <nav class="navbar navbar-fixed-top">
+        <div class="container">
+            <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+            <ol class="breadcrumbs gt-separated hidden-xs">
+                <li><a href="index.html">hetimatorrent</a></li>
+                <li><a href="hetimatorrent/hetimatorrent-library.html">hetimatorrent</a></li>
+                <li><a href="hetimatorrent/TorrentEngineTorrent-class.html">TorrentEngineTorrent</a></li>
+                <li class="self-crumb">createEngioneTorrent</li>
+            </ol>
+            <div class="self-name">createEngioneTorrent</div>
+        </div>
+    </nav>
+    <div class="container masthead">
+        <ol class="breadcrumbs gt-separated visible-xs">
+            <li><a href="index.html">hetimatorrent</a></li>
+            <li><a href="hetimatorrent/hetimatorrent-library.html">hetimatorrent</a></li>
+            <li><a href="hetimatorrent/TorrentEngineTorrent-class.html">TorrentEngineTorrent</a></li>
+            <li class="self-crumb">createEngioneTorrent</li>
+        </ol>
+        <div class="title-description">
+            <h1 class="title">
+                <div class="kind">method</div> createEngioneTorrent
+            </h1>
+            <!-- p class="subtitle">
+                
+            </p -->
+        </div>
+        <ul class="subnav">
+            <li><a href="hetimatorrent/TorrentEngineTorrent/createEngioneTorrent.html#source">Source</a></li>
+        </ul>
+    </div>
+</header>
+
+<div class="container body">
+
+  <div class="col-xs-6 col-sm-3 sidebar sidebar-offcanvas-left">
+    <h5><a href="index.html">hetimatorrent</a></h5>
+    <h5><a href="hetimatorrent/hetimatorrent-library.html">hetimatorrent</a></h5>
+    <h5><a href="hetimatorrent/TorrentEngineTorrent-class.html">TorrentEngineTorrent</a></h5>
+
+    <ol>
+    
+    
+      <li class="section-title"><a href="hetimatorrent/TorrentEngineTorrent-class.html#static-methods">Static methods</a></li>
+      <li><a href="hetimatorrent/TorrentEngineTorrent/createEngioneTorrent.html">createEngioneTorrent</a></li>
+    
+      <li class="section-title"><a href="hetimatorrent/TorrentEngineTorrent-class.html#instance-properties">Properties</a></li>
+      <li><a href="hetimatorrent/TorrentEngineTorrent/ai.html">ai</a>
+</li>
+      <li><a href="hetimatorrent/TorrentEngineTorrent/infoHash.html">infoHash</a>
+</li>
+      <li><a href="hetimatorrent/TorrentEngineTorrent/onProgress.html">onProgress</a>
+</li>
+      <li><a href="hetimatorrent/TorrentEngineTorrent/rawinfoHash.html">rawinfoHash</a>
+</li>
+      <li><a href="hetimatorrent/TorrentEngineTorrent/torrentClient.html">torrentClient</a>
+</li>
+      <li><a href="hetimatorrent/TorrentEngineTorrent/torrentFile.html">torrentFile</a>
+</li>
+      <li><a href="hetimatorrent/TorrentEngineTorrent/trackerClient.html">trackerClient</a>
+</li>
+    
+    
+    
+      <li class="section-title"><a href="hetimatorrent/TorrentEngineTorrent-class.html#methods">Methods</a></li>
+      <li><a href="hetimatorrent/TorrentEngineTorrent/createBaseFile.html">createBaseFile</a>
+</li>
+      <li><a href="hetimatorrent/TorrentEngineTorrent/startTorrent.html">startTorrent</a>
+</li>
+      <li><a href="hetimatorrent/TorrentEngineTorrent/stopTorrent.html">stopTorrent</a>
+</li>
+    </ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+  <div class="col-xs-12 col-sm-9 col-md-6 main-content">
+
+    <section class="multi-line-signature">
+            <span class="returntype">Future&lt;<a href="hetimatorrent.extra.torrentengine.torrent/TorrentEngineTorrent-class.html">TorrentEngineTorrent</a>&gt;</span>
+            <span class="name ">createEngioneTorrent</span>(
+            <br>
+            <div class="parameters">
+                <span class="parameter" id="createEngioneTorrent-param-engine"><span class="parameter-name">engine</span></span>,<br><span class="parameter" id="createEngioneTorrent-param-torrentfile"><span class="type-annotation"><a href="hetimatorrent/TorrentFile-class.html">TorrentFile</a></span> <span class="parameter-name">torrentfile</span></span>,<br><span class="parameter" id="createEngioneTorrent-param-downloadedData"><span class="type-annotation">HetimaData</span> <span class="parameter-name">downloadedData</span></span>,<br>{<span class="parameter" id="createEngioneTorrent-param-haveAllData"><span class="parameter-name">haveAllData</span>: <span class="default-value">false</span></span>,<br><span class="parameter" id="createEngioneTorrent-param-localPort"><span class="type-annotation">int</span> <span class="parameter-name">localPort</span>: <span class="default-value">18085</span></span>,<br><span class="parameter" id="createEngioneTorrent-param-globalPort"><span class="type-annotation">int</span> <span class="parameter-name">globalPort</span>: <span class="default-value">18085</span></span>,<br><span class="parameter" id="createEngioneTorrent-param-bitfield"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">bitfield</span>: <span class="default-value">null</span></span>,<br><span class="parameter" id="createEngioneTorrent-param-useDht"><span class="parameter-name">useDht</span>: <span class="default-value">false</span></span>}
+            </div>
+            )    </section>
+
+    <section class="desc markdown">
+    
+          <p class="no-docs">Not documented.</p>
+    
+    </section>
+
+    <section class="summary source-code" id="source">
+      <h2>Source</h2>
+      <pre><code class="prettyprint lang-dart">static Future&lt;TorrentEngineTorrent&gt; createEngioneTorrent(TorrentEngine engine, TorrentFile torrentfile, HetimaData downloadedData,
+    {haveAllData: false, int localPort: 18085, int globalPort: 18085, List&lt;int&gt; bitfield: null, useDht: false}) async {
+  TorrentEngineTorrent engineTorrent = new TorrentEngineTorrent._e();
+  TrackerClient trackerClient = await TrackerClient.createTrackerClient(engine.builder, torrentfile);
+  engineTorrent._trackerClient = trackerClient;
+  engineTorrent.ai = new TorrentEngineAI(trackerClient, engine.dhtClient, useDht);
+
+  //
+  List&lt;int&gt; reserved = [0, 0, 0, 0, 0, 0, 0, 0];
+  if (useDht == true) {
+    reserved = [0, 0, 0, 0, 0, 0, 0, 0x01];
+  }
+
+  engineTorrent._infoHash.addAll(trackerClient.infoHash);
+  engineTorrent._torrentClient = new TorrentClient(
+      engine.builder, trackerClient.peerId, trackerClient.infoHash, torrentfile.info.pieces,
+      torrentfile.info.piece_length, torrentfile.info.files.dataSize, downloadedData,
+      ai: engineTorrent.ai, haveAllData: haveAllData, bitfield: bitfield, reserved: reserved);
+  engineTorrent._torrentFile = torrentfile;
+  engineTorrent._downloadedData = downloadedData;
+
+  return engineTorrent;
+}</code></pre>
+    </section>
+
+  </div> <!-- /.main-content -->
+
+</div> <!-- container -->
+
+<footer>
+    <div class="container-fluid">
+        <div class="container">
+            <p class="text-center">
+                <span class="no-break">
+                  hetimatorrent 0.0.1 api docs
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="https://www.dartlang.org">
+                    <img src="static-assets/favicon.png" alt="Dart" title="Dart"width="16" height="16">
+                  </a>
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="http://creativecommons.org/licenses/by-sa/4.0/">cc license</a>
+                </span>
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script src="static-assets/prettify.js"></script>
+<script src="static-assets/script.js"></script>
+<!-- Do not remove placeholder -->
+<!-- Footer Placeholder -->
+</body>
+
+</html>

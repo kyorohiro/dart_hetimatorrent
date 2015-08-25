@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TorrentClientFront class - hetimatorrent library - Dart API</title>
+    <!-- required because all the links are pseudo-absolute -->
+    <base href="..">
+
+    <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro|Roboto:500,400italic,300,400' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="static-assets/prettify.css">
+    <link rel="stylesheet" href="static-assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static-assets/styles.css">
+
+    <meta name="description" content="API docs for the TorrentClientFront class from the hetimatorrent library, for the Dart programming language.">
+    <link rel="icon" href="static-assets/favicon.png">
+
+    <!-- Do not remove placeholder -->
+    <!-- Header Placeholder -->
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header class="container-fluid" id="title">
+    <nav class="navbar navbar-fixed-top">
+        <div class="container">
+            <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+            <ol class="breadcrumbs gt-separated hidden-xs">
+                <li><a href="index.html">hetimatorrent</a></li>
+                <li><a href="hetimatorrent/hetimatorrent-library.html">hetimatorrent</a></li>
+                <li class="self-crumb">TorrentClientFront</li>
+            </ol>
+            <div class="self-name">TorrentClientFront</div>
+        </div>
+    </nav>
+    <div class="container masthead">
+        <ol class="breadcrumbs gt-separated visible-xs">
+            <li><a href="index.html">hetimatorrent</a></li>
+            <li><a href="hetimatorrent/hetimatorrent-library.html">hetimatorrent</a></li>
+            <li class="self-crumb">TorrentClientFront</li>
+        </ol>
+        <div class="title-description">
+            <h1 class="title">
+                <div class="kind">class</div> TorrentClientFront
+            </h1>
+            <!-- p class="subtitle">
+                
+            </p -->
+        </div>
+        <ul class="subnav">
+            <li><a href="hetimatorrent/TorrentClientFront-class.html#constants">Constants</a></li>
+            <li><a href="hetimatorrent/TorrentClientFront-class.html#static-properties">Static Properties</a></li>
+            <li><a href="hetimatorrent/TorrentClientFront-class.html#static-methods">Static Methods</a></li>
+            <li><a href="hetimatorrent/TorrentClientFront-class.html#instance-properties">Properties</a></li>
+            <li><a href="hetimatorrent/TorrentClientFront-class.html#constructors">Constructors</a></li>
+            <li><a href="hetimatorrent/TorrentClientFront-class.html#instance-methods">Methods</a></li>
+        </ul>
+    </div>
+</header>
+
+<div class="container body">
+
+  <div class="col-xs-6 col-sm-3 col-md-3 sidebar sidebar-offcanvas-left">
+    <h5><a href="index.html">hetimatorrent</a></h5>
+    <h5><a href="hetimatorrent/hetimatorrent-library.html">hetimatorrent</a></h5>
+
+    <ol>
+    
+    
+    
+      <li class="section-title"><a href="hetimatorrent/hetimatorrent-library.html#functions">Functions</a></li>
+      <li><a href="hetimatorrent/objectToString.html">objectToString</a></li>
+    
+    
+      <li class="section-title"><a href="hetimatorrent/hetimatorrent-library.html#classes">Classes</a></li>
+      <li><a href="hetimatorrent/Bdecoder-class.html">Bdecoder</a></li>
+      <li><a href="hetimatorrent/Bencode-class.html">Bencode</a></li>
+      <li><a href="hetimatorrent/Bencoder-class.html">Bencoder</a></li>
+      <li><a href="hetimatorrent/Bitfield-class.html">Bitfield</a></li>
+      <li><a href="hetimatorrent/BitfieldInter-class.html">BitfieldInter</a></li>
+      <li><a href="hetimatorrent/BlockData-class.html">BlockData</a></li>
+      <li><a href="hetimatorrent/ChokeTest-class.html">ChokeTest</a></li>
+      <li><a href="hetimatorrent/CreatePieceHashResult-class.html">CreatePieceHashResult</a></li>
+      <li><a href="hetimatorrent/DDBitfield-class.html">DDBitfield</a></li>
+      <li><a href="hetimatorrent/HetiBdecoder-class.html">HetiBdecoder</a></li>
+      <li><a href="hetimatorrent/HetiBencode-class.html">HetiBencode</a></li>
+      <li><a href="hetimatorrent/HetimaDataFSDebug-class.html">HetimaDataFSDebug</a></li>
+      <li><a href="hetimatorrent/HetimaDataFSDebugBuilder-class.html">HetimaDataFSDebugBuilder</a></li>
+      <li><a href="hetimatorrent/KBucket-class.html">KBucket</a></li>
+      <li><a href="hetimatorrent/KGetPeerNodes-class.html">KGetPeerNodes</a></li>
+      <li><a href="hetimatorrent/KGetPeerValue-class.html">KGetPeerValue</a></li>
+      <li><a href="hetimatorrent/KId-class.html">KId</a></li>
+      <li><a href="hetimatorrent/KNode-class.html">KNode</a></li>
+      <li><a href="hetimatorrent/KPeerInfo-class.html">KPeerInfo</a></li>
+      <li><a href="hetimatorrent/KRootingTable-class.html">KRootingTable</a></li>
+      <li><a href="hetimatorrent/KrpcAnnounce-class.html">KrpcAnnounce</a></li>
+      <li><a href="hetimatorrent/KrpcError-class.html">KrpcError</a></li>
+      <li><a href="hetimatorrent/KrpcFindNode-class.html">KrpcFindNode</a></li>
+      <li><a href="hetimatorrent/KrpcGetPeers-class.html">KrpcGetPeers</a></li>
+      <li><a href="hetimatorrent/KrpcMessage-class.html">KrpcMessage</a></li>
+      <li><a href="hetimatorrent/KrpcPing-class.html">KrpcPing</a></li>
+      <li><a href="hetimatorrent/KrpcQuery-class.html">KrpcQuery</a></li>
+      <li><a href="hetimatorrent/KrpcResponse-class.html">KrpcResponse</a></li>
+      <li><a href="hetimatorrent/KSendInfo-class.html">KSendInfo</a></li>
+      <li><a href="hetimatorrent/MessageBitfield-class.html">MessageBitfield</a></li>
+      <li><a href="hetimatorrent/MessageCancel-class.html">MessageCancel</a></li>
+      <li><a href="hetimatorrent/MessageChoke-class.html">MessageChoke</a></li>
+      <li><a href="hetimatorrent/MessageHandshake-class.html">MessageHandshake</a></li>
+      <li><a href="hetimatorrent/MessageHave-class.html">MessageHave</a></li>
+      <li><a href="hetimatorrent/MessageInterested-class.html">MessageInterested</a></li>
+      <li><a href="hetimatorrent/MessageKeepAlive-class.html">MessageKeepAlive</a></li>
+      <li><a href="hetimatorrent/MessageNotInterested-class.html">MessageNotInterested</a></li>
+      <li><a href="hetimatorrent/MessageNull-class.html">MessageNull</a></li>
+      <li><a href="hetimatorrent/MessagePiece-class.html">MessagePiece</a></li>
+      <li><a href="hetimatorrent/MessagePort-class.html">MessagePort</a></li>
+      <li><a href="hetimatorrent/MessageRequest-class.html">MessageRequest</a></li>
+      <li><a href="hetimatorrent/MessageUnchoke-class.html">MessageUnchoke</a></li>
+      <li><a href="hetimatorrent/PeerIdCreator-class.html">PeerIdCreator</a></li>
+      <li><a href="hetimatorrent/PieceInfo-class.html">PieceInfo</a></li>
+      <li><a href="hetimatorrent/PieceInfoList-class.html">PieceInfoList</a></li>
+      <li><a href="hetimatorrent/RequestSingleWaitReturn-class.html">RequestSingleWaitReturn</a></li>
+      <li><a href="hetimatorrent/SHA1Iso-class.html">SHA1Iso</a></li>
+      <li><a href="hetimatorrent/SHA1IsoInfo-class.html">SHA1IsoInfo</a></li>
+      <li><a href="hetimatorrent/SHA1IsoSub-class.html">SHA1IsoSub</a></li>
+      <li><a href="hetimatorrent/ShuffleLinkedList-class.html">ShuffleLinkedList</a></li>
+      <li><a href="hetimatorrent/StartResult-class.html">StartResult</a></li>
+      <li><a href="hetimatorrent/StopResult-class.html">StopResult</a></li>
+      <li><a href="hetimatorrent/TorrenAIEmpty-class.html">TorrenAIEmpty</a></li>
+      <li><a href="hetimatorrent/TorrentAI-class.html">TorrentAI</a></li>
+      <li><a href="hetimatorrent/TorrentAIBasic-class.html">TorrentAIBasic</a></li>
+      <li><a href="hetimatorrent/TorrentClient-class.html">TorrentClient</a></li>
+      <li><a href="hetimatorrent/TorrentClientFront-class.html">TorrentClientFront</a></li>
+      <li><a href="hetimatorrent/TorrentClientFrontNerve-class.html">TorrentClientFrontNerve</a></li>
+      <li><a href="hetimatorrent/TorrentClientManager-class.html">TorrentClientManager</a></li>
+      <li><a href="hetimatorrent/TorrentClientMessage-class.html">TorrentClientMessage</a></li>
+      <li><a href="hetimatorrent/TorrentClientPeerInfo-class.html">TorrentClientPeerInfo</a></li>
+      <li><a href="hetimatorrent/TorrentClientPeerInfoList-class.html">TorrentClientPeerInfoList</a></li>
+      <li><a href="hetimatorrent/TorrentClientSignal-class.html">TorrentClientSignal</a></li>
+      <li><a href="hetimatorrent/TorrentClientSignalWithFront-class.html">TorrentClientSignalWithFront</a></li>
+      <li><a href="hetimatorrent/TorrentClientSignalWithPeerInfo-class.html">TorrentClientSignalWithPeerInfo</a></li>
+      <li><a href="hetimatorrent/TorrentEngine-class.html">TorrentEngine</a></li>
+      <li><a href="hetimatorrent/TorrentEngineAI-class.html">TorrentEngineAI</a></li>
+      <li><a href="hetimatorrent/TorrentEngineProgress-class.html">TorrentEngineProgress</a></li>
+      <li><a href="hetimatorrent/TorrentEngineTorrent-class.html">TorrentEngineTorrent</a></li>
+      <li><a href="hetimatorrent/TorrentFile-class.html">TorrentFile</a></li>
+      <li><a href="hetimatorrent/TorrentFileCreator-class.html">TorrentFileCreator</a></li>
+      <li><a href="hetimatorrent/TorrentFileCreatorResult-class.html">TorrentFileCreatorResult</a></li>
+      <li><a href="hetimatorrent/TorrentFileFile-class.html">TorrentFileFile</a></li>
+      <li><a href="hetimatorrent/TorrentFileFiles-class.html">TorrentFileFiles</a></li>
+      <li><a href="hetimatorrent/TorrentFileInfo-class.html">TorrentFileInfo</a></li>
+      <li><a href="hetimatorrent/TorrentInfoHashCreator-class.html">TorrentInfoHashCreator</a></li>
+      <li><a href="hetimatorrent/TorrentMessage-class.html">TorrentMessage</a></li>
+      <li><a href="hetimatorrent/TorrentPieceHashCreator-class.html">TorrentPieceHashCreator</a></li>
+      <li><a href="hetimatorrent/TrackerClient-class.html">TrackerClient</a></li>
+      <li><a href="hetimatorrent/TrackerPeerInfo-class.html">TrackerPeerInfo</a></li>
+      <li><a href="hetimatorrent/TrackerPeerManager-class.html">TrackerPeerManager</a></li>
+      <li><a href="hetimatorrent/TrackerRequest-class.html">TrackerRequest</a></li>
+      <li><a href="hetimatorrent/TrackerRequestResult-class.html">TrackerRequestResult</a></li>
+      <li><a href="hetimatorrent/TrackerResponse-class.html">TrackerResponse</a></li>
+      <li><a href="hetimatorrent/TrackerServer-class.html">TrackerServer</a></li>
+      <li><a href="hetimatorrent/TrackerUrl-class.html">TrackerUrl</a></li>
+    
+      <li class="section-title"><a href="hetimatorrent/hetimatorrent-library.html#exceptions">Exceptions</a></li>
+      <li><a href="hetimatorrent/BencodeParseError-class.html">BencodeParseError</a></li>
+      <li><a href="hetimatorrent/HetiBencodeParseError-class.html">HetiBencodeParseError</a></li>
+    </ol>
+  </div>
+
+  <div class="col-xs-12 col-sm-9 col-md-6 main-content">
+
+    <section class="desc markdown">
+    
+          <p class="no-docs">Not documented.</p>
+    
+    </section>
+
+
+    <section class="summary" id="constants">
+        <h2>Constants</h2>
+
+        <dl class="properties">
+            <dt id="STATE_NONE" class="constant">
+                <span class="top-level-variable-type">int</span>
+                <span class="name "><a href="hetimatorrent/TorrentClientFront/STATE_NONE.html">STATE_NONE</a></span>
+                =
+                <span class="constant-value">0</span>
+            </dt>
+            <dd>
+                <div class="is-const">
+                    const
+                </div>
+                
+            </dd>
+            <dt id="STATE_OFF" class="constant">
+                <span class="top-level-variable-type">int</span>
+                <span class="name "><a href="hetimatorrent/TorrentClientFront/STATE_OFF.html">STATE_OFF</a></span>
+                =
+                <span class="constant-value">2</span>
+            </dt>
+            <dd>
+                <div class="is-const">
+                    const
+                </div>
+                
+            </dd>
+            <dt id="STATE_ON" class="constant">
+                <span class="top-level-variable-type">int</span>
+                <span class="name "><a href="hetimatorrent/TorrentClientFront/STATE_ON.html">STATE_ON</a></span>
+                =
+                <span class="constant-value">1</span>
+            </dt>
+            <dd>
+                <div class="is-const">
+                    const
+                </div>
+                
+            </dd>
+        </dl>
+    </section>
+
+    <section class="summary" id="static-properties">
+        <h2>Static Properties</h2>
+
+        <dl class="properties">
+            <dt id="debugIdSeed" class="property">
+                <span class="top-level-variable-type">int</span>
+                <a href="hetimatorrent/TorrentClientFront/debugIdSeed.html">debugIdSeed</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read / write
+    </div>
+    
+            </dd>
+        </dl>
+    </section>
+
+    <section class="summary" id="static-methods">
+        <h2>Static Methods</h2>
+        <dl class="callables">
+            <dt id="connect" class="callable">
+                <a href="hetimatorrent/TorrentClientFront/connect.html"><span class="name ">connect</span></a><span class="signature">(<wbr><span class="parameter" id="connect-param-_builder"><span class="type-annotation">HetimaSocketBuilder</span> <span class="parameter-name">_builder</span></span>, <span class="parameter" id="connect-param-info"><span class="type-annotation"><a href="hetimatorrent/TorrentClientPeerInfo-class.html">TorrentClientPeerInfo</a></span> <span class="parameter-name">info</span></span>, <span class="parameter" id="connect-param-bitfieldSize"><span class="type-annotation">int</span> <span class="parameter-name">bitfieldSize</span></span>, <span class="parameter" id="connect-param-infoHash"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">infoHash</span></span>, {<span class="parameter" id="connect-param-peerId"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">peerId</span>: <span class="default-value">null</span></span>, <span class="parameter" id="connect-param-reseved"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">reseved</span>: <span class="default-value">null</span></span>, <span class="parameter" id="connect-param-verbose"><span class="type-annotation">bool</span> <span class="parameter-name">verbose</span>: <span class="default-value">false</span></span>})
+                    &#8594;
+                    <span class="returntype">Future&lt;<a href="hetimatorrent.torrent.clientfront/TorrentClientFront-class.html">TorrentClientFront</a>&gt;</span>
+                </span>
+            </dt>
+            <dd>
+                
+            </dd>
+        </dl>
+    </section>
+
+    <section class="summary" id="instance-properties">
+        <h2>Properties</h2>
+
+        <dl class="properties">
+            <dt id="amI" class="property">
+                <span class="top-level-variable-type">bool</span>
+                <a href="hetimatorrent/TorrentClientFront/amI.html">amI</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="bitfieldFromMe" class="property">
+                <span class="top-level-variable-type"><a href="hetimatorrent/Bitfield-class.html">Bitfield</a></span>
+                <a href="hetimatorrent/TorrentClientFront/bitfieldFromMe.html">bitfieldFromMe</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="bitfieldToMe" class="property">
+                <span class="top-level-variable-type"><a href="hetimatorrent/Bitfield-class.html">Bitfield</a></span>
+                <a href="hetimatorrent/TorrentClientFront/bitfieldToMe.html">bitfieldToMe</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="chokedFromMe" class="property">
+                <span class="top-level-variable-type">int</span>
+                <a href="hetimatorrent/TorrentClientFront/chokedFromMe.html">chokedFromMe</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read / write
+    </div>
+    
+            </dd>
+            <dt id="chokedToMe" class="property">
+                <span class="top-level-variable-type">int</span>
+                <a href="hetimatorrent/TorrentClientFront/chokedToMe.html">chokedToMe</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read / write
+    </div>
+    
+            </dd>
+            <dt id="currentRequesting" class="property">
+                <span class="top-level-variable-type">List&lt;<a href="hetimatorrent.message.request/MessageRequest-class.html">MessageRequest</a>&gt;</span>
+                <a href="hetimatorrent/TorrentClientFront/currentRequesting.html">currentRequesting</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read / write
+    </div>
+    
+            </dd>
+            <dt id="downloadedBytesFromMe" class="property">
+                <span class="top-level-variable-type">int</span>
+                <a href="hetimatorrent/TorrentClientFront/downloadedBytesFromMe.html">downloadedBytesFromMe</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read / write
+    </div>
+    
+            </dd>
+            <dt id="handshaked" class="property">
+                <span class="top-level-variable-type">bool</span>
+                <a href="hetimatorrent/TorrentClientFront/handshaked.html">handshaked</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read / write
+    </div>
+    
+            </dd>
+            <dt id="handshakeFromMe" class="property">
+                <span class="top-level-variable-type">bool</span>
+                <a href="hetimatorrent/TorrentClientFront/handshakeFromMe.html">handshakeFromMe</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="handshakeToMe" class="property">
+                <span class="top-level-variable-type">bool</span>
+                <a href="hetimatorrent/TorrentClientFront/handshakeToMe.html">handshakeToMe</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="interestedFromMe" class="property">
+                <span class="top-level-variable-type">int</span>
+                <a href="hetimatorrent/TorrentClientFront/interestedFromMe.html">interestedFromMe</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="interestedToMe" class="property">
+                <span class="top-level-variable-type">int</span>
+                <a href="hetimatorrent/TorrentClientFront/interestedToMe.html">interestedToMe</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="isClose" class="property">
+                <span class="top-level-variable-type">bool</span>
+                <a href="hetimatorrent/TorrentClientFront/isClose.html">isClose</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="lastRequestIndex" class="property">
+                <span class="top-level-variable-type">int</span>
+                <a href="hetimatorrent/TorrentClientFront/lastRequestIndex.html">lastRequestIndex</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="onReceiveEvent" class="property">
+                <span class="top-level-variable-type">Stream&lt;<a href="hetimatorrent.message.torentmessage/TorrentMessage-class.html">TorrentMessage</a>&gt;</span>
+                <a href="hetimatorrent/TorrentClientFront/onReceiveEvent.html">onReceiveEvent</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="onReceiveSignal" class="property">
+                <span class="top-level-variable-type">Stream&lt;<a href="hetimatorrent.torrent.client.message/TorrentClientSignal-class.html">TorrentClientSignal</a>&gt;</span>
+                <a href="hetimatorrent/TorrentClientFront/onReceiveSignal.html">onReceiveSignal</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="requestedMaxPieceSize" class="property">
+                <span class="top-level-variable-type">int</span>
+                <a href="hetimatorrent/TorrentClientFront/requestedMaxPieceSize.html">requestedMaxPieceSize</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read / write
+    </div>
+    
+            </dd>
+            <dt id="reseved" class="property">
+                <span class="top-level-variable-type">List&lt;int&gt;</span>
+                <a href="hetimatorrent/TorrentClientFront/reseved.html">reseved</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read / write
+    </div>
+    
+            </dd>
+            <dt id="speed" class="property">
+                <span class="top-level-variable-type">int</span>
+                <a href="hetimatorrent/TorrentClientFront/speed.html">speed</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read / write
+    </div>
+    
+            </dd>
+            <dt id="stream" class="property">
+                <span class="top-level-variable-type">StreamController&lt;<a href="hetimatorrent.message.torentmessage/TorrentMessage-class.html">TorrentMessage</a>&gt;</span>
+                <a href="hetimatorrent/TorrentClientFront/stream.html">stream</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read / write
+    </div>
+    
+            </dd>
+            <dt id="targetPeerId" class="property">
+                <span class="top-level-variable-type">List&lt;int&gt;</span>
+                <a href="hetimatorrent/TorrentClientFront/targetPeerId.html">targetPeerId</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="tmpForAI" class="property">
+                <span class="top-level-variable-type">Map&lt;String,Object&gt;</span>
+                <a href="hetimatorrent/TorrentClientFront/tmpForAI.html">tmpForAI</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read / write
+    </div>
+    
+            </dd>
+            <dt id="unchokedStartTime" class="property">
+                <span class="top-level-variable-type">int</span>
+                <a href="hetimatorrent/TorrentClientFront/unchokedStartTime.html">unchokedStartTime</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="uploadedBytesToMe" class="property">
+                <span class="top-level-variable-type">int</span>
+                <a href="hetimatorrent/TorrentClientFront/uploadedBytesToMe.html">uploadedBytesToMe</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read / write
+    </div>
+    
+            </dd>
+            <dt id="uploadSpeedFromUnchokeFromMe" class="property">
+                <span class="top-level-variable-type">int</span>
+                <a href="hetimatorrent/TorrentClientFront/uploadSpeedFromUnchokeFromMe.html">uploadSpeedFromUnchokeFromMe</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="verbose" class="property">
+                <span class="top-level-variable-type">bool</span>
+                <a href="hetimatorrent/TorrentClientFront/verbose.html">verbose</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+        </dl>
+    </section>
+
+    <section class="summary" id="constructors">
+        <h2>Constructors</h2>
+
+        <dl class="constructor-summary-list">
+            <dt id="TorrentClientFront" class="callable">
+                <span class="name"><a href="hetimatorrent/TorrentClientFront/TorrentClientFront.html">TorrentClientFront</a></span><span class="signature">(<span class="parameter" id="-param-socket"><span class="type-annotation">HetimaSocket</span> <span class="parameter-name">socket</span></span>, <span class="parameter" id="-param-peerIp"><span class="type-annotation">String</span> <span class="parameter-name">peerIp</span></span>, <span class="parameter" id="-param-peerPort"><span class="type-annotation">int</span> <span class="parameter-name">peerPort</span></span>, <span class="parameter" id="-param-reader"><span class="type-annotation">HetimaReader</span> <span class="parameter-name">reader</span></span>, <span class="parameter" id="-param-bitfieldSize"><span class="type-annotation">int</span> <span class="parameter-name">bitfieldSize</span></span>, <span class="parameter" id="-param-infoHash"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">infoHash</span></span>, <span class="parameter" id="-param-peerId"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">peerId</span></span>, <span class="parameter" id="-param-reseved"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">reseved</span></span>, {<span class="parameter" id="-param-verbose"><span class="type-annotation">bool</span> <span class="parameter-name">verbose</span>: <span class="default-value">false</span></span>})</span>
+            </dt>
+            <dd>
+                
+            </dd>
+        </dl>
+      </section>
+
+
+      <section class="summary" id="instance-methods">
+          <h2>Methods</h2>
+          <dl class="callables">
+              <dt id="close" class="callable">
+                  <a href="hetimatorrent/TorrentClientFront/close.html"><span class="name ">close</span></a><span class="signature">(<wbr>)
+                      &#8594;
+                      <span class="returntype">void</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="log" class="callable">
+                  <a href="hetimatorrent/TorrentClientFront/log.html"><span class="name ">log</span></a><span class="signature">(<wbr><span class="parameter" id="log-param-message"><span class="type-annotation">String</span> <span class="parameter-name">message</span></span>)
+                      &#8594;
+                      <span class="returntype">void</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="parse" class="callable">
+                  <a href="hetimatorrent/TorrentClientFront/parse.html"><span class="name ">parse</span></a><span class="signature">(<wbr>)
+                      &#8594;
+                      <span class="returntype">Future&lt;<a href="hetimatorrent.message.torentmessage/TorrentMessage-class.html">TorrentMessage</a>&gt;</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="sendBitfield" class="callable">
+                  <a href="hetimatorrent/TorrentClientFront/sendBitfield.html"><span class="name ">sendBitfield</span></a><span class="signature">(<wbr><span class="parameter" id="sendBitfield-param-bitfield"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">bitfield</span></span>)
+                      &#8594;
+                      <span class="returntype">Future</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="sendCancel" class="callable">
+                  <a href="hetimatorrent/TorrentClientFront/sendCancel.html"><span class="name ">sendCancel</span></a><span class="signature">(<wbr><span class="parameter" id="sendCancel-param-index"><span class="type-annotation">int</span> <span class="parameter-name">index</span></span>, <span class="parameter" id="sendCancel-param-begin"><span class="type-annotation">int</span> <span class="parameter-name">begin</span></span>, <span class="parameter" id="sendCancel-param-length"><span class="type-annotation">int</span> <span class="parameter-name">length</span></span>)
+                      &#8594;
+                      <span class="returntype">Future</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="sendChoke" class="callable">
+                  <a href="hetimatorrent/TorrentClientFront/sendChoke.html"><span class="name ">sendChoke</span></a><span class="signature">(<wbr>)
+                      &#8594;
+                      <span class="returntype">Future</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="sendHandshake" class="callable">
+                  <a href="hetimatorrent/TorrentClientFront/sendHandshake.html"><span class="name ">sendHandshake</span></a><span class="signature">(<wbr>{<span class="parameter" id="sendHandshake-param-reseved"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">reseved</span>: <span class="default-value">null</span></span>})
+                      &#8594;
+                      <span class="returntype">Future</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="sendHave" class="callable">
+                  <a href="hetimatorrent/TorrentClientFront/sendHave.html"><span class="name ">sendHave</span></a><span class="signature">(<wbr><span class="parameter" id="sendHave-param-index"><span class="type-annotation">int</span> <span class="parameter-name">index</span></span>)
+                      &#8594;
+                      <span class="returntype">Future</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="sendInterested" class="callable">
+                  <a href="hetimatorrent/TorrentClientFront/sendInterested.html"><span class="name ">sendInterested</span></a><span class="signature">(<wbr>)
+                      &#8594;
+                      <span class="returntype">Future</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="sendMessage" class="callable">
+                  <a href="hetimatorrent/TorrentClientFront/sendMessage.html"><span class="name ">sendMessage</span></a><span class="signature">(<wbr><span class="parameter" id="sendMessage-param-message"><span class="type-annotation"><a href="hetimatorrent/TorrentMessage-class.html">TorrentMessage</a></span> <span class="parameter-name">message</span></span>)
+                      &#8594;
+                      <span class="returntype">Future</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="sendNotInterested" class="callable">
+                  <a href="hetimatorrent/TorrentClientFront/sendNotInterested.html"><span class="name ">sendNotInterested</span></a><span class="signature">(<wbr>)
+                      &#8594;
+                      <span class="returntype">Future</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="sendPiece" class="callable">
+                  <a href="hetimatorrent/TorrentClientFront/sendPiece.html"><span class="name ">sendPiece</span></a><span class="signature">(<wbr><span class="parameter" id="sendPiece-param-index"><span class="type-annotation">int</span> <span class="parameter-name">index</span></span>, <span class="parameter" id="sendPiece-param-begin"><span class="type-annotation">int</span> <span class="parameter-name">begin</span></span>, <span class="parameter" id="sendPiece-param-content"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">content</span></span>)
+                      &#8594;
+                      <span class="returntype">Future</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="sendPort" class="callable">
+                  <a href="hetimatorrent/TorrentClientFront/sendPort.html"><span class="name ">sendPort</span></a><span class="signature">(<wbr><span class="parameter" id="sendPort-param-port"><span class="type-annotation">int</span> <span class="parameter-name">port</span></span>)
+                      &#8594;
+                      <span class="returntype">Future</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="sendRequest" class="callable">
+                  <a href="hetimatorrent/TorrentClientFront/sendRequest.html"><span class="name ">sendRequest</span></a><span class="signature">(<wbr><span class="parameter" id="sendRequest-param-index"><span class="type-annotation">int</span> <span class="parameter-name">index</span></span>, <span class="parameter" id="sendRequest-param-begin"><span class="type-annotation">int</span> <span class="parameter-name">begin</span></span>, <span class="parameter" id="sendRequest-param-length"><span class="type-annotation">int</span> <span class="parameter-name">length</span></span>)
+                      &#8594;
+                      <span class="returntype">Future</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="sendUnchoke" class="callable">
+                  <a href="hetimatorrent/TorrentClientFront/sendUnchoke.html"><span class="name ">sendUnchoke</span></a><span class="signature">(<wbr>)
+                      &#8594;
+                      <span class="returntype">Future</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="startReceive" class="callable">
+                  <a href="hetimatorrent/TorrentClientFront/startReceive.html"><span class="name ">startReceive</span></a><span class="signature">(<wbr>)
+                      &#8594;
+                      <span class="returntype">void</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+          </dl>
+      </section>
+
+    </div> <!-- /.main-content -->
+
+  <div class="col-xs-6 col-sm-6 col-md-3 sidebar sidebar-offcanvas-right">
+    <h5>TorrentClientFront</h5>
+    <ol>
+      <li class="section-title"><a href="hetimatorrent/TorrentClientFront-class.html#constants">Constants</a></li>
+      <li><a href="hetimatorrent/TorrentClientFront/STATE_NONE.html">STATE_NONE</a></li>
+      <li><a href="hetimatorrent/TorrentClientFront/STATE_OFF.html">STATE_OFF</a></li>
+      <li><a href="hetimatorrent/TorrentClientFront/STATE_ON.html">STATE_ON</a></li>
+    
+      <li class="section-title"><a href="hetimatorrent/TorrentClientFront-class.html#static-properties">Static properties</a></li>
+      <li><a href="hetimatorrent/TorrentClientFront/debugIdSeed.html">debugIdSeed</a></li>
+    
+      <li class="section-title"><a href="hetimatorrent/TorrentClientFront-class.html#static-methods">Static methods</a></li>
+      <li><a href="hetimatorrent/TorrentClientFront/connect.html">connect</a></li>
+    
+      <li class="section-title"><a href="hetimatorrent/TorrentClientFront-class.html#instance-properties">Properties</a></li>
+      <li><a href="hetimatorrent/TorrentClientFront/amI.html">amI</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/bitfieldFromMe.html">bitfieldFromMe</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/bitfieldToMe.html">bitfieldToMe</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/chokedFromMe.html">chokedFromMe</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/chokedToMe.html">chokedToMe</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/currentRequesting.html">currentRequesting</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/downloadedBytesFromMe.html">downloadedBytesFromMe</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/handshaked.html">handshaked</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/handshakeFromMe.html">handshakeFromMe</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/handshakeToMe.html">handshakeToMe</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/interestedFromMe.html">interestedFromMe</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/interestedToMe.html">interestedToMe</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/isClose.html">isClose</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/lastRequestIndex.html">lastRequestIndex</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/onReceiveEvent.html">onReceiveEvent</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/onReceiveSignal.html">onReceiveSignal</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/requestedMaxPieceSize.html">requestedMaxPieceSize</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/reseved.html">reseved</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/speed.html">speed</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/stream.html">stream</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/targetPeerId.html">targetPeerId</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/tmpForAI.html">tmpForAI</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/unchokedStartTime.html">unchokedStartTime</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/uploadedBytesToMe.html">uploadedBytesToMe</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/uploadSpeedFromUnchokeFromMe.html">uploadSpeedFromUnchokeFromMe</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/verbose.html">verbose</a>
+</li>
+    
+      <li class="section-title"><a href="hetimatorrent/TorrentClientFront-class.html#constructors">Constructors</a></li>
+      <li><a href="hetimatorrent/TorrentClientFront/TorrentClientFront.html">TorrentClientFront</a></li>
+    
+    
+      <li class="section-title"><a href="hetimatorrent/TorrentClientFront-class.html#methods">Methods</a></li>
+      <li><a href="hetimatorrent/TorrentClientFront/close.html">close</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/log.html">log</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/parse.html">parse</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/sendBitfield.html">sendBitfield</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/sendCancel.html">sendCancel</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/sendChoke.html">sendChoke</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/sendHandshake.html">sendHandshake</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/sendHave.html">sendHave</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/sendInterested.html">sendInterested</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/sendMessage.html">sendMessage</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/sendNotInterested.html">sendNotInterested</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/sendPiece.html">sendPiece</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/sendPort.html">sendPort</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/sendRequest.html">sendRequest</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/sendUnchoke.html">sendUnchoke</a>
+</li>
+      <li><a href="hetimatorrent/TorrentClientFront/startReceive.html">startReceive</a>
+</li>
+    </ol>
+  </div><!--/.sidebar-offcanvas-->
+
+</div> <!-- container -->
+
+<footer>
+    <div class="container-fluid">
+        <div class="container">
+            <p class="text-center">
+                <span class="no-break">
+                  hetimatorrent 0.0.1 api docs
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="https://www.dartlang.org">
+                    <img src="static-assets/favicon.png" alt="Dart" title="Dart"width="16" height="16">
+                  </a>
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="http://creativecommons.org/licenses/by-sa/4.0/">cc license</a>
+                </span>
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script src="static-assets/prettify.js"></script>
+<script src="static-assets/script.js"></script>
+<!-- Do not remove placeholder -->
+<!-- Footer Placeholder -->
+</body>
+
+</html>

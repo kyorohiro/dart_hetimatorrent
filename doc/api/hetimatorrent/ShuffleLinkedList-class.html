@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ShuffleLinkedList class - hetimatorrent library - Dart API</title>
+    <!-- required because all the links are pseudo-absolute -->
+    <base href="..">
+
+    <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro|Roboto:500,400italic,300,400' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="static-assets/prettify.css">
+    <link rel="stylesheet" href="static-assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static-assets/styles.css">
+
+    <meta name="description" content="API docs for the ShuffleLinkedList class from the hetimatorrent library, for the Dart programming language.">
+    <link rel="icon" href="static-assets/favicon.png">
+
+    <!-- Do not remove placeholder -->
+    <!-- Header Placeholder -->
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header class="container-fluid" id="title">
+    <nav class="navbar navbar-fixed-top">
+        <div class="container">
+            <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+            <ol class="breadcrumbs gt-separated hidden-xs">
+                <li><a href="index.html">hetimatorrent</a></li>
+                <li><a href="hetimatorrent/hetimatorrent-library.html">hetimatorrent</a></li>
+                <li class="self-crumb">ShuffleLinkedList</li>
+            </ol>
+            <div class="self-name">ShuffleLinkedList</div>
+        </div>
+    </nav>
+    <div class="container masthead">
+        <ol class="breadcrumbs gt-separated visible-xs">
+            <li><a href="index.html">hetimatorrent</a></li>
+            <li><a href="hetimatorrent/hetimatorrent-library.html">hetimatorrent</a></li>
+            <li class="self-crumb">ShuffleLinkedList</li>
+        </ol>
+        <div class="title-description">
+            <h1 class="title">
+                <div class="kind">class</div> ShuffleLinkedList&ltX&gt
+            </h1>
+            <!-- p class="subtitle">
+                
+            </p -->
+        </div>
+        <ul class="subnav">
+            <li><a href="hetimatorrent/ShuffleLinkedList-class.html#instance-properties">Properties</a></li>
+            <li><a href="hetimatorrent/ShuffleLinkedList-class.html#constructors">Constructors</a></li>
+            <li><a href="hetimatorrent/ShuffleLinkedList-class.html#instance-methods">Methods</a></li>
+        </ul>
+    </div>
+</header>
+
+<div class="container body">
+
+  <div class="col-xs-6 col-sm-3 col-md-3 sidebar sidebar-offcanvas-left">
+    <h5><a href="index.html">hetimatorrent</a></h5>
+    <h5><a href="hetimatorrent/hetimatorrent-library.html">hetimatorrent</a></h5>
+
+    <ol>
+    
+    
+    
+      <li class="section-title"><a href="hetimatorrent/hetimatorrent-library.html#functions">Functions</a></li>
+      <li><a href="hetimatorrent/objectToString.html">objectToString</a></li>
+    
+    
+      <li class="section-title"><a href="hetimatorrent/hetimatorrent-library.html#classes">Classes</a></li>
+      <li><a href="hetimatorrent/Bdecoder-class.html">Bdecoder</a></li>
+      <li><a href="hetimatorrent/Bencode-class.html">Bencode</a></li>
+      <li><a href="hetimatorrent/Bencoder-class.html">Bencoder</a></li>
+      <li><a href="hetimatorrent/Bitfield-class.html">Bitfield</a></li>
+      <li><a href="hetimatorrent/BitfieldInter-class.html">BitfieldInter</a></li>
+      <li><a href="hetimatorrent/BlockData-class.html">BlockData</a></li>
+      <li><a href="hetimatorrent/ChokeTest-class.html">ChokeTest</a></li>
+      <li><a href="hetimatorrent/CreatePieceHashResult-class.html">CreatePieceHashResult</a></li>
+      <li><a href="hetimatorrent/DDBitfield-class.html">DDBitfield</a></li>
+      <li><a href="hetimatorrent/HetiBdecoder-class.html">HetiBdecoder</a></li>
+      <li><a href="hetimatorrent/HetiBencode-class.html">HetiBencode</a></li>
+      <li><a href="hetimatorrent/HetimaDataFSDebug-class.html">HetimaDataFSDebug</a></li>
+      <li><a href="hetimatorrent/HetimaDataFSDebugBuilder-class.html">HetimaDataFSDebugBuilder</a></li>
+      <li><a href="hetimatorrent/KBucket-class.html">KBucket</a></li>
+      <li><a href="hetimatorrent/KGetPeerNodes-class.html">KGetPeerNodes</a></li>
+      <li><a href="hetimatorrent/KGetPeerValue-class.html">KGetPeerValue</a></li>
+      <li><a href="hetimatorrent/KId-class.html">KId</a></li>
+      <li><a href="hetimatorrent/KNode-class.html">KNode</a></li>
+      <li><a href="hetimatorrent/KPeerInfo-class.html">KPeerInfo</a></li>
+      <li><a href="hetimatorrent/KRootingTable-class.html">KRootingTable</a></li>
+      <li><a href="hetimatorrent/KrpcAnnounce-class.html">KrpcAnnounce</a></li>
+      <li><a href="hetimatorrent/KrpcError-class.html">KrpcError</a></li>
+      <li><a href="hetimatorrent/KrpcFindNode-class.html">KrpcFindNode</a></li>
+      <li><a href="hetimatorrent/KrpcGetPeers-class.html">KrpcGetPeers</a></li>
+      <li><a href="hetimatorrent/KrpcMessage-class.html">KrpcMessage</a></li>
+      <li><a href="hetimatorrent/KrpcPing-class.html">KrpcPing</a></li>
+      <li><a href="hetimatorrent/KrpcQuery-class.html">KrpcQuery</a></li>
+      <li><a href="hetimatorrent/KrpcResponse-class.html">KrpcResponse</a></li>
+      <li><a href="hetimatorrent/KSendInfo-class.html">KSendInfo</a></li>
+      <li><a href="hetimatorrent/MessageBitfield-class.html">MessageBitfield</a></li>
+      <li><a href="hetimatorrent/MessageCancel-class.html">MessageCancel</a></li>
+      <li><a href="hetimatorrent/MessageChoke-class.html">MessageChoke</a></li>
+      <li><a href="hetimatorrent/MessageHandshake-class.html">MessageHandshake</a></li>
+      <li><a href="hetimatorrent/MessageHave-class.html">MessageHave</a></li>
+      <li><a href="hetimatorrent/MessageInterested-class.html">MessageInterested</a></li>
+      <li><a href="hetimatorrent/MessageKeepAlive-class.html">MessageKeepAlive</a></li>
+      <li><a href="hetimatorrent/MessageNotInterested-class.html">MessageNotInterested</a></li>
+      <li><a href="hetimatorrent/MessageNull-class.html">MessageNull</a></li>
+      <li><a href="hetimatorrent/MessagePiece-class.html">MessagePiece</a></li>
+      <li><a href="hetimatorrent/MessagePort-class.html">MessagePort</a></li>
+      <li><a href="hetimatorrent/MessageRequest-class.html">MessageRequest</a></li>
+      <li><a href="hetimatorrent/MessageUnchoke-class.html">MessageUnchoke</a></li>
+      <li><a href="hetimatorrent/PeerIdCreator-class.html">PeerIdCreator</a></li>
+      <li><a href="hetimatorrent/PieceInfo-class.html">PieceInfo</a></li>
+      <li><a href="hetimatorrent/PieceInfoList-class.html">PieceInfoList</a></li>
+      <li><a href="hetimatorrent/RequestSingleWaitReturn-class.html">RequestSingleWaitReturn</a></li>
+      <li><a href="hetimatorrent/SHA1Iso-class.html">SHA1Iso</a></li>
+      <li><a href="hetimatorrent/SHA1IsoInfo-class.html">SHA1IsoInfo</a></li>
+      <li><a href="hetimatorrent/SHA1IsoSub-class.html">SHA1IsoSub</a></li>
+      <li><a href="hetimatorrent/ShuffleLinkedList-class.html">ShuffleLinkedList</a></li>
+      <li><a href="hetimatorrent/StartResult-class.html">StartResult</a></li>
+      <li><a href="hetimatorrent/StopResult-class.html">StopResult</a></li>
+      <li><a href="hetimatorrent/TorrenAIEmpty-class.html">TorrenAIEmpty</a></li>
+      <li><a href="hetimatorrent/TorrentAI-class.html">TorrentAI</a></li>
+      <li><a href="hetimatorrent/TorrentAIBasic-class.html">TorrentAIBasic</a></li>
+      <li><a href="hetimatorrent/TorrentClient-class.html">TorrentClient</a></li>
+      <li><a href="hetimatorrent/TorrentClientFront-class.html">TorrentClientFront</a></li>
+      <li><a href="hetimatorrent/TorrentClientFrontNerve-class.html">TorrentClientFrontNerve</a></li>
+      <li><a href="hetimatorrent/TorrentClientManager-class.html">TorrentClientManager</a></li>
+      <li><a href="hetimatorrent/TorrentClientMessage-class.html">TorrentClientMessage</a></li>
+      <li><a href="hetimatorrent/TorrentClientPeerInfo-class.html">TorrentClientPeerInfo</a></li>
+      <li><a href="hetimatorrent/TorrentClientPeerInfoList-class.html">TorrentClientPeerInfoList</a></li>
+      <li><a href="hetimatorrent/TorrentClientSignal-class.html">TorrentClientSignal</a></li>
+      <li><a href="hetimatorrent/TorrentClientSignalWithFront-class.html">TorrentClientSignalWithFront</a></li>
+      <li><a href="hetimatorrent/TorrentClientSignalWithPeerInfo-class.html">TorrentClientSignalWithPeerInfo</a></li>
+      <li><a href="hetimatorrent/TorrentEngine-class.html">TorrentEngine</a></li>
+      <li><a href="hetimatorrent/TorrentEngineAI-class.html">TorrentEngineAI</a></li>
+      <li><a href="hetimatorrent/TorrentEngineProgress-class.html">TorrentEngineProgress</a></li>
+      <li><a href="hetimatorrent/TorrentEngineTorrent-class.html">TorrentEngineTorrent</a></li>
+      <li><a href="hetimatorrent/TorrentFile-class.html">TorrentFile</a></li>
+      <li><a href="hetimatorrent/TorrentFileCreator-class.html">TorrentFileCreator</a></li>
+      <li><a href="hetimatorrent/TorrentFileCreatorResult-class.html">TorrentFileCreatorResult</a></li>
+      <li><a href="hetimatorrent/TorrentFileFile-class.html">TorrentFileFile</a></li>
+      <li><a href="hetimatorrent/TorrentFileFiles-class.html">TorrentFileFiles</a></li>
+      <li><a href="hetimatorrent/TorrentFileInfo-class.html">TorrentFileInfo</a></li>
+      <li><a href="hetimatorrent/TorrentInfoHashCreator-class.html">TorrentInfoHashCreator</a></li>
+      <li><a href="hetimatorrent/TorrentMessage-class.html">TorrentMessage</a></li>
+      <li><a href="hetimatorrent/TorrentPieceHashCreator-class.html">TorrentPieceHashCreator</a></li>
+      <li><a href="hetimatorrent/TrackerClient-class.html">TrackerClient</a></li>
+      <li><a href="hetimatorrent/TrackerPeerInfo-class.html">TrackerPeerInfo</a></li>
+      <li><a href="hetimatorrent/TrackerPeerManager-class.html">TrackerPeerManager</a></li>
+      <li><a href="hetimatorrent/TrackerRequest-class.html">TrackerRequest</a></li>
+      <li><a href="hetimatorrent/TrackerRequestResult-class.html">TrackerRequestResult</a></li>
+      <li><a href="hetimatorrent/TrackerResponse-class.html">TrackerResponse</a></li>
+      <li><a href="hetimatorrent/TrackerServer-class.html">TrackerServer</a></li>
+      <li><a href="hetimatorrent/TrackerUrl-class.html">TrackerUrl</a></li>
+    
+      <li class="section-title"><a href="hetimatorrent/hetimatorrent-library.html#exceptions">Exceptions</a></li>
+      <li><a href="hetimatorrent/BencodeParseError-class.html">BencodeParseError</a></li>
+      <li><a href="hetimatorrent/HetiBencodeParseError-class.html">HetiBencodeParseError</a></li>
+    </ol>
+  </div>
+
+  <div class="col-xs-12 col-sm-9 col-md-6 main-content">
+
+    <section class="desc markdown">
+    
+          <p class="no-docs">Not documented.</p>
+    
+    </section>
+
+
+
+
+
+    <section class="summary" id="instance-properties">
+        <h2>Properties</h2>
+
+        <dl class="properties">
+            <dt id="iterator" class="property">
+                <span class="top-level-variable-type">Iterator&lt;X&gt;</span>
+                <a href="hetimatorrent/ShuffleLinkedList/iterator.html">iterator</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="length" class="property">
+                <span class="top-level-variable-type">int</span>
+                <a href="hetimatorrent/ShuffleLinkedList/length.html">length</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="max" class="property">
+                <span class="top-level-variable-type">int</span>
+                <a href="hetimatorrent/ShuffleLinkedList/max.html">max</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="rawsequential" class="property">
+                <span class="top-level-variable-type">List&lt;X&gt;</span>
+                <a href="hetimatorrent/ShuffleLinkedList/rawsequential.html">rawsequential</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="rawshuffled" class="property">
+                <span class="top-level-variable-type">List&lt;X&gt;</span>
+                <a href="hetimatorrent/ShuffleLinkedList/rawshuffled.html">rawshuffled</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="sequential" class="property">
+                <span class="top-level-variable-type">List&lt;X&gt;</span>
+                <a href="hetimatorrent/ShuffleLinkedList/sequential.html">sequential</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="shuffled" class="property">
+                <span class="top-level-variable-type">List&lt;X&gt;</span>
+                <a href="hetimatorrent/ShuffleLinkedList/shuffled.html">shuffled</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+        </dl>
+    </section>
+
+    <section class="summary" id="constructors">
+        <h2>Constructors</h2>
+
+        <dl class="constructor-summary-list">
+            <dt id="ShuffleLinkedList" class="callable">
+                <span class="name"><a href="hetimatorrent/ShuffleLinkedList/ShuffleLinkedList.html">ShuffleLinkedList</a></span><span class="signature">([<span class="parameter" id="-param-max"><span class="type-annotation">int</span> <span class="parameter-name">max</span> = <span class="default-value">0</span></span>])</span>
+            </dt>
+            <dd>
+                
+            </dd>
+        </dl>
+      </section>
+
+
+      <section class="summary" id="instance-methods">
+          <h2>Methods</h2>
+          <dl class="callables">
+              <dt id="addHead" class="callable">
+                  <a href="hetimatorrent/ShuffleLinkedList/addHead.html"><span class="name ">addHead</span></a><span class="signature">(<wbr><span class="parameter" id="addHead-param-value"><span class="type-annotation">X</span> <span class="parameter-name">value</span></span>)
+                      &#8594;
+                      <span class="returntype">X</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="addLast" class="callable">
+                  <a href="hetimatorrent/ShuffleLinkedList/addLast.html"><span class="name ">addLast</span></a><span class="signature">(<wbr><span class="parameter" id="addLast-param-value"><span class="type-annotation">X</span> <span class="parameter-name">value</span></span>)
+                      &#8594;
+                      <span class="returntype">X</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="clearAll" class="callable">
+                  <a href="hetimatorrent/ShuffleLinkedList/clearAll.html"><span class="name ">clearAll</span></a><span class="signature">(<wbr>)
+                      &#8594;
+                      <span class="returntype">void</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="getSequential" class="callable">
+                  <a href="hetimatorrent/ShuffleLinkedList/getSequential.html"><span class="name ">getSequential</span></a><span class="signature">(<wbr><span class="parameter" id="getSequential-param-index"><span class="type-annotation">int</span> <span class="parameter-name">index</span></span>)
+                      &#8594;
+                      <span class="returntype">X</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="getShuffled" class="callable">
+                  <a href="hetimatorrent/ShuffleLinkedList/getShuffled.html"><span class="name ">getShuffled</span></a><span class="signature">(<wbr><span class="parameter" id="getShuffled-param-index"><span class="type-annotation">int</span> <span class="parameter-name">index</span></span>)
+                      &#8594;
+                      <span class="returntype">X</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="getWithFilter" class="callable">
+                  <a href="hetimatorrent/ShuffleLinkedList/getWithFilter.html"><span class="name ">getWithFilter</span></a><span class="signature">(<wbr><span class="parameter" id="getWithFilter-param-filter"><span class="type-annotation">bool</span> <span class="parameter-name">filter</span>(<span class="parameter" id="filter-param-xx"><span class="type-annotation">X</span> <span class="parameter-name">xx</span></span>)</span>)
+                      &#8594;
+                      <span class="returntype">List&lt;X&gt;</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="removeHead" class="callable">
+                  <a href="hetimatorrent/ShuffleLinkedList/removeHead.html"><span class="name ">removeHead</span></a><span class="signature">(<wbr>)
+                      &#8594;
+                      <span class="returntype">void</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="removeWithFilter" class="callable">
+                  <a href="hetimatorrent/ShuffleLinkedList/removeWithFilter.html"><span class="name ">removeWithFilter</span></a><span class="signature">(<wbr><span class="parameter" id="removeWithFilter-param-filter"><span class="type-annotation">bool</span> <span class="parameter-name">filter</span>(<span class="parameter" id="filter-param-xx"><span class="type-annotation">X</span> <span class="parameter-name">xx</span></span>)</span>)
+                      &#8594;
+                      <span class="returntype">void</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="shuffle" class="callable">
+                  <a href="hetimatorrent/ShuffleLinkedList/shuffle.html"><span class="name ">shuffle</span></a><span class="signature">(<wbr>)
+                      &#8594;
+                      <span class="returntype">void</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+          </dl>
+      </section>
+
+    </div> <!-- /.main-content -->
+
+  <div class="col-xs-6 col-sm-6 col-md-3 sidebar sidebar-offcanvas-right">
+    <h5>ShuffleLinkedList</h5>
+    <ol>
+    
+    
+    
+      <li class="section-title"><a href="hetimatorrent/ShuffleLinkedList-class.html#instance-properties">Properties</a></li>
+      <li><a href="hetimatorrent/ShuffleLinkedList/iterator.html">iterator</a>
+</li>
+      <li><a href="hetimatorrent/ShuffleLinkedList/length.html">length</a>
+</li>
+      <li><a href="hetimatorrent/ShuffleLinkedList/max.html">max</a>
+</li>
+      <li><a href="hetimatorrent/ShuffleLinkedList/rawsequential.html">rawsequential</a>
+</li>
+      <li><a href="hetimatorrent/ShuffleLinkedList/rawshuffled.html">rawshuffled</a>
+</li>
+      <li><a href="hetimatorrent/ShuffleLinkedList/sequential.html">sequential</a>
+</li>
+      <li><a href="hetimatorrent/ShuffleLinkedList/shuffled.html">shuffled</a>
+</li>
+    
+      <li class="section-title"><a href="hetimatorrent/ShuffleLinkedList-class.html#constructors">Constructors</a></li>
+      <li><a href="hetimatorrent/ShuffleLinkedList/ShuffleLinkedList.html">ShuffleLinkedList</a></li>
+    
+    
+      <li class="section-title"><a href="hetimatorrent/ShuffleLinkedList-class.html#methods">Methods</a></li>
+      <li><a href="hetimatorrent/ShuffleLinkedList/addHead.html">addHead</a>
+</li>
+      <li><a href="hetimatorrent/ShuffleLinkedList/addLast.html">addLast</a>
+</li>
+      <li><a href="hetimatorrent/ShuffleLinkedList/clearAll.html">clearAll</a>
+</li>
+      <li><a href="hetimatorrent/ShuffleLinkedList/getSequential.html">getSequential</a>
+</li>
+      <li><a href="hetimatorrent/ShuffleLinkedList/getShuffled.html">getShuffled</a>
+</li>
+      <li><a href="hetimatorrent/ShuffleLinkedList/getWithFilter.html">getWithFilter</a>
+</li>
+      <li><a href="hetimatorrent/ShuffleLinkedList/removeHead.html">removeHead</a>
+</li>
+      <li><a href="hetimatorrent/ShuffleLinkedList/removeWithFilter.html">removeWithFilter</a>
+</li>
+      <li><a href="hetimatorrent/ShuffleLinkedList/shuffle.html">shuffle</a>
+</li>
+    </ol>
+  </div><!--/.sidebar-offcanvas-->
+
+</div> <!-- container -->
+
+<footer>
+    <div class="container-fluid">
+        <div class="container">
+            <p class="text-center">
+                <span class="no-break">
+                  hetimatorrent 0.0.1 api docs
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="https://www.dartlang.org">
+                    <img src="static-assets/favicon.png" alt="Dart" title="Dart"width="16" height="16">
+                  </a>
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="http://creativecommons.org/licenses/by-sa/4.0/">cc license</a>
+                </span>
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script src="static-assets/prettify.js"></script>
+<script src="static-assets/script.js"></script>
+<!-- Do not remove placeholder -->
+<!-- Footer Placeholder -->
+</body>
+
+</html>

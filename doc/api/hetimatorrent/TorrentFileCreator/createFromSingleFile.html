@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>createFromSingleFile method - TorrentFileCreator class - hetimatorrent library - Dart API</title>
+    <!-- required because all the links are pseudo-absolute -->
+    <base href="../..">
+
+    <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro|Roboto:500,400italic,300,400' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="static-assets/prettify.css">
+    <link rel="stylesheet" href="static-assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static-assets/styles.css">
+
+    <meta name="description" content="API docs for the createFromSingleFile method from the TorrentFileCreator class, for the Dart programming language.">
+    <link rel="icon" href="static-assets/favicon.png">
+
+    <!-- Do not remove placeholder -->
+    <!-- Header Placeholder -->
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header class="container-fluid" id="title">
+    <nav class="navbar navbar-fixed-top">
+        <div class="container">
+            <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+            <ol class="breadcrumbs gt-separated hidden-xs">
+                <li><a href="index.html">hetimatorrent</a></li>
+                <li><a href="hetimatorrent/hetimatorrent-library.html">hetimatorrent</a></li>
+                <li><a href="hetimatorrent/TorrentFileCreator-class.html">TorrentFileCreator</a></li>
+                <li class="self-crumb">createFromSingleFile</li>
+            </ol>
+            <div class="self-name">createFromSingleFile</div>
+        </div>
+    </nav>
+    <div class="container masthead">
+        <ol class="breadcrumbs gt-separated visible-xs">
+            <li><a href="index.html">hetimatorrent</a></li>
+            <li><a href="hetimatorrent/hetimatorrent-library.html">hetimatorrent</a></li>
+            <li><a href="hetimatorrent/TorrentFileCreator-class.html">TorrentFileCreator</a></li>
+            <li class="self-crumb">createFromSingleFile</li>
+        </ol>
+        <div class="title-description">
+            <h1 class="title">
+                <div class="kind">method</div> createFromSingleFile
+            </h1>
+            <!-- p class="subtitle">
+                
+            </p -->
+        </div>
+        <ul class="subnav">
+            <li><a href="hetimatorrent/TorrentFileCreator/createFromSingleFile.html#source">Source</a></li>
+        </ul>
+    </div>
+</header>
+
+<div class="container body">
+
+  <div class="col-xs-6 col-sm-3 sidebar sidebar-offcanvas-left">
+    <h5><a href="index.html">hetimatorrent</a></h5>
+    <h5><a href="hetimatorrent/hetimatorrent-library.html">hetimatorrent</a></h5>
+    <h5><a href="hetimatorrent/TorrentFileCreator-class.html">TorrentFileCreator</a></h5>
+
+    <ol>
+    
+    
+    
+      <li class="section-title"><a href="hetimatorrent/TorrentFileCreator-class.html#instance-properties">Properties</a></li>
+      <li><a href="hetimatorrent/TorrentFileCreator/announce.html">announce</a>
+</li>
+      <li><a href="hetimatorrent/TorrentFileCreator/name.html">name</a>
+</li>
+      <li><a href="hetimatorrent/TorrentFileCreator/piececLength.html">piececLength</a>
+</li>
+    
+      <li class="section-title"><a href="hetimatorrent/TorrentFileCreator-class.html#constructors">Constructors</a></li>
+      <li><a href="hetimatorrent/TorrentFileCreator/TorrentFileCreator.html">TorrentFileCreator</a></li>
+    
+    
+      <li class="section-title"><a href="hetimatorrent/TorrentFileCreator-class.html#methods">Methods</a></li>
+      <li><a href="hetimatorrent/TorrentFileCreator/createFromSingleFile.html">createFromSingleFile</a>
+</li>
+      <li><a href="hetimatorrent/TorrentFileCreator/saveTorrentFile.html">saveTorrentFile</a>
+</li>
+    </ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+  <div class="col-xs-12 col-sm-9 col-md-6 main-content">
+
+    <section class="multi-line-signature">
+            <span class="returntype">Future&lt;<a href="hetimatorrent.torrent.torrentfilehelper/TorrentFileCreatorResult-class.html">TorrentFileCreatorResult</a>&gt;</span>
+            <span class="name ">createFromSingleFile</span>(
+            <br>
+            <div class="parameters">
+                <span class="parameter" id="createFromSingleFile-param-target"><span class="type-annotation">HetimaData</span> <span class="parameter-name">target</span></span>,<br>{<span class="parameter" id="createFromSingleFile-param-threadNum"><span class="parameter-name">threadNum</span>: <span class="default-value">1</span></span>,<br><span class="parameter" id="createFromSingleFile-param-cacheSize"><span class="parameter-name">cacheSize</span>: <span class="default-value">0</span></span>,<br><span class="parameter" id="createFromSingleFile-param-cacheNum"><span class="parameter-name">cacheNum</span>: <span class="default-value">3</span></span>,<br><span class="parameter" id="createFromSingleFile-param-progress"><span class="type-annotation">Function</span> <span class="parameter-name">progress</span>: <span class="default-value">null</span></span>,<br><span class="parameter" id="createFromSingleFile-param-isopath"><span class="parameter-name">isopath</span>: <span class="default-value">null</span></span>}
+            </div>
+            )    </section>
+
+    <section class="desc markdown">
+    
+          <p class="no-docs">Not documented.</p>
+    
+    </section>
+
+    <section class="summary source-code" id="source">
+      <h2>Source</h2>
+      <pre><code class="prettyprint lang-dart">async.Future&lt;TorrentFileCreatorResult&gt; createFromSingleFile(hetima.HetimaData target, {threadNum: 1, cacheSize: 0, cacheNum: 3, Function progress: null,isopath:null}) {
+  async.Completer&lt;TorrentFileCreatorResult&gt; ret = new async.Completer();
+  TorrentPieceHashCreator helper = new TorrentPieceHashCreator();
+
+  target.getLength().then((int targetLength) {
+    helper
+        .createPieceHash(target, piececLength, threadNum: threadNum, cacheSize: cacheSize, cacheNum: cacheNum, progress: progress,isopath:isopath)
+        .then((CreatePieceHashResult r) {
+      Map file = {};
+      Map info = {};
+      file[TorrentFile.KEY_ANNOUNCE] = announce;
+      file[TorrentFile.KEY_INFO] = info;
+      info[TorrentFile.KEY_NAME] = name;
+      info[TorrentFile.KEY_PIECE_LENGTH] = piececLength;
+      info[TorrentFile.KEY_LENGTH] = targetLength;
+      info[TorrentFile.KEY_PIECES] = r.pieceBuffer.toUint8List();
+      TorrentFileCreatorResult result = new TorrentFileCreatorResult(TorrentFileCreatorResult.OK);
+      result.torrentFile = new TorrentFile.torentmap(file);
+      ret.complete(result);
+    });
+  });
+  return ret.future;
+}</code></pre>
+    </section>
+
+  </div> <!-- /.main-content -->
+
+</div> <!-- container -->
+
+<footer>
+    <div class="container-fluid">
+        <div class="container">
+            <p class="text-center">
+                <span class="no-break">
+                  hetimatorrent 0.0.1 api docs
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="https://www.dartlang.org">
+                    <img src="static-assets/favicon.png" alt="Dart" title="Dart"width="16" height="16">
+                  </a>
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="http://creativecommons.org/licenses/by-sa/4.0/">cc license</a>
+                </span>
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script src="static-assets/prettify.js"></script>
+<script src="static-assets/script.js"></script>
+<!-- Do not remove placeholder -->
+<!-- Footer Placeholder -->
+</body>
+
+</html>
