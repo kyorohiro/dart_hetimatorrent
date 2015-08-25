@@ -69,35 +69,31 @@ class TorrentClientFront {
 
   static int debugIdSeed = 0;
   int _debugId = 0;
-  
+
   List<int> _reseved = [0, 0, 0, 0, 0, 0, 0, 0];
   List<int> get reseved => new List.from(_reseved);
 
-  int requestedMaxPieceSize = 16*1024;
+  int requestedMaxPieceSize = 16 * 1024;
 
   bool _verbose = false;
   bool get verbose => _verbose;
 
-  set reseved( List<int>  v) {
-    if(v.length != 8) {
+  set reseved(List<int> v) {
+    if (v.length != 8) {
       throw {};
     }
     _reseved.clear();
     _reseved.addAll(v);
   }
 
-  static Future<TorrentClientFront> connect(HetimaSocketBuilder _builder, TorrentClientPeerInfo info, int bitfieldSize, List<int> infoHash, 
-      {List<int> peerId:null,List<int> reseved:null, bool verbose:false}) {
-    return new Future(() {
-      HetimaSocket socket = _builder.createClient();
-      return socket.connect(info.ip, info.portAcceptable).then((HetimaSocket socket) {
-        return new TorrentClientFront(socket, info.ip, info.portAcceptable, socket.buffer, bitfieldSize, infoHash, peerId, reseved, verbose:verbose);
-      });
-    });
+  static Future<TorrentClientFront> connect(HetimaSocketBuilder _builder, TorrentClientPeerInfo info, int bitfieldSize, List<int> infoHash,
+      {List<int> peerId: null, List<int> reseved: null, bool verbose: false}) async {
+    HetimaSocket socket = _builder.createClient();
+    await socket.connect(info.ip, info.portAcceptable);
+    return new TorrentClientFront(socket, info.ip, info.portAcceptable, socket.buffer, bitfieldSize, infoHash, peerId, reseved, verbose: verbose);
   }
 
-  TorrentClientFront(HetimaSocket socket, String peerIp, int peerPort, HetimaReader reader, int bitfieldSize,
-                     List<int> infoHash, List<int> peerId, List<int> reseved, {bool verbose:false}) {
+  TorrentClientFront(HetimaSocket socket, String peerIp, int peerPort, HetimaReader reader, int bitfieldSize, List<int> infoHash, List<int> peerId, List<int> reseved, {bool verbose: false}) {
     if (peerId == null) {
       _myPeerId.addAll(PeerIdCreator.createPeerid("heti69"));
     } else {
@@ -136,26 +132,21 @@ class TorrentClientFront {
       });
     } else {
       print("### basic --");
-      return TorrentMessage.parseBasic(_parser , maxOfMessageSize:requestedMaxPieceSize+20);
+      return TorrentMessage.parseBasic(_parser, maxOfMessageSize: requestedMaxPieceSize + 20);
     }
   }
 
-  void startReceive() {
-    a() {
-      new Future(() {
-        return parse().then((TorrentMessage message) {
-          print("###${message}");
-          TorrentClientFrontNerve.doReceiveMessage(this, message);
-          stream.add(message);
-          a();
-        });
-      }).catchError((e) {
-        print("###catch error");
-        stream.addError(e);
-        close();
-      });
+  startReceive() async {
+    try {
+      while (true) {
+        TorrentMessage message = await parse();
+        TorrentClientFrontNerve.doReceiveMessage(this, message);
+        stream.add(message);
+      }
+    } catch (e) {
+      stream.addError(e);
+      close();
     }
-    a();
   }
 
   Future sendHandshake({List<int> reseved: null}) {
@@ -212,7 +203,7 @@ class TorrentClientFront {
   }
 
   Future sendRequest(int index, int begin, int length) {
-    if(requestedMaxPieceSize < length) {
+    if (requestedMaxPieceSize < length) {
       requestedMaxPieceSize = length;
     }
     MessageRequest message = new MessageRequest(index, begin, length);
@@ -233,9 +224,9 @@ class TorrentClientFront {
     _socket.close();
     TorrentClientFrontNerve.doClose(this, 0);
   }
-  
+
   void log(String message) {
-    if(_verbose) {
+    if (_verbose) {
       print("...${message}");
     }
   }
