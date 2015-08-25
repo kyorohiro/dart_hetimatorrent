@@ -32,7 +32,8 @@ class TorrentClientManager {
   StreamController<TorrentClientSignal> _signalStream = new StreamController.broadcast();
   Stream<TorrentClientSignal> get onReceiveSignal => _signalStream.stream;
 
-  List<TorrentClient> clients = [];
+  List<TorrentClient> _clients = [];
+  List<TorrentClient> get rawclients => _clients;
 
   bool _verbose = false;
   bool get verbose => _verbose;
@@ -44,7 +45,7 @@ class TorrentClientManager {
 
   void addTorrentClientWithDelegationToAccept(TorrentClient client) {
     if (null == getTorrentClientFromInfoHash(client.infoHash)) {
-      clients.add(client);
+      _clients.add(client);
     }
   }
 
@@ -72,7 +73,7 @@ class TorrentClientManager {
   Future stop() async {
     if (_isStart == true) {
       _isStart = false;
-      for (TorrentClient c in clients) {
+      for (TorrentClient c in _clients) {
         await c.stop();
       }
       _server.close();
@@ -109,7 +110,7 @@ class TorrentClientManager {
     if (20 != infoHash.length) {
       return null;
     }
-    for (TorrentClient client in clients) {
+    for (TorrentClient client in _clients) {
       bool isManagedInfoHash = true;
       for (int index = 0; index < infoHash.length; index++) {
         if (client.infoHash[index] != infoHash[index]) {

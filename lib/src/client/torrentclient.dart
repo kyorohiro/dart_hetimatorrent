@@ -64,31 +64,27 @@ class TorrentClient {
   static Future<TorrentClient> create(HetimaSocketBuilder builder, List<int> peerId, TorrentFile file, HetimaData data,
       {TorrentAI ai: null, List<int> bitfield: null, List<int> reserved: null, verbose: false}) async {
     List<int> infoHash = await file.createInfoSha1();
-    return new TorrentClient(builder, peerId, infoHash, file.info.pieces, file.info.piece_length, file.info.files.dataSize, data, ai: ai, bitfield: bitfield, reserved: reserved, verbose: verbose);
+    return new TorrentClient(builder, peerId, infoHash, file.info.pieces, file.info.piece_length, file.info.files.dataSize, 
+        data, ai: ai, bitfield: bitfield, reserved: reserved, verbose: verbose);
   }
 
   TorrentClient(HetimaSocketBuilder builder, List<int> peerId, List<int> infoHash, List<int> piece, int pieceLength, int fileSize, HetimaData data,
       {TorrentAI ai: null, haveAllData: false, List<int> bitfield: null, List<int> reserved: null, verbose: false}) {
-    this._builder = builder;
+    _verbose = verbose;
+    _builder = builder;
     _peerInfos = new TorrentClientPeerInfoList();
     _infoHash.addAll(infoHash);
     _peerId.addAll(peerId);
     _targetBlock = new BlockData(data, new Bitfield(Bitfield.calcbitSize(piece.length), clearIsOne: haveAllData), pieceLength, fileSize);
+    
+    this.ai = (ai == null ? new TorrentAIBasic() : ai);
     if (bitfield != null) {
       _targetBlock.rawHead.writeBytes(bitfield);
     }
-    if (ai == null) {
-      this.ai = new TorrentAIBasic();
-    } else {
-      this.ai = ai;
-    }
-    if (reserved == null) {
-      _reseved = [0, 0, 0, 0, 0, 0, 0, 0];
-    } else {
+    if (reserved != null) {
       _reseved.clear();
       _reseved.addAll(reserved);
     }
-    _verbose = verbose;
   }
 
   TorrentClientPeerInfo putTorrentPeerInfoFromTracker(String ip, int port) {
