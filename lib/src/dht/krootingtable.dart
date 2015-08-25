@@ -74,19 +74,4 @@ class KRootingTable {
     });
   }
 
-  List<int> retrievePath(KId kd) {
-    List<KId> d = [];
-    KId out = new KId(_ownerKId.value);
-    for (int i = 0; i < 161; i++) {
-      d.add(kd.xor(_ownerKId.xorToThe(i, repeat: true)));
-    }
-    d.sort();
-    {
-      List<int> r = [];
-      for (int i = 0; i < 161; i++) {
-        r.add(_ownerKId.getRootingTabkeIndex(d[i].xor(kd)));
-      }
-      return r;
-    }
-  }
 }
