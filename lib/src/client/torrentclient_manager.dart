@@ -48,20 +48,23 @@ class TorrentClientManager {
     }
   }
 
+  /**
+   * if infoHash args is unmanaged infohash, return null;
+   */
   TorrentClient getTorrentClient(List<int> infoHash) {
-    for (TorrentClient c in clients) {
-      bool isOk = true;
-      if (c.infoHash.length != infoHash.length) {
-        continue;
-      }
-      for (int j = 0; j < infoHash.length; j++) {
-        if (c.infoHash[j] != infoHash[j]) {
-          isOk = false;
+    if (20 != infoHash.length) {
+      return null;
+    }
+    for (TorrentClient client in clients) {
+      bool isManagedInfoHash = true;
+      for (int index = 0; index < infoHash.length; index++) {
+        if (client.infoHash[index] != infoHash[index]) {
+          isManagedInfoHash = false;
           break;
         }
       }
-      if (isOk == true) {
-        return c;
+      if (isManagedInfoHash == true) {
+        return client;
       }
     }
     return null;
@@ -86,6 +89,7 @@ class TorrentClientManager {
         if (false == _isStart) {
           return null;
         }
+        //
         HetimaSocketInfo socketInfo = await socket.getSocketInfo();
         log("accept: ${socketInfo.peerAddress}, ${socketInfo.peerPort}");
         MessageHandshake handshake = await TorrentMessage.parseHandshake(new EasyParser(socket.buffer));
