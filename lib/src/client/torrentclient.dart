@@ -64,8 +64,7 @@ class TorrentClient {
   static Future<TorrentClient> create(HetimaSocketBuilder builder, List<int> peerId, TorrentFile file, HetimaData data,
       {TorrentAI ai: null, List<int> bitfield: null, List<int> reserved: null, verbose: false}) async {
     List<int> infoHash = await file.createInfoSha1();
-    return new TorrentClient(builder, peerId, infoHash, file.info.pieces, file.info.piece_length, file.info.files.dataSize, 
-        data, ai: ai, bitfield: bitfield, reserved: reserved, verbose: verbose);
+    return new TorrentClient(builder, peerId, infoHash, file.info.pieces, file.info.piece_length, file.info.files.dataSize, data, ai: ai, bitfield: bitfield, reserved: reserved, verbose: verbose);
   }
 
   TorrentClient(HetimaSocketBuilder builder, List<int> peerId, List<int> infoHash, List<int> piece, int pieceLength, int fileSize, HetimaData data,
@@ -76,7 +75,7 @@ class TorrentClient {
     _infoHash.addAll(infoHash);
     _peerId.addAll(peerId);
     _targetBlock = new BlockData(data, new Bitfield(Bitfield.calcbitSize(piece.length), clearIsOne: haveAllData), pieceLength, fileSize);
-    
+
     this.ai = (ai == null ? new TorrentAIBasic() : ai);
     if (bitfield != null) {
       _targetBlock.rawHead.writeBytes(bitfield);
@@ -204,12 +203,7 @@ class TorrentClient {
   }
 
   Future<TorrentClientFront> connect(TorrentClientPeerInfo info) async {
-    //
-    // cuurent implements duprecate connection do not permit
-    if (info.front != null && info.front.isClose == false) {
-      throw {};
-    }
-    if (false == _isStart) {
+    if (false == _isStart || info.front != null && info.front.isClose == false) {
       throw {};
     }
     info.front = await TorrentClientFront.connect(_builder, info, this._targetBlock.bitSize, infoHash, peerId: peerId, reseved: _reseved, verbose: _verbose);
@@ -225,14 +219,12 @@ class TorrentClient {
   }
 
   void _internalOnReceive(TorrentClientFront front, TorrentClientPeerInfo info) {
-    front.onReceiveEvent.listen((TorrentMessage message) {
+    front.onReceiveEvent.listen((TorrentMessage message) async {
       messageStream.add(new TorrentClientMessage(info, message));
       if (message is MessagePiece) {
         MessagePiece piece = message;
-        print("####piece[A] ${piece.index}, ${piece.begin}, ${piece.content.length}");
-        _targetBlock.writePartBlock(piece.content, piece.index, piece.begin, piece.content.length).then((WriteResult w) {
-          print("####piece[B]  ${piece.index}, ${piece.begin}, ${piece.content.length}");
-          ///*
+        try {
+          await _targetBlock.writePartBlock(piece.content, piece.index, piece.begin, piece.content.length);
           if (_targetBlock.have(piece.index)) {
             _sendSignal(this, info, new TorrentClientSignal(TorrentClientSignal.ID_SET_PIECE, piece.index, "set piece : index:${piece.index}"));
           } else {
@@ -240,24 +232,18 @@ class TorrentClient {
           }
           if (_targetBlock.haveAll()) {
             _sendSignal(this, null, new TorrentClientSignal(TorrentClientSignal.ID_SET_PIECE_ALL, piece.index, "set piece all"));
-          } //*/
-        }).catchError((e) {
+          }
+        } catch (e) {
           print("####ERROR ${e}");
-        });
-      } else if (message is MessageHandshake) {
-        //
-        //
+        }
       }
       _ai.onReceive(this, info, message);
     });
     front.onReceiveSignal.listen((TorrentClientSignalWithFront signal) {
-      switch (signal.id) {
-        case TorrentClientSignal.ID_PIECE_RECEIVE:
-          this._downloaded += signal.v;
-          break;
-        case TorrentClientSignal.ID_PIECE_SEND:
-          this._uploaded += signal.v;
-          break;
+      if (signal.id == TorrentClientSignal.ID_PIECE_RECEIVE) {
+        this._downloaded += signal.v;
+      } else if (signal.id == TorrentClientSignal.ID_PIECE_SEND) {
+        this._uploaded += signal.v;
       }
       TorrentClientSignal sig = new TorrentClientSignalWithPeerInfo(info, signal.id, signal.reason, signal.toString());
       _sendSignal(this, info, sig);
