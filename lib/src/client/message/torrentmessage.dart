@@ -2,12 +2,7 @@ library hetimatorrent.message.torentmessage;
 
 import 'dart:core';
 import 'dart:async';
-import 'dart:convert';
 import 'package:hetimacore/hetimacore.dart';
-import 'package:hetimanet/hetimanet.dart';
-
-//
-//
 
 import 'messagehandshake.dart';
 import 'messagebitfield.dart';
@@ -37,7 +32,6 @@ class TorrentMessage {
   static const int SIGN_PIECE = 7;
   static const int SIGN_CANCEL = 8;
   static const int SIGN_PORT = 9; // For MDHT
-
   static final int SIGN_LENGTH = 1; //1 byte
   int _id = 0;
   int get id => _id;
@@ -46,71 +40,68 @@ class TorrentMessage {
     _id = id;
   }
 
-  Future<List<int>> encode() {
-    return new Future((){
-      return [0];
-    });
+  Future<List<int>> encode() async {
+     return [0];
   }
 
-  static Future<TorrentMessage> parseHandshake(EasyParser parser, [int maxOfMessageSize = 256 * 1024]) {
+  static Future<TorrentMessage> parseHandshake(EasyParser parser, [int maxOfMessageSize = 256 * 1024]) async {
     parser.push();
-    return new Future(() {
-      return MessageHandshake.decode(parser);
-    }).catchError((e) {
-      parser.back();
-      throw e;
-    }).whenComplete(() {
+    try {
+      MessageHandshake message = await MessageHandshake.decode(parser);
       parser.pop();
-    });    
+      return message;
+    } catch (e) {
+      parser.back();
+      parser.pop();
+      throw e;
+    }
   }
 
-  static  Future<TorrentMessage> parseBasic(EasyParser parser, {int maxOfMessageSize:32 * 1024}) {
+  static Future<TorrentMessage> parseBasic(EasyParser parser, {int maxOfMessageSize: 32 * 1024}) async {
     parser.push();
-        
-    return new Future(() {
-      return MessageNull.decode(parser, maxOfMessageSize:maxOfMessageSize).then((MessageNull nullMessage) {
-        parser.back();
-        switch (nullMessage._id) {
-          case TorrentMessage.SIGN_BITFIELD:
-            return MessageBitfield.decode(parser);
-          case TorrentMessage.SIGN_CANCEL:
-            return MessageCancel.decode(parser);
-          case TorrentMessage.SIGN_CHOKE:
-            return MessageChoke.decode(parser);
-          case TorrentMessage.SIGN_HAVE:
-            return MessageHave.decode(parser);
-          case TorrentMessage.SIGN_INTERESTED:
-            return MessageInterested.decode(parser);
-          case TorrentMessage.SIGN_NOTINTERESTED:
-            return MessageNotInterested.decode(parser);
-          case TorrentMessage.SIGN_PIECE:
-            return MessagePiece.decode(parser);
-          case TorrentMessage.SIGN_PORT:
-            return MessagePort.decode(parser);
-          case TorrentMessage.SIGN_REQUEST:
-            return MessageRequest.decode(parser);
-          case TorrentMessage.SIGN_UNCHOKE:
-            return MessageUnchoke.decode(parser);
-          default:
-            if(nullMessage.messageContent.length == 0) {
-              return MessageKeepAlive.decode(parser);
-            } else {
-              return MessageNull.decode(parser);
-            }
-        }
-      });
-    }).catchError((e) {
+    try {
+      MessageNull nullMessage = await MessageNull.decode(parser, maxOfMessageSize: maxOfMessageSize);
+      parser.back();
+      switch (nullMessage._id) {
+        case TorrentMessage.SIGN_BITFIELD:
+          return MessageBitfield.decode(parser);
+        case TorrentMessage.SIGN_CANCEL:
+          return MessageCancel.decode(parser);
+        case TorrentMessage.SIGN_CHOKE:
+          return MessageChoke.decode(parser);
+        case TorrentMessage.SIGN_HAVE:
+          return MessageHave.decode(parser);
+        case TorrentMessage.SIGN_INTERESTED:
+          return MessageInterested.decode(parser);
+        case TorrentMessage.SIGN_NOTINTERESTED:
+          return MessageNotInterested.decode(parser);
+        case TorrentMessage.SIGN_PIECE:
+          return MessagePiece.decode(parser);
+        case TorrentMessage.SIGN_PORT:
+          return MessagePort.decode(parser);
+        case TorrentMessage.SIGN_REQUEST:
+          return MessageRequest.decode(parser);
+        case TorrentMessage.SIGN_UNCHOKE:
+          return MessageUnchoke.decode(parser);
+        default:
+          if (nullMessage.messageContent.length == 0) {
+            return MessageKeepAlive.decode(parser);
+          } else {
+            return MessageNull.decode(parser);
+          }
+      }
+    } catch (e) {
       parser.back();
       throw e;
-    }).whenComplete(() {
+    } finally {
       parser.buffer.clearInnerBuffer(parser.getInedx());
       parser.pop();
-    });
+    }
   }
-  
+
   static String toText(int id) {
-    switch(id) {
-      case  DUMMY_SIGN_SHAKEHAND:
+    switch (id) {
+      case DUMMY_SIGN_SHAKEHAND:
         return "shakehand(${id})";
       case DUMMY_SIGN_KEEPALIVE:
         return "keepalive(${id})";

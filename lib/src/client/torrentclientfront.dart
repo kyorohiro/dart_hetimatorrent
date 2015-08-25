@@ -125,13 +125,11 @@ class TorrentClientFront {
 
   Future<TorrentMessage> parse() {
     if (handshaked == false) {
-      print("### handshake --");
       return TorrentMessage.parseHandshake(_parser).then((TorrentMessage message) {
         handshaked = true;
         return message;
       });
     } else {
-      print("### basic --");
       return TorrentMessage.parseBasic(_parser, maxOfMessageSize: requestedMaxPieceSize + 20);
     }
   }
@@ -210,13 +208,11 @@ class TorrentClientFront {
     return sendMessage(message);
   }
 
-  Future sendMessage(TorrentMessage message) {
-    return message.encode().then((List<int> data) {
-      return _socket.send(data).then((HetimaSendInfo info) {
-        TorrentClientFrontNerve.doSendMessage(this, message);
-        return {};
-      });
-    });
+  Future sendMessage(TorrentMessage message) async {
+    List<int> data = await message.encode();
+    await _socket.send(data);
+    TorrentClientFrontNerve.doSendMessage(this, message);
+    return {};
   }
 
   void close() {
