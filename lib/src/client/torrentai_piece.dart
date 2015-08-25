@@ -6,13 +6,13 @@ import 'torrentclientfront.dart';
 import '../util/bitfield.dart';
 import '../util/ddbitfield.dart';
 
-class PieceTest {
+class TorrentAIPieceTest {
 
   DDBitfield rand = null;
   List<int> requestedBit = [];
   int downloadPieceLength=16*1024;
 
-  PieceTest(TorrentClient client) {
+  TorrentAIPieceTest(TorrentClient client) {
     rand = new DDBitfield(client.targetBlock.rawHead);
     if(downloadPieceLength > client.targetBlock.blockSize) {
       downloadPieceLength =  client.targetBlock.blockSize;
@@ -29,6 +29,7 @@ class PieceTest {
       }
       return;
     }
+
     //
     // interest or notinterest
     Bitfield field = client.targetBlock.isNotThrere(front.bitfieldToMe);

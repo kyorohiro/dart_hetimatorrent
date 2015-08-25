@@ -14,9 +14,9 @@ import 'torrentai.dart';
 import 'torrentai_connect.dart';
 
 class TorrentAIBasic extends TorrentAI {
-  ChokeTest _chokeTest = new ChokeTest();
-  PieceTest _pieceTest = null;
-  ConnectTest _connectTest = new ConnectTest();
+  TorrentAIChokeTest _chokeTest = new TorrentAIChokeTest();
+  TorrentAIPieceTest _pieceTest = null;
+  TorrentAIConnectTest _connectTest = new TorrentAIConnectTest();
   int _maxUnchoke = 8;
   int _maxConnect = 20;
 
@@ -107,7 +107,7 @@ class TorrentAIBasic extends TorrentAI {
       // case TorrentMessage.SIGN_PIECE:
       case TorrentMessage.SIGN_UNCHOKE:
         if (_pieceTest == null) {
-          _pieceTest = new PieceTest(client);
+          _pieceTest = new TorrentAIPieceTest(client);
         }
         _pieceTest.pieceTest(client, front);
         break;
@@ -130,7 +130,7 @@ class TorrentAIBasic extends TorrentAI {
       case TorrentClientSignal.ID_SET_PIECE_A_PART:
       case TorrentClientSignal.ID_SET_PIECE:
         if (_pieceTest == null) {
-          _pieceTest = new PieceTest(client);
+          _pieceTest = new TorrentAIPieceTest(client);
         }
         _pieceTest.pieceTest(client, info.front);
         break;

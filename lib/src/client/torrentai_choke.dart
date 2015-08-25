@@ -5,7 +5,7 @@ import 'torrentclient.dart';
 import 'torrentclientfront.dart';
 import 'torrentclientpeerinfo.dart';
 
-class ChokeTest {
+class TorrentAIChokeTest {
   void chokeTest(TorrentClient client, int _maxUnchoke) {
     List<TorrentClientPeerInfo> unchokeInterestedPeers = client.rawPeerInfos.getPeerInfo((TorrentClientPeerInfo info) {
       return  (info.front != null && info.front.isClose == false && info.front.interestedToMe == TorrentClientFront.STATE_ON && info.front.chokedFromMe == TorrentClientFront.STATE_ON);

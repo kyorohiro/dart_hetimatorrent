@@ -6,7 +6,7 @@ import 'torrentclient.dart';
 import 'torrentclientfront.dart';
 import 'torrentclientpeerinfo.dart';
 
-class ConnectTest {
+class TorrentAIConnectTest {
   Future connectTest(TorrentClientPeerInfo info, TorrentClient client, int _maxConnect) async {
     if (!(info.front == null || info.front.isClose == true)) {
       return {};
