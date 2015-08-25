@@ -32,13 +32,12 @@ class TorrentClientManager {
   StreamController<TorrentClientSignal> _signalStream = new StreamController.broadcast();
   Stream<TorrentClientSignal> get onReceiveSignal => _signalStream.stream;
 
-
   List<TorrentClient> clients = [];
 
   bool _verbose = false;
   bool get verbose => _verbose;
 
-  TorrentClientManager(HetimaSocketBuilder builder,{bool verbose:false}) {
+  TorrentClientManager(HetimaSocketBuilder builder, {bool verbose: false}) {
     this._builder = builder;
     this._verbose = verbose;
   }
@@ -61,14 +60,14 @@ class TorrentClientManager {
           break;
         }
       }
-      if(isOk == true) {
+      if (isOk == true) {
         return c;
       }
     }
     return null;
   }
 
-  Future start(String localAddress, int localPort, String globalIp, int globalPort) {
+  Future start(String localAddress, int localPort, String globalIp, int globalPort) async {
     this._localIp = localAddress;
     this._localPort = localPort;
     this.globalPort = globalPort;
@@ -77,59 +76,49 @@ class TorrentClientManager {
       this.globalPort = localPort;
     }
 
-    return _builder.startServer(localAddress, localPort).then((HetimaServerSocket serverSocket) {
-      if (_isStart == true) {
-        throw {"message": "already started"};
-      }
-      _server = serverSocket;
-      _server.onAccept().listen((HetimaSocket socket) {
-        new Future(() {
-          if (false == _isStart) {
-            return null;
-          }
-          return socket.getSocketInfo().then((HetimaSocketInfo socketInfo) {
-            log("accept: ${socketInfo.peerAddress}, ${socketInfo.peerPort}");
-            return TorrentMessage.parseHandshake(new EasyParser(socket.buffer)).then((TorrentMessage message) {
-              //
-              MessageHandshake handshake = message;
-              TorrentClient client = getTorrentClient(handshake.infoHash);
-              if (client == null) {
-                // unmanaged infohash
-                socket.close();
-              }
-              client.onAccept(socket);
-            });
-          });
-        }).catchError((e) {
-          socket.close();
-          socket = null;
-        });
-      });
-      TorrentClientSignal sig = new TorrentClientSignal(TorrentClientSignal.ID_STARTED_CLIENT, 0, "started client");
-      _signalStream.add(sig);
-      _isStart = true;
-    });
-  }
-
-  Future stop() {
-    return new Future(() {
-      if (_isStart == true) {
-        _isStart = false;
-        List<Future> f = [];
-        for (TorrentClient c in clients) {
-          f.add(c.stop());
+    HetimaServerSocket serverSocket = await _builder.startServer(localAddress, localPort);
+    if (_isStart == true) {
+      throw {"message": "already started"};
+    }
+    _server = serverSocket;
+    _server.onAccept().listen((HetimaSocket socket) async {
+      try {
+        if (false == _isStart) {
+          return null;
         }
-        _server.close();
-
-        return Future.wait(f);
+        HetimaSocketInfo socketInfo = await socket.getSocketInfo();
+        log("accept: ${socketInfo.peerAddress}, ${socketInfo.peerPort}");
+        MessageHandshake handshake = await TorrentMessage.parseHandshake(new EasyParser(socket.buffer));
+        //
+        TorrentClient client = getTorrentClient(handshake.infoHash);
+        if (client == null) {
+          // unmanaged infohash
+          socket.close();
+        }
+        client.onAccept(socket);
+      } catch (e) {
+        socket.close();
+        socket = null;
       }
     });
+    TorrentClientSignal sig = new TorrentClientSignal(TorrentClientSignal.ID_STARTED_CLIENT, 0, "started client");
+    _signalStream.add(sig);
+    _isStart = true;
   }
-  
+
+  Future stop() async {
+    if (_isStart == true) {
+      _isStart = false;
+      for (TorrentClient c in clients) {
+        await c.stop();
+      }
+      _server.close();
+    }
+  }
+
   log(String message) {
-    if(_verbose) {
+    if (_verbose) {
       print("*+*${message}");
     }
-    
   }
 }
