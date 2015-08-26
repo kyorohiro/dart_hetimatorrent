@@ -7,15 +7,15 @@ import 'dart:core';
 import 'package:hetimacore/hetimacore.dart' as hetima;
 import 'package:hetimanet/hetimanet.dart' as hetima;
 
-class HetiBencode {
-  static HetiBdecoder _decoder = new HetiBdecoder();
+class BencodeAsync {
+  static BdecoderAsync _decoder = new BdecoderAsync();
 
   static Future<Object> decode(hetima.EasyParser parser) {
     return _decoder.decode(parser);
   }
 }
 
-class HetiBdecoder {
+class BdecoderAsync {
   static String DIGIT_AS_STRING = "0123456789";
   static List<int> DIGIT = convert.UTF8.encode(DIGIT_AS_STRING);
 

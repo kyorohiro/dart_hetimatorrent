@@ -1,7 +1,7 @@
 library hetimatorrent;
 
 export 'src/util/bencode.dart';
-export 'src/util/hetibencode.dart';
+export 'src/util/bencode_async.dart';
 export 'src/util/bitfield.dart';
 export 'src/util/bitfield_plus.dart';
 export 'src/util/shufflelinkedlist.dart';

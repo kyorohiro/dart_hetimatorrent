@@ -7,7 +7,7 @@ import 'dart:core';
 import 'package:hetimacore/hetimacore.dart' as hetima;
 import 'package:hetimanet/hetimanet.dart' as hetima;
 import '../util/bencode.dart';
-import '../util/hetibencode.dart';
+import '../util/bencode_async.dart';
 import 'torrentfilehelper.dart';
 
 class TorrentFile {
@@ -59,7 +59,7 @@ class TorrentFile {
 
   static async.Future<TorrentFile> createFromTorrentFile(hetima.HetimaReader builder) {
     async.Completer<TorrentFile> completer = new async.Completer();
-    HetiBencode.decode(new hetima.EasyParser(builder)).then((Object o) {
+    BencodeAsync.decode(new hetima.EasyParser(builder)).then((Object o) {
       completer.complete(new TorrentFile.torentmap(o));
     }).catchError((e) {
       completer.completeError(e);

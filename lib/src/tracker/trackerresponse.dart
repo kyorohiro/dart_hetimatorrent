@@ -8,7 +8,7 @@ import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimanet/hetimanet.dart';
 import 'trackerpeerinfo.dart';
 import '../util/bencode.dart';
-import '../util/hetibencode.dart';
+import '../util/bencode_async.dart';
 
 class TrackerResponse {
   static final String KEY_INTERVAL = "interval";
@@ -32,7 +32,7 @@ class TrackerResponse {
 
   static async.Future<TrackerResponse> createFromContent(HetimaReader builder) async {
     EasyParser parser = new EasyParser(builder);
-    Map<String, Object> c = await HetiBencode.decode(parser);
+    Map<String, Object> c = await BencodeAsync.decode(parser);
     TrackerResponse instance = new TrackerResponse();
     instance.initFromMap(c);
     return instance;
