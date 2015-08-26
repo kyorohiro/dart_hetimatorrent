@@ -16,9 +16,11 @@ class KNodeWorkFindNode {
   ShuffleLinkedList<KPeerInfo> _findNodesInfo = new ShuffleLinkedList(20);
   int _startTime = 0;
   int get startTime => _startTime;
+  int _intervalTime = 0;
+  int get intervalTime => _intervalTime;
 
   start(KNode node) {
-    _startTime = new DateTime.now().millisecondsSinceEpoch;
+    _intervalTime = _startTime = new DateTime.now().millisecondsSinceEpoch;
     updateP2PNetwork(node);
   }
 
@@ -78,7 +80,13 @@ class KNodeWorkFindNode {
   }
 
   onTicket(KNode node) {
-    updateP2PNetworkWithRandom(node);
+    int currentTime = new DateTime.now().millisecondsSinceEpoch;
+    if (node.intervalSecondForFindNode < (currentTime - _intervalTime) ~/ 1000) {
+      _intervalTime = currentTime;
+      updateP2PNetwork(node);
+    } else {
+      updateP2PNetworkWithRandom(node);
+    }
     for (List l in _todoFineNodes) {
       node.sendFindNodeQuery(l[0], l[1], node.nodeId.value).catchError((_) {});
     }

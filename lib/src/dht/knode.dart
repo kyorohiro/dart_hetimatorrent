@@ -58,6 +58,8 @@ class KNode extends Object {
   int _intervalSecondForAnnounce = 60;
   int get intervalSecondForAnnounce => _intervalSecondForAnnounce;
 
+  int _intervalSecondForFindNode = 10*60;
+  int get intervalSecondForFindNode => _intervalSecondForFindNode;
   bool _verbose = false;
   bool get verbose => _verbose;
 
@@ -68,6 +70,7 @@ class KNode extends Object {
     this._verbose = verbose;
     this._intervalSecondForMaintenance = intervalSecondForMaintenance;
     this._intervalSecondForAnnounce = intervalSecondForAnnounce;
+    this._intervalSecondForFindNode = intervalSecondForFindNode;
     this._nodeId = (nodeIdAsList == null ? KId.createIDAtRandom() : new KId(nodeIdAsList));
     this._socketBuilder = socketBuilder;
     this._rootingtable = new KRootingTable(kBucketSize, _nodeId);
