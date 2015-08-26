@@ -1,4 +1,5 @@
 library hetimatorrent.torrent.hetibencode;
+
 import 'dart:typed_data' as data;
 import 'dart:convert' as convert;
 import 'dart:async';
@@ -12,7 +13,6 @@ class HetiBencode {
   static Future<Object> decode(hetima.EasyParser parser) {
     return _decoder.decode(parser);
   }
-
 }
 
 class HetiBdecoder {
@@ -25,14 +25,18 @@ class HetiBdecoder {
 
   Future<Object> decodeBenObject(hetima.EasyParser parser) async {
     List<int> v = await parser.getPeek(1);
-    if (0x69 == v[0]) {// i
+    if (0x69 == v[0]) {
+      // i
       return decodeNumber(parser);
-    } else if (0x30 <= v[0] && v[0] <= 0x39) {//0-9
+    } else if (0x30 <= v[0] && v[0] <= 0x39) {
+      //0-9
       List<int> vv = await decodeBytes(parser);
-      return (vv is data.Uint8List?vv:new data.Uint8List.fromList(vv));
-    } else if (0x6c == v[0]) {// l
+      return (vv is data.Uint8List ? vv : new data.Uint8List.fromList(vv));
+    } else if (0x6c == v[0]) {
+      // l
       return decodeList(parser);
-    } else if (0x64 == v[0]) {// d
+    } else if (0x64 == v[0]) {
+      // d
       return decodeDiction(parser);
     }
     throw new HetiBencodeParseError("benobject");
@@ -58,16 +62,18 @@ class HetiBdecoder {
         ret[key] = v;
         return parser.getPeek(1);
       }).then((List<int> v) {
-        if (v[0] == 0x65) { //e
+        if (v[0] == 0x65) {
+          //e
           completer.complete(ret);
         } else {
           elem();
         }
-      }).catchError((e){
+      }).catchError((e) {
         print("dict error ${parser.index}");
         completer.completeError(e);
       });
-    };
+    }
+    ;
     elem();
     return completer.future;
   }
@@ -89,7 +95,8 @@ class HetiBdecoder {
         return parser.getPeek(1).then((List<int> v) {
           if (v.length == 0) {
             completer.completeError(new HetiBencodeParseError("list elm"));
-          } else if (v[0] == 0x65) { //e
+          } else if (v[0] == 0x65) {
+            //e
             completer.complete(ret);
           } else {
             return elem();
@@ -104,58 +111,34 @@ class HetiBdecoder {
     return completer.future;
   }
 
-
-  Future<int> decodeNumber(hetima.EasyParser parser) {
-    Completer<int> completer = new Completer();
+  Future<int> decodeNumber(hetima.EasyParser parser) async {
     int num = 0;
-    parser.nextString("i").then((String v) {
-      return parser.nextBytePatternByUnmatch(new hetima.EasyParserIncludeMatcher(DIGIT));
-    }).then((List<int> numList) {
-      num = intList2int(numList);
-      return parser.nextString("e");
-    }).then((String v) {
-      completer.complete(num);
-    }).catchError((e) {
-      completer.completeError(e);
-    });
-    return completer.future;
+    await parser.nextString("i");
+    List<int> numList = await parser.nextBytePatternByUnmatch(new hetima.EasyParserIncludeMatcher(DIGIT));
+    num = intList2int(numList);
+    await parser.nextString("e");
+    return num;
   }
 
-  Future<String> decodeString(hetima.EasyParser parser) {
-    Completer<String> completer = new Completer();
-    decodeBytes(parser).then((List<int> v) {
-      try {
-        completer.complete(convert.UTF8.decode(v));
-      } catch (e) {
-        completer.completeError(e);
-      }
-    }).catchError((e) {
-      completer.completeError(e);
-    });
-    return completer.future;
+  Future<String> decodeString(hetima.EasyParser parser) async {
+    List<int> v = await decodeBytes(parser);
+    return convert.UTF8.decode(v, allowMalformed:true);
   }
 
-  Future<List<int>> decodeBytes(hetima.EasyParser parser) {
-    Completer<List<int>> completer = new Completer();
+  Future<List<int>> decodeBytes(hetima.EasyParser parser) async {
     int length = 0;
-    parser.nextBytePatternByUnmatch(new hetima.EasyParserIncludeMatcher(DIGIT)).then((List<int> lengthList) {
-      if (lengthList.length == 0) {
-        throw new HetiBencodeParseError("byte:length=0");
-      }
-      length = intList2int(lengthList);
-      return parser.nextString(":");
-    }).then((v) {
-      return parser.nextBuffer(length);
-    }).then((List<int> value) {
-      if (value.length == length) {
-        completer.complete(value);
-      } else {
-        throw new HetiBencodeParseError("byte:length:" + value.length.toString() + "==" + length.toString());
-      }
-    }).catchError((e){
-      completer.completeError(e);
-    });
-    return completer.future;
+    List<int> lengthList = await parser.nextBytePatternByUnmatch(new hetima.EasyParserIncludeMatcher(DIGIT));
+    if (lengthList.length == 0) {
+      throw new HetiBencodeParseError("byte:length=0");
+    }
+    length = intList2int(lengthList);
+    await parser.nextString(":");
+    List<int> value = await parser.nextBuffer(length);
+    if (value.length == length) {
+      return value;
+    } else {
+      throw new HetiBencodeParseError("byte:length:" + value.length.toString() + "==" + length.toString());
+    }
   }
 
   static int intList2int(List<int> numList) {
@@ -169,7 +152,6 @@ class HetiBdecoder {
 }
 
 class HetiBencodeParseError implements Exception {
-
   String log = "";
   HetiBencodeParseError(String s) {
     log = s + "#" + super.toString();
