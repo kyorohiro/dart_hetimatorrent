@@ -38,21 +38,11 @@ class HetiBdecoder {
     throw new HetiBencodeParseError("benobject");
   }
 
-  Future<Map> decodeDiction(hetima.EasyParser parser) {
-    Completer<Map> completer = new Completer();
-    Map ret = {};
-    parser.nextString("d").then((String v) {
-      return decodeDictionElements(parser);
-    }).then((Map l) {
-      ret = l;
-    }).then((String v) {
-      return parser.nextString("e");
-    }).then((e) {
-      completer.complete(ret);
-    }).catchError((e) {
-      completer.completeError(e);
-    });
-    return completer.future;
+  Future<Map> decodeDiction(hetima.EasyParser parser) async {
+    await parser.nextString("d");
+    Map ret = await decodeDictionElements(parser);
+    await parser.nextString("e");
+    return ret;
   }
 
   Future<Map> decodeDictionElements(hetima.EasyParser parser) {
@@ -82,21 +72,11 @@ class HetiBdecoder {
     return completer.future;
   }
 
-  Future<List<Object>> decodeList(hetima.EasyParser parser) {
-    Completer<List<Object>> completer = new Completer();
-    List<Object> ret = [];
-    parser.nextString("l").then((String v) {
-      return decodeListElement(parser);
-    }).then((List<Object> l) {
-      ret = l;
-    }).then((String v) {
-      return parser.nextString("e");
-    }).then((e) {
-      completer.complete(ret);
-    }).catchError((e) {
-      completer.completeError(e);
-    });
-    return completer.future;
+  Future<List<Object>> decodeList(hetima.EasyParser parser) async {
+    await parser.nextString("l");
+    List<Object> ret = await decodeListElement(parser);
+    await parser.nextString("e");
+    return ret;
   }
 
   Future<List<Object>> decodeListElement(hetima.EasyParser parser) {
