@@ -30,12 +30,15 @@ class KNodeWorkFindNode {
 
   updateP2PNetworkWithoutClear(KNode node) async {
     List<KPeerInfo> infos = await node.rootingtable.findNode(node.nodeId);
-    if (node.isStart == false) {
-      return;
-    }
     int count = 0;
     int currentTime = new DateTime.now().millisecondsSinceEpoch;
     for (KPeerInfo info in infos) {
+      if (currentTime - startTime > 30000 && count > 2) {
+        break;
+      } else if (currentTime - startTime > 5000 && count > 5) {
+        break;
+      }
+
       if (!_findNodesInfo.rawsequential.contains(info)) {
         count++;
         _findNodesInfo.addLast(info);
@@ -43,33 +46,24 @@ class KNodeWorkFindNode {
         node.log("<id_index>=${node.rootingtable.getRootingTabkeIndex(info.id)}");
       }
       //
-      if (currentTime - startTime > 30000 && count > 2) {
-        break;
-      } else if (currentTime - startTime > 5000 && count > 5) {
-        break;
-      }
     }
   }
 
   updateP2PNetworkWithRandom(KNode node) async {
     List<KPeerInfo> infos = await node.rootingtable.findNode(KId.createIDAtRandom());
-    if (node.isStart == false) {
-      return;
-    }
     int count = 0;
     int currentTime = new DateTime.now().millisecondsSinceEpoch;
     for (KPeerInfo info in infos) {
-      if (!_findNodesInfo.rawsequential.contains(info)) {
-        count++;
-        _findNodesInfo.addLast(info);
-        node.sendFindNodeQuery(info.ipAsString, info.port, KId.createIDAtRandom().value);
-      }
-      //
-      //
       if (currentTime - startTime > 30000 && count > 1) {
         break;
       } else if (currentTime - startTime > 5000 && count > 3) {
         break;
+      }
+
+      if (!_findNodesInfo.rawsequential.contains(info)) {
+        count++;
+        _findNodesInfo.addLast(info);
+        node.sendFindNodeQuery(info.ipAsString, info.port, KId.createIDAtRandom().value);
       }
     }
   }
