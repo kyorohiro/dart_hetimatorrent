@@ -30,18 +30,12 @@ class TrackerResponse {
     initFromMap(c);
   }
 
-  static async.Future<TrackerResponse> createFromContent(HetimaReader builder) {
-    async.Completer<TrackerResponse> completer = new async.Completer();
+  static async.Future<TrackerResponse> createFromContent(HetimaReader builder) async {
     EasyParser parser = new EasyParser(builder);
-    HetiBencode.decode(parser).then((Object o) {
-      Map<String, Object> c = o;
-      TrackerResponse instance = new TrackerResponse();
-      instance.initFromMap(c);
-      completer.complete(instance);
-    }).catchError((e) {
-      completer.completeError(e);
-    });
-    return completer.future;
+    Map<String, Object> c = await HetiBencode.decode(parser);
+    TrackerResponse instance = new TrackerResponse();
+    instance.initFromMap(c);
+    return instance;
   }
 
   initFromMap(Map<String, Object> c) {
@@ -50,7 +44,7 @@ class TrackerResponse {
 
     failureReason = "";
     if (obj == null) {
-      if(c[KEY_FAILURE_REASON] != null) {
+      if (c[KEY_FAILURE_REASON] != null) {
         failureReason = "FailureReason:${convert.UTF8.decode(c[KEY_FAILURE_REASON],allowMalformed:true)}";
       } else {
         failureReason = "FailureReason:none";
