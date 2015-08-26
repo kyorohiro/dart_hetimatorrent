@@ -6,7 +6,6 @@ import 'package:hetimacore/hetimacore.dart';
 import 'kid.dart';
 import 'dart:typed_data';
 
-
 class KPeerInfo {
   int _port = 0;
   int get port => _port;
@@ -14,6 +13,7 @@ class KPeerInfo {
   List<int> _ip = [];
   List<int> get ipAsList => new List.from(_ip);
   String get ipAsString => HetiIP.toIPString(_ip);
+
   KId _id = null;
   KId get id => _id;
 
