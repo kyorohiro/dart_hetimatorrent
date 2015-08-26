@@ -58,15 +58,20 @@ class KNode extends Object {
   int _intervalSecondForAnnounce = 60;
   int get intervalSecondForAnnounce => _intervalSecondForAnnounce;
 
+  // todo 
   int _intervalSecondForFindNode = 10*60;
   int get intervalSecondForFindNode => _intervalSecondForFindNode;
+
+  int _intervalSecondForPing = 6*60;
+  int get intervalSecondForPing => _intervalSecondForPing;
+
   bool _verbose = false;
   bool get verbose => _verbose;
 
   KNode(HetimaSocketBuilder socketBuilder,
       {int kBucketSize: 8, List<int> nodeIdAsList: null, KNodeWork ai: null,
       intervalSecondForMaintenance: 10, intervalSecondForAnnounce: 5 * 60, 
-      intervalSecondForFindNode: 10 * 60,bool verbose: false}) {
+      intervalSecondForFindNode: 10 * 60, bool verbose: false}) {
     this._verbose = verbose;
     this._intervalSecondForMaintenance = intervalSecondForMaintenance;
     this._intervalSecondForAnnounce = intervalSecondForAnnounce;
