@@ -45,7 +45,9 @@ export 'src/dht/message/krpcmessage_announce.dart';
 export 'src/dht/message/krpcmessage_ping.dart';
 export 'src/dht/message/krpcmessage_findnode.dart';
 export 'src/dht/message/krpcmessage_getpeers.dart';
-
+export 'src/dht/message/krpcmessage_error.dart';
+export 'src/dht/message/krpcmessage_response.dart';
+export 'src/dht/message/krpcmessage_query.dart';
 export 'src/app/torrentengine.dart';
 export 'src/app/torrentengine_torrent.dart';
 export 'src/app/torrentengineai.dart';

@@ -13,6 +13,7 @@ import 'message/krpcmessage_announce.dart';
 import 'message/krpcmessage_ping.dart';
 import 'message/krpcmessage_findnode.dart';
 import 'message/krpcmessage_getpeers.dart';
+import 'message/krpcmessage_error.dart';
 import 'kpeerinfo.dart';
 import 'kgetpeervalue.dart';
 import 'work/knodework.dart';
