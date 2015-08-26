@@ -49,33 +49,17 @@ class HetiBdecoder {
     return ret;
   }
 
-  Future<Map> decodeDictionElements(hetima.EasyParser parser) {
-    Completer<Map> completer = new Completer();
+  Future<Map> decodeDictionElements(hetima.EasyParser parser) async {
     Map ret = new Map();
-    Future<Object> elem() {
-      String key = "";
-      return decodeString(parser).then((String v) {
-        key = v;
-        return decodeBenObject(parser);
-      }).then((Object v) {
-//        print("##=> ${key} :${v}");//kiyo kiyo
-        ret[key] = v;
-        return parser.getPeek(1);
-      }).then((List<int> v) {
-        if (v[0] == 0x65) {
-          //e
-          completer.complete(ret);
-        } else {
-          elem();
-        }
-      }).catchError((e) {
-        print("dict error ${parser.index}");
-        completer.completeError(e);
-      });
+    while (true) {
+      String key = await decodeString(parser);
+      ret[key] = await decodeBenObject(parser);
+      List<int> v = await parser.getPeek(1);
+      if (v[0] == 0x65) {
+        //e
+        return ret;
+      }
     }
-    ;
-    elem();
-    return completer.future;
   }
 
   Future<List<Object>> decodeList(hetima.EasyParser parser) async {
@@ -86,29 +70,18 @@ class HetiBdecoder {
   }
 
   Future<List<Object>> decodeListElement(hetima.EasyParser parser) async {
-    Completer<List<Object>> completer = new Completer();
     List<Object> ret = new List();
-
-    Future<Object> elem() {
-      return decodeBenObject(parser).then((Object v) {
-        ret.add(v);
-        return parser.getPeek(1).then((List<int> v) {
-          if (v.length == 0) {
-            completer.completeError(new HetiBencodeParseError("list elm"));
-          } else if (v[0] == 0x65) {
-            //e
-            completer.complete(ret);
-          } else {
-            return elem();
-          }
-        });
-      }).catchError((e) {
-        completer.completeError(e);
-      });
+    while (true) {
+      Object v1 = await decodeBenObject(parser);
+      ret.add(v1);
+      List<int> v = await parser.getPeek(1);
+      if (v.length == 0) {
+        throw new HetiBencodeParseError("list elm");
+      } else if (v[0] == 0x65) {
+        //e
+        return ret;
+      }
     }
-    elem();
-
-    return completer.future;
   }
 
   Future<int> decodeNumber(hetima.EasyParser parser) async {
@@ -121,7 +94,7 @@ class HetiBdecoder {
 
   Future<String> decodeString(hetima.EasyParser parser) async {
     List<int> v = await decodeBytes(parser);
-    return convert.UTF8.decode(v, allowMalformed:true);
+    return convert.UTF8.decode(v, allowMalformed: true);
   }
 
   Future<List<int>> decodeBytes(hetima.EasyParser parser) async {
