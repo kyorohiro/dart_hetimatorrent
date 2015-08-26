@@ -121,20 +121,12 @@
 
     <section class="summary source-code" id="source">
       <h2>Source</h2>
-      <pre><code class="prettyprint lang-dart">async.Future&lt;int&gt; decodeNumber(hetima.EasyParser parser) {
-  async.Completer&lt;int&gt; completer = new async.Completer();
-  int num = 0;
-  parser.nextString(&quot;i&quot;).then((String v) {
-    return parser.nextBytePatternByUnmatch(new hetima.EasyParserIncludeMatcher(DIGIT));
-  }).then((List&lt;int&gt; numList) {
-    num = intList2int(numList);
-    return parser.nextString(&quot;e&quot;);
-  }).then((String v) {
-    completer.complete(num);
-  }).catchError((e) {
-    completer.completeError(e);
-  });
-  return completer.future;
+      <pre><code class="prettyprint lang-dart">Future&lt;int&gt; decodeNumber(hetima.EasyParser parser) async {
+  await parser.nextString(&quot;i&quot;);
+  List&lt;int&gt; numList = await parser.nextBytePatternByUnmatch(new hetima.EasyParserIncludeMatcher(DIGIT));
+  int num = intList2int(numList);
+  await parser.nextString(&quot;e&quot;);
+  return num;
 }</code></pre>
     </section>
 

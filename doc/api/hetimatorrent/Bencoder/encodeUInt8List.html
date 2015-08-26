@@ -117,7 +117,7 @@
       <h2>Source</h2>
       <pre><code class="prettyprint lang-dart">void encodeUInt8List(data.Uint8List buffer) {
   builder.appendString(&quot;&quot; + buffer.lengthInBytes.toString() + &quot;:&quot;);
-  builder.appendUint8List(buffer, 0, buffer.length);
+  builder.appendIntList(buffer, 0, buffer.length);
 }</code></pre>
     </section>
 

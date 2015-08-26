@@ -121,31 +121,17 @@
 
     <section class="summary source-code" id="source">
       <h2>Source</h2>
-      <pre><code class="prettyprint lang-dart">async.Future&lt;Map&gt; decodeDictionElements(hetima.EasyParser parser) {
-  async.Completer&lt;Map&gt; completer = new async.Completer();
+      <pre><code class="prettyprint lang-dart">Future&lt;Map&gt; decodeDictionElements(hetima.EasyParser parser) async {
   Map ret = new Map();
-  async.Future&lt;Object&gt; elem() {
-    String key = &quot;&quot;;
-    return decodeString(parser).then((String v) {
-      key = v;
-      return decodeBenObject(parser);
-    }).then((Object v) {
-//        print(&quot;##=&gt; ${key} :${v}&quot;);//kiyo kiyo
-      ret[key] = v;
-      return parser.getPeek(1);
-    }).then((List&lt;int&gt; v) {
-      if (v[0] == 0x65) { //e
-        completer.complete(ret);
-      } else {
-        elem();
-      }
-    }).catchError((e){
-      print(&quot;dict error ${parser.index}&quot;);
-      completer.completeError(e);
-    });
-  };
-  elem();
-  return completer.future;
+  while (true) {
+    String key = await decodeString(parser);
+    ret[key] = await decodeBenObject(parser);
+    List&lt;int&gt; v = await parser.getPeek(1);
+    if (v[0] == 0x65) {
+      //e
+      return ret;
+    }
+  }
 }</code></pre>
     </section>
 

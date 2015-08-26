@@ -78,7 +78,11 @@
 </li>
       <li><a href="hetimatorrent/KNode/intervalSecondForAnnounce.html">intervalSecondForAnnounce</a>
 </li>
+      <li><a href="hetimatorrent/KNode/intervalSecondForFindNode.html">intervalSecondForFindNode</a>
+</li>
       <li><a href="hetimatorrent/KNode/intervalSecondForMaintenance.html">intervalSecondForMaintenance</a>
+</li>
+      <li><a href="hetimatorrent/KNode/intervalSecondForPing.html">intervalSecondForPing</a>
 </li>
       <li><a href="hetimatorrent/KNode/isStart.html">isStart</a>
 </li>
@@ -190,7 +194,7 @@
     log(&quot;---&gt;receive[${nodeDebugId}] ${info.remoteAddress}:${info.remotePort} ${message}&quot;);
   }
   if (message.isResonse) {
-    KSendInfo rm = removeQueryNameFromTransactionId(UTF8.decode(message.rawMessageMap[&quot;t&quot;]));
+    KNodeSendInfo rm = removeQueryNameFromTransactionId(UTF8.decode(message.rawMessageMap[&quot;t&quot;]));
     this._ai.onReceiveResponse(this, info, message);
     if (rm != null &amp;&amp; rm.c != null) {
       rm.c.complete(message);
@@ -204,7 +208,7 @@
   } else {
     this._ai.onReceiveUnknown(this, info, message);
   }
-  for (KSendInfo i in clearTimeout(20000)) {
+  for (KNodeSendInfo i in clearTimeout(20000)) {
     if (i.c != null &amp;&amp; i.c.isCompleted == false) {
       i.c.completeError({message: &quot;timeout&quot;});
     }

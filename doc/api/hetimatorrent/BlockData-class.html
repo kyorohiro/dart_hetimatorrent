@@ -78,19 +78,17 @@
       <li><a href="hetimatorrent/Bencoder-class.html">Bencoder</a></li>
       <li><a href="hetimatorrent/Bitfield-class.html">Bitfield</a></li>
       <li><a href="hetimatorrent/BitfieldInter-class.html">BitfieldInter</a></li>
+      <li><a href="hetimatorrent/BitfieldPlus-class.html">BitfieldPlus</a></li>
       <li><a href="hetimatorrent/BlockData-class.html">BlockData</a></li>
-      <li><a href="hetimatorrent/ChokeTest-class.html">ChokeTest</a></li>
       <li><a href="hetimatorrent/CreatePieceHashResult-class.html">CreatePieceHashResult</a></li>
-      <li><a href="hetimatorrent/DDBitfield-class.html">DDBitfield</a></li>
       <li><a href="hetimatorrent/HetiBdecoder-class.html">HetiBdecoder</a></li>
       <li><a href="hetimatorrent/HetiBencode-class.html">HetiBencode</a></li>
-      <li><a href="hetimatorrent/HetimaDataFSDebug-class.html">HetimaDataFSDebug</a></li>
-      <li><a href="hetimatorrent/HetimaDataFSDebugBuilder-class.html">HetimaDataFSDebugBuilder</a></li>
       <li><a href="hetimatorrent/KBucket-class.html">KBucket</a></li>
       <li><a href="hetimatorrent/KGetPeerNodes-class.html">KGetPeerNodes</a></li>
       <li><a href="hetimatorrent/KGetPeerValue-class.html">KGetPeerValue</a></li>
       <li><a href="hetimatorrent/KId-class.html">KId</a></li>
       <li><a href="hetimatorrent/KNode-class.html">KNode</a></li>
+      <li><a href="hetimatorrent/KNodeSendInfo-class.html">KNodeSendInfo</a></li>
       <li><a href="hetimatorrent/KPeerInfo-class.html">KPeerInfo</a></li>
       <li><a href="hetimatorrent/KRootingTable-class.html">KRootingTable</a></li>
       <li><a href="hetimatorrent/KrpcAnnounce-class.html">KrpcAnnounce</a></li>
@@ -101,7 +99,6 @@
       <li><a href="hetimatorrent/KrpcPing-class.html">KrpcPing</a></li>
       <li><a href="hetimatorrent/KrpcQuery-class.html">KrpcQuery</a></li>
       <li><a href="hetimatorrent/KrpcResponse-class.html">KrpcResponse</a></li>
-      <li><a href="hetimatorrent/KSendInfo-class.html">KSendInfo</a></li>
       <li><a href="hetimatorrent/MessageBitfield-class.html">MessageBitfield</a></li>
       <li><a href="hetimatorrent/MessageCancel-class.html">MessageCancel</a></li>
       <li><a href="hetimatorrent/MessageChoke-class.html">MessageChoke</a></li>
@@ -128,6 +125,7 @@
       <li><a href="hetimatorrent/TorrenAIEmpty-class.html">TorrenAIEmpty</a></li>
       <li><a href="hetimatorrent/TorrentAI-class.html">TorrentAI</a></li>
       <li><a href="hetimatorrent/TorrentAIBasic-class.html">TorrentAIBasic</a></li>
+      <li><a href="hetimatorrent/TorrentAIChokeTest-class.html">TorrentAIChokeTest</a></li>
       <li><a href="hetimatorrent/TorrentClient-class.html">TorrentClient</a></li>
       <li><a href="hetimatorrent/TorrentClientFront-class.html">TorrentClientFront</a></li>
       <li><a href="hetimatorrent/TorrentClientFrontNerve-class.html">TorrentClientFrontNerve</a></li>
@@ -243,7 +241,7 @@
                 <span class="name"><a href="hetimatorrent/BlockData/BlockData.html">BlockData</a></span><span class="signature">(<span class="parameter" id="-param-data"><span class="type-annotation">HetimaData</span> <span class="parameter-name">data</span></span>, <span class="parameter" id="-param-head"><span class="type-annotation"><a href="hetimatorrent/Bitfield-class.html">Bitfield</a></span> <span class="parameter-name">head</span></span>, <span class="parameter" id="-param-blockSize"><span class="type-annotation">int</span> <span class="parameter-name">blockSize</span></span>, <span class="parameter" id="-param-dataSize"><span class="type-annotation">int</span> <span class="parameter-name">dataSize</span></span>)</span>
             </dt>
             <dd>
-                
+                create BlockData
             </dd>
         </dl>
       </section>
@@ -325,7 +323,7 @@
                   
               </dd>
               <dt id="writeBlock" class="callable">
-                  <a href="hetimatorrent/BlockData/writeBlock.html"><span class="name ">writeBlock</span></a><span class="signature">(<wbr><span class="parameter" id="writeBlock-param-data"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">data</span></span>, <span class="parameter" id="writeBlock-param-blockNum"><span class="type-annotation">int</span> <span class="parameter-name">blockNum</span></span>)
+                  <a href="hetimatorrent/BlockData/writeBlock.html"><span class="name ">writeBlock</span></a><span class="signature">(<wbr><span class="parameter" id="writeBlock-param-data"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">data</span></span>, <span class="parameter" id="writeBlock-param-blockNum"><span class="type-annotation">int</span> <span class="parameter-name">blockNum</span></span>, {<span class="parameter" id="writeBlock-param-strict"><span class="parameter-name">strict</span>: <span class="default-value">true</span></span>})
                       &#8594;
                       <span class="returntype">Future&lt;WriteResult&gt;</span>
                   </span>
@@ -343,7 +341,7 @@
                   
               </dd>
               <dt id="writePartBlock" class="callable">
-                  <a href="hetimatorrent/BlockData/writePartBlock.html"><span class="name ">writePartBlock</span></a><span class="signature">(<wbr><span class="parameter" id="writePartBlock-param-data"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">data</span></span>, <span class="parameter" id="writePartBlock-param-blockNum"><span class="type-annotation">int</span> <span class="parameter-name">blockNum</span></span>, <span class="parameter" id="writePartBlock-param-begin"><span class="type-annotation">int</span> <span class="parameter-name">begin</span></span>, <span class="parameter" id="writePartBlock-param-length"><span class="type-annotation">int</span> <span class="parameter-name">length</span></span>)
+                  <a href="hetimatorrent/BlockData/writePartBlock.html"><span class="name ">writePartBlock</span></a><span class="signature">(<wbr><span class="parameter" id="writePartBlock-param-data"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">data</span></span>, <span class="parameter" id="writePartBlock-param-blockNum"><span class="type-annotation">int</span> <span class="parameter-name">blockNum</span></span>, <span class="parameter" id="writePartBlock-param-begin"><span class="type-annotation">int</span> <span class="parameter-name">begin</span></span>, <span class="parameter" id="writePartBlock-param-length"><span class="type-annotation">int</span> <span class="parameter-name">length</span></span>, {<span class="parameter" id="writePartBlock-param-strict"><span class="parameter-name">strict</span>: <span class="default-value">true</span></span>})
                       &#8594;
                       <span class="returntype">Future&lt;WriteResult&gt;</span>
                   </span>

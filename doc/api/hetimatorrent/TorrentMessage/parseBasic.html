@@ -123,48 +123,46 @@
 
     <section class="summary source-code" id="source">
       <h2>Source</h2>
-      <pre><code class="prettyprint lang-dart">static  Future&lt;TorrentMessage&gt; parseBasic(EasyParser parser, {int maxOfMessageSize:32 * 1024}) {
+      <pre><code class="prettyprint lang-dart">static Future&lt;TorrentMessage&gt; parseBasic(EasyParser parser, {int maxOfMessageSize: 32 * 1024}) async {
   parser.push();
-
-  return new Future(() {
-    return MessageNull.decode(parser, maxOfMessageSize:maxOfMessageSize).then((MessageNull nullMessage) {
-      parser.back();
-      switch (nullMessage._id) {
-        case TorrentMessage.SIGN_BITFIELD:
-          return MessageBitfield.decode(parser);
-        case TorrentMessage.SIGN_CANCEL:
-          return MessageCancel.decode(parser);
-        case TorrentMessage.SIGN_CHOKE:
-          return MessageChoke.decode(parser);
-        case TorrentMessage.SIGN_HAVE:
-          return MessageHave.decode(parser);
-        case TorrentMessage.SIGN_INTERESTED:
-          return MessageInterested.decode(parser);
-        case TorrentMessage.SIGN_NOTINTERESTED:
-          return MessageNotInterested.decode(parser);
-        case TorrentMessage.SIGN_PIECE:
-          return MessagePiece.decode(parser);
-        case TorrentMessage.SIGN_PORT:
-          return MessagePort.decode(parser);
-        case TorrentMessage.SIGN_REQUEST:
-          return MessageRequest.decode(parser);
-        case TorrentMessage.SIGN_UNCHOKE:
-          return MessageUnchoke.decode(parser);
-        default:
-          if(nullMessage.messageContent.length == 0) {
-            return MessageKeepAlive.decode(parser);
-          } else {
-            return MessageNull.decode(parser);
-          }
-      }
-    });
-  }).catchError((e) {
+  try {
+    MessageNull nullMessage = await MessageNull.decode(parser, maxOfMessageSize: maxOfMessageSize);
+    parser.back();
+    switch (nullMessage._id) {
+      case TorrentMessage.SIGN_BITFIELD:
+        return MessageBitfield.decode(parser);
+      case TorrentMessage.SIGN_CANCEL:
+        return MessageCancel.decode(parser);
+      case TorrentMessage.SIGN_CHOKE:
+        return MessageChoke.decode(parser);
+      case TorrentMessage.SIGN_HAVE:
+        return MessageHave.decode(parser);
+      case TorrentMessage.SIGN_INTERESTED:
+        return MessageInterested.decode(parser);
+      case TorrentMessage.SIGN_NOTINTERESTED:
+        return MessageNotInterested.decode(parser);
+      case TorrentMessage.SIGN_PIECE:
+        return MessagePiece.decode(parser);
+      case TorrentMessage.SIGN_PORT:
+        return MessagePort.decode(parser);
+      case TorrentMessage.SIGN_REQUEST:
+        return MessageRequest.decode(parser);
+      case TorrentMessage.SIGN_UNCHOKE:
+        return MessageUnchoke.decode(parser);
+      default:
+        if (nullMessage.messageContent.length == 0) {
+          return MessageKeepAlive.decode(parser);
+        } else {
+          return MessageNull.decode(parser);
+        }
+    }
+  } catch (e) {
     parser.back();
     throw e;
-  }).whenComplete(() {
+  } finally {
     parser.buffer.clearInnerBuffer(parser.getInedx());
     parser.pop();
-  });
+  }
 }</code></pre>
     </section>
 

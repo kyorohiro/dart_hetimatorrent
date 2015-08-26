@@ -138,7 +138,7 @@
 
     <section class="summary source-code" id="source">
       <h2>Source</h2>
-      <pre><code class="prettyprint lang-dart">KId xorToThe(int x, {KId output:null, bool repeat:false}) {
+      <pre><code class="prettyprint lang-dart">KId xorToThe(int x, {KId output: null, bool repeat: false}) {
   if (output == null) {
     output = new KId.zeroClear();
   }
@@ -154,14 +154,14 @@
     int i = x ~/ 8;
     int v = x % 8;
     int d = 0;
-    if(repeat) {
-      for(int j=0;j&lt;=v;j++) {
+    if (repeat) {
+      for (int j = 0; j &lt;= v; j++) {
         d |= (0x01 &lt;&lt; j);
       }
     } else {
       d = (0x01 &lt;&lt; v);
     }
-    output._values[19-i] = this._values[19-i] ^ d;
+    output._values[19 - i] = this._values[19 - i] ^ d;
     return output;
   }
 }</code></pre>

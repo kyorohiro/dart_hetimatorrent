@@ -191,13 +191,11 @@
 
     <section class="summary source-code" id="source">
       <h2>Source</h2>
-      <pre><code class="prettyprint lang-dart">Future sendMessage(TorrentMessage message) {
-  return message.encode().then((List&lt;int&gt; data) {
-    return _socket.send(data).then((HetimaSendInfo info) {
-      TorrentClientFrontNerve.doSendMessage(this, message);
-      return {};
-    });
-  });
+      <pre><code class="prettyprint lang-dart">Future sendMessage(TorrentMessage message) async {
+  List&lt;int&gt; data = await message.encode();
+  await _socket.send(data);
+  TorrentClientFrontNerve.doSendMessage(this, message);
+  return {};
 }</code></pre>
     </section>
 

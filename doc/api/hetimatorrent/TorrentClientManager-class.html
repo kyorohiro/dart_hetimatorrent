@@ -78,19 +78,17 @@
       <li><a href="hetimatorrent/Bencoder-class.html">Bencoder</a></li>
       <li><a href="hetimatorrent/Bitfield-class.html">Bitfield</a></li>
       <li><a href="hetimatorrent/BitfieldInter-class.html">BitfieldInter</a></li>
+      <li><a href="hetimatorrent/BitfieldPlus-class.html">BitfieldPlus</a></li>
       <li><a href="hetimatorrent/BlockData-class.html">BlockData</a></li>
-      <li><a href="hetimatorrent/ChokeTest-class.html">ChokeTest</a></li>
       <li><a href="hetimatorrent/CreatePieceHashResult-class.html">CreatePieceHashResult</a></li>
-      <li><a href="hetimatorrent/DDBitfield-class.html">DDBitfield</a></li>
       <li><a href="hetimatorrent/HetiBdecoder-class.html">HetiBdecoder</a></li>
       <li><a href="hetimatorrent/HetiBencode-class.html">HetiBencode</a></li>
-      <li><a href="hetimatorrent/HetimaDataFSDebug-class.html">HetimaDataFSDebug</a></li>
-      <li><a href="hetimatorrent/HetimaDataFSDebugBuilder-class.html">HetimaDataFSDebugBuilder</a></li>
       <li><a href="hetimatorrent/KBucket-class.html">KBucket</a></li>
       <li><a href="hetimatorrent/KGetPeerNodes-class.html">KGetPeerNodes</a></li>
       <li><a href="hetimatorrent/KGetPeerValue-class.html">KGetPeerValue</a></li>
       <li><a href="hetimatorrent/KId-class.html">KId</a></li>
       <li><a href="hetimatorrent/KNode-class.html">KNode</a></li>
+      <li><a href="hetimatorrent/KNodeSendInfo-class.html">KNodeSendInfo</a></li>
       <li><a href="hetimatorrent/KPeerInfo-class.html">KPeerInfo</a></li>
       <li><a href="hetimatorrent/KRootingTable-class.html">KRootingTable</a></li>
       <li><a href="hetimatorrent/KrpcAnnounce-class.html">KrpcAnnounce</a></li>
@@ -101,7 +99,6 @@
       <li><a href="hetimatorrent/KrpcPing-class.html">KrpcPing</a></li>
       <li><a href="hetimatorrent/KrpcQuery-class.html">KrpcQuery</a></li>
       <li><a href="hetimatorrent/KrpcResponse-class.html">KrpcResponse</a></li>
-      <li><a href="hetimatorrent/KSendInfo-class.html">KSendInfo</a></li>
       <li><a href="hetimatorrent/MessageBitfield-class.html">MessageBitfield</a></li>
       <li><a href="hetimatorrent/MessageCancel-class.html">MessageCancel</a></li>
       <li><a href="hetimatorrent/MessageChoke-class.html">MessageChoke</a></li>
@@ -128,6 +125,7 @@
       <li><a href="hetimatorrent/TorrenAIEmpty-class.html">TorrenAIEmpty</a></li>
       <li><a href="hetimatorrent/TorrentAI-class.html">TorrentAI</a></li>
       <li><a href="hetimatorrent/TorrentAIBasic-class.html">TorrentAIBasic</a></li>
+      <li><a href="hetimatorrent/TorrentAIChokeTest-class.html">TorrentAIChokeTest</a></li>
       <li><a href="hetimatorrent/TorrentClient-class.html">TorrentClient</a></li>
       <li><a href="hetimatorrent/TorrentClientFront-class.html">TorrentClientFront</a></li>
       <li><a href="hetimatorrent/TorrentClientFrontNerve-class.html">TorrentClientFrontNerve</a></li>
@@ -182,16 +180,6 @@
         <h2>Properties</h2>
 
         <dl class="properties">
-            <dt id="clients" class="property">
-                <span class="top-level-variable-type">List&lt;<a href="hetimatorrent.torrent.client/TorrentClient-class.html">TorrentClient</a>&gt;</span>
-                <a href="hetimatorrent/TorrentClientManager/clients.html">clients</a>
-            </dt>
-            <dd>
-                <div class="readable-writable">
-        read / write
-    </div>
-    
-            </dd>
             <dt id="globalIp" class="property">
                 <span class="top-level-variable-type">String</span>
                 <a href="hetimatorrent/TorrentClientManager/globalIp.html">globalIp</a>
@@ -272,6 +260,16 @@
     </div>
     
             </dd>
+            <dt id="rawclients" class="property">
+                <span class="top-level-variable-type">List&lt;<a href="hetimatorrent.torrent.client/TorrentClient-class.html">TorrentClient</a>&gt;</span>
+                <a href="hetimatorrent/TorrentClientManager/rawclients.html">rawclients</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
             <dt id="verbose" class="property">
                 <span class="top-level-variable-type">bool</span>
                 <a href="hetimatorrent/TorrentClientManager/verbose.html">verbose</a>
@@ -302,8 +300,8 @@
       <section class="summary" id="instance-methods">
           <h2>Methods</h2>
           <dl class="callables">
-              <dt id="addTorrentClient" class="callable">
-                  <a href="hetimatorrent/TorrentClientManager/addTorrentClient.html"><span class="name ">addTorrentClient</span></a><span class="signature">(<wbr><span class="parameter" id="addTorrentClient-param-client"><span class="type-annotation"><a href="hetimatorrent/TorrentClient-class.html">TorrentClient</a></span> <span class="parameter-name">client</span></span>)
+              <dt id="addTorrentClientWithDelegationToAccept" class="callable">
+                  <a href="hetimatorrent/TorrentClientManager/addTorrentClientWithDelegationToAccept.html"><span class="name ">addTorrentClientWithDelegationToAccept</span></a><span class="signature">(<wbr><span class="parameter" id="addTorrentClientWithDelegationToAccept-param-client"><span class="type-annotation"><a href="hetimatorrent/TorrentClient-class.html">TorrentClient</a></span> <span class="parameter-name">client</span></span>)
                       &#8594;
                       <span class="returntype">void</span>
                   </span>
@@ -311,14 +309,14 @@
               <dd>
                   
               </dd>
-              <dt id="getTorrentClient" class="callable">
-                  <a href="hetimatorrent/TorrentClientManager/getTorrentClient.html"><span class="name ">getTorrentClient</span></a><span class="signature">(<wbr><span class="parameter" id="getTorrentClient-param-infoHash"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">infoHash</span></span>)
+              <dt id="getTorrentClientFromInfoHash" class="callable">
+                  <a href="hetimatorrent/TorrentClientManager/getTorrentClientFromInfoHash.html"><span class="name ">getTorrentClientFromInfoHash</span></a><span class="signature">(<wbr><span class="parameter" id="getTorrentClientFromInfoHash-param-infoHash"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">infoHash</span></span>)
                       &#8594;
                       <span class="returntype"><a href="hetimatorrent/TorrentClient-class.html">TorrentClient</a></span>
                   </span>
               </dt>
               <dd>
-                  
+                  if infoHash args is unmanaged infohash, return null;
               </dd>
               <dt id="log" class="callable">
                   <a href="hetimatorrent/TorrentClientManager/log.html"><span class="name ">log</span></a><span class="signature">(<wbr><span class="parameter" id="log-param-message"><span class="type-annotation">String</span> <span class="parameter-name">message</span></span>)
@@ -359,8 +357,6 @@
     
     
       <li class="section-title"><a href="hetimatorrent/TorrentClientManager-class.html#instance-properties">Properties</a></li>
-      <li><a href="hetimatorrent/TorrentClientManager/clients.html">clients</a>
-</li>
       <li><a href="hetimatorrent/TorrentClientManager/globalIp.html">globalIp</a>
 </li>
       <li><a href="hetimatorrent/TorrentClientManager/globalPort.html">globalPort</a>
@@ -377,6 +373,8 @@
 </li>
       <li><a href="hetimatorrent/TorrentClientManager/onReceiveSignal.html">onReceiveSignal</a>
 </li>
+      <li><a href="hetimatorrent/TorrentClientManager/rawclients.html">rawclients</a>
+</li>
       <li><a href="hetimatorrent/TorrentClientManager/verbose.html">verbose</a>
 </li>
     
@@ -385,9 +383,9 @@
     
     
       <li class="section-title"><a href="hetimatorrent/TorrentClientManager-class.html#methods">Methods</a></li>
-      <li><a href="hetimatorrent/TorrentClientManager/addTorrentClient.html">addTorrentClient</a>
+      <li><a href="hetimatorrent/TorrentClientManager/addTorrentClientWithDelegationToAccept.html">addTorrentClientWithDelegationToAccept</a>
 </li>
-      <li><a href="hetimatorrent/TorrentClientManager/getTorrentClient.html">getTorrentClient</a>
+      <li><a href="hetimatorrent/TorrentClientManager/getTorrentClientFromInfoHash.html">getTorrentClientFromInfoHash</a>
 </li>
       <li><a href="hetimatorrent/TorrentClientManager/log.html">log</a>
 </li>

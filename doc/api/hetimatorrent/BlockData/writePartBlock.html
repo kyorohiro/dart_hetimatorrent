@@ -119,7 +119,7 @@
             <span class="name ">writePartBlock</span>(
             <br>
             <div class="parameters">
-                <span class="parameter" id="writePartBlock-param-data"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">data</span></span>,<br><span class="parameter" id="writePartBlock-param-blockNum"><span class="type-annotation">int</span> <span class="parameter-name">blockNum</span></span>,<br><span class="parameter" id="writePartBlock-param-begin"><span class="type-annotation">int</span> <span class="parameter-name">begin</span></span>,<br><span class="parameter" id="writePartBlock-param-length"><span class="type-annotation">int</span> <span class="parameter-name">length</span></span>
+                <span class="parameter" id="writePartBlock-param-data"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">data</span></span>,<br><span class="parameter" id="writePartBlock-param-blockNum"><span class="type-annotation">int</span> <span class="parameter-name">blockNum</span></span>,<br><span class="parameter" id="writePartBlock-param-begin"><span class="type-annotation">int</span> <span class="parameter-name">begin</span></span>,<br><span class="parameter" id="writePartBlock-param-length"><span class="type-annotation">int</span> <span class="parameter-name">length</span></span>,<br>{<span class="parameter" id="writePartBlock-param-strict"><span class="parameter-name">strict</span>: <span class="default-value">true</span></span>}
             </div>
             )    </section>
 
@@ -131,41 +131,35 @@
 
     <section class="summary source-code" id="source">
       <h2>Source</h2>
-      <pre><code class="prettyprint lang-dart">Future&lt;WriteResult&gt; writePartBlock(List&lt;int&gt; data, int blockNum, int begin, int length) {
-  return new Future(() {
-    int targetBlockData = blockSize;
-    if(blockNum == _head.lengthPerBit()-1) {
-      targetBlockData = dataSize%blockSize;
-    }
-    if (begin+length &gt; _blockSize || _head.lengthPerBit()-1 &lt; blockNum ) {
-        throw  {};
-    }
-    print(&quot;####piece[CC] ${length}, ${blockNum * _blockSize + begin}&quot;);
-
-    return _data.write(data.sublist(0,length), blockNum * _blockSize + begin).then((WriteResult result) {
-      print(&quot;####piece[CD] ${length}, ${blockNum * _blockSize + begin}&quot;);
-      {
-        //
-        //
-        PieceInfoList infoList = null;
-        if(_writePartData.containsKey(blockNum)) {
-          infoList = _writePartData[blockNum];
-        } else {
-          infoList = new PieceInfoList();
-          _writePartData[blockNum] = infoList;
-        }
-        infoList.append(begin, begin+length);
-        //
-        //
-        if(infoList.size() == 1 &amp;&amp; infoList.getPieceInfo(0).start== 0 &amp;&amp; infoList.getPieceInfo(0).end&gt;=targetBlockData) {
-          _head.setIsOn(blockNum, true);
-          _writePartData.remove(blockNum);
-        }
-
-      }
-      return result;
-    });
-  });
+      <pre><code class="prettyprint lang-dart">/**
+ *
+ */
+Future&lt;WriteResult&gt; writePartBlock(List&lt;int&gt; data, int blockNum, int begin, int length, {strict: true}) async {
+  int targetBlockData = blockSize;
+  if (blockNum == _head.lengthPerBit() - 1) {
+    targetBlockData = dataSize % blockSize;
+  }
+  if (strict == true &amp;&amp; begin + length &gt; _blockSize || _head.lengthPerBit() - 1 &lt; blockNum) {
+    throw {};
+  }
+  WriteResult result = await _data.write(data.sublist(0, length), blockNum * _blockSize + begin);
+  //
+  //
+  PieceInfoList infoList = null;
+  if (_writePartData.containsKey(blockNum)) {
+    infoList = _writePartData[blockNum];
+  } else {
+    infoList = new PieceInfoList();
+    _writePartData[blockNum] = infoList;
+  }
+  infoList.append(begin, begin + length);
+  //
+  //
+  if (infoList.size() == 1 &amp;&amp; infoList.getPieceInfo(0).start == 0 &amp;&amp; infoList.getPieceInfo(0).end &gt;= targetBlockData) {
+    _head.setIsOn(blockNum, true);
+    _writePartData.remove(blockNum);
+  }
+  return result;
 }</code></pre>
     </section>
 

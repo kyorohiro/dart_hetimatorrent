@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>chokeTest method - TorrentAIChokeTest class - hetimatorrent library - Dart API</title>
+    <!-- required because all the links are pseudo-absolute -->
+    <base href="../..">
+
+    <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro|Roboto:500,400italic,300,400' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="static-assets/prettify.css">
+    <link rel="stylesheet" href="static-assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static-assets/styles.css">
+
+    <meta name="description" content="API docs for the chokeTest method from the TorrentAIChokeTest class, for the Dart programming language.">
+    <link rel="icon" href="static-assets/favicon.png">
+
+    <!-- Do not remove placeholder -->
+    <!-- Header Placeholder -->
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header class="container-fluid" id="title">
+    <nav class="navbar navbar-fixed-top">
+        <div class="container">
+            <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+            <ol class="breadcrumbs gt-separated hidden-xs">
+                <li><a href="index.html">hetimatorrent</a></li>
+                <li><a href="hetimatorrent/hetimatorrent-library.html">hetimatorrent</a></li>
+                <li><a href="hetimatorrent/TorrentAIChokeTest-class.html">TorrentAIChokeTest</a></li>
+                <li class="self-crumb">chokeTest</li>
+            </ol>
+            <div class="self-name">chokeTest</div>
+        </div>
+    </nav>
+    <div class="container masthead">
+        <ol class="breadcrumbs gt-separated visible-xs">
+            <li><a href="index.html">hetimatorrent</a></li>
+            <li><a href="hetimatorrent/hetimatorrent-library.html">hetimatorrent</a></li>
+            <li><a href="hetimatorrent/TorrentAIChokeTest-class.html">TorrentAIChokeTest</a></li>
+            <li class="self-crumb">chokeTest</li>
+        </ol>
+        <div class="title-description">
+            <h1 class="title">
+                <div class="kind">method</div> chokeTest
+            </h1>
+            <!-- p class="subtitle">
+                
+            </p -->
+        </div>
+        <ul class="subnav">
+            <li><a href="hetimatorrent/TorrentAIChokeTest/chokeTest.html#source">Source</a></li>
+        </ul>
+    </div>
+</header>
+
+<div class="container body">
+
+  <div class="col-xs-6 col-sm-3 sidebar sidebar-offcanvas-left">
+    <h5><a href="index.html">hetimatorrent</a></h5>
+    <h5><a href="hetimatorrent/hetimatorrent-library.html">hetimatorrent</a></h5>
+    <h5><a href="hetimatorrent/TorrentAIChokeTest-class.html">TorrentAIChokeTest</a></h5>
+
+    <ol>
+    
+    
+    
+    
+      <li class="section-title"><a href="hetimatorrent/TorrentAIChokeTest-class.html#constructors">Constructors</a></li>
+      <li><a href="hetimatorrent/TorrentAIChokeTest/TorrentAIChokeTest.html">TorrentAIChokeTest</a></li>
+    
+    
+      <li class="section-title"><a href="hetimatorrent/TorrentAIChokeTest-class.html#methods">Methods</a></li>
+      <li><a href="hetimatorrent/TorrentAIChokeTest/chokeTest.html">chokeTest</a>
+</li>
+    </ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+  <div class="col-xs-12 col-sm-9 col-md-6 main-content">
+
+    <section class="multi-line-signature">
+            <span class="returntype">void</span>
+            <span class="name ">chokeTest</span>(
+            <br>
+            <div class="parameters">
+                <span class="parameter" id="chokeTest-param-client"><span class="type-annotation"><a href="hetimatorrent/TorrentClient-class.html">TorrentClient</a></span> <span class="parameter-name">client</span></span>,<br><span class="parameter" id="chokeTest-param-_maxUnchoke"><span class="type-annotation">int</span> <span class="parameter-name">_maxUnchoke</span></span>
+            </div>
+            )    </section>
+
+    <section class="desc markdown">
+    
+          <p class="no-docs">Not documented.</p>
+    
+    </section>
+
+    <section class="summary source-code" id="source">
+      <h2>Source</h2>
+      <pre><code class="prettyprint lang-dart">void chokeTest(TorrentClient client, int _maxUnchoke) {
+  List&lt;TorrentClientPeerInfo&gt; unchokeInterestedPeers = client.rawPeerInfos.getPeerInfo((TorrentClientPeerInfo info) {
+    return  (info.front != null &amp;&amp; info.front.isClose == false &amp;&amp; info.front.interestedToMe == TorrentClientFront.STATE_ON &amp;&amp; info.front.chokedFromMe == TorrentClientFront.STATE_ON);
+  });
+
+  List&lt;TorrentClientPeerInfo&gt; newcomerPeers = client.rawPeerInfos.getPeerInfo((TorrentClientPeerInfo info) {
+    return (info.front != null &amp;&amp; info.front.isClose == false &amp;&amp; info.front.chokedFromMe == TorrentClientFront.STATE_NONE);
+  });
+
+  List&lt;TorrentClientPeerInfo&gt; chokedAndInterestPeers = client.rawPeerInfos.getPeerInfo((TorrentClientPeerInfo info) {
+    return (info.front != null &amp;&amp; info.front.isClose == false &amp;&amp; info.front.chokedFromMe == TorrentClientFront.STATE_OFF);
+  });
+
+  List&lt;TorrentClientPeerInfo&gt; nextUnchoke = [];
+  nextUnchoke.addAll(newcomerPeers);
+  nextUnchoke.addAll(chokedAndInterestPeers);
+
+  //
+  //
+  // 2 peer change
+  unchokeInterestedPeers.shuffle();
+  if (unchokeInterestedPeers.length &gt; (_maxUnchoke - 2)) {
+    unchokeInterestedPeers.sort((TorrentClientPeerInfo x, TorrentClientPeerInfo y) {
+      return x.front.uploadSpeedFromUnchokeFromMe - y.front.uploadSpeedFromUnchokeFromMe;
+    });
+    unchokeInterestedPeers.removeLast().front.sendChoke();
+    if (unchokeInterestedPeers.length &lt; (_maxUnchoke - 2)) {
+      unchokeInterestedPeers.removeLast().front.sendChoke();
+    }
+  }
+
+  //
+  // add include peer
+  //
+  int unchokeNum = _maxUnchoke - unchokeInterestedPeers.length;
+  nextUnchoke.shuffle();
+  int numOfSendedUnchoke = 0;
+
+  // first intersted peer
+  for (int i = 0; i &lt; unchokeNum &amp;&amp; 0 &lt; nextUnchoke.length; i++) {
+    TorrentClientPeerInfo info = nextUnchoke.removeLast();
+    if (info.front.amI == false &amp;&amp;info.front.interestedToMe == TorrentClientFront.STATE_ON || info.front.interestedToMe == TorrentClientFront.STATE_NONE) {
+      if(info.front.chokedFromMe != TorrentClientFront.STATE_OFF) {
+        info.front.sendUnchoke();
+      }
+      numOfSendedUnchoke++;
+    }
+  }
+
+  // secound notinterested peer
+  for (int i = 0; i &lt; (_maxUnchoke - numOfSendedUnchoke) &amp;&amp; 0 &lt; nextUnchoke.length; i++) {
+    TorrentClientPeerInfo info = nextUnchoke.removeLast();
+    if (info.front.amI == false &amp;&amp; info.front.interestedToMe == TorrentClientFront.STATE_OFF) {
+      if(info.front.chokedFromMe != TorrentClientFront.STATE_OFF) {
+        info.front.sendUnchoke();
+      }
+    }
+  }
+
+  //
+  // send unchoke
+  for (TorrentClientPeerInfo info in nextUnchoke) {
+    if (info.chokedFromMe != TorrentClientFront.STATE_ON) {
+      info.front.sendChoke();
+    }
+  }
+}</code></pre>
+    </section>
+
+  </div> <!-- /.main-content -->
+
+</div> <!-- container -->
+
+<footer>
+    <div class="container-fluid">
+        <div class="container">
+            <p class="text-center">
+                <span class="no-break">
+                  hetimatorrent 0.0.1 api docs
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="https://www.dartlang.org">
+                    <img src="static-assets/favicon.png" alt="Dart" title="Dart"width="16" height="16">
+                  </a>
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="http://creativecommons.org/licenses/by-sa/4.0/">cc license</a>
+                </span>
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script src="static-assets/prettify.js"></script>
+<script src="static-assets/script.js"></script>
+<!-- Do not remove placeholder -->
+<!-- Footer Placeholder -->
+</body>
+
+</html>

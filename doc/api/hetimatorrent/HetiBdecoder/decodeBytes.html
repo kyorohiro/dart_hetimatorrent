@@ -121,27 +121,19 @@
 
     <section class="summary source-code" id="source">
       <h2>Source</h2>
-      <pre><code class="prettyprint lang-dart">async.Future&lt;List&lt;int&gt;&gt; decodeBytes(hetima.EasyParser parser) {
-  async.Completer&lt;List&lt;int&gt;&gt; completer = new async.Completer();
-  int length = 0;
-  parser.nextBytePatternByUnmatch(new hetima.EasyParserIncludeMatcher(DIGIT)).then((List&lt;int&gt; lengthList) {
-    if (lengthList.length == 0) {
-      throw new HetiBencodeParseError(&quot;byte:length=0&quot;);
-    }
-    length = intList2int(lengthList);
-    return parser.nextString(&quot;:&quot;);
-  }).then((v) {
-    return parser.nextBuffer(length);
-  }).then((List&lt;int&gt; value) {
-    if (value.length == length) {
-      completer.complete(value);
-    } else {
-      throw new HetiBencodeParseError(&quot;byte:length:&quot; + value.length.toString() + &quot;==&quot; + length.toString());
-    }
-  }).catchError((e){
-    completer.completeError(e);
-  });
-  return completer.future;
+      <pre><code class="prettyprint lang-dart">Future&lt;List&lt;int&gt;&gt; decodeBytes(hetima.EasyParser parser) async {
+  List&lt;int&gt; lengthList = await parser.nextBytePatternByUnmatch(new hetima.EasyParserIncludeMatcher(DIGIT));
+  if (lengthList.length == 0) {
+    throw new HetiBencodeParseError(&quot;byte:length=0&quot;);
+  }
+  int length = intList2int(lengthList);
+  await parser.nextString(&quot;:&quot;);
+  List&lt;int&gt; value = await parser.nextBuffer(length);
+  if (value.length == length) {
+    return value;
+  } else {
+    throw new HetiBencodeParseError(&quot;byte:length:&quot; + value.length.toString() + &quot;==&quot; + length.toString());
+  }
 }</code></pre>
     </section>
 

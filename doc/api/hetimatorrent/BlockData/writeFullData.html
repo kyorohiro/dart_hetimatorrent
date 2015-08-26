@@ -131,23 +131,18 @@
 
     <section class="summary source-code" id="source">
       <h2>Source</h2>
-      <pre><code class="prettyprint lang-dart">Future&lt;WriteResult&gt; writeFullData(HetimaData data) {
-  return new Future(() {
-    int index = 0;
-    a() {
-      return data.read(index*blockSize, blockSize).then((ReadResult result) {
-        return writeBlock(result.buffer, index);
-      }).then((WriteResult result) {
-        index++;
-        if (index * blockSize &lt; dataSize) {
-          a();
-        } else {
-          return result;
-        }
-      });
-    }
-    return a();
-  });
+      <pre><code class="prettyprint lang-dart">/**
+ *
+ */
+Future&lt;WriteResult&gt; writeFullData(HetimaData data) async {
+  int index = 0;
+  WriteResult result = null;
+  do {
+    ReadResult readResult = await data.read(index * blockSize, blockSize);
+    result = await writeBlock(readResult.buffer, index);
+    index++;
+  } while (index * blockSize &lt; dataSize);
+  return result;
 }</code></pre>
     </section>
 

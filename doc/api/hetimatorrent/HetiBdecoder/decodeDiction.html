@@ -121,21 +121,11 @@
 
     <section class="summary source-code" id="source">
       <h2>Source</h2>
-      <pre><code class="prettyprint lang-dart">async.Future&lt;Map&gt; decodeDiction(hetima.EasyParser parser) {
-  async.Completer&lt;Map&gt; completer = new async.Completer();
-  Map ret = {};
-  parser.nextString(&quot;d&quot;).then((String v) {
-    return decodeDictionElements(parser);
-  }).then((Map l) {
-    ret = l;
-  }).then((String v) {
-    return parser.nextString(&quot;e&quot;);
-  }).then((e) {
-    completer.complete(ret);
-  }).catchError((e) {
-    completer.completeError(e);
-  });
-  return completer.future;
+      <pre><code class="prettyprint lang-dart">Future&lt;Map&gt; decodeDiction(hetima.EasyParser parser) async {
+  await parser.nextString(&quot;d&quot;);
+  Map ret = await decodeDictionElements(parser);
+  await parser.nextString(&quot;e&quot;);
+  return ret;
 }</code></pre>
     </section>
 

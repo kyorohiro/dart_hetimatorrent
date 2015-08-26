@@ -121,29 +121,19 @@
 
     <section class="summary source-code" id="source">
       <h2>Source</h2>
-      <pre><code class="prettyprint lang-dart">async.Future&lt;List&lt;Object&gt;&gt; decodeListElement(hetima.EasyParser parser) {
-  async.Completer&lt;List&lt;Object&gt;&gt; completer = new async.Completer();
+      <pre><code class="prettyprint lang-dart">Future&lt;List&lt;Object&gt;&gt; decodeListElement(hetima.EasyParser parser) async {
   List&lt;Object&gt; ret = new List();
-
-  async.Future&lt;Object&gt; elem() {
-    return decodeBenObject(parser).then((Object v) {
-      ret.add(v);
-      return parser.getPeek(1).then((List&lt;int&gt; v) {
-        if (v.length == 0) {
-          completer.completeError(new HetiBencodeParseError(&quot;list elm&quot;));
-        } else if (v[0] == 0x65) { //e
-          completer.complete(ret);
-        } else {
-          return elem();
-        }
-      });
-    }).catchError((e) {
-      completer.completeError(e);
-    });
+  while (true) {
+    Object v1 = await decodeBenObject(parser);
+    ret.add(v1);
+    List&lt;int&gt; v = await parser.getPeek(1);
+    if (v.length == 0) {
+      throw new HetiBencodeParseError(&quot;list elm&quot;);
+    } else if (v[0] == 0x65) {
+      //e
+      return ret;
+    }
   }
-  elem();
-
-  return completer.future;
 }</code></pre>
     </section>
 

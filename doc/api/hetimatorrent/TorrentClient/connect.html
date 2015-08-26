@@ -158,12 +158,7 @@
     <section class="summary source-code" id="source">
       <h2>Source</h2>
       <pre><code class="prettyprint lang-dart">Future&lt;TorrentClientFront&gt; connect(TorrentClientPeerInfo info) async {
-  //
-  // cuurent implements duprecate connection do not permit
-  if (info.front != null &amp;&amp; info.front.isClose == false) {
-    throw {};
-  }
-  if (false == _isStart) {
+  if (false == _isStart || info.front != null &amp;&amp; info.front.isClose == false) {
     throw {};
   }
   info.front = await TorrentClientFront.connect(_builder, info, this._targetBlock.bitSize, infoHash, peerId: peerId, reseved: _reseved, verbose: _verbose);

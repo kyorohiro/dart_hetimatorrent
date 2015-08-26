@@ -129,15 +129,13 @@
 
     <section class="summary source-code" id="source">
       <h2>Source</h2>
-      <pre><code class="prettyprint lang-dart">async.Future&lt;StopResult&gt; stop() {
+      <pre><code class="prettyprint lang-dart">async.Future&lt;StopResult&gt; stop() async {
   if (outputLog) {
     print(&quot;TrackerServer#stop&quot;);
   }
-  async.Completer&lt;StopResult&gt; c = new async.Completer();
   _server.stopServer();
   _isStart = false;
-  c.complete(new StopResult());
-  return c.future;
+  return new StopResult();
 }</code></pre>
     </section>
 

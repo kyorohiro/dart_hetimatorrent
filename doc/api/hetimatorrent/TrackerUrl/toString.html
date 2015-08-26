@@ -141,9 +141,7 @@
 
     <section class="summary source-code" id="source">
       <h2>Source</h2>
-      <pre><code class="prettyprint lang-dart">String toString() {
-  return scheme + &quot;://&quot; + trackerHost + &quot;:&quot; + trackerPort.toString() + &quot;&quot; + path + toHeader();
-}</code></pre>
+      <pre><code class="prettyprint lang-dart">String toString() =&gt; scheme + &quot;://&quot; + trackerHost + &quot;:&quot; + trackerPort.toString() + &quot;&quot; + path + toHeader();</code></pre>
     </section>
 
   </div> <!-- /.main-content -->

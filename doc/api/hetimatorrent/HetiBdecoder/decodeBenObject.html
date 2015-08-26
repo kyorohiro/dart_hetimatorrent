@@ -121,33 +121,23 @@
 
     <section class="summary source-code" id="source">
       <h2>Source</h2>
-      <pre><code class="prettyprint lang-dart">async.Future&lt;Object&gt; decodeBenObject(hetima.EasyParser parser) {
-  async.Completer completer = new async.Completer();
-  parser.getPeek(1).then((List&lt;int&gt; v) {
-    if (0x69 == v[0]) {
-      // i
-      return decodeNumber(parser).then((int n) {
-        completer.complete(n);
-      });
-    } else if (0x30 &lt;= v[0] &amp;&amp; v[0] &lt;= 0x39) {//0-9
-      return decodeBytes(parser).then((List&lt;int&gt; v) {
-        // todo? byte data is data.Uint8List;
-        completer.complete(new data.Uint8List.fromList(v));
-      });
-    } else if (0x6c == v[0]) {// l
-      return decodeList(parser).then((List&lt;Object&gt; v) {
-        completer.complete(v);
-      });
-    } else if (0x64 == v[0]) {// d
-      return decodeDiction(parser).then((Map dict) {
-        completer.complete(dict);
-      });
-    }
-    throw new HetiBencodeParseError(&quot;benobject&quot;);
-  }).catchError((e) {
-    completer.completeError(e);
-  });
-  return completer.future;
+      <pre><code class="prettyprint lang-dart">Future&lt;Object&gt; decodeBenObject(hetima.EasyParser parser) async {
+  List&lt;int&gt; v = await parser.getPeek(1);
+  if (0x69 == v[0]) {
+    // i
+    return decodeNumber(parser);
+  } else if (0x30 &lt;= v[0] &amp;&amp; v[0] &lt;= 0x39) {
+    //0-9
+    List&lt;int&gt; vv = await decodeBytes(parser);
+    return (vv is data.Uint8List ? vv : new data.Uint8List.fromList(vv));
+  } else if (0x6c == v[0]) {
+    // l
+    return decodeList(parser);
+  } else if (0x64 == v[0]) {
+    // d
+    return decodeDiction(parser);
+  }
+  throw new HetiBencodeParseError(&quot;benobject&quot;);
 }</code></pre>
     </section>
 

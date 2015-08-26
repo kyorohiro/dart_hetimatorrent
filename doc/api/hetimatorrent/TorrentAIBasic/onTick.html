@@ -109,33 +109,29 @@
 
     <section class="summary source-code" id="source">
       <h2>Source</h2>
-      <pre><code class="prettyprint lang-dart">Future onTick(TorrentClient client) {
-  return new Future(() {
-    {
-      bool haveAll = client.targetBlock.haveAll();
-      List&lt;TorrentClientPeerInfo&gt; infos = client.rawPeerInfos.getPeerInfo((TorrentClientPeerInfo info) {
-        if (info.front == null || info.front.isClose) {
-          return false;
-        }
-        if (info.amI) {
-          return true;
-        }
-        if (haveAll == true &amp;&amp; info.front.bitfieldToMe.isAllOn()) {
-          return true;
-        }
-        return false;
-      });
-      //
-      // close
-      //
-      for (TorrentClientPeerInfo info in infos) {
-        new Future.delayed(new Duration(seconds: 5)).then((_) {
-          info.front.close();
-        });
-      }
+      <pre><code class="prettyprint lang-dart">Future onTick(TorrentClient client) async {
+  bool haveAll = client.targetBlock.haveAll();
+  List&lt;TorrentClientPeerInfo&gt; infos = client.rawPeerInfos.getPeerInfo((TorrentClientPeerInfo info) {
+    if (info.front == null || info.front.isClose) {
+      return false;
     }
-    _chokeTest.chokeTest(client, _maxUnchoke);
+    if (info.amI) {
+      return true;
+    }
+    if (haveAll == true &amp;&amp; info.front.bitfieldToMe.isAllOn()) {
+      return true;
+    }
+    return false;
   });
+  //
+  // close
+  //
+  for (TorrentClientPeerInfo info in infos) {
+    new Future.delayed(new Duration(seconds: 5)).then((_) {
+      info.front.close();
+    });
+  }
+  _chokeTest.chokeTest(client, _maxUnchoke);
 }</code></pre>
     </section>
 

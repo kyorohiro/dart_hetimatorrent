@@ -131,24 +131,26 @@
 
     <section class="summary source-code" id="source">
       <h2>Source</h2>
-      <pre><code class="prettyprint lang-dart">Future&lt;ReadResult&gt; readBlock(int blockNum) {
-  return new Future(() {
-    int length = _blockSize;
-    if (blockNum * _blockSize + length &gt; _dataSize) {
-      length = _dataSize - blockNum * _blockSize;
-    }
+      <pre><code class="prettyprint lang-dart">/**
+ *
+ */
+Future&lt;ReadResult&gt; readBlock(int blockNum) async {
+  int length = _blockSize;
+  if (blockNum * _blockSize + length &gt; _dataSize) {
+    length = _dataSize - blockNum * _blockSize;
+  }
 
-    if (_head.getIsOn(blockNum) == false) {
-      return new ReadResult(ReadResult.NG, new List.filled(length, 0));
-    }
-    return _data.getLength().then((int currentDataLength) {
-      if (blockNum * _blockSize + length &gt; currentDataLength) {
-        return new ReadResult(ReadResult.NG, new List.filled(length, 0));
-      } else {
-        return _data.read(blockNum * _blockSize, length);
-      }
-    });
-  });
+  if (_head.getIsOn(blockNum) == false) {
+    // todo throw error
+    return new ReadResult(new List.filled(length, 0));
+  }
+  int currentDataLength = await _data.getLength();
+  if (blockNum * _blockSize + length &gt; currentDataLength) {
+    // todo throw error
+    return new ReadResult(new List.filled(length, 0));
+  } else {
+    return _data.read(blockNum * _blockSize, length);
+  }
 }</code></pre>
     </section>
 

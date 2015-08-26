@@ -145,10 +145,9 @@
 
     <section class="summary source-code" id="source">
       <h2>Source</h2>
-      <pre><code class="prettyprint lang-dart">static Future&lt;TrackerUrl&gt; createTrackerUrlFromTorrentFile(TorrentFile torrentfile, List&lt;int&gt; peerId) {
-  return torrentfile.createInfoSha1().then((List&lt;int&gt; infoHash) {
-    return new TrackerUrl(torrentfile.announce, infoHash, peerId);
-  });
+      <pre><code class="prettyprint lang-dart">static Future&lt;TrackerUrl&gt; createTrackerUrlFromTorrentFile(TorrentFile torrentfile, List&lt;int&gt; peerId) async {
+  List&lt;int&gt; infoHash = await torrentfile.createInfoSha1();
+  return new TrackerUrl(torrentfile.announce, infoHash, peerId);
 }</code></pre>
     </section>
 

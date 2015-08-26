@@ -79,19 +79,17 @@
       <li><a href="hetimatorrent/Bencoder-class.html">Bencoder</a></li>
       <li><a href="hetimatorrent/Bitfield-class.html">Bitfield</a></li>
       <li><a href="hetimatorrent/BitfieldInter-class.html">BitfieldInter</a></li>
+      <li><a href="hetimatorrent/BitfieldPlus-class.html">BitfieldPlus</a></li>
       <li><a href="hetimatorrent/BlockData-class.html">BlockData</a></li>
-      <li><a href="hetimatorrent/ChokeTest-class.html">ChokeTest</a></li>
       <li><a href="hetimatorrent/CreatePieceHashResult-class.html">CreatePieceHashResult</a></li>
-      <li><a href="hetimatorrent/DDBitfield-class.html">DDBitfield</a></li>
       <li><a href="hetimatorrent/HetiBdecoder-class.html">HetiBdecoder</a></li>
       <li><a href="hetimatorrent/HetiBencode-class.html">HetiBencode</a></li>
-      <li><a href="hetimatorrent/HetimaDataFSDebug-class.html">HetimaDataFSDebug</a></li>
-      <li><a href="hetimatorrent/HetimaDataFSDebugBuilder-class.html">HetimaDataFSDebugBuilder</a></li>
       <li><a href="hetimatorrent/KBucket-class.html">KBucket</a></li>
       <li><a href="hetimatorrent/KGetPeerNodes-class.html">KGetPeerNodes</a></li>
       <li><a href="hetimatorrent/KGetPeerValue-class.html">KGetPeerValue</a></li>
       <li><a href="hetimatorrent/KId-class.html">KId</a></li>
       <li><a href="hetimatorrent/KNode-class.html">KNode</a></li>
+      <li><a href="hetimatorrent/KNodeSendInfo-class.html">KNodeSendInfo</a></li>
       <li><a href="hetimatorrent/KPeerInfo-class.html">KPeerInfo</a></li>
       <li><a href="hetimatorrent/KRootingTable-class.html">KRootingTable</a></li>
       <li><a href="hetimatorrent/KrpcAnnounce-class.html">KrpcAnnounce</a></li>
@@ -102,7 +100,6 @@
       <li><a href="hetimatorrent/KrpcPing-class.html">KrpcPing</a></li>
       <li><a href="hetimatorrent/KrpcQuery-class.html">KrpcQuery</a></li>
       <li><a href="hetimatorrent/KrpcResponse-class.html">KrpcResponse</a></li>
-      <li><a href="hetimatorrent/KSendInfo-class.html">KSendInfo</a></li>
       <li><a href="hetimatorrent/MessageBitfield-class.html">MessageBitfield</a></li>
       <li><a href="hetimatorrent/MessageCancel-class.html">MessageCancel</a></li>
       <li><a href="hetimatorrent/MessageChoke-class.html">MessageChoke</a></li>
@@ -129,6 +126,7 @@
       <li><a href="hetimatorrent/TorrenAIEmpty-class.html">TorrenAIEmpty</a></li>
       <li><a href="hetimatorrent/TorrentAI-class.html">TorrentAI</a></li>
       <li><a href="hetimatorrent/TorrentAIBasic-class.html">TorrentAIBasic</a></li>
+      <li><a href="hetimatorrent/TorrentAIChokeTest-class.html">TorrentAIChokeTest</a></li>
       <li><a href="hetimatorrent/TorrentClient-class.html">TorrentClient</a></li>
       <li><a href="hetimatorrent/TorrentClientFront-class.html">TorrentClientFront</a></li>
       <li><a href="hetimatorrent/TorrentClientFrontNerve-class.html">TorrentClientFrontNerve</a></li>
@@ -229,9 +227,29 @@
     </div>
     
             </dd>
+            <dt id="intervalSecondForFindNode" class="property">
+                <span class="top-level-variable-type">int</span>
+                <a href="hetimatorrent/KNode/intervalSecondForFindNode.html">intervalSecondForFindNode</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
             <dt id="intervalSecondForMaintenance" class="property">
                 <span class="top-level-variable-type">int</span>
                 <a href="hetimatorrent/KNode/intervalSecondForMaintenance.html">intervalSecondForMaintenance</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="intervalSecondForPing" class="property">
+                <span class="top-level-variable-type">int</span>
+                <a href="hetimatorrent/KNode/intervalSecondForPing.html">intervalSecondForPing</a>
             </dt>
             <dd>
                 <div class="readable-writable">
@@ -290,7 +308,7 @@
     
             </dd>
             <dt id="queryInfo" class="property">
-                <span class="top-level-variable-type">List&lt;<a href="hetimatorrent.dht.knode/KSendInfo-class.html">KSendInfo</a>&gt;</span>
+                <span class="top-level-variable-type">List&lt;<a href="hetimatorrent.dht.knode/KNodeSendInfo-class.html">KNodeSendInfo</a>&gt;</span>
                 <a href="hetimatorrent/KNode/queryInfo.html">queryInfo</a>
             </dt>
             <dd>
@@ -399,7 +417,7 @@
               <dt id="clearTimeout" class="callable">
                   <a href="hetimatorrent/KNode/clearTimeout.html"><span class="name ">clearTimeout</span></a><span class="signature">(<wbr><span class="parameter" id="clearTimeout-param-timeout"><span class="type-annotation">int</span> <span class="parameter-name">timeout</span></span>)
                       &#8594;
-                      <span class="returntype">List&lt;<a href="hetimatorrent.dht.knode/KSendInfo-class.html">KSendInfo</a>&gt;</span>
+                      <span class="returntype">List&lt;<a href="hetimatorrent.dht.knode/KNodeSendInfo-class.html">KNodeSendInfo</a>&gt;</span>
                   </span>
               </dt>
               <dd>
@@ -453,7 +471,7 @@
               <dt id="removeQueryNameFromTransactionId" class="callable">
                   <a href="hetimatorrent/KNode/removeQueryNameFromTransactionId.html"><span class="name ">removeQueryNameFromTransactionId</span></a><span class="signature">(<wbr><span class="parameter" id="removeQueryNameFromTransactionId-param-transactionId"><span class="type-annotation">String</span> <span class="parameter-name">transactionId</span></span>)
                       &#8594;
-                      <span class="returntype"><a href="hetimatorrent/KSendInfo-class.html">KSendInfo</a></span>
+                      <span class="returntype"><a href="hetimatorrent/KNodeSendInfo-class.html">KNodeSendInfo</a></span>
                   </span>
               </dt>
               <dd>
@@ -632,7 +650,11 @@
 </li>
       <li><a href="hetimatorrent/KNode/intervalSecondForAnnounce.html">intervalSecondForAnnounce</a>
 </li>
+      <li><a href="hetimatorrent/KNode/intervalSecondForFindNode.html">intervalSecondForFindNode</a>
+</li>
       <li><a href="hetimatorrent/KNode/intervalSecondForMaintenance.html">intervalSecondForMaintenance</a>
+</li>
+      <li><a href="hetimatorrent/KNode/intervalSecondForPing.html">intervalSecondForPing</a>
 </li>
       <li><a href="hetimatorrent/KNode/isStart.html">isStart</a>
 </li>

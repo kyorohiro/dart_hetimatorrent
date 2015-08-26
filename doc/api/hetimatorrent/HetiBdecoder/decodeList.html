@@ -121,21 +121,11 @@
 
     <section class="summary source-code" id="source">
       <h2>Source</h2>
-      <pre><code class="prettyprint lang-dart">async.Future&lt;List&lt;Object&gt;&gt; decodeList(hetima.EasyParser parser) {
-  async.Completer&lt;List&lt;Object&gt;&gt; completer = new async.Completer();
-  List&lt;Object&gt; ret = [];
-  parser.nextString(&quot;l&quot;).then((String v) {
-    return decodeListElement(parser);
-  }).then((List&lt;Object&gt; l) {
-    ret = l;
-  }).then((String v) {
-    return parser.nextString(&quot;e&quot;);
-  }).then((e) {
-    completer.complete(ret);
-  }).catchError((e) {
-    completer.completeError(e);
-  });
-  return completer.future;
+      <pre><code class="prettyprint lang-dart">Future&lt;List&lt;Object&gt;&gt; decodeList(hetima.EasyParser parser) async {
+  await parser.nextString(&quot;l&quot;);
+  List&lt;Object&gt; ret = await decodeListElement(parser);
+  await parser.nextString(&quot;e&quot;);
+  return ret;
 }</code></pre>
     </section>
 

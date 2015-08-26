@@ -189,14 +189,12 @@
       <h2>Source</h2>
       <pre><code class="prettyprint lang-dart">Future&lt;TorrentMessage&gt; parse() {
   if (handshaked == false) {
-    print(&quot;### handshake --&quot;);
     return TorrentMessage.parseHandshake(_parser).then((TorrentMessage message) {
       handshaked = true;
       return message;
     });
   } else {
-    print(&quot;### basic --&quot;);
-    return TorrentMessage.parseBasic(_parser , maxOfMessageSize:requestedMaxPieceSize+20);
+    return TorrentMessage.parseBasic(_parser, maxOfMessageSize: requestedMaxPieceSize + 20);
   }
 }</code></pre>
     </section>

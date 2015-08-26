@@ -123,16 +123,17 @@
 
     <section class="summary source-code" id="source">
       <h2>Source</h2>
-      <pre><code class="prettyprint lang-dart">static Future&lt;TorrentMessage&gt; parseHandshake(EasyParser parser, [int maxOfMessageSize = 256 * 1024]) {
+      <pre><code class="prettyprint lang-dart">static Future&lt;TorrentMessage&gt; parseHandshake(EasyParser parser, [int maxOfMessageSize = 256 * 1024]) async {
   parser.push();
-  return new Future(() {
-    return MessageHandshake.decode(parser);
-  }).catchError((e) {
-    parser.back();
-    throw e;
-  }).whenComplete(() {
+  try {
+    MessageHandshake message = await MessageHandshake.decode(parser);
     parser.pop();
-  });
+    return message;
+  } catch (e) {
+    parser.back();
+    parser.pop();
+    throw e;
+  }
 }</code></pre>
     </section>
 

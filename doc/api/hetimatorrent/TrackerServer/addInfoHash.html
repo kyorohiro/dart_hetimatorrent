@@ -133,30 +133,28 @@
 
     <section class="summary source-code" id="source">
       <h2>Source</h2>
-      <pre><code class="prettyprint lang-dart">async.Future addInfoHash(List&lt;int&gt; infoHash) {
-  return new async.Future(() {
-    bool isManaged = false;
+      <pre><code class="prettyprint lang-dart">async.Future addInfoHash(List&lt;int&gt; infoHash) async {
+  bool isManaged = false;
 
-    for (TrackerPeerManager m in _peerManagerList) {
-      if (m.isManagedInfoHash(infoHash)) {
-        isManaged = true;
-      }
+  for (TrackerPeerManager m in _peerManagerList) {
+    if (m.isManagedInfoHash(infoHash)) {
+      isManaged = true;
     }
+  }
 
-    if (isManaged == true) {
-      if (outputLog) {
-        print(&quot;TrackerServer#add:###non: ${infoHash}&quot;);
-      }
-      return;
-    }
-
-    // todo
-    TrackerPeerManager peerManager = new TrackerPeerManager(infoHash, null);
-    _peerManagerList.add(peerManager);
+  if (isManaged == true) {
     if (outputLog) {
-      print(&quot;TrackerServer#add:###add: ${infoHash}&quot;);
+      print(&quot;TrackerServer#add:###non: ${infoHash}&quot;);
     }
-  });
+    return;
+  }
+
+  // todo
+  TrackerPeerManager peerManager = new TrackerPeerManager(infoHash, null);
+  _peerManagerList.add(peerManager);
+  if (outputLog) {
+    print(&quot;TrackerServer#add:###add: ${infoHash}&quot;);
+  }
 }</code></pre>
     </section>
 

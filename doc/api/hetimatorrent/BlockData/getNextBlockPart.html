@@ -131,11 +131,14 @@
 
     <section class="summary source-code" id="source">
       <h2>Source</h2>
-      <pre><code class="prettyprint lang-dart">List&lt;int&gt; getNextBlockPart(int targetBit, int downloadPieceLength) {
+      <pre><code class="prettyprint lang-dart">/**
+ *
+ */
+List&lt;int&gt; getNextBlockPart(int targetBit, int downloadPieceLength) {
   PieceInfoList pieceInfo = getPieceInfo(targetBit);
   int begin = 0;
   int end = 0;
-  if(pieceInfo == null) {
+  if (pieceInfo == null) {
     begin = 0;
     end = downloadPieceLength;
   } else {
@@ -143,8 +146,8 @@
     begin = bl[0];
     end = bl[1];
   }
-  if(_dataSize&lt;targetBit*_blockSize+end) {
-    end = end - ((targetBit*_blockSize+end) -_dataSize);
+  if (_dataSize &lt; targetBit * _blockSize + end) {
+    end = end - ((targetBit * _blockSize + end) - _dataSize);
   }
   return [begin, end];
 }</code></pre>

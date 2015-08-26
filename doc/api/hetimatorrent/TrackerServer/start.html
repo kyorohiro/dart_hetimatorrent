@@ -129,26 +129,18 @@
 
     <section class="summary source-code" id="source">
       <h2>Source</h2>
-      <pre><code class="prettyprint lang-dart">async.Future&lt;StartResult&gt; start() {
+      <pre><code class="prettyprint lang-dart">async.Future&lt;StartResult&gt; start() async {
   if (outputLog) {
     print(&quot;TrackerServer#start&quot;);
   }
-  async.Completer&lt;StartResult&gt; c = new async.Completer();
   _server.basePort = port;
   _server.numOfRetry = 0;
-
-  _server.startServer().then((HetiHttpStartServerResult re) {
-    _isStart = true;
-    c.complete(new StartResult());
-  }).catchError((e) {
-    _isStart = false;
-    c.completeError(e);
-  });
   if (res == null) {
     res = _server.onResponse.listen(onListen);
   }
-
-  return c.future;
+  await _server.startServer();
+  _isStart = true;
+  return new StartResult();
 }</code></pre>
     </section>
 

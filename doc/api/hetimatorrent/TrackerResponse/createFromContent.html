@@ -122,18 +122,12 @@
 
     <section class="summary source-code" id="source">
       <h2>Source</h2>
-      <pre><code class="prettyprint lang-dart">static async.Future&lt;TrackerResponse&gt; createFromContent(HetimaReader builder) {
-  async.Completer&lt;TrackerResponse&gt; completer = new async.Completer();
+      <pre><code class="prettyprint lang-dart">static async.Future&lt;TrackerResponse&gt; createFromContent(HetimaReader builder) async {
   EasyParser parser = new EasyParser(builder);
-  HetiBencode.decode(parser).then((Object o) {
-    Map&lt;String, Object&gt; c = o;
-    TrackerResponse instance = new TrackerResponse();
-    instance.initFromMap(c);
-    completer.complete(instance);
-  }).catchError((e) {
-    completer.completeError(e);
-  });
-  return completer.future;
+  Map&lt;String, Object&gt; c = await HetiBencode.decode(parser);
+  TrackerResponse instance = new TrackerResponse();
+  instance.initFromMap(c);
+  return instance;
 }</code></pre>
     </section>
 

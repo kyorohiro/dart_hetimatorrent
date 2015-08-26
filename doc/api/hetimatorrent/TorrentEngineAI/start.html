@@ -123,7 +123,7 @@
   this._torrent = torrentClient;
   _tracker.peerport = manager.globalPort;
   torrentClient.startWithoutSocket(manager.localIp, manager.localPort, manager.globalIp, manager.globalPort);
-  manager.addTorrentClient(torrentClient);
+  manager.addTorrentClientWithDelegationToAccept(torrentClient);
   if (useDht == true) {
     _dht.startSearchValue(new KId(_tracker.infoHash), _torrent.globalPort);
   }

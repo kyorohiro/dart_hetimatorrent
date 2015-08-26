@@ -119,7 +119,7 @@
             <span class="name ">writeBlock</span>(
             <br>
             <div class="parameters">
-                <span class="parameter" id="writeBlock-param-data"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">data</span></span>,<br><span class="parameter" id="writeBlock-param-blockNum"><span class="type-annotation">int</span> <span class="parameter-name">blockNum</span></span>
+                <span class="parameter" id="writeBlock-param-data"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">data</span></span>,<br><span class="parameter" id="writeBlock-param-blockNum"><span class="type-annotation">int</span> <span class="parameter-name">blockNum</span></span>,<br>{<span class="parameter" id="writeBlock-param-strict"><span class="parameter-name">strict</span>: <span class="default-value">true</span></span>}
             </div>
             )    </section>
 
@@ -131,28 +131,11 @@
 
     <section class="summary source-code" id="source">
       <h2>Source</h2>
-      <pre><code class="prettyprint lang-dart">Future&lt;WriteResult&gt; writeBlock(List&lt;int&gt; data, int blockNum) {
-  return new Future(() {
-
-    if (data.length != _blockSize) {
-      int lastLength = dataSize%blockSize;
-      if(!(_head.lengthPerBit()-1 == blockNum &amp;&amp; data.length == lastLength)) {
-        throw  {};
-      }
-    }
-    return _data.write(data, blockNum * _blockSize).then((WriteResult result) {
-      _head.setIsOn(blockNum, true);
-      {
-        //
-        //
-        //
-        if(_writePartData.containsKey(blockNum)){
-          _writePartData.remove(blockNum);
-        }
-      }
-      return result;
-    });
-  });
+      <pre><code class="prettyprint lang-dart">/**
+ *
+ */
+Future&lt;WriteResult&gt; writeBlock(List&lt;int&gt; data, int blockNum, {strict: true}) async {
+  return writePartBlock(data, blockNum, 0, data.length, strict: strict);
 }</code></pre>
     </section>
 

@@ -121,18 +121,9 @@
 
     <section class="summary source-code" id="source">
       <h2>Source</h2>
-      <pre><code class="prettyprint lang-dart">async.Future&lt;String&gt; decodeString(hetima.EasyParser parser) {
-  async.Completer&lt;String&gt; completer = new async.Completer();
-  decodeBytes(parser).then((List&lt;int&gt; v) {
-    try {
-      completer.complete(convert.UTF8.decode(v));
-    } catch (e) {
-      completer.completeError(e);
-    }
-  }).catchError((e) {
-    completer.completeError(e);
-  });
-  return completer.future;
+      <pre><code class="prettyprint lang-dart">Future&lt;String&gt; decodeString(hetima.EasyParser parser) async {
+  List&lt;int&gt; v = await decodeBytes(parser);
+  return convert.UTF8.decode(v, allowMalformed: true);
 }</code></pre>
     </section>
 
