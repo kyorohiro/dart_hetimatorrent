@@ -14,13 +14,15 @@ import '../knode.dart';
 class KNodeWorkFindNode {
   List<List> _todoFineNodes = [];
   ShuffleLinkedList<KPeerInfo> _findNodesInfo = new ShuffleLinkedList(20);
-  int _startTime = 0;
-  int get startTime => _startTime;
-  int _intervalTime = 0;
-  int get intervalTime => _intervalTime;
+
+  int _timeFromStart = 0;
+  int get timeFromStart => _timeFromStart;
+
+  int _timeFromUpdateP2PNetwork = 0;
+  int get timeFromUpdateP2PNetwork => _timeFromUpdateP2PNetwork;
 
   start(KNode node) {
-    _intervalTime = _startTime = new DateTime.now().millisecondsSinceEpoch;
+    _timeFromUpdateP2PNetwork = _timeFromStart = new DateTime.now().millisecondsSinceEpoch;
     updateP2PNetwork(node);
   }
 
@@ -36,9 +38,9 @@ class KNodeWorkFindNode {
     int count = 0;
     int currentTime = new DateTime.now().millisecondsSinceEpoch;
     for (KPeerInfo info in infos) {
-      if (currentTime - _startTime > 30000 && count > 2) {
+      if (currentTime - _timeFromStart > 30000 && count > 2) {
         break;
-      } else if (currentTime - _startTime > 5000 && count > 5) {
+      } else if (currentTime - _timeFromStart > 5000 && count > 5) {
         break;
       }
 
@@ -57,9 +59,9 @@ class KNodeWorkFindNode {
     int count = 0;
     int currentTime = new DateTime.now().millisecondsSinceEpoch;
     for (KPeerInfo info in infos) {
-      if (currentTime - _startTime > 30000 && count > 1) {
+      if (currentTime - _timeFromStart > 30000 && count > 1) {
         break;
-      } else if (currentTime - _startTime > 5000 && count > 2) {
+      } else if (currentTime - _timeFromStart > 5000 && count > 2) {
         break;
       }
 
@@ -81,8 +83,8 @@ class KNodeWorkFindNode {
 
   onTicket(KNode node) {
     int currentTime = new DateTime.now().millisecondsSinceEpoch;
-    if (node.intervalSecondForFindNode < (currentTime - _intervalTime) ~/ 1000) {
-      _intervalTime = currentTime;
+    if (node.intervalSecondForFindNode < (currentTime - _timeFromUpdateP2PNetwork) ~/ 1000) {
+      _timeFromUpdateP2PNetwork = currentTime;
       updateP2PNetwork(node);
     } else {
       updateP2PNetworkWithRandom(node);
