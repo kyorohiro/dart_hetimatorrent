@@ -1,7 +1,7 @@
 library hetimatorrent.torrent.hetibencode;
 import 'dart:typed_data' as data;
 import 'dart:convert' as convert;
-import 'dart:async' as async;
+import 'dart:async';
 import 'dart:core';
 import 'package:hetimacore/hetimacore.dart' as hetima;
 import 'package:hetimanet/hetimanet.dart' as hetima;
@@ -9,7 +9,7 @@ import 'package:hetimanet/hetimanet.dart' as hetima;
 class HetiBencode {
   static HetiBdecoder _decoder = new HetiBdecoder();
 
-  static async.Future<Object> decode(hetima.EasyParser parser) {
+  static Future<Object> decode(hetima.EasyParser parser) {
     return _decoder.decode(parser);
   }
 
@@ -19,41 +19,27 @@ class HetiBdecoder {
   static String DIGIT_AS_STRING = "0123456789";
   static List<int> DIGIT = convert.UTF8.encode(DIGIT_AS_STRING);
 
-  async.Future<Object> decode(hetima.EasyParser parser) {
+  Future<Object> decode(hetima.EasyParser parser) {
     return decodeBenObject(parser);
   }
 
-  async.Future<Object> decodeBenObject(hetima.EasyParser parser) {
-    async.Completer completer = new async.Completer();
-    parser.getPeek(1).then((List<int> v) {
-      if (0x69 == v[0]) {
-        // i
-        return decodeNumber(parser).then((int n) {
-          completer.complete(n);
-        });
-      } else if (0x30 <= v[0] && v[0] <= 0x39) {//0-9
-        return decodeBytes(parser).then((List<int> v) {
-          // todo? byte data is data.Uint8List; 
-          completer.complete(new data.Uint8List.fromList(v));
-        });
-      } else if (0x6c == v[0]) {// l
-        return decodeList(parser).then((List<Object> v) {
-          completer.complete(v);
-        });
-      } else if (0x64 == v[0]) {// d
-        return decodeDiction(parser).then((Map dict) {
-          completer.complete(dict);
-        });
-      }
-      throw new HetiBencodeParseError("benobject");
-    }).catchError((e) {
-      completer.completeError(e);
-    });
-    return completer.future;
+  Future<Object> decodeBenObject(hetima.EasyParser parser) async {
+    List<int> v = await parser.getPeek(1);
+    if (0x69 == v[0]) {// i
+      return decodeNumber(parser);
+    } else if (0x30 <= v[0] && v[0] <= 0x39) {//0-9
+      List<int> vv = await decodeBytes(parser);
+      return (vv is data.Uint8List?vv:new data.Uint8List.fromList(vv));
+    } else if (0x6c == v[0]) {// l
+      return decodeList(parser);
+    } else if (0x64 == v[0]) {// d
+      return decodeDiction(parser);
+    }
+    throw new HetiBencodeParseError("benobject");
   }
 
-  async.Future<Map> decodeDiction(hetima.EasyParser parser) {
-    async.Completer<Map> completer = new async.Completer();
+  Future<Map> decodeDiction(hetima.EasyParser parser) {
+    Completer<Map> completer = new Completer();
     Map ret = {};
     parser.nextString("d").then((String v) {
       return decodeDictionElements(parser);
@@ -69,10 +55,10 @@ class HetiBdecoder {
     return completer.future;
   }
 
-  async.Future<Map> decodeDictionElements(hetima.EasyParser parser) {
-    async.Completer<Map> completer = new async.Completer();
+  Future<Map> decodeDictionElements(hetima.EasyParser parser) {
+    Completer<Map> completer = new Completer();
     Map ret = new Map();
-    async.Future<Object> elem() {
+    Future<Object> elem() {
       String key = "";
       return decodeString(parser).then((String v) {
         key = v;
@@ -96,8 +82,8 @@ class HetiBdecoder {
     return completer.future;
   }
 
-  async.Future<List<Object>> decodeList(hetima.EasyParser parser) {
-    async.Completer<List<Object>> completer = new async.Completer();
+  Future<List<Object>> decodeList(hetima.EasyParser parser) {
+    Completer<List<Object>> completer = new Completer();
     List<Object> ret = [];
     parser.nextString("l").then((String v) {
       return decodeListElement(parser);
@@ -113,11 +99,11 @@ class HetiBdecoder {
     return completer.future;
   }
 
-  async.Future<List<Object>> decodeListElement(hetima.EasyParser parser) {
-    async.Completer<List<Object>> completer = new async.Completer();
+  Future<List<Object>> decodeListElement(hetima.EasyParser parser) {
+    Completer<List<Object>> completer = new Completer();
     List<Object> ret = new List();
 
-    async.Future<Object> elem() {
+    Future<Object> elem() {
       return decodeBenObject(parser).then((Object v) {
         ret.add(v);
         return parser.getPeek(1).then((List<int> v) {
@@ -139,8 +125,8 @@ class HetiBdecoder {
   }
 
 
-  async.Future<int> decodeNumber(hetima.EasyParser parser) {
-    async.Completer<int> completer = new async.Completer();
+  Future<int> decodeNumber(hetima.EasyParser parser) {
+    Completer<int> completer = new Completer();
     int num = 0;
     parser.nextString("i").then((String v) {
       return parser.nextBytePatternByUnmatch(new hetima.EasyParserIncludeMatcher(DIGIT));
@@ -155,8 +141,8 @@ class HetiBdecoder {
     return completer.future;
   }
 
-  async.Future<String> decodeString(hetima.EasyParser parser) {
-    async.Completer<String> completer = new async.Completer();
+  Future<String> decodeString(hetima.EasyParser parser) {
+    Completer<String> completer = new Completer();
     decodeBytes(parser).then((List<int> v) {
       try {
         completer.complete(convert.UTF8.decode(v));
@@ -169,8 +155,8 @@ class HetiBdecoder {
     return completer.future;
   }
 
-  async.Future<List<int>> decodeBytes(hetima.EasyParser parser) {
-    async.Completer<List<int>> completer = new async.Completer();
+  Future<List<int>> decodeBytes(hetima.EasyParser parser) {
+    Completer<List<int>> completer = new Completer();
     int length = 0;
     parser.nextBytePatternByUnmatch(new hetima.EasyParserIncludeMatcher(DIGIT)).then((List<int> lengthList) {
       if (lengthList.length == 0) {
