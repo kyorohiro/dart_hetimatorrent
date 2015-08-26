@@ -8,7 +8,7 @@ import '../message/krpcmessage.dart';
 import '../kpeerinfo.dart';
 import '../knode.dart';
 import 'knodework_findnode.dart';
-import 'knodeiannounce.dart';
+import 'knodework_announce.dart';
 import 'knodework.dart';
 
 class KNodeWorkBasic extends KNodeWork {

@@ -11,7 +11,7 @@ import '../kpeerinfo.dart';
 import '../kgetpeervalue.dart';
 import '../knode.dart';
 import 'knodework.dart';
-import 'knodeiannouncetask.dart';
+import 'knodework_announcetask.dart';
 
 class KNodeWorkAnnounce extends KNodeWork {
   bool _isStart = false;
