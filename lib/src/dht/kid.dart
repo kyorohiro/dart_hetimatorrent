@@ -5,7 +5,7 @@ import 'dart:math';
 import 'package:hetimacore/hetimacore.dart';
 import 'dart:typed_data';
 
-class KId implements Comparable<KId>{
+class KId implements Comparable<KId> {
   List<int> _values = null;
   List<int> get value => new List.from(_values);
   List<int> get rawvalue => _values;
@@ -44,7 +44,7 @@ class KId implements Comparable<KId>{
     return output;
   }
 
-  KId xorToThe(int x, {KId output:null, bool repeat:false}) {
+  KId xorToThe(int x, {KId output: null, bool repeat: false}) {
     if (output == null) {
       output = new KId.zeroClear();
     }
@@ -60,14 +60,14 @@ class KId implements Comparable<KId>{
       int i = x ~/ 8;
       int v = x % 8;
       int d = 0;
-      if(repeat) {
-        for(int j=0;j<=v;j++) {
-          d |= (0x01 << j);      
+      if (repeat) {
+        for (int j = 0; j <= v; j++) {
+          d |= (0x01 << j);
         }
       } else {
         d = (0x01 << v);
       }
-      output._values[19-i] = this._values[19-i] ^ d;
+      output._values[19 - i] = this._values[19 - i] ^ d;
       return output;
     }
   }
@@ -107,9 +107,9 @@ class KId implements Comparable<KId>{
   }
 
   int compareTo(KId other) {
-    if(this == other) {
+    if (this == other) {
       return 0;
-    } else if(this > other) {
+    } else if (this > other) {
       return 1;
     } else {
       return -1;
