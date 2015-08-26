@@ -160,11 +160,14 @@ class BlockData {
       }
 
       if (_head.getIsOn(blockNum) == false) {
-        return new ReadResult(ReadResult.NG, new List.filled(length, 0));
+        
+        // todo throw error
+        return new ReadResult(new List.filled(length, 0));
       }
       return _data.getLength().then((int currentDataLength) {
         if (blockNum * _blockSize + length > currentDataLength) {
-          return new ReadResult(ReadResult.NG, new List.filled(length, 0));
+          // todo throw error
+          return new ReadResult(new List.filled(length, 0));
         } else {
           return _data.read(blockNum * _blockSize, length);
         }

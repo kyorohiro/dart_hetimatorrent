@@ -20,7 +20,7 @@ void main() {
     }).whenComplete(() {
       ticket.fin();
     });
-    builder.appendUint8List(out, 0, out.length);
+    builder.appendIntList(out, 0, out.length);
   }
   {
     hetima.HetiTestTicket ticket = test.test("number e1", 3000);
@@ -79,7 +79,7 @@ void main() {
     }).whenComplete(() {
       ticket.fin();
     });
-    builder.appendUint8List(out, 0, out.length);
+    builder.appendIntList(out, 0, out.length);
   }
   {
     hetima.HetiTestTicket ticket = test.test("string e1", 3000);
@@ -148,7 +148,7 @@ void main() {
     }).whenComplete(() {
       ticket.fin();
     });
-    builder.appendUint8List(out, 0, out.length);
+    builder.appendIntList(out, 0, out.length);
   }
   {
     hetima.HetiTestTicket ticket = test.test("list e1", 3000);
@@ -219,7 +219,7 @@ void main() {
     }).whenComplete(() {
       ticket.fin();
     });
-    builder.appendUint8List(out, 0, out.length);
+    builder.appendIntList(out, 0, out.length);
   }
 
   {

@@ -21,7 +21,7 @@ class ClientModel {
 
   static int clientModeId = 0;
   ClientModel(String key, TorrentFile metadata) {
-    this._seedfile = new HetimaDataFSDebug("${key}.cont", erace: false);
+    this._seedfile = new HetimaDataFS("${key}.cont", erace: false);
     this._torrentfile = new HetimaDataFS("${key}.torrent", erace: true);
     this._bitfieldfile = new HetimaDataFS("${key}.bitfield", erace: false);
     this._metadata = metadata;

@@ -55,23 +55,18 @@ void main() {
       BlockData blockData = new BlockData(data, head, 5, 21);
       return blockData.readBlock(0).then((ReadResult result) {
         unit.expect(result.buffer, [0, 0, 0, 0, 0]);
-        unit.expect(result.status, ReadResult.NG);
         return blockData.readBlock(1);
       }).then((ReadResult result) {
         unit.expect(result.buffer, [0, 0, 0, 0, 0]);
-        unit.expect(result.status, ReadResult.NG);
         return blockData.readBlock(2);
       }).then((ReadResult result) {
         unit.expect(result.buffer, [0, 0, 0, 0, 0]);
-        unit.expect(result.status, ReadResult.NG);
         return blockData.readBlock(3);
       }).then((ReadResult result) {
         unit.expect(result.buffer, [0, 0, 0, 0, 0]);
-        unit.expect(result.status, ReadResult.NG);
         return blockData.readBlock(4);
       }).then((ReadResult result) {
         unit.expect(result.buffer, [0]);
-        unit.expect(result.status, ReadResult.NG);
       });
     });
     unit.test("test one bit", () {
@@ -80,11 +75,9 @@ void main() {
       BlockData blockData = new BlockData(data, head, 5, 21);
       return blockData.readBlock(0).then((ReadResult result) {
         unit.expect(result.buffer, [0, 0, 0, 0, 0]);
-        unit.expect(result.status, ReadResult.NG);
         return blockData.readBlock(4);
       }).then((ReadResult result) {
         unit.expect(result.buffer, [0]);
-        unit.expect(result.status, ReadResult.NG);
       });
     });
     unit.test("test one byte true", () {
@@ -93,11 +86,9 @@ void main() {
       BlockData blockData = new BlockData(data, head, 5, 21);
       return blockData.readBlock(0).then((ReadResult result) {
         unit.expect(result.buffer, [0, 1, 2, 3, 4]);
-        unit.expect(result.status, ReadResult.OK);
         return blockData.readBlock(4);
       }).then((ReadResult result) {
         unit.expect(result.buffer, [0]);
-        unit.expect(result.status, ReadResult.NG);
       });
     });
     unit.test("test one byte false", () {
@@ -106,11 +97,9 @@ void main() {
       BlockData blockData = new BlockData(data, head, 5, 21);
       return blockData.readBlock(0).then((ReadResult result) {
         unit.expect(result.buffer, [0, 0, 0, 0, 0]);
-        unit.expect(result.status, ReadResult.NG);
         return blockData.readBlock(4);
       }).then((ReadResult result) {
         unit.expect(result.buffer, [0]);
-        unit.expect(result.status, ReadResult.NG);
       });
     });
   });
