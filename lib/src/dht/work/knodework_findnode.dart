@@ -1,7 +1,6 @@
 library hetimatorrent.dht.knodeai.findnode;
 
 import 'dart:core';
-import 'dart:async';
 import 'package:hetimanet/hetimanet.dart';
 
 import '../kid.dart';
@@ -9,7 +8,6 @@ import '../../util/shufflelinkedlist.dart';
 
 import '../message/krpcmessage.dart';
 import '../message/krpcmessage_findnode.dart';
-import '../message/krpcmessage_announce.dart';
 import '../kpeerinfo.dart';
 import '../knode.dart';
 

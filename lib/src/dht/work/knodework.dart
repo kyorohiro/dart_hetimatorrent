@@ -2,10 +2,8 @@ library hetimatorrent.dht.knodeai;
 
 import 'dart:core';
 import 'dart:async';
-import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimanet/hetimanet.dart';
 import '../kid.dart';
-import 'dart:convert';
 
 import '../message/krpcmessage.dart';
 import '../knode.dart';

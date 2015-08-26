@@ -6,8 +6,6 @@ import 'package:hetimanet/hetimanet.dart';
 import '../kid.dart';
 import '../krootingtable.dart';
 
-import '../../util/shufflelinkedlist.dart';
-
 import '../message/krpcmessage.dart';
 import '../message/krpcmessage_getpeers.dart';
 import '../kpeerinfo.dart';
