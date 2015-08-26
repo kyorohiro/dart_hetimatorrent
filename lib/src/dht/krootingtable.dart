@@ -34,24 +34,6 @@ class KRootingTable {
     _kBuckets[getRootingTabkeIndex(info.id)].add(info);
   }
 
-  String toInfo() {
-    StringBuffer buffer = new StringBuffer();
-    buffer.write("${ownerKId.toString()}\n");
-    for (int j = 0; j < _kBuckets.length; j++) {
-      int bucketLength = _kBuckets[j].length;
-      if (bucketLength == 0) {
-        continue;
-      }
-      buffer.write("[${j}] len:${bucketLength}:## ");
-      for (int i = 0; i < bucketLength; i++) {
-        buffer.write(_kBuckets[j][i].toString());
-        buffer.write("(^_^)");
-      }
-      buffer.write("\n");
-    }
-    return buffer.toString();
-  }
-
   Future<List<KPeerInfo>> findNode(KId id) {
     List<KPeerInfo> ids = [];
     for (KBucket b in _kBuckets) {
@@ -72,6 +54,24 @@ class KRootingTable {
       }
       return ret;
     });
+  }
+
+  String toInfo() {
+    StringBuffer buffer = new StringBuffer();
+    buffer.write("${ownerKId.toString()}\n");
+    for (int j = 0; j < _kBuckets.length; j++) {
+      int bucketLength = _kBuckets[j].length;
+      if (bucketLength == 0) {
+        continue;
+      }
+      buffer.write("[${j}] len:${bucketLength}:## ");
+      for (int i = 0; i < bucketLength; i++) {
+        buffer.write(_kBuckets[j][i].toString());
+        buffer.write("(^_^)");
+      }
+      buffer.write("\n");
+    }
+    return buffer.toString();
   }
 
 }
