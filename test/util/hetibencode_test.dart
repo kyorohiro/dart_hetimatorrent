@@ -138,58 +138,46 @@ void main() {
     builder.appendIntList(out, 0, out.length);
     return e;
   });
-   /*
-  {
-    hetima.HetiTestTicket ticket = test.test("list e1", 3000);
-
+  unit.test("list e1", (){
     hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
     hetima.EasyParser parser = new hetima.EasyParser(builder);
     hetima.HetiBdecoder decoder = new hetima.HetiBdecoder();
     decoder.decodeList(parser).then((List<Object> o) {
-      ticket.assertTrue("v1", false);
+      unit.expect(true, false);
     }).catchError((e) {
-      ticket.assertTrue("v1", true);
-    }).whenComplete(() {
-      ticket.fin();
+      unit.expect(true, true);
     });
     builder.appendString("l4:testi1024e");
     builder.fin();
-  }
-  {
-    hetima.HetiTestTicket ticket = test.test("list e2", 3000);
+  });
 
+  unit.test("list e2", (){
     hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
     hetima.EasyParser parser = new hetima.EasyParser(builder);
     hetima.HetiBdecoder decoder = new hetima.HetiBdecoder();
     decoder.decodeList(parser).then((List<Object> o) {
-      ticket.assertTrue("v1", false);
+      unit.expect(true, false);
     }).catchError((e) {
-      ticket.assertTrue("v1", true);
-    }).whenComplete(() {
-      ticket.fin();
+      unit.expect(true, true);
     });
     builder.appendString("l4:test;1024ee");
     builder.fin();
-  }
+  });
 
-  {
-    hetima.HetiTestTicket ticket = test.test("list e3", 3000);
-
+  unit.test("list e3", (){
     hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
     hetima.EasyParser parser = new hetima.EasyParser(builder);
     hetima.HetiBdecoder decoder = new hetima.HetiBdecoder();
     decoder.decodeList(parser).then((List<Object> o) {
-      ticket.assertTrue("v1", false);
+      unit.expect(true, false);
     }).catchError((e) {
-      ticket.assertTrue("v1", true);
-    }).whenComplete(() {
-      ticket.fin();
+      unit.expect(true, true);
     });
     builder.appendString("f4:testi1024ee");
     builder.fin();
-  }
-  {
-    hetima.HetiTestTicket ticket = test.test("dictionary", 3000);
+  });
+
+  unit.test("dictionary", (){
 
     Map<String, Object> m = new Map();
     m["test"] = "test";
@@ -200,66 +188,53 @@ void main() {
     hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
     hetima.EasyParser parser = new hetima.EasyParser(builder);
     hetima.HetiBdecoder decoder = new hetima.HetiBdecoder();
-    decoder.decodeDiction(parser).then((Map dict) {
-      ticket.assertTrue("" + dict["test"].toString(), convert.UTF8.decode(dict["test"]) == "test");
-      ticket.assertTrue("" + dict["value"].toString(), dict["value"] == 1024);
-    }).catchError((e) {
-
-    }).whenComplete(() {
-      ticket.fin();
+    Future e = decoder.decodeDiction(parser).then((Map dict) {
+      unit.expect(convert.UTF8.decode(dict["test"]),"test");
+      unit.expect(dict["value"],1024);
     });
     builder.appendIntList(out, 0, out.length);
-  }
+    return e;
+  });
 
-  {
-    hetima.HetiTestTicket ticket = test.test("dictionary e1", 3000);
+  unit.test("dictionary e1", (){
     hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
     hetima.EasyParser parser = new hetima.EasyParser(builder);
     hetima.HetiBdecoder decoder = new hetima.HetiBdecoder();
-    decoder.decodeDiction(parser).then((Map dict) {
-      ticket.assertTrue("" + dict["test"].toString(), convert.UTF8.decode(dict["test"]) == "test");
-      ticket.assertTrue("" + dict["value"].toString(), dict["value"] == 1024);
+    Future e = decoder.decodeDiction(parser).then((Map dict) {
+      unit.expect(true, false);
     }).catchError((e) {
-      ticket.assertTrue("v1", true);
-    }).whenComplete(() {
-      ticket.fin();
+      unit.expect(true, true);
     });
     builder.appendString("d4:test4:test5:valuei1024e");
     builder.fin();
-  }
+    return e;
+  });
 
-  {
-    hetima.HetiTestTicket ticket = test.test("dictionary e2", 3000);
+  unit.test("dictionary e2", (){
     hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
     hetima.EasyParser parser = new hetima.EasyParser(builder);
     hetima.HetiBdecoder decoder = new hetima.HetiBdecoder();
-    decoder.decodeDiction(parser).then((Map dict) {
-      ticket.assertTrue("" + dict["test"].toString(), convert.UTF8.decode(dict["test"]) == "test");
-      ticket.assertTrue("" + dict["value"].toString(), dict["value"] == 1024);
+    Future e = decoder.decodeDiction(parser).then((Map dict) {
+      unit.expect(true, false);
     }).catchError((e) {
-      ticket.assertTrue("v1", true);
-    }).whenComplete(() {
-      ticket.fin();
+      unit.expect(true, true);
     });
     builder.appendString("d4:test4:test5:value1024ee");
     builder.fin();
-  }
+    return e;
+  });
 
-  {
-    hetima.HetiTestTicket ticket = test.test("dictionary e3", 3000);
+  unit.test("dictionary e3", (){
     hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
     hetima.EasyParser parser = new hetima.EasyParser(builder);
     hetima.HetiBdecoder decoder = new hetima.HetiBdecoder();
-    decoder.decodeDiction(parser).then((Map dict) {
-      ticket.assertTrue("" + dict["test"].toString(), convert.UTF8.decode(dict["test"]) == "test");
-      ticket.assertTrue("" + dict["value"].toString(), dict["value"] == 1024);
+    Future e = decoder.decodeDiction(parser).then((Map dict) {
+      unit.expect(true, false);
     }).catchError((e) {
-      ticket.assertTrue("v1", true);
-    }).whenComplete(() {
-      ticket.fin();
+      unit.expect(true, true);
     });
     builder.appendString("gg4:test4:test5:value1024ee");
     builder.fin();
-  }
-  */
+    return e;
+  });
 }
