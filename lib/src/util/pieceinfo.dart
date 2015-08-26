@@ -1,22 +1,22 @@
 library hetimatorrent.torrent.pieceinfo;
 import 'dart:core';
 
-class PieceInfo {
+class PieceInfoItem {
   int start = 0;
   int end = 0;
-  PieceInfo(int start, int end) {
+  PieceInfoItem(int start, int end) {
     this.start = start;
     this.end = end;
   }
 }
 
 
-class PieceInfoList {
-  List<PieceInfo> mInfo = new List<PieceInfo>();
+class PieceInfo {
+  List<PieceInfoItem> mInfo = new List<PieceInfoItem>();
 
   List<int> getFreeSpace(int size) {
     int begin = 0;
-    for(PieceInfo info in mInfo) {
+    for(PieceInfoItem info in mInfo) {
       if(info.start > begin && begin != info.start) {
         return [begin, info.start];
       } else {
@@ -30,12 +30,12 @@ class PieceInfoList {
     return mInfo.length;
   }
 
-  PieceInfo getPieceInfo(int index) {
+  PieceInfoItem getPieceInfo(int index) {
     return mInfo[index];
   }
 
   void append(int start, int end) {
-    mInfo.add(new PieceInfo(start, end));
+    mInfo.add(new PieceInfoItem(start, end));
     normalize();
   }
 
@@ -92,7 +92,7 @@ class PieceInfoList {
   }
 
   void sort() {
-    mInfo.sort((PieceInfo a, PieceInfo b) {
+    mInfo.sort((PieceInfoItem a, PieceInfoItem b) {
       return a.start - b.start;
     });
   }
@@ -100,8 +100,8 @@ class PieceInfoList {
   void normalize() {
     sort();
     for(int i=0;i<mInfo.length-1;) {
-      PieceInfo bef = mInfo[i];
-      PieceInfo aft = mInfo[i+1];
+      PieceInfoItem bef = mInfo[i];
+      PieceInfoItem aft = mInfo[i+1];
       if(bef.end >= aft.start) {
         int end = bef.end;
         if(end<aft.end) {

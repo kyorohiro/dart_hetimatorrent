@@ -16,7 +16,7 @@ class BlockData {
   HetimaData _data;
   int _blockSize;
   int _dataSize;
-  Map<int, PieceInfoList> _writePartData = {};
+  Map<int, PieceInfo> _writePartData = {};
   Bitfield _cacheHead = null;
 
   /**
@@ -71,7 +71,7 @@ class BlockData {
 
   List<int> pieceInfoBlockNums() => new List.from(_writePartData.keys);
 
-  PieceInfoList getPieceInfo(int blockNum) => _writePartData[blockNum];
+  PieceInfo getPieceInfo(int blockNum) => _writePartData[blockNum];
 
   /**
    * 
@@ -94,11 +94,11 @@ class BlockData {
     WriteResult result = await _data.write(data.sublist(0, length), blockNum * _blockSize + begin);
     //
     //
-    PieceInfoList infoList = null;
+    PieceInfo infoList = null;
     if (_writePartData.containsKey(blockNum)) {
       infoList = _writePartData[blockNum];
     } else {
-      infoList = new PieceInfoList();
+      infoList = new PieceInfo();
       _writePartData[blockNum] = infoList;
     }
     infoList.append(begin, begin + length);
@@ -151,7 +151,7 @@ class BlockData {
    * 
    */
   List<int> getNextBlockPart(int targetBit, int downloadPieceLength) {
-    PieceInfoList pieceInfo = getPieceInfo(targetBit);
+    PieceInfo pieceInfo = getPieceInfo(targetBit);
     int begin = 0;
     int end = 0;
     if (pieceInfo == null) {

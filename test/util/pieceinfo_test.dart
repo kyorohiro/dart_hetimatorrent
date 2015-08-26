@@ -6,7 +6,7 @@ import 'package:hetimatorrent/hetimatorrent.dart';
 void main() {
   unit.group('A group of tests', () {
     unit.test("pieceinfo: 0-1", () {
-      PieceInfoList infoList = new PieceInfoList();
+      PieceInfo infoList = new PieceInfo();
       infoList.append(0, 1);
       unit.expect(infoList.size(),1);
       unit.expect(infoList.getPieceInfo(0).start,0);
@@ -14,7 +14,7 @@ void main() {
     });
     
     unit.test("pieceinfo: 100-200", () {
-      PieceInfoList infoList = new PieceInfoList();
+      PieceInfo infoList = new PieceInfo();
       infoList.append(100, 200);
       unit.expect(infoList.size(),1);
       unit.expect(infoList.getPieceInfo(0).start,100);
@@ -22,7 +22,7 @@ void main() {
     });
 
     unit.test("pieceinfo: 100-200,201-300", () {
-      PieceInfoList infoList = new PieceInfoList();
+      PieceInfo infoList = new PieceInfo();
       infoList.append(100, 200);
       infoList.append(201, 300);
       unit.expect(infoList.size(),2);
@@ -33,7 +33,7 @@ void main() {
     });
     
     unit.test("pieceinfo: 100-200,200-300", () {
-      PieceInfoList infoList = new PieceInfoList();
+      PieceInfo infoList = new PieceInfo();
       infoList.append(100, 200);
       infoList.append(200, 300);
       unit.expect(infoList.size(),1);
@@ -42,7 +42,7 @@ void main() {
     });
 
     unit.test("pieceinfo: 100-200,201-300, 150-250", () {
-      PieceInfoList infoList = new PieceInfoList();
+      PieceInfo infoList = new PieceInfo();
       infoList.append(100, 200);
       infoList.append(201, 300);
       infoList.append(150, 250);
@@ -52,7 +52,7 @@ void main() {
     });
     
     unit.test("pieceinfo: 100-200,201-300, 0-500", () {
-      PieceInfoList infoList = new PieceInfoList();
+      PieceInfo infoList = new PieceInfo();
       infoList.append(100, 200);
       infoList.append(201, 300);
       infoList.append(0, 500);
@@ -62,7 +62,7 @@ void main() {
     });
     
     unit.test("pieceinfo: 100-200,150-180, 180-199", () {
-      PieceInfoList infoList = new PieceInfoList();
+      PieceInfo infoList = new PieceInfo();
       infoList.append(100, 200);
       infoList.append(150, 180);
       infoList.append(180, 199);
