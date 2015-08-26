@@ -5,7 +5,8 @@ import 'package:hetimanet/hetimanet.dart';
 import '../kid.dart';
 
 import '../message/krpcmessage.dart';
-import '../message/krpcmessage_builder.dart';
+import '../message/krpcmessage_announce.dart';
+import '../message/krpcmessage_getpeers.dart';
 import '../kpeerinfo.dart';
 import '../kgetpeervalue.dart';
 import '../knode.dart';

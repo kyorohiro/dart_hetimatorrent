@@ -8,7 +8,8 @@ import '../kid.dart';
 import '../../util/shufflelinkedlist.dart';
 
 import '../message/krpcmessage.dart';
-import '../message/krpcmessage_builder.dart';
+import '../message/krpcmessage_findnode.dart';
+import '../message/krpcmessage_announce.dart';
 import '../kpeerinfo.dart';
 import '../knode.dart';
 
