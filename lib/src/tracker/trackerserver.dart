@@ -62,89 +62,76 @@ class TrackerServer {
     }
   }
 
-  async.Future addTorrentFile(TorrentFile f) {
-    return f.createInfoSha1().then((List<int> infoHash) {
-      bool isManaged = false;
+  async.Future addTorrentFile(TorrentFile f) async {
+    List<int> infoHash = await f.createInfoSha1();
+    bool isManaged = false;
 
-      for (TrackerPeerManager m in _peerManagerList) {
-        if (m.isManagedInfoHash(infoHash)) {
-          isManaged = true;
-        }
+    for (TrackerPeerManager m in _peerManagerList) {
+      if (m.isManagedInfoHash(infoHash)) {
+        isManaged = true;
       }
+    }
 
-      if (isManaged == true) {
-        if (outputLog) {
-          print("TrackerServer#add:###non: ${infoHash}");
-        }
-        return;
-      }
-
-      TrackerPeerManager peerManager = new TrackerPeerManager(infoHash, f);
-      _peerManagerList.add(peerManager);
+    if (isManaged == true) {
       if (outputLog) {
-        print("TrackerServer#add:###add: ${infoHash}");
+        print("TrackerServer#add:###non: ${infoHash}");
       }
-    });
+      return;
+    }
+
+    TrackerPeerManager peerManager = new TrackerPeerManager(infoHash, f);
+    _peerManagerList.add(peerManager);
+    if (outputLog) {
+      print("TrackerServer#add:###add: ${infoHash}");
+    }
   }
 
-  async.Future addInfoHash(List<int> infoHash) {
-    return new async.Future(() {
-      bool isManaged = false;
+  async.Future addInfoHash(List<int> infoHash) async {
+    bool isManaged = false;
 
-      for (TrackerPeerManager m in _peerManagerList) {
-        if (m.isManagedInfoHash(infoHash)) {
-          isManaged = true;
-        }
+    for (TrackerPeerManager m in _peerManagerList) {
+      if (m.isManagedInfoHash(infoHash)) {
+        isManaged = true;
       }
+    }
 
-      if (isManaged == true) {
-        if (outputLog) {
-          print("TrackerServer#add:###non: ${infoHash}");
-        }
-        return;
-      }
-
-      // todo
-      TrackerPeerManager peerManager = new TrackerPeerManager(infoHash, null);
-      _peerManagerList.add(peerManager);
+    if (isManaged == true) {
       if (outputLog) {
-        print("TrackerServer#add:###add: ${infoHash}");
+        print("TrackerServer#add:###non: ${infoHash}");
       }
-    });
+      return;
+    }
+
+    // todo
+    TrackerPeerManager peerManager = new TrackerPeerManager(infoHash, null);
+    _peerManagerList.add(peerManager);
+    if (outputLog) {
+      print("TrackerServer#add:###add: ${infoHash}");
+    }
   }
 
   async.StreamSubscription res = null;
-  async.Future<StartResult> start() {
+  async.Future<StartResult> start() async {
     if (outputLog) {
       print("TrackerServer#start");
     }
-    async.Completer<StartResult> c = new async.Completer();
     _server.basePort = port;
     _server.numOfRetry = 0;
-
-    _server.startServer().then((HetiHttpStartServerResult re) {
-      _isStart = true;
-      c.complete(new StartResult());
-    }).catchError((e) {
-      _isStart = false;
-      c.completeError(e);
-    });
     if (res == null) {
       res = _server.onResponse.listen(onListen);
     }
-
-    return c.future;
+    await _server.startServer();
+    _isStart = true;
+    return new StartResult();
   }
 
-  async.Future<StopResult> stop() {
+  async.Future<StopResult> stop() async {
     if (outputLog) {
       print("TrackerServer#stop");
     }
-    async.Completer<StopResult> c = new async.Completer();
     _server.stopServer();
     _isStart = false;
-    c.complete(new StopResult());
-    return c.future;
+    return new StopResult();
   }
 
   void onListen(HetiHttpServerPlusResponseItem item) {
