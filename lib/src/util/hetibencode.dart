@@ -85,7 +85,7 @@ class HetiBdecoder {
     return ret;
   }
 
-  Future<List<Object>> decodeListElement(hetima.EasyParser parser) {
+  Future<List<Object>> decodeListElement(hetima.EasyParser parser) async {
     Completer<List<Object>> completer = new Completer();
     List<Object> ret = new List();
 
@@ -112,10 +112,9 @@ class HetiBdecoder {
   }
 
   Future<int> decodeNumber(hetima.EasyParser parser) async {
-    int num = 0;
     await parser.nextString("i");
     List<int> numList = await parser.nextBytePatternByUnmatch(new hetima.EasyParserIncludeMatcher(DIGIT));
-    num = intList2int(numList);
+    int num = intList2int(numList);
     await parser.nextString("e");
     return num;
   }
@@ -126,12 +125,11 @@ class HetiBdecoder {
   }
 
   Future<List<int>> decodeBytes(hetima.EasyParser parser) async {
-    int length = 0;
     List<int> lengthList = await parser.nextBytePatternByUnmatch(new hetima.EasyParserIncludeMatcher(DIGIT));
     if (lengthList.length == 0) {
       throw new HetiBencodeParseError("byte:length=0");
     }
-    length = intList2int(lengthList);
+    int length = intList2int(lengthList);
     await parser.nextString(":");
     List<int> value = await parser.nextBuffer(length);
     if (value.length == length) {
