@@ -3,7 +3,7 @@ library hetimatorrent.dht.getpeervalue;
 import 'dart:core';
 import 'package:hetimanet/hetimanet.dart';
 import 'package:hetimacore/hetimacore.dart';
-import '../kid.dart';
+import 'kid.dart';
 import 'dart:typed_data';
 
 class KGetPeerValue {

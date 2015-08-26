@@ -5,7 +5,7 @@ import 'dart:convert';
 import '../kid.dart';
 import 'dart:typed_data';
 import '../kpeerinfo.dart';
-import 'kgetpeervalue.dart';
+import '../kgetpeervalue.dart';
 import 'krpcmessage.dart';
 
 

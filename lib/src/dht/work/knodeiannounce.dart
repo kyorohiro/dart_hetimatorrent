@@ -7,7 +7,7 @@ import '../kid.dart';
 import '../message/krpcmessage.dart';
 import '../message/krpcmessage_builder.dart';
 import '../kpeerinfo.dart';
-import '../message/kgetpeervalue.dart';
+import '../kgetpeervalue.dart';
 import '../knode.dart';
 import 'knodework.dart';
 import 'knodeiannouncetask.dart';

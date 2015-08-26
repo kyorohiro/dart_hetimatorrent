@@ -3,8 +3,7 @@ library hetimatorrent.dht.kpeerinfo.getpeerinfo;
 import 'dart:core';
 import 'package:hetimanet/hetimanet.dart';
 import 'package:hetimacore/hetimacore.dart';
-import '../kid.dart';
-
+import 'kid.dart';
 
 class KGetPeerNodes {
   int _port = 0;
@@ -77,7 +76,7 @@ class KGetPeerNodes {
     if (this._port != p._port) {
       return false;
     }
-    
+
     if (this._infoHash != p._infoHash) {
       return false;
     }
@@ -86,19 +85,19 @@ class KGetPeerNodes {
     }
     return true;
   }
-  
+
   static List<KGetPeerNodes> extract(List<KGetPeerNodes> vs, bool filter(KGetPeerNodes a)) {
     List<KGetPeerNodes> ret = [];
-    for(KGetPeerNodes v in vs) {
-      if(filter(v) == true) { 
+    for (KGetPeerNodes v in vs) {
+      if (filter(v) == true) {
         ret.add(v);
       }
     }
     return ret;
   }
   static bool contain(List<KGetPeerNodes> vs, bool filter(KGetPeerNodes a)) {
-    for(KGetPeerNodes v in vs) {
-      if(filter(v) == true) { 
+    for (KGetPeerNodes v in vs) {
+      if (filter(v) == true) {
         return true;
       }
     }

@@ -11,7 +11,7 @@ import '../util/shufflelinkedlist.dart';
 import 'message/krpcmessage.dart';
 import 'message/krpcmessage_builder.dart';
 import 'kpeerinfo.dart';
-import 'message/kgetpeervalue.dart';
+import 'kgetpeervalue.dart';
 import 'work/knodework.dart';
 import 'work/knodework_basic.dart';
 
