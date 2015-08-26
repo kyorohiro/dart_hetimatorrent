@@ -84,15 +84,17 @@ class KNodeWorkFindNode {
     _todoFineNodes.clear();
   }
 
-  onReceiveQuery(KNode node, HetimaReceiveUdpInfo info, KrpcMessage query) {
+  onReceiveQuery(KNode node, HetimaReceiveUdpInfo info, KrpcMessage query) async {
     if (query.queryAsString == KrpcMessage.QUERY_FIND_NODE) {
       KrpcFindNode findNode = query.toFindNode();
-      return node.rootingtable.findNode(findNode.targetAsKId).then((List<KPeerInfo> infos) {
-        return node.sendFindNodeResponse(info.remoteAddress, info.remotePort, query.transactionId, KPeerInfo.toCompactNodeInfos(infos)).catchError((_) {});
-      });
+      List<KPeerInfo> infos = await node.rootingtable.findNode(findNode.targetAsKId);
+      return node
+          .sendFindNodeResponse(info.remoteAddress, info.remotePort, query.transactionId, KPeerInfo.toCompactNodeInfos(infos))
+          .catchError((_) {});
+    } else {
+      node.rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, query.nodeIdAsKId));
+      updateP2PNetworkWithoutClear(node);
     }
-    node.rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, query.nodeIdAsKId));
-    updateP2PNetworkWithoutClear(node);
   }
 
   onReceiveResponse(KNode node, HetimaReceiveUdpInfo info, KrpcMessage response) {
