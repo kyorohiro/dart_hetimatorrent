@@ -4,13 +4,13 @@ import 'dart:core';
 import 'dart:math';
 import 'bitfield.dart';
 
-class DDBitfield extends BitfieldInter {
+class BitfieldPlus extends BitfieldInter {
   Bitfield innerField = null;
 
   List<int> _shuffleList = [0, 1, 2, 3, 4, 5, 6, 7];
   Random _rand = null;
 
-  DDBitfield(Bitfield bitfield,{int seed: null}) {
+  BitfieldPlus(Bitfield bitfield,{int seed: null}) {
     innerField = bitfield;
     if (seed == null) {
       _rand = new Random();

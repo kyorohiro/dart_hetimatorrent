@@ -7,21 +7,47 @@ import 'package:hetimacore/hetimacore.dart';
 import 'bitfield.dart';
 import 'pieceinfo.dart';
 
+/**
+ * 
+ * 
+ */
 class BlockData {
   Bitfield _head;
   HetimaData _data;
   int _blockSize;
   int _dataSize;
-
-  int get blockSize => _blockSize;
-  int get dataSize => _dataSize;
-
-  List<int> get bitfield => _head.value;
-  int get bitSize => _head.lengthPerBit();
   Map<int, PieceInfoList> _writePartData = {};
-  Bitfield get rawHead => _head;
   Bitfield _cacheHead = null;
 
+  /**
+   * 
+   */
+  int get blockSize => _blockSize;
+
+  /**
+   * 
+   */
+  int get dataSize => _dataSize;
+
+  /**
+   * 
+   */
+  List<int> get bitfield => _head.value;
+
+  /**
+   * 
+   */
+  int get bitSize => _head.lengthPerBit();
+
+  /**
+   *
+   */
+  Bitfield get rawHead => _head;
+
+
+  /**
+   * create BlockData
+   */
   BlockData(HetimaData data, Bitfield head, int blockSize, int dataSize) {
     if (dataSize == null) {
       _dataSize = head.lengthPerBit() * blockSize;

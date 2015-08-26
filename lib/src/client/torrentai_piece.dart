@@ -4,16 +4,16 @@ import 'dart:core';
 import 'torrentclient.dart';
 import 'torrentclientfront.dart';
 import '../util/bitfield.dart';
-import '../util/ddbitfield.dart';
+import '../util/bitfield_plus.dart';
 
 class TorrentAIPieceTest {
 
-  DDBitfield rand = null;
+  BitfieldPlus rand = null;
   List<int> requestedBit = [];
   int downloadPieceLength=16*1024;
 
   TorrentAIPieceTest(TorrentClient client) {
-    rand = new DDBitfield(client.targetBlock.rawHead);
+    rand = new BitfieldPlus(client.targetBlock.rawHead);
     if(downloadPieceLength > client.targetBlock.blockSize) {
       downloadPieceLength =  client.targetBlock.blockSize;
     }
