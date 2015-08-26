@@ -13,10 +13,10 @@ import '../knode.dart';
 import 'knodework.dart';
 import 'knodeiannouncetask.dart';
 
-class KNodeAIAnnounce extends KNodeWork {
+class KNodeWorkAnnounce extends KNodeWork {
   bool _isStart = false;
   bool get isStart => _isStart;
-  Map<KId, KNodeAIAnnounceTask> taskList = {};
+  Map<KId, KNodeWorkAnnounceTask> taskList = {};
 
   start(KNode node) {
     _isStart = true;
@@ -32,7 +32,7 @@ class KNodeAIAnnounce extends KNodeWork {
   startSearchValue(KNode node, KId infoHash, int port, {getPeerOnly:false}) {
     if (infoHash != null) {
       if (false == taskList.containsKey(infoHash)) {
-        taskList[infoHash] = new KNodeAIAnnounceTask(infoHash, port);
+        taskList[infoHash] = new KNodeWorkAnnounceTask(infoHash, port);
       }
       taskList[infoHash].port = port;
     }
@@ -41,7 +41,7 @@ class KNodeAIAnnounce extends KNodeWork {
 
   researchSearchPeer(KNode node, KId infoHash,{getPeerOnly:false}) {
     if (infoHash == null) {
-      for(KNodeAIAnnounceTask t in taskList.values) {
+      for(KNodeWorkAnnounceTask t in taskList.values) {
         if(t != null && t.isStart == true) { 
           t.startSearchPeer(node, infoHash, getPeerOnly:getPeerOnly);
         }
@@ -60,7 +60,7 @@ class KNodeAIAnnounce extends KNodeWork {
   }
 
   onTicket(KNode node) {
-    for (KNodeAIAnnounceTask t in taskList.values) {
+    for (KNodeWorkAnnounceTask t in taskList.values) {
       if (t.isStart) {
         t.onTicket(node);
       }
@@ -69,7 +69,7 @@ class KNodeAIAnnounce extends KNodeWork {
 
   onReceiveQuery(KNode node, HetimaReceiveUdpInfo info, KrpcMessage query) {
 
-    for (KNodeAIAnnounceTask t in taskList.values) {
+    for (KNodeWorkAnnounceTask t in taskList.values) {
       if (t.isStart) {
         t.onReceiveQuery(node, info, query);
       }
@@ -124,7 +124,7 @@ class KNodeAIAnnounce extends KNodeWork {
   }
 
   onReceiveResponse(KNode node, HetimaReceiveUdpInfo info, KrpcMessage response) {
-    for (KNodeAIAnnounceTask t in taskList.values) {
+    for (KNodeWorkAnnounceTask t in taskList.values) {
       if (t.isStart) {
         t.onReceiveResponse(node, info, response);
       }

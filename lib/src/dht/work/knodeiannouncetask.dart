@@ -15,7 +15,7 @@ import '../kgetpeernodes.dart';
 
 
 
-class KNodeAIAnnounceTask {
+class KNodeWorkAnnounceTask {
   bool _isStart = false;
 
   KRootingTable _currentClosePeerStack = null;
@@ -30,7 +30,7 @@ class KNodeAIAnnounceTask {
 
   bool _getPeerOnly = false;
   bool get getPeerOnly => _getPeerOnly;
-  KNodeAIAnnounceTask(KId infoHashId, int port) {
+  KNodeWorkAnnounceTask(KId infoHashId, int port) {
     this._infoHashId = infoHashId;
     this.port = port;
     this._currentClosePeerStack = new KRootingTable(4, infoHashId);

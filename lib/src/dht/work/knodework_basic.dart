@@ -11,11 +11,11 @@ import 'knodework_findnode.dart';
 import 'knodeiannounce.dart';
 import 'knodework.dart';
 
-class KNodeAIBasic extends KNodeWork {
+class KNodeWorkBasic extends KNodeWork {
   KNodeWorkFindNode findNodeAI = new KNodeWorkFindNode();
-  KNodeAIAnnounce announceAI = new KNodeAIAnnounce();
+  KNodeWorkAnnounce announceAI = new KNodeWorkAnnounce();
 
-  KNodeAIBasic({bool verbose: false}) {}
+  KNodeWorkBasic({bool verbose: false}) {}
 
   start(KNode node) {
     findNodeAI.start(node);

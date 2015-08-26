@@ -42,7 +42,7 @@ class KNode extends Object {
 
   static int id = 0;
 
-  List<KSendInfo> queryInfo = [];
+  List<KNodeSendInfo> queryInfo = [];
   KNodeWork _ai = null;
   KNodeWork get ai => _ai;
 
@@ -79,7 +79,7 @@ class KNode extends Object {
     this._nodeId = (nodeIdAsList == null ? KId.createIDAtRandom() : new KId(nodeIdAsList));
     this._socketBuilder = socketBuilder;
     this._rootingtable = new KRootingTable(kBucketSize, _nodeId);
-    this._ai = (ai == null ? new KNodeAIBasic(verbose: verbose) : ai);
+    this._ai = (ai == null ? new KNodeWorkBasic(verbose: verbose) : ai);
     this._nodeDebugId = id++;
   }
 
@@ -107,7 +107,7 @@ class KNode extends Object {
       log("--->receive[${nodeDebugId}] ${info.remoteAddress}:${info.remotePort} ${message}");
     }
     if (message.isResonse) {
-      KSendInfo rm = removeQueryNameFromTransactionId(UTF8.decode(message.rawMessageMap["t"]));
+      KNodeSendInfo rm = removeQueryNameFromTransactionId(UTF8.decode(message.rawMessageMap["t"]));
       this._ai.onReceiveResponse(this, info, message);
       if (rm != null && rm.c != null) {
         rm.c.complete(message);
@@ -121,7 +121,7 @@ class KNode extends Object {
     } else {
       this._ai.onReceiveUnknown(this, info, message);
     }
-    for (KSendInfo i in clearTimeout(20000)) {
+    for (KNodeSendInfo i in clearTimeout(20000)) {
       if (i.c != null && i.c.isCompleted == false) {
         i.c.completeError({message: "timeout"});
       }
@@ -173,7 +173,7 @@ class KNode extends Object {
   List<int> getOpaqueWriteToken(KId infoHash, KId nodeID) => KId.createToken(infoHash, nodeID, this.nodeId);
 
   String getQueryNameFromTransactionId(String transactionId) {
-    for (KSendInfo si in queryInfo) {
+    for (KNodeSendInfo si in queryInfo) {
       if (si._id == transactionId) {
         return si._act;
       }
@@ -181,9 +181,9 @@ class KNode extends Object {
     return "";
   }
 
-  KSendInfo removeQueryNameFromTransactionId(String transactionId) {
-    KSendInfo re = null;
-    for (KSendInfo si in queryInfo) {
+  KNodeSendInfo removeQueryNameFromTransactionId(String transactionId) {
+    KNodeSendInfo re = null;
+    for (KNodeSendInfo si in queryInfo) {
       if (si._id == transactionId) {
         re = si;
         break;
@@ -193,15 +193,15 @@ class KNode extends Object {
     return re;
   }
 
-  List<KSendInfo> clearTimeout(int timeout) {
+  List<KNodeSendInfo> clearTimeout(int timeout) {
     int currentTime = new DateTime.now().millisecondsSinceEpoch;
-    List<KSendInfo> ret = [];
-    for (KSendInfo si in queryInfo) {
+    List<KNodeSendInfo> ret = [];
+    for (KNodeSendInfo si in queryInfo) {
       if (currentTime - si._time > timeout) {
         ret.add(si);
       }
     }
-    for (KSendInfo i in ret) {
+    for (KNodeSendInfo i in ret) {
       queryInfo.remove(i);
     }
     return ret;
@@ -239,7 +239,7 @@ class KNode extends Object {
           c.complete({});
           c = null;
         }
-        queryInfo.add(new KSendInfo(message.transactionIdAsString, message.queryAsString, c));
+        queryInfo.add(new KNodeSendInfo(message.transactionIdAsString, message.queryAsString, c));
       } else {
         c.complete({});
       }
@@ -256,7 +256,7 @@ class KNode extends Object {
   }
 }
 
-class KSendInfo {
+class KNodeSendInfo {
   String _id = "";
   String get id => _id;
   String _act = "";
@@ -267,7 +267,7 @@ class KSendInfo {
 
   Completer _c = null;
   Completer get c => _c;
-  KSendInfo(String id, String act, Completer c) {
+  KNodeSendInfo(String id, String act, Completer c) {
     this._id = id;
     this._c = c;
     this._act = act;
