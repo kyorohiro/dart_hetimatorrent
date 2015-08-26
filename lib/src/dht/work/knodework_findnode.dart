@@ -12,19 +12,16 @@ import '../kpeerinfo.dart';
 import '../knode.dart';
 
 class KNodeWorkFindNode {
-  bool _isStart = false;
   List<List> _todoFineNodes = [];
   ShuffleLinkedList<KPeerInfo> _findNodesInfo = new ShuffleLinkedList(20);
   int startTime = 0;
 
   start(KNode node) {
-    _isStart = true;
     startTime = new DateTime.now().millisecondsSinceEpoch;
     updateP2PNetwork(node);
   }
 
   stop(KNode node) {
-    _isStart = false;
   }
 
   updateP2PNetwork(KNode node) {
@@ -34,7 +31,7 @@ class KNodeWorkFindNode {
 
   updateP2PNetworkWithoutClear(KNode node) {
     node.rootingtable.findNode(node.nodeId).then((List<KPeerInfo> infos) {
-      if (_isStart == false) {
+      if (node.isStart== false) {
         return;
       }
       int count = 0;
@@ -57,7 +54,7 @@ class KNodeWorkFindNode {
   }
   updateP2PNetworkWithRandom(KNode node) {
     node.rootingtable.findNode(KId.createIDAtRandom()).then((List<KPeerInfo> infos) {
-      if (_isStart == false) {
+      if (node.isStart== false) {
         return;
       }
       int count = 0;
@@ -96,9 +93,6 @@ class KNodeWorkFindNode {
   }
 
   onReceiveQuery(KNode node, HetimaReceiveUdpInfo info, KrpcMessage query) {
-    if (_isStart == false) {
-      return null;
-    }
     if (query.queryAsString == KrpcMessage.QUERY_FIND_NODE) {
       KrpcFindNode findNode = query.toFindNode();
       return node.rootingtable.findNode(findNode.targetAsKId).then((List<KPeerInfo> infos) {
@@ -110,9 +104,6 @@ class KNodeWorkFindNode {
   }
 
   onReceiveResponse(KNode node, HetimaReceiveUdpInfo info, KrpcMessage response) {
-    if (_isStart == false) {
-      return null;
-    }
     if (response.queryFromTransactionId == KrpcMessage.QUERY_FIND_NODE) {
       KrpcFindNode findNode = response.toFindNode();
       for (KPeerInfo info in findNode.compactNodeInfoAsKPeerInfo) {

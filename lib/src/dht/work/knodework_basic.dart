@@ -12,9 +12,6 @@ import 'knodeiannounce.dart';
 import 'knodework.dart';
 
 class KNodeAIBasic extends KNodeWork {
-  bool _isStart = false;
-  bool get isStart => _isStart;
-
   KNodeWorkFindNode findNodeAI = new KNodeWorkFindNode();
   KNodeAIAnnounce announceAI = new KNodeAIAnnounce();
 
@@ -58,6 +55,9 @@ class KNodeAIBasic extends KNodeWork {
   }
 
   onReceiveQuery(KNode node, HetimaReceiveUdpInfo info, KrpcMessage query) {
+    if (node.isStart  == false) {
+      //return null;
+    }
     node.rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, query.nodeIdAsKId));
     switch (query.queryAsString) {
       case KrpcMessage.QUERY_PING:
@@ -74,16 +74,25 @@ class KNodeAIBasic extends KNodeWork {
   }
 
   onReceiveResponse(KNode node, HetimaReceiveUdpInfo info, KrpcMessage response) {
+    if (node.isStart == false) {
+      //return null;
+    }
     findNodeAI.onReceiveResponse(node, info, response);
     announceAI.onReceiveResponse(node, info, response);
   }
 
   onReceiveError(KNode node, HetimaReceiveUdpInfo info, KrpcMessage message) {
+    if (node.isStart  == false) {
+      //return null;
+    }
     findNodeAI.onReceiveError(node, info, message);
     announceAI.onReceiveError(node, info, message);
   }
 
   onReceiveUnknown(KNode node, HetimaReceiveUdpInfo info, KrpcMessage message) {
+    if (node.isStart  == false) {
+      //return null;
+    }
     findNodeAI.onReceiveUnknown(node, info, message);
     announceAI.onReceiveUnknown(node, info, message);
   }

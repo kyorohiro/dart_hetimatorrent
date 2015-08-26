@@ -9,7 +9,6 @@ import '../message/krpcmessage.dart';
 import '../knode.dart';
 
 abstract class KNodeWork {
-  bool get isStart;
   start(KNode node);
   stop(KNode node);
   updateP2PNetwork(KNode node);
