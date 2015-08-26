@@ -43,9 +43,7 @@ class TrackerUrl {
     path = url.path;
   }
 
-  String toString() {
-    return scheme + "://" + trackerHost + ":" + trackerPort.toString() + "" + path + toHeader();
-  }
+  String toString() => scheme + "://" + trackerHost + ":" + trackerPort.toString() + "" + path + toHeader();
 
   String toHeader() {
     String ret =  
@@ -73,9 +71,8 @@ class TrackerUrl {
     this.port = port;
   }
 
-  static Future<TrackerUrl> createTrackerUrlFromTorrentFile(TorrentFile torrentfile, List<int> peerId) {
-    return torrentfile.createInfoSha1().then((List<int> infoHash) {
-      return new TrackerUrl(torrentfile.announce, infoHash, peerId);
-    });
+  static Future<TrackerUrl> createTrackerUrlFromTorrentFile(TorrentFile torrentfile, List<int> peerId) async {
+    List<int> infoHash = await torrentfile.createInfoSha1();
+    return new TrackerUrl(torrentfile.announce, infoHash, peerId);
   }
 }
