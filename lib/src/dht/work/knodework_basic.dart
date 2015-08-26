@@ -56,7 +56,7 @@ class KNodeWorkBasic extends KNodeWork {
 
   onReceiveQuery(KNode node, HetimaReceiveUdpInfo info, KrpcMessage query) {
     if (node.isStart  == false) {
-      //return null;
+      return null;
     }
     node.rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, query.nodeIdAsKId));
     switch (query.queryAsString) {
@@ -75,7 +75,7 @@ class KNodeWorkBasic extends KNodeWork {
 
   onReceiveResponse(KNode node, HetimaReceiveUdpInfo info, KrpcMessage response) {
     if (node.isStart == false) {
-      //return null;
+      return null;
     }
     findNodeAI.onReceiveResponse(node, info, response);
     announceAI.onReceiveResponse(node, info, response);
@@ -83,7 +83,7 @@ class KNodeWorkBasic extends KNodeWork {
 
   onReceiveError(KNode node, HetimaReceiveUdpInfo info, KrpcMessage message) {
     if (node.isStart  == false) {
-      //return null;
+      return null;
     }
     findNodeAI.onReceiveError(node, info, message);
     announceAI.onReceiveError(node, info, message);
