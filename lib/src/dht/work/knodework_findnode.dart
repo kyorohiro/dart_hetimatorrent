@@ -57,7 +57,7 @@ class KNodeWorkFindNode {
     for (KPeerInfo info in infos) {
       if (currentTime - _startTime > 30000 && count > 1) {
         break;
-      } else if (currentTime - _startTime > 5000 && count > 3) {
+      } else if (currentTime - _startTime > 5000 && count > 2) {
         break;
       }
 
