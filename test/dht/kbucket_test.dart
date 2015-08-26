@@ -45,8 +45,8 @@ void main() {
       kbucket.add(new KPeerInfo("127.0.0.1", 8081, new KId(new List.filled(20, 1))));
 
       unit.expect(kbucket.length, 2);
-      unit.expect(info2, kbucket[1]);
-      unit.expect(info1, kbucket[0]);
+      unit.expect(info1, kbucket[1]);
+      unit.expect(info2, kbucket[0]);
     });
 
     unit.test("update kbucket sort", () {
