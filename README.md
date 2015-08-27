@@ -10,7 +10,7 @@ A Torrent library for Dart developers.  This library is pre-Alpha level now.
 - dht tracker (bep5)
 
 
-[mini sample]
+## [mini sample]
  - torrent client
   - ./example/TorrentClient
  - torrent dht
@@ -22,7 +22,7 @@ A Torrent library for Dart developers.  This library is pre-Alpha level now.
  - torrent file parser
   - ./example/TorrentFileParser
 
-[sample app (large sample)]
+## [sample app (large sample)]
  - hetima torrent client
   ./example/HetimaTorrentClient
   https://chrome.google.com/webstore/detail/hetimatorrentclientpre-al/bepllifcfhpjoijdddiafgmclfhgjnfb
@@ -35,7 +35,9 @@ A Torrent library for Dart developers.  This library is pre-Alpha level now.
   ./example/HetimaTorrentFile
   https://chrome.google.com/webstore/detail/hetimatorrentfilesample/aponagendffongjcpfmloabmbilnapoo
 
-[Scadule]
+
+## [Scadule]
+
   Start coding pre-Beta version
   middle of september
   Hetima Torrent library 's stability will be enhanced. and suppprt ipv6.
