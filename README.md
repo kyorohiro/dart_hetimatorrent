@@ -1,15 +1,13 @@
 # dart_hetimatorrent
 
-A Torrent library for Dart developers. 
+A Torrent library for Dart developers.  This library is pre-Alpha level now.
 
-- tracker server library
-  - http only (Alpha level)
-- tracker client library
-  - http only (Alpha level)
-- torrent client library
-  - now creating (bep3 pre-Alpha level)
-- dht tracker
-  - now creating (bep5 pre-Alpha level)
+- tracker server library (bep003, bep0023)
+  - http only
+- tracker client library (bep003, bep0023)
+  - http only
+- torrent client library (bep003)
+- dht tracker (bep5)
 
 
 [mini sample]
