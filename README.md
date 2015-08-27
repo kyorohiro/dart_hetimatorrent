@@ -8,8 +8,8 @@ A Torrent library for Dart developers.
   - http only (Alpha level)
 - torrent client library
   - now creating (bep3 pre-Alpha level)
-- dht tracker (bep5)
-  - now creating (starting)
+- dht tracker
+  - now creating (bep5 pre-Alpha level)
 
 
 [mini sample]
