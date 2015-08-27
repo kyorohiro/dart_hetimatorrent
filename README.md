@@ -50,7 +50,7 @@ A Torrent library for Dart developers.  This library is pre-Alpha level now.
 - bep032
  
  
-[Bitcoin address for donate]
+## [Bitcoin address for donate]
  16bnm3h16eSduvdYwpCWeuvPapAc5zcvK4
  
 
