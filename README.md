@@ -35,9 +35,23 @@ A Torrent library for Dart developers.  This library is pre-Alpha level now.
   ./example/HetimaTorrentFile
   https://chrome.google.com/webstore/detail/hetimatorrentfilesample/aponagendffongjcpfmloabmbilnapoo
 
+[Scadule]
+  Start coding pre-Beta version
+  middle of september
+  Hetima Torrent library 's stability will be enhanced. and suppprt ipv6.
+ 
+  Hetima Torrent library will following supprt
+- bep003
+- bep005
+- bep007
+- bep023
+- bep032
+ 
+ 
 [Bitcoin address for donate]
  16bnm3h16eSduvdYwpCWeuvPapAc5zcvK4
  
+
  
 
  ----------------------------------- 
