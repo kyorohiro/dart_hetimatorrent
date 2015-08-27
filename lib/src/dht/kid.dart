@@ -1,4 +1,4 @@
-library hetimatorrent.dht.krpcid;
+library hetimatorrent.dht.kid;
 
 import 'dart:core';
 import 'dart:math';

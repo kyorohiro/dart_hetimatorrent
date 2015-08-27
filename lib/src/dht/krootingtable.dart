@@ -1,4 +1,4 @@
-library hetimatorrent.dht.rootingtable;
+library hetimatorrent.dht.krootingtable;
 
 import 'dart:core';
 import 'dart:async';

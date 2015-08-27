@@ -1,4 +1,4 @@
-library hetimatorrent.dht.knodeai.announce;
+library hetimatorrent.dht.work.announce;
 
 import 'dart:core';
 import 'package:hetimanet/hetimanet.dart';

@@ -1,4 +1,4 @@
-library hetimatorrent.dht.knodeai.announcetask;
+library hetimatorrent.dht.work.announcetask;
 
 import 'dart:core';
 import 'dart:async';

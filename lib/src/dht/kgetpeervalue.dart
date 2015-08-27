@@ -1,4 +1,4 @@
-library hetimatorrent.dht.getpeervalue;
+library hetimatorrent.dht.kgetpeervalue;
 
 import 'dart:core';
 import 'package:hetimanet/hetimanet.dart';

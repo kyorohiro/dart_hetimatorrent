@@ -1,4 +1,4 @@
-library hetimatorrent.dht.knodeaibasic;
+library hetimatorrent.dht.work.basic;
 
 import 'dart:core';
 import 'package:hetimanet/hetimanet.dart';

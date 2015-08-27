@@ -1,4 +1,4 @@
-library hetimatorrent.dht.knodeai.findnode;
+library hetimatorrent.dht.work.findnode;
 
 import 'dart:core';
 import 'package:hetimanet/hetimanet.dart';

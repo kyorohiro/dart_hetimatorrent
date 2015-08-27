@@ -1,4 +1,4 @@
-library hetimatorrent.dht.kpeerinfo.getpeerinfo;
+library hetimatorrent.dht.kgetpeerinfo;
 
 import 'dart:core';
 import 'package:hetimanet/hetimanet.dart';
