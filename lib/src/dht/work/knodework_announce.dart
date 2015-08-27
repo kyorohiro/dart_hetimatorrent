@@ -75,7 +75,7 @@ class KNodeWorkAnnounce extends KNodeWork {
       }
     }
     switch (query.queryAsString) {
-      case KrpcMessage.QUERY_ANNOUNCE:
+      case KrpcMessage.MESSAGE_ANNOUNCE:
         {
           KrpcAnnounce announce = query.toAnnounce();
           List<int> opaqueWriteTokenA = node.getOpaqueWriteToken(announce.infoHashAsKId, announce.nodeIdAsKId);
@@ -96,7 +96,7 @@ class KNodeWorkAnnounce extends KNodeWork {
           return node.sendAnnouncePeerResponse(info.remoteAddress, info.remotePort, announce.transactionId).catchError((_){});
         }
         break;
-      case KrpcMessage.QUERY_GET_PEERS:
+      case KrpcMessage.MESSAGE_GET_PEERS:
         {
           KrpcGetPeers getpeers = query.toKrpcGetPeers();
           //print("## receive query");

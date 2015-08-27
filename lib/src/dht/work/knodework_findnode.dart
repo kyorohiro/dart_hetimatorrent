@@ -101,7 +101,7 @@ class KNodeWorkFindNode {
   }
 
   onReceiveQuery(KNode node, HetimaReceiveUdpInfo info, KrpcMessage message) async {
-    if (message.queryAsString == KrpcMessage.QUERY_FIND_NODE) {
+    if (message.queryAsString == KrpcMessage.MESSAGE_FIND_NODE) {
       KrpcFindNode findNode = message.toFindNode();
       List<KPeerInfo> infos = await node.rootingtable.findNode(findNode.targetAsKId);
       await node.sendFindNodeResponse(info.remoteAddress, info.remotePort, message.transactionId, KPeerInfo.toCompactNodeInfos(infos)).catchError((_) {});
@@ -110,7 +110,7 @@ class KNodeWorkFindNode {
   }
 
   onReceiveResponse(KNode node, HetimaReceiveUdpInfo info, KrpcMessage message) {
-    if (message.queryFromTransactionId == KrpcMessage.QUERY_FIND_NODE) {
+    if (message.queryFromTransactionId == KrpcMessage.MESSAGE_FIND_NODE) {
       KrpcFindNode findNode = message.toFindNode();
       for (KPeerInfo info in findNode.compactNodeInfoAsKPeerInfo) {
         node.rootingtable.update(info);

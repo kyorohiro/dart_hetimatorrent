@@ -17,10 +17,10 @@ class KrpcMessage {
   static const int PROTOCOL_ERROR = 203;
   static const int METHOD_ERROR = 204;
   //
-  static const String QUERY_PING = "ping";
-  static const String QUERY_FIND_NODE = "find_node";
-  static const String QUERY_GET_PEERS = "get_peers";
-  static const String QUERY_ANNOUNCE = "announce_peer";
+  static const String MESSAGE_PING = "ping";
+  static const String MESSAGE_FIND_NODE = "find_node";
+  static const String MESSAGE_GET_PEERS = "get_peers";
+  static const String MESSAGE_ANNOUNCE = "announce_peer";
 
   Map<String, Object> _messageAsMap = {};
   Map<String, Object> get messageAsMap => new Map.from(_messageAsMap);
@@ -33,13 +33,13 @@ class KrpcMessage {
 
   String get queryFromTransactionId {
     if (transactionIdAsString.contains("pi")) {
-      return QUERY_PING;
+      return MESSAGE_PING;
     } else if (transactionIdAsString.contains("fi")) {
-      return QUERY_FIND_NODE;
+      return MESSAGE_FIND_NODE;
     } else if (transactionIdAsString.contains("ge")) {
-      return QUERY_GET_PEERS;
+      return MESSAGE_GET_PEERS;
     } else if (transactionIdAsString.contains("an")) {
-      return QUERY_ANNOUNCE;
+      return MESSAGE_ANNOUNCE;
     }
     return "";
   }

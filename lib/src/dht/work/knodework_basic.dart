@@ -60,11 +60,11 @@ class KNodeWorkBasic extends KNodeWork {
     }
     node.rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, query.nodeIdAsKId));
     switch (query.queryAsString) {
-      case KrpcMessage.QUERY_PING:
+      case KrpcMessage.MESSAGE_PING:
         return node.sendPingResponse(info.remoteAddress, info.remotePort, query.transactionId).catchError((_) {});
-      case KrpcMessage.QUERY_FIND_NODE:
-      case KrpcMessage.QUERY_ANNOUNCE:
-      case KrpcMessage.QUERY_GET_PEERS:
+      case KrpcMessage.MESSAGE_FIND_NODE:
+      case KrpcMessage.MESSAGE_ANNOUNCE:
+      case KrpcMessage.MESSAGE_GET_PEERS:
         break;
       default:
         return node.sendErrorResponse(info.remoteAddress, info.remotePort, KrpcMessage.METHOD_ERROR, query.transactionId).catchError((_) {});

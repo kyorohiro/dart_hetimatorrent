@@ -154,7 +154,7 @@ class KNodeWorkAnnounceTask {
         return null;
       }
 
-      if (response.queryFromTransactionId == KrpcMessage.QUERY_GET_PEERS) {
+      if (response.queryFromTransactionId == KrpcMessage.MESSAGE_GET_PEERS) {
      //   print("##===fin ==> ${response.nodeIdAsKId.getRootingTabkeIndex(_infoHashId)}-------------------ZZZZZZZZZZZ");
         KrpcGetPeers getpeers = response.toKrpcGetPeers();
         updateReceveGetPeerInfo(info, getpeers);
