@@ -145,11 +145,11 @@ Future&lt;WriteResult&gt; writePartBlock(List&lt;int&gt; data, int blockNum, int
   WriteResult result = await _data.write(data.sublist(0, length), blockNum * _blockSize + begin);
   //
   //
-  PieceInfoList infoList = null;
+  PieceInfo infoList = null;
   if (_writePartData.containsKey(blockNum)) {
     infoList = _writePartData[blockNum];
   } else {
-    infoList = new PieceInfoList();
+    infoList = new PieceInfo();
     _writePartData[blockNum] = infoList;
   }
   infoList.append(begin, begin + length);

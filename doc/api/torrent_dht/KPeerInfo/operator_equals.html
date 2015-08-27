@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>operator == method - KPeerInfo class - torrent_dht library - Dart API</title>
+    <!-- required because all the links are pseudo-absolute -->
+    <base href="../..">
+
+    <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro|Roboto:500,400italic,300,400' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="static-assets/prettify.css">
+    <link rel="stylesheet" href="static-assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static-assets/styles.css">
+
+    <meta name="description" content="API docs for the operator == method from the KPeerInfo class, for the Dart programming language.">
+    <link rel="icon" href="static-assets/favicon.png">
+
+    <!-- Do not remove placeholder -->
+    <!-- Header Placeholder -->
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header class="container-fluid" id="title">
+    <nav class="navbar navbar-fixed-top">
+        <div class="container">
+            <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+            <ol class="breadcrumbs gt-separated hidden-xs">
+                <li><a href="index.html">hetimatorrent</a></li>
+                <li><a href="torrent_dht/torrent_dht-library.html">torrent_dht</a></li>
+                <li><a href="torrent_dht/KPeerInfo-class.html">KPeerInfo</a></li>
+                <li class="self-crumb">operator ==</li>
+            </ol>
+            <div class="self-name">operator ==</div>
+        </div>
+    </nav>
+    <div class="container masthead">
+        <ol class="breadcrumbs gt-separated visible-xs">
+            <li><a href="index.html">hetimatorrent</a></li>
+            <li><a href="torrent_dht/torrent_dht-library.html">torrent_dht</a></li>
+            <li><a href="torrent_dht/KPeerInfo-class.html">KPeerInfo</a></li>
+            <li class="self-crumb">operator ==</li>
+        </ol>
+        <div class="title-description">
+            <h1 class="title">
+                <div class="kind">method</div> operator ==
+            </h1>
+            <!-- p class="subtitle">
+                The equality operator.
+            </p -->
+        </div>
+        <ul class="subnav">
+            <li><a href="torrent_dht/KPeerInfo/operator_equals.html#source">Source</a></li>
+        </ul>
+    </div>
+</header>
+
+<div class="container body">
+
+  <div class="col-xs-6 col-sm-3 sidebar sidebar-offcanvas-left">
+    <h5><a href="index.html">hetimatorrent</a></h5>
+    <h5><a href="torrent_dht/torrent_dht-library.html">torrent_dht</a></h5>
+    <h5><a href="torrent_dht/KPeerInfo-class.html">KPeerInfo</a></h5>
+
+    <ol>
+    
+    
+      <li class="section-title"><a href="torrent_dht/KPeerInfo-class.html#static-methods">Static methods</a></li>
+      <li><a href="torrent_dht/KPeerInfo/toCompactNodeInfos.html">toCompactNodeInfos</a></li>
+    
+      <li class="section-title"><a href="torrent_dht/KPeerInfo-class.html#instance-properties">Properties</a></li>
+      <li><a href="torrent_dht/KPeerInfo/hashCode.html">hashCode</a>
+</li>
+      <li><a href="torrent_dht/KPeerInfo/id.html">id</a>
+</li>
+      <li><a href="torrent_dht/KPeerInfo/ipAsList.html">ipAsList</a>
+</li>
+      <li><a href="torrent_dht/KPeerInfo/ipAsString.html">ipAsString</a>
+</li>
+      <li><a href="torrent_dht/KPeerInfo/port.html">port</a>
+</li>
+    
+      <li class="section-title"><a href="torrent_dht/KPeerInfo-class.html#constructors">Constructors</a></li>
+      <li><a href="torrent_dht/KPeerInfo/KPeerInfo.html">KPeerInfo</a></li>
+      <li><a href="torrent_dht/KPeerInfo/KPeerInfo.fromBytes.html">fromBytes</a></li>
+    
+      <li class="section-title"><a href="torrent_dht/KPeerInfo-class.html#operators">Operators</a></li>
+      <li><a href="torrent_dht/KPeerInfo/operator_equals.html">operator ==</a>
+</li>
+    
+      <li class="section-title"><a href="torrent_dht/KPeerInfo-class.html#methods">Methods</a></li>
+      <li><a href="torrent_dht/KPeerInfo/toCompactNodeInfo.html">toCompactNodeInfo</a>
+</li>
+      <li><a href="torrent_dht/KPeerInfo/toPeerInfoString.html">toPeerInfoString</a>
+</li>
+      <li><a href="torrent_dht/KPeerInfo/toString.html">toString</a>
+</li>
+    </ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+  <div class="col-xs-12 col-sm-9 col-md-6 main-content">
+
+    <section class="multi-line-signature">
+            <span class="returntype">bool</span>
+            <span class="name ">operator ==</span>(
+            <br>
+            <div class="parameters">
+                <span class="parameter" id="==-param-o"><span class="type-annotation">Object</span> <span class="parameter-name">o</span></span>
+            </div>
+            )    </section>
+
+    <section class="desc markdown">
+    
+          <p>The equality operator.</p>
+<p>The default behavior for all <code class="prettyprint lang-dart">Object</code>s is to return true if and
+only if <code class="prettyprint lang-dart">this</code> and <code class="prettyprint lang-dart">other</code> are the same object.</p>
+<p>Override this method to specify a different equality relation on
+a class. The overriding method must still be an equivalence relation.
+That is, it must be:</p>
+<p>Total: It must return a boolean for all arguments. It should never throw
+or return <code class="prettyprint lang-dart">null</code>.</p>
+<p>Reflexive: For all objects <code class="prettyprint lang-dart">o</code>, <code class="prettyprint lang-dart">o == o</code> must be true.</p>
+<p>Symmetric: For all objects <code class="prettyprint lang-dart">o1</code> and <code class="prettyprint lang-dart">o2</code>, <code class="prettyprint lang-dart">o1 == o2</code> and <code class="prettyprint lang-dart">o2 == o1</code> must
+either both be true, or both be false.</p>
+<p>Transitive: For all objects <code class="prettyprint lang-dart">o1</code>, <code class="prettyprint lang-dart">o2</code>, and <code class="prettyprint lang-dart">o3</code>, if <code class="prettyprint lang-dart">o1 == o2</code> and
+<code class="prettyprint lang-dart">o2 == o3</code> are true, then <code class="prettyprint lang-dart">o1 == o3</code> must be true.</p>
+<p>The method should also be consistent over time, so equality of two objects
+should not change over time, or at least only change if one of the objects
+was modified.</p>
+<p>If a subclass overrides the equality operator it should override
+the <code class="prettyprint lang-dart">hashCode</code> method as well to maintain consistency.</p>
+    
+    </section>
+
+    <section class="summary source-code" id="source">
+      <h2>Source</h2>
+      <pre><code class="prettyprint lang-dart">bool operator ==(Object o) {
+  if (!(o is KPeerInfo)) {
+    return false;
+  }
+  KPeerInfo p = o;
+  if (this._id != p._id) {
+    return false;
+  }
+  if (this._ip.length == p._ip.length) {
+    for (int i = 0; i &lt; p._ip.length; i++) {
+      if (this._ip[i] != p._ip[i]) {
+        return false;
+      }
+    }
+  }
+  if (this._port != (o as KPeerInfo)._port) {
+    return false;
+  }
+  return true;
+}</code></pre>
+    </section>
+
+  </div> <!-- /.main-content -->
+
+</div> <!-- container -->
+
+<footer>
+    <div class="container-fluid">
+        <div class="container">
+            <p class="text-center">
+                <span class="no-break">
+                  hetimatorrent 0.0.1 api docs
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="https://www.dartlang.org">
+                    <img src="static-assets/favicon.png" alt="Dart" title="Dart"width="16" height="16">
+                  </a>
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="http://creativecommons.org/licenses/by-sa/4.0/">cc license</a>
+                </span>
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script src="static-assets/prettify.js"></script>
+<script src="static-assets/script.js"></script>
+<!-- Do not remove placeholder -->
+<!-- Footer Placeholder -->
+</body>
+
+</html>

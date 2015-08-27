@@ -136,7 +136,7 @@
       <h2>Source</h2>
       <pre><code class="prettyprint lang-dart">static async.Future&lt;TorrentFile&gt; createFromTorrentFile(hetima.HetimaReader builder) {
   async.Completer&lt;TorrentFile&gt; completer = new async.Completer();
-  HetiBencode.decode(new hetima.EasyParser(builder)).then((Object o) {
+  BencodeAsync.decode(new hetima.EasyParser(builder)).then((Object o) {
     completer.complete(new TorrentFile.torentmap(o));
   }).catchError((e) {
     completer.completeError(e);

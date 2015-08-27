@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>onListen method - TrackerServer class - tracker library - Dart API</title>
+    <!-- required because all the links are pseudo-absolute -->
+    <base href="../..">
+
+    <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro|Roboto:500,400italic,300,400' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="static-assets/prettify.css">
+    <link rel="stylesheet" href="static-assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static-assets/styles.css">
+
+    <meta name="description" content="API docs for the onListen method from the TrackerServer class, for the Dart programming language.">
+    <link rel="icon" href="static-assets/favicon.png">
+
+    <!-- Do not remove placeholder -->
+    <!-- Header Placeholder -->
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header class="container-fluid" id="title">
+    <nav class="navbar navbar-fixed-top">
+        <div class="container">
+            <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+            <ol class="breadcrumbs gt-separated hidden-xs">
+                <li><a href="index.html">hetimatorrent</a></li>
+                <li><a href="tracker/tracker-library.html">tracker</a></li>
+                <li><a href="tracker/TrackerServer-class.html">TrackerServer</a></li>
+                <li class="self-crumb">onListen</li>
+            </ol>
+            <div class="self-name">onListen</div>
+        </div>
+    </nav>
+    <div class="container masthead">
+        <ol class="breadcrumbs gt-separated visible-xs">
+            <li><a href="index.html">hetimatorrent</a></li>
+            <li><a href="tracker/tracker-library.html">tracker</a></li>
+            <li><a href="tracker/TrackerServer-class.html">TrackerServer</a></li>
+            <li class="self-crumb">onListen</li>
+        </ol>
+        <div class="title-description">
+            <h1 class="title">
+                <div class="kind">method</div> onListen
+            </h1>
+            <!-- p class="subtitle">
+                
+            </p -->
+        </div>
+        <ul class="subnav">
+            <li><a href="tracker/TrackerServer/onListen.html#source">Source</a></li>
+        </ul>
+    </div>
+</header>
+
+<div class="container body">
+
+  <div class="col-xs-6 col-sm-3 sidebar sidebar-offcanvas-left">
+    <h5><a href="index.html">hetimatorrent</a></h5>
+    <h5><a href="tracker/tracker-library.html">tracker</a></h5>
+    <h5><a href="tracker/TrackerServer-class.html">TrackerServer</a></h5>
+
+    <ol>
+    
+    
+    
+      <li class="section-title"><a href="tracker/TrackerServer-class.html#instance-properties">Properties</a></li>
+      <li><a href="tracker/TrackerServer/address.html">address</a>
+</li>
+      <li><a href="tracker/TrackerServer/isStart.html">isStart</a>
+</li>
+      <li><a href="tracker/TrackerServer/outputLog.html">outputLog</a>
+</li>
+      <li><a href="tracker/TrackerServer/port.html">port</a>
+</li>
+      <li><a href="tracker/TrackerServer/res.html">res</a>
+</li>
+      <li><a href="tracker/TrackerServer/trackerAnnounceAddressForTorrentFile.html">trackerAnnounceAddressForTorrentFile</a>
+</li>
+    
+      <li class="section-title"><a href="tracker/TrackerServer-class.html#constructors">Constructors</a></li>
+      <li><a href="tracker/TrackerServer/TrackerServer.html">TrackerServer</a></li>
+    
+    
+      <li class="section-title"><a href="tracker/TrackerServer-class.html#methods">Methods</a></li>
+      <li><a href="tracker/TrackerServer/addInfoHash.html">addInfoHash</a>
+</li>
+      <li><a href="tracker/TrackerServer/addTorrentFile.html">addTorrentFile</a>
+</li>
+      <li><a href="tracker/TrackerServer/createResponse.html">createResponse</a>
+</li>
+      <li><a href="tracker/TrackerServer/find.html">find</a>
+</li>
+      <li><a href="tracker/TrackerServer/getManagedHash.html">getManagedHash</a>
+</li>
+      <li><a href="tracker/TrackerServer/numOfPeer.html">numOfPeer</a>
+</li>
+      <li><a href="tracker/TrackerServer/onListen.html">onListen</a>
+</li>
+      <li><a href="tracker/TrackerServer/removeInfoHash.html">removeInfoHash</a>
+</li>
+      <li><a href="tracker/TrackerServer/start.html">start</a>
+</li>
+      <li><a href="tracker/TrackerServer/stop.html">stop</a>
+</li>
+      <li><a href="tracker/TrackerServer/updateResponse.html">updateResponse</a>
+</li>
+    </ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+  <div class="col-xs-12 col-sm-9 col-md-6 main-content">
+
+    <section class="multi-line-signature">
+            <span class="returntype">void</span>
+            <span class="name ">onListen</span>(
+            <br>
+            <div class="parameters">
+                <span class="parameter" id="onListen-param-item"><span class="type-annotation">HetiHttpServerPlusResponseItem</span> <span class="parameter-name">item</span></span>
+            </div>
+            )    </section>
+
+    <section class="desc markdown">
+    
+          <p class="no-docs">Not documented.</p>
+    
+    </section>
+
+    <section class="summary source-code" id="source">
+      <h2>Source</h2>
+      <pre><code class="prettyprint lang-dart">void onListen(HetiHttpServerPlusResponseItem item) {
+  new async.Future(() {
+    String qurey = item.option.replaceFirst(new RegExp(r&quot;^\?&quot;), &quot;&quot;);
+    Map&lt;String, String&gt; parameter = HttpUrlDecoder.queryMap(qurey);
+    print(&quot;${qurey}&quot;);
+    String infoHashAsString = parameter[TrackerUrl.KEY_INFO_HASH];
+
+    if (infoHashAsString == null &amp;&amp; (item.path == &quot;/&quot; || item.path == &quot;/index.html&quot;) &amp;&amp; _isTorrentfile) {
+      StringBuffer cont = new StringBuffer();
+      for (TrackerPeerManager manager in _peerManagerList) {
+        cont.writeln(&quot;&quot;&quot;&lt;div&gt;[${PercentEncode.encode(manager.managedInfoHash)}]&lt;/div&gt;&quot;&quot;&quot;);
+        if (manager.torrentFile != null) {
+          cont.writeln(&quot;&quot;&quot;&lt;div&gt;&lt;a href=&quot;/your.torrent?infohash=${PercentEncode.encode(manager.managedInfoHash)}&amp;mode=g&quot;&gt;  global&lt;/a&gt;&lt;/div&gt;&quot;&quot;&quot;);
+          cont.writeln(&quot;&quot;&quot;&lt;div&gt;&lt;a href=&quot;/your.torrent?infohash=${PercentEncode.encode(manager.managedInfoHash)}&amp;mode=l&quot;&gt;  local&lt;/a&gt;&lt;/div&gt;&quot;&quot;&quot;);
+        }
+      }
+      _server.response(item.req, new HetimaBuilderToFile(new ArrayBuilder.fromList(UTF8.encode(&quot;&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body&gt;&lt;div&gt;[managed hash]&lt;/div&gt;${cont}&lt;/body&gt;&lt;/html&gt;&quot;))),
+          contentType: &quot;text/html&quot;);
+    } else if (item.path == &quot;/your.torrent&quot; &amp;&amp; _isTorrentfile) {
+      for (TrackerPeerManager manager in _peerManagerList) {
+        if (PercentEncode.encode(manager.managedInfoHash) == parameter[&quot;infohash&quot;]) {
+          if (manager.torrentFile != null) {
+            String addr = trackerAnnounceAddressForTorrentFile;
+            if ((addr == null || addr.length == 0) || parameter[&quot;mode&quot;] == &quot;l&quot;) {
+              addr = &quot;http://${address}:${port}/announce&quot;;
+            }
+            manager.torrentFile.announce = addr;
+            _server.response(item.req, new HetimaDataMemory(Bencode.encode(manager.torrentFile.mMetadata)));
+            return null;
+          }
+        }
+      }
+      item.socket.close();
+    } else if (item.path == &quot;/redirect&quot; &amp;&amp; _isTorrentfile) {
+      _server.response(item.req, new HetimaDataMemory([]), statusCode: 301, headerList: {&quot;Location&quot;: &quot;/announce?${qurey}&quot;});
+    } else if (infoHashAsString != null) {
+      return item.socket.getSocketInfo().then((HetimaSocketInfo info) {
+        if (outputLog) {
+          print(&quot;TrackerServer#onListen ${info.peerAddress} ${info.peerPort}&quot;);
+        }
+        List&lt;int&gt; ip = HetiIP.toRawIP(info.peerAddress);
+
+        updateResponse(parameter, ip);
+        List&lt;int&gt; cont = createResponse(item.option, HetiIP.toRawIP(info.peerAddress));
+        _server.response(item.req, new HetimaDataMemory(cont), contentType: &quot;text/plain&quot;);
+      });
+    } else {
+      try {
+        item.socket.close();
+      } catch (e) {}
+    }
+  }).catchError((e) {
+    try {
+      item.socket.close();
+    } catch (e) {}
+  });
+}</code></pre>
+    </section>
+
+  </div> <!-- /.main-content -->
+
+</div> <!-- container -->
+
+<footer>
+    <div class="container-fluid">
+        <div class="container">
+            <p class="text-center">
+                <span class="no-break">
+                  hetimatorrent 0.0.1 api docs
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="https://www.dartlang.org">
+                    <img src="static-assets/favicon.png" alt="Dart" title="Dart"width="16" height="16">
+                  </a>
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="http://creativecommons.org/licenses/by-sa/4.0/">cc license</a>
+                </span>
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script src="static-assets/prettify.js"></script>
+<script src="static-assets/script.js"></script>
+<!-- Do not remove placeholder -->
+<!-- Footer Placeholder -->
+</body>
+
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>createPieceHash method - TorrentPieceHashCreator class - torrent_file library - Dart API</title>
+    <!-- required because all the links are pseudo-absolute -->
+    <base href="../..">
+
+    <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro|Roboto:500,400italic,300,400' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="static-assets/prettify.css">
+    <link rel="stylesheet" href="static-assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static-assets/styles.css">
+
+    <meta name="description" content="API docs for the createPieceHash method from the TorrentPieceHashCreator class, for the Dart programming language.">
+    <link rel="icon" href="static-assets/favicon.png">
+
+    <!-- Do not remove placeholder -->
+    <!-- Header Placeholder -->
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header class="container-fluid" id="title">
+    <nav class="navbar navbar-fixed-top">
+        <div class="container">
+            <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+            <ol class="breadcrumbs gt-separated hidden-xs">
+                <li><a href="index.html">hetimatorrent</a></li>
+                <li><a href="torrent_file/torrent_file-library.html">torrent_file</a></li>
+                <li><a href="torrent_file/TorrentPieceHashCreator-class.html">TorrentPieceHashCreator</a></li>
+                <li class="self-crumb">createPieceHash</li>
+            </ol>
+            <div class="self-name">createPieceHash</div>
+        </div>
+    </nav>
+    <div class="container masthead">
+        <ol class="breadcrumbs gt-separated visible-xs">
+            <li><a href="index.html">hetimatorrent</a></li>
+            <li><a href="torrent_file/torrent_file-library.html">torrent_file</a></li>
+            <li><a href="torrent_file/TorrentPieceHashCreator-class.html">TorrentPieceHashCreator</a></li>
+            <li class="self-crumb">createPieceHash</li>
+        </ol>
+        <div class="title-description">
+            <h1 class="title">
+                <div class="kind">method</div> createPieceHash
+            </h1>
+            <!-- p class="subtitle">
+                
+            </p -->
+        </div>
+        <ul class="subnav">
+            <li><a href="torrent_file/TorrentPieceHashCreator/createPieceHash.html#source">Source</a></li>
+        </ul>
+    </div>
+</header>
+
+<div class="container body">
+
+  <div class="col-xs-6 col-sm-3 sidebar sidebar-offcanvas-left">
+    <h5><a href="index.html">hetimatorrent</a></h5>
+    <h5><a href="torrent_file/torrent_file-library.html">torrent_file</a></h5>
+    <h5><a href="torrent_file/TorrentPieceHashCreator-class.html">TorrentPieceHashCreator</a></h5>
+
+    <ol>
+    
+    
+    
+    
+      <li class="section-title"><a href="torrent_file/TorrentPieceHashCreator-class.html#constructors">Constructors</a></li>
+      <li><a href="torrent_file/TorrentPieceHashCreator/TorrentPieceHashCreator.html">TorrentPieceHashCreator</a></li>
+    
+    
+      <li class="section-title"><a href="torrent_file/TorrentPieceHashCreator-class.html#methods">Methods</a></li>
+      <li><a href="torrent_file/TorrentPieceHashCreator/createPieceHash.html">createPieceHash</a>
+</li>
+    </ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+  <div class="col-xs-12 col-sm-9 col-md-6 main-content">
+
+    <section class="multi-line-signature">
+            <span class="returntype">Future&lt;<a href="hetimatorrent.torrent.torrentpiecehashcreator/CreatePieceHashResult-class.html">CreatePieceHashResult</a>&gt;</span>
+            <span class="name ">createPieceHash</span>(
+            <br>
+            <div class="parameters">
+                <span class="parameter" id="createPieceHash-param-file"><span class="type-annotation">HetimaData</span> <span class="parameter-name">file</span></span>,<br><span class="parameter" id="createPieceHash-param-pieceLength"><span class="type-annotation">int</span> <span class="parameter-name">pieceLength</span></span>,<br>{<span class="parameter" id="createPieceHash-param-threadNum"><span class="parameter-name">threadNum</span>: <span class="default-value">1</span></span>,<br><span class="parameter" id="createPieceHash-param-cacheSize"><span class="parameter-name">cacheSize</span>: <span class="default-value">0</span></span>,<br><span class="parameter" id="createPieceHash-param-cacheNum"><span class="parameter-name">cacheNum</span>: <span class="default-value">3</span></span>,<br><span class="parameter" id="createPieceHash-param-progress"><span class="type-annotation">Function</span> <span class="parameter-name">progress</span>: <span class="default-value">null</span></span>,<br><span class="parameter" id="createPieceHash-param-isopath"><span class="parameter-name">isopath</span>: <span class="default-value">"sha1Isolate.dart"</span></span>}
+            </div>
+            )    </section>
+
+    <section class="desc markdown">
+    
+          <p class="no-docs">Not documented.</p>
+    
+    </section>
+
+    <section class="summary source-code" id="source">
+      <h2>Source</h2>
+      <pre><code class="prettyprint lang-dart">async.Future&lt;CreatePieceHashResult&gt; createPieceHash(hetima.HetimaData file, int pieceLength,
+    {threadNum: 1, cacheSize: 0, cacheNum: 3, Function progress: null, isopath: &quot;sha1Isolate.dart&quot;}) {
+  async.Completer&lt;CreatePieceHashResult&gt; compleater = new async.Completer();
+  CreatePieceHashResult result = new CreatePieceHashResult();
+  result.pieceLength = pieceLength;
+  __timeS = new DateTime.now().millisecondsSinceEpoch;
+
+  bool cache = (cacheSize &gt; 0 &amp;&amp; cacheNum &gt; 0);
+  bool concurrency  = (threadNum &gt; 1 &amp;&amp; isopath!=null);
+  new async.Future(() {
+    if (cache == true) {
+      return hetima.HetimaDataCache.createWithReuseCashData(file, cacheSize: cacheSize, cacheNum: cacheNum).then((hetima.HetimaDataCache c) {
+        result.targetFile = c;
+      });
+    } else {
+      return new async.Future(() {
+        result.targetFile = file;
+      });
+    }
+  }).then((_) {
+    // result._tmpStart = 500000*1000;
+    if (concurrency == true) {
+      _createPieceHashConcurrency(compleater, result, progress: progress, numOfIso: threadNum, isopath: isopath);
+    } else {
+      _createPieceHash(compleater, result, progress: progress);
+    }
+  });
+  return compleater.future;
+}</code></pre>
+    </section>
+
+  </div> <!-- /.main-content -->
+
+</div> <!-- container -->
+
+<footer>
+    <div class="container-fluid">
+        <div class="container">
+            <p class="text-center">
+                <span class="no-break">
+                  hetimatorrent 0.0.1 api docs
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="https://www.dartlang.org">
+                    <img src="static-assets/favicon.png" alt="Dart" title="Dart"width="16" height="16">
+                  </a>
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="http://creativecommons.org/licenses/by-sa/4.0/">cc license</a>
+                </span>
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script src="static-assets/prettify.js"></script>
+<script src="static-assets/script.js"></script>
+<!-- Do not remove placeholder -->
+<!-- Footer Placeholder -->
+</body>
+
+</html>

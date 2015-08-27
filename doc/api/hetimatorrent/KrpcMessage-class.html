@@ -76,15 +76,15 @@
     
       <li class="section-title"><a href="hetimatorrent/hetimatorrent-library.html#classes">Classes</a></li>
       <li><a href="hetimatorrent/Bdecoder-class.html">Bdecoder</a></li>
+      <li><a href="hetimatorrent/BdecoderAsync-class.html">BdecoderAsync</a></li>
       <li><a href="hetimatorrent/Bencode-class.html">Bencode</a></li>
+      <li><a href="hetimatorrent/BencodeAsync-class.html">BencodeAsync</a></li>
       <li><a href="hetimatorrent/Bencoder-class.html">Bencoder</a></li>
       <li><a href="hetimatorrent/Bitfield-class.html">Bitfield</a></li>
       <li><a href="hetimatorrent/BitfieldInter-class.html">BitfieldInter</a></li>
       <li><a href="hetimatorrent/BitfieldPlus-class.html">BitfieldPlus</a></li>
       <li><a href="hetimatorrent/BlockData-class.html">BlockData</a></li>
       <li><a href="hetimatorrent/CreatePieceHashResult-class.html">CreatePieceHashResult</a></li>
-      <li><a href="hetimatorrent/HetiBdecoder-class.html">HetiBdecoder</a></li>
-      <li><a href="hetimatorrent/HetiBencode-class.html">HetiBencode</a></li>
       <li><a href="hetimatorrent/KBucket-class.html">KBucket</a></li>
       <li><a href="hetimatorrent/KGetPeerNodes-class.html">KGetPeerNodes</a></li>
       <li><a href="hetimatorrent/KGetPeerValue-class.html">KGetPeerValue</a></li>
@@ -116,7 +116,7 @@
       <li><a href="hetimatorrent/MessageUnchoke-class.html">MessageUnchoke</a></li>
       <li><a href="hetimatorrent/PeerIdCreator-class.html">PeerIdCreator</a></li>
       <li><a href="hetimatorrent/PieceInfo-class.html">PieceInfo</a></li>
-      <li><a href="hetimatorrent/PieceInfoList-class.html">PieceInfoList</a></li>
+      <li><a href="hetimatorrent/PieceInfoItem-class.html">PieceInfoItem</a></li>
       <li><a href="hetimatorrent/RequestSingleWaitReturn-class.html">RequestSingleWaitReturn</a></li>
       <li><a href="hetimatorrent/SHA1Iso-class.html">SHA1Iso</a></li>
       <li><a href="hetimatorrent/SHA1IsoInfo-class.html">SHA1IsoInfo</a></li>
@@ -206,6 +206,54 @@
                 </div>
                 
             </dd>
+            <dt id="MESSAGE_ANNOUNCE" class="constant">
+                <span class="top-level-variable-type">String</span>
+                <span class="name "><a href="hetimatorrent/KrpcMessage/MESSAGE_ANNOUNCE.html">MESSAGE_ANNOUNCE</a></span>
+                =
+                <span class="constant-value">"announce_peer"</span>
+            </dt>
+            <dd>
+                <div class="is-const">
+                    const
+                </div>
+                
+            </dd>
+            <dt id="MESSAGE_FIND_NODE" class="constant">
+                <span class="top-level-variable-type">String</span>
+                <span class="name "><a href="hetimatorrent/KrpcMessage/MESSAGE_FIND_NODE.html">MESSAGE_FIND_NODE</a></span>
+                =
+                <span class="constant-value">"find_node"</span>
+            </dt>
+            <dd>
+                <div class="is-const">
+                    const
+                </div>
+                
+            </dd>
+            <dt id="MESSAGE_GET_PEERS" class="constant">
+                <span class="top-level-variable-type">String</span>
+                <span class="name "><a href="hetimatorrent/KrpcMessage/MESSAGE_GET_PEERS.html">MESSAGE_GET_PEERS</a></span>
+                =
+                <span class="constant-value">"get_peers"</span>
+            </dt>
+            <dd>
+                <div class="is-const">
+                    const
+                </div>
+                
+            </dd>
+            <dt id="MESSAGE_PING" class="constant">
+                <span class="top-level-variable-type">String</span>
+                <span class="name "><a href="hetimatorrent/KrpcMessage/MESSAGE_PING.html">MESSAGE_PING</a></span>
+                =
+                <span class="constant-value">"ping"</span>
+            </dt>
+            <dd>
+                <div class="is-const">
+                    const
+                </div>
+                
+            </dd>
             <dt id="METHOD_ERROR" class="constant">
                 <span class="top-level-variable-type">int</span>
                 <span class="name "><a href="hetimatorrent/KrpcMessage/METHOD_ERROR.html">METHOD_ERROR</a></span>
@@ -223,54 +271,6 @@
                 <span class="name "><a href="hetimatorrent/KrpcMessage/PROTOCOL_ERROR.html">PROTOCOL_ERROR</a></span>
                 =
                 <span class="constant-value">203</span>
-            </dt>
-            <dd>
-                <div class="is-const">
-                    const
-                </div>
-                
-            </dd>
-            <dt id="QUERY_ANNOUNCE" class="constant">
-                <span class="top-level-variable-type">String</span>
-                <span class="name "><a href="hetimatorrent/KrpcMessage/QUERY_ANNOUNCE.html">QUERY_ANNOUNCE</a></span>
-                =
-                <span class="constant-value">"announce_peer"</span>
-            </dt>
-            <dd>
-                <div class="is-const">
-                    const
-                </div>
-                
-            </dd>
-            <dt id="QUERY_FIND_NODE" class="constant">
-                <span class="top-level-variable-type">String</span>
-                <span class="name "><a href="hetimatorrent/KrpcMessage/QUERY_FIND_NODE.html">QUERY_FIND_NODE</a></span>
-                =
-                <span class="constant-value">"find_node"</span>
-            </dt>
-            <dd>
-                <div class="is-const">
-                    const
-                </div>
-                
-            </dd>
-            <dt id="QUERY_GET_PEERS" class="constant">
-                <span class="top-level-variable-type">String</span>
-                <span class="name "><a href="hetimatorrent/KrpcMessage/QUERY_GET_PEERS.html">QUERY_GET_PEERS</a></span>
-                =
-                <span class="constant-value">"get_peers"</span>
-            </dt>
-            <dd>
-                <div class="is-const">
-                    const
-                </div>
-                
-            </dd>
-            <dt id="QUERY_PING" class="constant">
-                <span class="top-level-variable-type">String</span>
-                <span class="name "><a href="hetimatorrent/KrpcMessage/QUERY_PING.html">QUERY_PING</a></span>
-                =
-                <span class="constant-value">"ping"</span>
             </dt>
             <dd>
                 <div class="is-const">
@@ -594,12 +594,12 @@
     <ol>
       <li class="section-title"><a href="hetimatorrent/KrpcMessage-class.html#constants">Constants</a></li>
       <li><a href="hetimatorrent/KrpcMessage/GENERIC_ERROR.html">GENERIC_ERROR</a></li>
+      <li><a href="hetimatorrent/KrpcMessage/MESSAGE_ANNOUNCE.html">MESSAGE_ANNOUNCE</a></li>
+      <li><a href="hetimatorrent/KrpcMessage/MESSAGE_FIND_NODE.html">MESSAGE_FIND_NODE</a></li>
+      <li><a href="hetimatorrent/KrpcMessage/MESSAGE_GET_PEERS.html">MESSAGE_GET_PEERS</a></li>
+      <li><a href="hetimatorrent/KrpcMessage/MESSAGE_PING.html">MESSAGE_PING</a></li>
       <li><a href="hetimatorrent/KrpcMessage/METHOD_ERROR.html">METHOD_ERROR</a></li>
       <li><a href="hetimatorrent/KrpcMessage/PROTOCOL_ERROR.html">PROTOCOL_ERROR</a></li>
-      <li><a href="hetimatorrent/KrpcMessage/QUERY_ANNOUNCE.html">QUERY_ANNOUNCE</a></li>
-      <li><a href="hetimatorrent/KrpcMessage/QUERY_FIND_NODE.html">QUERY_FIND_NODE</a></li>
-      <li><a href="hetimatorrent/KrpcMessage/QUERY_GET_PEERS.html">QUERY_GET_PEERS</a></li>
-      <li><a href="hetimatorrent/KrpcMessage/QUERY_PING.html">QUERY_PING</a></li>
       <li><a href="hetimatorrent/KrpcMessage/SERVER_ERROR.html">SERVER_ERROR</a></li>
     
     

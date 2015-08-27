@@ -135,7 +135,7 @@
  *
  */
 List&lt;int&gt; getNextBlockPart(int targetBit, int downloadPieceLength) {
-  PieceInfoList pieceInfo = getPieceInfo(targetBit);
+  PieceInfo pieceInfo = getPieceInfo(targetBit);
   int begin = 0;
   int end = 0;
   if (pieceInfo == null) {

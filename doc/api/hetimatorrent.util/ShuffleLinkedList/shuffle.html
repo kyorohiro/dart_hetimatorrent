@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>shuffle method - ShuffleLinkedList class - hetimatorrent.util library - Dart API</title>
+    <!-- required because all the links are pseudo-absolute -->
+    <base href="../..">
+
+    <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro|Roboto:500,400italic,300,400' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="static-assets/prettify.css">
+    <link rel="stylesheet" href="static-assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static-assets/styles.css">
+
+    <meta name="description" content="API docs for the shuffle method from the ShuffleLinkedList class, for the Dart programming language.">
+    <link rel="icon" href="static-assets/favicon.png">
+
+    <!-- Do not remove placeholder -->
+    <!-- Header Placeholder -->
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header class="container-fluid" id="title">
+    <nav class="navbar navbar-fixed-top">
+        <div class="container">
+            <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+            <ol class="breadcrumbs gt-separated hidden-xs">
+                <li><a href="index.html">hetimatorrent</a></li>
+                <li><a href="hetimatorrent.util/hetimatorrent.util-library.html">hetimatorrent.util</a></li>
+                <li><a href="hetimatorrent.util/ShuffleLinkedList-class.html">ShuffleLinkedList</a></li>
+                <li class="self-crumb">shuffle</li>
+            </ol>
+            <div class="self-name">shuffle</div>
+        </div>
+    </nav>
+    <div class="container masthead">
+        <ol class="breadcrumbs gt-separated visible-xs">
+            <li><a href="index.html">hetimatorrent</a></li>
+            <li><a href="hetimatorrent.util/hetimatorrent.util-library.html">hetimatorrent.util</a></li>
+            <li><a href="hetimatorrent.util/ShuffleLinkedList-class.html">ShuffleLinkedList</a></li>
+            <li class="self-crumb">shuffle</li>
+        </ol>
+        <div class="title-description">
+            <h1 class="title">
+                <div class="kind">method</div> shuffle
+            </h1>
+            <!-- p class="subtitle">
+                
+            </p -->
+        </div>
+        <ul class="subnav">
+            <li><a href="hetimatorrent.util/ShuffleLinkedList/shuffle.html#source">Source</a></li>
+        </ul>
+    </div>
+</header>
+
+<div class="container body">
+
+  <div class="col-xs-6 col-sm-3 sidebar sidebar-offcanvas-left">
+    <h5><a href="index.html">hetimatorrent</a></h5>
+    <h5><a href="hetimatorrent.util/hetimatorrent.util-library.html">hetimatorrent.util</a></h5>
+    <h5><a href="hetimatorrent.util/ShuffleLinkedList-class.html">ShuffleLinkedList</a></h5>
+
+    <ol>
+    
+    
+    
+      <li class="section-title"><a href="hetimatorrent.util/ShuffleLinkedList-class.html#instance-properties">Properties</a></li>
+      <li><a href="hetimatorrent.util/ShuffleLinkedList/iterator.html">iterator</a>
+</li>
+      <li><a href="hetimatorrent.util/ShuffleLinkedList/length.html">length</a>
+</li>
+      <li><a href="hetimatorrent.util/ShuffleLinkedList/max.html">max</a>
+</li>
+      <li><a href="hetimatorrent.util/ShuffleLinkedList/rawsequential.html">rawsequential</a>
+</li>
+      <li><a href="hetimatorrent.util/ShuffleLinkedList/rawshuffled.html">rawshuffled</a>
+</li>
+      <li><a href="hetimatorrent.util/ShuffleLinkedList/sequential.html">sequential</a>
+</li>
+      <li><a href="hetimatorrent.util/ShuffleLinkedList/shuffled.html">shuffled</a>
+</li>
+    
+      <li class="section-title"><a href="hetimatorrent.util/ShuffleLinkedList-class.html#constructors">Constructors</a></li>
+      <li><a href="hetimatorrent.util/ShuffleLinkedList/ShuffleLinkedList.html">ShuffleLinkedList</a></li>
+    
+    
+      <li class="section-title"><a href="hetimatorrent.util/ShuffleLinkedList-class.html#methods">Methods</a></li>
+      <li><a href="hetimatorrent.util/ShuffleLinkedList/addHead.html">addHead</a>
+</li>
+      <li><a href="hetimatorrent.util/ShuffleLinkedList/addLast.html">addLast</a>
+</li>
+      <li><a href="hetimatorrent.util/ShuffleLinkedList/clearAll.html">clearAll</a>
+</li>
+      <li><a href="hetimatorrent.util/ShuffleLinkedList/getSequential.html">getSequential</a>
+</li>
+      <li><a href="hetimatorrent.util/ShuffleLinkedList/getShuffled.html">getShuffled</a>
+</li>
+      <li><a href="hetimatorrent.util/ShuffleLinkedList/getWithFilter.html">getWithFilter</a>
+</li>
+      <li><a href="hetimatorrent.util/ShuffleLinkedList/removeHead.html">removeHead</a>
+</li>
+      <li><a href="hetimatorrent.util/ShuffleLinkedList/removeWithFilter.html">removeWithFilter</a>
+</li>
+      <li><a href="hetimatorrent.util/ShuffleLinkedList/shuffle.html">shuffle</a>
+</li>
+    </ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+  <div class="col-xs-12 col-sm-9 col-md-6 main-content">
+
+    <section class="multi-line-signature">
+            <span class="returntype">void</span>
+            <span class="name ">shuffle</span>(
+            )    </section>
+
+    <section class="desc markdown">
+    
+          <p class="no-docs">Not documented.</p>
+    
+    </section>
+
+    <section class="summary source-code" id="source">
+      <h2>Source</h2>
+      <pre><code class="prettyprint lang-dart">void shuffle() {
+  List&lt;X&gt; items = _shuffled;
+  var random = new math.Random();
+  for (int i = 0; i &lt; items.length; i++) {
+    int n = random.nextInt(items.length);
+    Object temp = items[i];
+    items[i] = items[n];
+    items[n] = temp;
+  }
+}</code></pre>
+    </section>
+
+  </div> <!-- /.main-content -->
+
+</div> <!-- container -->
+
+<footer>
+    <div class="container-fluid">
+        <div class="container">
+            <p class="text-center">
+                <span class="no-break">
+                  hetimatorrent 0.0.1 api docs
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="https://www.dartlang.org">
+                    <img src="static-assets/favicon.png" alt="Dart" title="Dart"width="16" height="16">
+                  </a>
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="http://creativecommons.org/licenses/by-sa/4.0/">cc license</a>
+                </span>
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script src="static-assets/prettify.js"></script>
+<script src="static-assets/script.js"></script>
+<!-- Do not remove placeholder -->
+<!-- Footer Placeholder -->
+</body>
+
+</html>

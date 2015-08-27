@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>saveTorrentFile method - TorrentFileCreator class - torrent_file library - Dart API</title>
+    <!-- required because all the links are pseudo-absolute -->
+    <base href="../..">
+
+    <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro|Roboto:500,400italic,300,400' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="static-assets/prettify.css">
+    <link rel="stylesheet" href="static-assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static-assets/styles.css">
+
+    <meta name="description" content="API docs for the saveTorrentFile method from the TorrentFileCreator class, for the Dart programming language.">
+    <link rel="icon" href="static-assets/favicon.png">
+
+    <!-- Do not remove placeholder -->
+    <!-- Header Placeholder -->
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header class="container-fluid" id="title">
+    <nav class="navbar navbar-fixed-top">
+        <div class="container">
+            <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+            <ol class="breadcrumbs gt-separated hidden-xs">
+                <li><a href="index.html">hetimatorrent</a></li>
+                <li><a href="torrent_file/torrent_file-library.html">torrent_file</a></li>
+                <li><a href="torrent_file/TorrentFileCreator-class.html">TorrentFileCreator</a></li>
+                <li class="self-crumb">saveTorrentFile</li>
+            </ol>
+            <div class="self-name">saveTorrentFile</div>
+        </div>
+    </nav>
+    <div class="container masthead">
+        <ol class="breadcrumbs gt-separated visible-xs">
+            <li><a href="index.html">hetimatorrent</a></li>
+            <li><a href="torrent_file/torrent_file-library.html">torrent_file</a></li>
+            <li><a href="torrent_file/TorrentFileCreator-class.html">TorrentFileCreator</a></li>
+            <li class="self-crumb">saveTorrentFile</li>
+        </ol>
+        <div class="title-description">
+            <h1 class="title">
+                <div class="kind">method</div> saveTorrentFile
+            </h1>
+            <!-- p class="subtitle">
+                
+            </p -->
+        </div>
+        <ul class="subnav">
+            <li><a href="torrent_file/TorrentFileCreator/saveTorrentFile.html#source">Source</a></li>
+        </ul>
+    </div>
+</header>
+
+<div class="container body">
+
+  <div class="col-xs-6 col-sm-3 sidebar sidebar-offcanvas-left">
+    <h5><a href="index.html">hetimatorrent</a></h5>
+    <h5><a href="torrent_file/torrent_file-library.html">torrent_file</a></h5>
+    <h5><a href="torrent_file/TorrentFileCreator-class.html">TorrentFileCreator</a></h5>
+
+    <ol>
+    
+    
+    
+      <li class="section-title"><a href="torrent_file/TorrentFileCreator-class.html#instance-properties">Properties</a></li>
+      <li><a href="torrent_file/TorrentFileCreator/announce.html">announce</a>
+</li>
+      <li><a href="torrent_file/TorrentFileCreator/name.html">name</a>
+</li>
+      <li><a href="torrent_file/TorrentFileCreator/piececLength.html">piececLength</a>
+</li>
+    
+      <li class="section-title"><a href="torrent_file/TorrentFileCreator-class.html#constructors">Constructors</a></li>
+      <li><a href="torrent_file/TorrentFileCreator/TorrentFileCreator.html">TorrentFileCreator</a></li>
+    
+    
+      <li class="section-title"><a href="torrent_file/TorrentFileCreator-class.html#methods">Methods</a></li>
+      <li><a href="torrent_file/TorrentFileCreator/createFromSingleFile.html">createFromSingleFile</a>
+</li>
+      <li><a href="torrent_file/TorrentFileCreator/saveTorrentFile.html">saveTorrentFile</a>
+</li>
+    </ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+  <div class="col-xs-12 col-sm-9 col-md-6 main-content">
+
+    <section class="multi-line-signature">
+            <span class="returntype">Future&lt;WriteResult&gt;</span>
+            <span class="name ">saveTorrentFile</span>(
+            <br>
+            <div class="parameters">
+                <span class="parameter" id="saveTorrentFile-param-target"><span class="type-annotation"><a href="hetimatorrent/TorrentFile-class.html">TorrentFile</a></span> <span class="parameter-name">target</span></span>,<br><span class="parameter" id="saveTorrentFile-param-output"><span class="type-annotation">HetimaData</span> <span class="parameter-name">output</span></span>
+            </div>
+            )    </section>
+
+    <section class="desc markdown">
+    
+          <p class="no-docs">Not documented.</p>
+    
+    </section>
+
+    <section class="summary source-code" id="source">
+      <h2>Source</h2>
+      <pre><code class="prettyprint lang-dart">async.Future&lt;hetima.WriteResult&gt; saveTorrentFile(TorrentFile target, hetima.HetimaData output) {
+  async.Completer&lt;hetima.WriteResult&gt; c = new async.Completer();
+  data.Uint8List buffer = Bencode.encode(target.mMetadata);
+  output.write(buffer, 0).then((hetima.WriteResult ret) {
+    c.complete(ret);
+  });
+  return c.future;
+}</code></pre>
+    </section>
+
+  </div> <!-- /.main-content -->
+
+</div> <!-- container -->
+
+<footer>
+    <div class="container-fluid">
+        <div class="container">
+            <p class="text-center">
+                <span class="no-break">
+                  hetimatorrent 0.0.1 api docs
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="https://www.dartlang.org">
+                    <img src="static-assets/favicon.png" alt="Dart" title="Dart"width="16" height="16">
+                  </a>
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="http://creativecommons.org/licenses/by-sa/4.0/">cc license</a>
+                </span>
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script src="static-assets/prettify.js"></script>
+<script src="static-assets/script.js"></script>
+<!-- Do not remove placeholder -->
+<!-- Footer Placeholder -->
+</body>
+
+</html>

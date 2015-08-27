@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BdecoderAsync class - hetimatorrent library - Dart API</title>
+    <!-- required because all the links are pseudo-absolute -->
+    <base href="..">
+
+    <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro|Roboto:500,400italic,300,400' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="static-assets/prettify.css">
+    <link rel="stylesheet" href="static-assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static-assets/styles.css">
+
+    <meta name="description" content="API docs for the BdecoderAsync class from the hetimatorrent library, for the Dart programming language.">
+    <link rel="icon" href="static-assets/favicon.png">
+
+    <!-- Do not remove placeholder -->
+    <!-- Header Placeholder -->
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header class="container-fluid" id="title">
+    <nav class="navbar navbar-fixed-top">
+        <div class="container">
+            <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+            <ol class="breadcrumbs gt-separated hidden-xs">
+                <li><a href="index.html">hetimatorrent</a></li>
+                <li><a href="hetimatorrent/hetimatorrent-library.html">hetimatorrent</a></li>
+                <li class="self-crumb">BdecoderAsync</li>
+            </ol>
+            <div class="self-name">BdecoderAsync</div>
+        </div>
+    </nav>
+    <div class="container masthead">
+        <ol class="breadcrumbs gt-separated visible-xs">
+            <li><a href="index.html">hetimatorrent</a></li>
+            <li><a href="hetimatorrent/hetimatorrent-library.html">hetimatorrent</a></li>
+            <li class="self-crumb">BdecoderAsync</li>
+        </ol>
+        <div class="title-description">
+            <h1 class="title">
+                <div class="kind">class</div> BdecoderAsync
+            </h1>
+            <!-- p class="subtitle">
+                
+            </p -->
+        </div>
+        <ul class="subnav">
+            <li><a href="hetimatorrent/BdecoderAsync-class.html#static-properties">Static Properties</a></li>
+            <li><a href="hetimatorrent/BdecoderAsync-class.html#static-methods">Static Methods</a></li>
+            <li><a href="hetimatorrent/BdecoderAsync-class.html#constructors">Constructors</a></li>
+            <li><a href="hetimatorrent/BdecoderAsync-class.html#instance-methods">Methods</a></li>
+        </ul>
+    </div>
+</header>
+
+<div class="container body">
+
+  <div class="col-xs-6 col-sm-3 col-md-3 sidebar sidebar-offcanvas-left">
+    <h5><a href="index.html">hetimatorrent</a></h5>
+    <h5><a href="hetimatorrent/hetimatorrent-library.html">hetimatorrent</a></h5>
+
+    <ol>
+    
+    
+    
+      <li class="section-title"><a href="hetimatorrent/hetimatorrent-library.html#functions">Functions</a></li>
+      <li><a href="hetimatorrent/objectToString.html">objectToString</a></li>
+    
+    
+      <li class="section-title"><a href="hetimatorrent/hetimatorrent-library.html#classes">Classes</a></li>
+      <li><a href="hetimatorrent/Bdecoder-class.html">Bdecoder</a></li>
+      <li><a href="hetimatorrent/BdecoderAsync-class.html">BdecoderAsync</a></li>
+      <li><a href="hetimatorrent/Bencode-class.html">Bencode</a></li>
+      <li><a href="hetimatorrent/BencodeAsync-class.html">BencodeAsync</a></li>
+      <li><a href="hetimatorrent/Bencoder-class.html">Bencoder</a></li>
+      <li><a href="hetimatorrent/Bitfield-class.html">Bitfield</a></li>
+      <li><a href="hetimatorrent/BitfieldInter-class.html">BitfieldInter</a></li>
+      <li><a href="hetimatorrent/BitfieldPlus-class.html">BitfieldPlus</a></li>
+      <li><a href="hetimatorrent/BlockData-class.html">BlockData</a></li>
+      <li><a href="hetimatorrent/CreatePieceHashResult-class.html">CreatePieceHashResult</a></li>
+      <li><a href="hetimatorrent/KBucket-class.html">KBucket</a></li>
+      <li><a href="hetimatorrent/KGetPeerNodes-class.html">KGetPeerNodes</a></li>
+      <li><a href="hetimatorrent/KGetPeerValue-class.html">KGetPeerValue</a></li>
+      <li><a href="hetimatorrent/KId-class.html">KId</a></li>
+      <li><a href="hetimatorrent/KNode-class.html">KNode</a></li>
+      <li><a href="hetimatorrent/KNodeSendInfo-class.html">KNodeSendInfo</a></li>
+      <li><a href="hetimatorrent/KPeerInfo-class.html">KPeerInfo</a></li>
+      <li><a href="hetimatorrent/KRootingTable-class.html">KRootingTable</a></li>
+      <li><a href="hetimatorrent/KrpcAnnounce-class.html">KrpcAnnounce</a></li>
+      <li><a href="hetimatorrent/KrpcError-class.html">KrpcError</a></li>
+      <li><a href="hetimatorrent/KrpcFindNode-class.html">KrpcFindNode</a></li>
+      <li><a href="hetimatorrent/KrpcGetPeers-class.html">KrpcGetPeers</a></li>
+      <li><a href="hetimatorrent/KrpcMessage-class.html">KrpcMessage</a></li>
+      <li><a href="hetimatorrent/KrpcPing-class.html">KrpcPing</a></li>
+      <li><a href="hetimatorrent/KrpcQuery-class.html">KrpcQuery</a></li>
+      <li><a href="hetimatorrent/KrpcResponse-class.html">KrpcResponse</a></li>
+      <li><a href="hetimatorrent/MessageBitfield-class.html">MessageBitfield</a></li>
+      <li><a href="hetimatorrent/MessageCancel-class.html">MessageCancel</a></li>
+      <li><a href="hetimatorrent/MessageChoke-class.html">MessageChoke</a></li>
+      <li><a href="hetimatorrent/MessageHandshake-class.html">MessageHandshake</a></li>
+      <li><a href="hetimatorrent/MessageHave-class.html">MessageHave</a></li>
+      <li><a href="hetimatorrent/MessageInterested-class.html">MessageInterested</a></li>
+      <li><a href="hetimatorrent/MessageKeepAlive-class.html">MessageKeepAlive</a></li>
+      <li><a href="hetimatorrent/MessageNotInterested-class.html">MessageNotInterested</a></li>
+      <li><a href="hetimatorrent/MessageNull-class.html">MessageNull</a></li>
+      <li><a href="hetimatorrent/MessagePiece-class.html">MessagePiece</a></li>
+      <li><a href="hetimatorrent/MessagePort-class.html">MessagePort</a></li>
+      <li><a href="hetimatorrent/MessageRequest-class.html">MessageRequest</a></li>
+      <li><a href="hetimatorrent/MessageUnchoke-class.html">MessageUnchoke</a></li>
+      <li><a href="hetimatorrent/PeerIdCreator-class.html">PeerIdCreator</a></li>
+      <li><a href="hetimatorrent/PieceInfo-class.html">PieceInfo</a></li>
+      <li><a href="hetimatorrent/PieceInfoItem-class.html">PieceInfoItem</a></li>
+      <li><a href="hetimatorrent/RequestSingleWaitReturn-class.html">RequestSingleWaitReturn</a></li>
+      <li><a href="hetimatorrent/SHA1Iso-class.html">SHA1Iso</a></li>
+      <li><a href="hetimatorrent/SHA1IsoInfo-class.html">SHA1IsoInfo</a></li>
+      <li><a href="hetimatorrent/SHA1IsoSub-class.html">SHA1IsoSub</a></li>
+      <li><a href="hetimatorrent/ShuffleLinkedList-class.html">ShuffleLinkedList</a></li>
+      <li><a href="hetimatorrent/StartResult-class.html">StartResult</a></li>
+      <li><a href="hetimatorrent/StopResult-class.html">StopResult</a></li>
+      <li><a href="hetimatorrent/TorrenAIEmpty-class.html">TorrenAIEmpty</a></li>
+      <li><a href="hetimatorrent/TorrentAI-class.html">TorrentAI</a></li>
+      <li><a href="hetimatorrent/TorrentAIBasic-class.html">TorrentAIBasic</a></li>
+      <li><a href="hetimatorrent/TorrentAIChokeTest-class.html">TorrentAIChokeTest</a></li>
+      <li><a href="hetimatorrent/TorrentClient-class.html">TorrentClient</a></li>
+      <li><a href="hetimatorrent/TorrentClientFront-class.html">TorrentClientFront</a></li>
+      <li><a href="hetimatorrent/TorrentClientFrontNerve-class.html">TorrentClientFrontNerve</a></li>
+      <li><a href="hetimatorrent/TorrentClientManager-class.html">TorrentClientManager</a></li>
+      <li><a href="hetimatorrent/TorrentClientMessage-class.html">TorrentClientMessage</a></li>
+      <li><a href="hetimatorrent/TorrentClientPeerInfo-class.html">TorrentClientPeerInfo</a></li>
+      <li><a href="hetimatorrent/TorrentClientPeerInfoList-class.html">TorrentClientPeerInfoList</a></li>
+      <li><a href="hetimatorrent/TorrentClientSignal-class.html">TorrentClientSignal</a></li>
+      <li><a href="hetimatorrent/TorrentClientSignalWithFront-class.html">TorrentClientSignalWithFront</a></li>
+      <li><a href="hetimatorrent/TorrentClientSignalWithPeerInfo-class.html">TorrentClientSignalWithPeerInfo</a></li>
+      <li><a href="hetimatorrent/TorrentEngine-class.html">TorrentEngine</a></li>
+      <li><a href="hetimatorrent/TorrentEngineAI-class.html">TorrentEngineAI</a></li>
+      <li><a href="hetimatorrent/TorrentEngineProgress-class.html">TorrentEngineProgress</a></li>
+      <li><a href="hetimatorrent/TorrentEngineTorrent-class.html">TorrentEngineTorrent</a></li>
+      <li><a href="hetimatorrent/TorrentFile-class.html">TorrentFile</a></li>
+      <li><a href="hetimatorrent/TorrentFileCreator-class.html">TorrentFileCreator</a></li>
+      <li><a href="hetimatorrent/TorrentFileCreatorResult-class.html">TorrentFileCreatorResult</a></li>
+      <li><a href="hetimatorrent/TorrentFileFile-class.html">TorrentFileFile</a></li>
+      <li><a href="hetimatorrent/TorrentFileFiles-class.html">TorrentFileFiles</a></li>
+      <li><a href="hetimatorrent/TorrentFileInfo-class.html">TorrentFileInfo</a></li>
+      <li><a href="hetimatorrent/TorrentInfoHashCreator-class.html">TorrentInfoHashCreator</a></li>
+      <li><a href="hetimatorrent/TorrentMessage-class.html">TorrentMessage</a></li>
+      <li><a href="hetimatorrent/TorrentPieceHashCreator-class.html">TorrentPieceHashCreator</a></li>
+      <li><a href="hetimatorrent/TrackerClient-class.html">TrackerClient</a></li>
+      <li><a href="hetimatorrent/TrackerPeerInfo-class.html">TrackerPeerInfo</a></li>
+      <li><a href="hetimatorrent/TrackerPeerManager-class.html">TrackerPeerManager</a></li>
+      <li><a href="hetimatorrent/TrackerRequest-class.html">TrackerRequest</a></li>
+      <li><a href="hetimatorrent/TrackerRequestResult-class.html">TrackerRequestResult</a></li>
+      <li><a href="hetimatorrent/TrackerResponse-class.html">TrackerResponse</a></li>
+      <li><a href="hetimatorrent/TrackerServer-class.html">TrackerServer</a></li>
+      <li><a href="hetimatorrent/TrackerUrl-class.html">TrackerUrl</a></li>
+    
+      <li class="section-title"><a href="hetimatorrent/hetimatorrent-library.html#exceptions">Exceptions</a></li>
+      <li><a href="hetimatorrent/BencodeParseError-class.html">BencodeParseError</a></li>
+      <li><a href="hetimatorrent/HetiBencodeParseError-class.html">HetiBencodeParseError</a></li>
+    </ol>
+  </div>
+
+  <div class="col-xs-12 col-sm-9 col-md-6 main-content">
+
+    <section class="desc markdown">
+    
+          <p class="no-docs">Not documented.</p>
+    
+    </section>
+
+
+
+    <section class="summary" id="static-properties">
+        <h2>Static Properties</h2>
+
+        <dl class="properties">
+            <dt id="DIGIT" class="property">
+                <span class="top-level-variable-type">List&lt;int&gt;</span>
+                <a href="hetimatorrent/BdecoderAsync/DIGIT.html">DIGIT</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read / write
+    </div>
+    
+            </dd>
+            <dt id="DIGIT_AS_STRING" class="property">
+                <span class="top-level-variable-type">String</span>
+                <a href="hetimatorrent/BdecoderAsync/DIGIT_AS_STRING.html">DIGIT_AS_STRING</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read / write
+    </div>
+    
+            </dd>
+        </dl>
+    </section>
+
+    <section class="summary" id="static-methods">
+        <h2>Static Methods</h2>
+        <dl class="callables">
+            <dt id="intList2int" class="callable">
+                <a href="hetimatorrent/BdecoderAsync/intList2int.html"><span class="name ">intList2int</span></a><span class="signature">(<wbr><span class="parameter" id="intList2int-param-numList"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">numList</span></span>)
+                    &#8594;
+                    <span class="returntype">int</span>
+                </span>
+            </dt>
+            <dd>
+                
+            </dd>
+        </dl>
+    </section>
+
+
+    <section class="summary" id="constructors">
+        <h2>Constructors</h2>
+
+        <dl class="constructor-summary-list">
+            <dt id="BdecoderAsync" class="callable">
+                <span class="name"><a href="hetimatorrent/BdecoderAsync/BdecoderAsync.html">BdecoderAsync</a></span><span class="signature">()</span>
+            </dt>
+            <dd>
+                
+            </dd>
+        </dl>
+      </section>
+
+
+      <section class="summary" id="instance-methods">
+          <h2>Methods</h2>
+          <dl class="callables">
+              <dt id="decode" class="callable">
+                  <a href="hetimatorrent/BdecoderAsync/decode.html"><span class="name ">decode</span></a><span class="signature">(<wbr><span class="parameter" id="decode-param-parser"><span class="type-annotation">EasyParser</span> <span class="parameter-name">parser</span></span>)
+                      &#8594;
+                      <span class="returntype">Future&lt;Object&gt;</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="decodeBenObject" class="callable">
+                  <a href="hetimatorrent/BdecoderAsync/decodeBenObject.html"><span class="name ">decodeBenObject</span></a><span class="signature">(<wbr><span class="parameter" id="decodeBenObject-param-parser"><span class="type-annotation">EasyParser</span> <span class="parameter-name">parser</span></span>)
+                      &#8594;
+                      <span class="returntype">Future&lt;Object&gt;</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="decodeBytes" class="callable">
+                  <a href="hetimatorrent/BdecoderAsync/decodeBytes.html"><span class="name ">decodeBytes</span></a><span class="signature">(<wbr><span class="parameter" id="decodeBytes-param-parser"><span class="type-annotation">EasyParser</span> <span class="parameter-name">parser</span></span>)
+                      &#8594;
+                      <span class="returntype">Future&lt;List&lt;int&gt;&gt;</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="decodeDiction" class="callable">
+                  <a href="hetimatorrent/BdecoderAsync/decodeDiction.html"><span class="name ">decodeDiction</span></a><span class="signature">(<wbr><span class="parameter" id="decodeDiction-param-parser"><span class="type-annotation">EasyParser</span> <span class="parameter-name">parser</span></span>)
+                      &#8594;
+                      <span class="returntype">Future&lt;Map&gt;</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="decodeDictionElements" class="callable">
+                  <a href="hetimatorrent/BdecoderAsync/decodeDictionElements.html"><span class="name ">decodeDictionElements</span></a><span class="signature">(<wbr><span class="parameter" id="decodeDictionElements-param-parser"><span class="type-annotation">EasyParser</span> <span class="parameter-name">parser</span></span>)
+                      &#8594;
+                      <span class="returntype">Future&lt;Map&gt;</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="decodeList" class="callable">
+                  <a href="hetimatorrent/BdecoderAsync/decodeList.html"><span class="name ">decodeList</span></a><span class="signature">(<wbr><span class="parameter" id="decodeList-param-parser"><span class="type-annotation">EasyParser</span> <span class="parameter-name">parser</span></span>)
+                      &#8594;
+                      <span class="returntype">Future&lt;List&lt;Object&gt;&gt;</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="decodeListElement" class="callable">
+                  <a href="hetimatorrent/BdecoderAsync/decodeListElement.html"><span class="name ">decodeListElement</span></a><span class="signature">(<wbr><span class="parameter" id="decodeListElement-param-parser"><span class="type-annotation">EasyParser</span> <span class="parameter-name">parser</span></span>)
+                      &#8594;
+                      <span class="returntype">Future&lt;List&lt;Object&gt;&gt;</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="decodeNumber" class="callable">
+                  <a href="hetimatorrent/BdecoderAsync/decodeNumber.html"><span class="name ">decodeNumber</span></a><span class="signature">(<wbr><span class="parameter" id="decodeNumber-param-parser"><span class="type-annotation">EasyParser</span> <span class="parameter-name">parser</span></span>)
+                      &#8594;
+                      <span class="returntype">Future&lt;int&gt;</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="decodeString" class="callable">
+                  <a href="hetimatorrent/BdecoderAsync/decodeString.html"><span class="name ">decodeString</span></a><span class="signature">(<wbr><span class="parameter" id="decodeString-param-parser"><span class="type-annotation">EasyParser</span> <span class="parameter-name">parser</span></span>)
+                      &#8594;
+                      <span class="returntype">Future&lt;String&gt;</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+          </dl>
+      </section>
+
+    </div> <!-- /.main-content -->
+
+  <div class="col-xs-6 col-sm-6 col-md-3 sidebar sidebar-offcanvas-right">
+    <h5>BdecoderAsync</h5>
+    <ol>
+    
+      <li class="section-title"><a href="hetimatorrent/BdecoderAsync-class.html#static-properties">Static properties</a></li>
+      <li><a href="hetimatorrent/BdecoderAsync/DIGIT.html">DIGIT</a></li>
+      <li><a href="hetimatorrent/BdecoderAsync/DIGIT_AS_STRING.html">DIGIT_AS_STRING</a></li>
+    
+      <li class="section-title"><a href="hetimatorrent/BdecoderAsync-class.html#static-methods">Static methods</a></li>
+      <li><a href="hetimatorrent/BdecoderAsync/intList2int.html">intList2int</a></li>
+    
+    
+      <li class="section-title"><a href="hetimatorrent/BdecoderAsync-class.html#constructors">Constructors</a></li>
+      <li><a href="hetimatorrent/BdecoderAsync/BdecoderAsync.html">BdecoderAsync</a></li>
+    
+    
+      <li class="section-title"><a href="hetimatorrent/BdecoderAsync-class.html#methods">Methods</a></li>
+      <li><a href="hetimatorrent/BdecoderAsync/decode.html">decode</a>
+</li>
+      <li><a href="hetimatorrent/BdecoderAsync/decodeBenObject.html">decodeBenObject</a>
+</li>
+      <li><a href="hetimatorrent/BdecoderAsync/decodeBytes.html">decodeBytes</a>
+</li>
+      <li><a href="hetimatorrent/BdecoderAsync/decodeDiction.html">decodeDiction</a>
+</li>
+      <li><a href="hetimatorrent/BdecoderAsync/decodeDictionElements.html">decodeDictionElements</a>
+</li>
+      <li><a href="hetimatorrent/BdecoderAsync/decodeList.html">decodeList</a>
+</li>
+      <li><a href="hetimatorrent/BdecoderAsync/decodeListElement.html">decodeListElement</a>
+</li>
+      <li><a href="hetimatorrent/BdecoderAsync/decodeNumber.html">decodeNumber</a>
+</li>
+      <li><a href="hetimatorrent/BdecoderAsync/decodeString.html">decodeString</a>
+</li>
+    </ol>
+  </div><!--/.sidebar-offcanvas-->
+
+</div> <!-- container -->
+
+<footer>
+    <div class="container-fluid">
+        <div class="container">
+            <p class="text-center">
+                <span class="no-break">
+                  hetimatorrent 0.0.1 api docs
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="https://www.dartlang.org">
+                    <img src="static-assets/favicon.png" alt="Dart" title="Dart"width="16" height="16">
+                  </a>
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="http://creativecommons.org/licenses/by-sa/4.0/">cc license</a>
+                </span>
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script src="static-assets/prettify.js"></script>
+<script src="static-assets/script.js"></script>
+<!-- Do not remove placeholder -->
+<!-- Footer Placeholder -->
+</body>
+
+</html>

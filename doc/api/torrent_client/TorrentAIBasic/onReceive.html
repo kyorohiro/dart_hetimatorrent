@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>onReceive method - TorrentAIBasic class - torrent_client library - Dart API</title>
+    <!-- required because all the links are pseudo-absolute -->
+    <base href="../..">
+
+    <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro|Roboto:500,400italic,300,400' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="static-assets/prettify.css">
+    <link rel="stylesheet" href="static-assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static-assets/styles.css">
+
+    <meta name="description" content="API docs for the onReceive method from the TorrentAIBasic class, for the Dart programming language.">
+    <link rel="icon" href="static-assets/favicon.png">
+
+    <!-- Do not remove placeholder -->
+    <!-- Header Placeholder -->
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header class="container-fluid" id="title">
+    <nav class="navbar navbar-fixed-top">
+        <div class="container">
+            <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+            <ol class="breadcrumbs gt-separated hidden-xs">
+                <li><a href="index.html">hetimatorrent</a></li>
+                <li><a href="torrent_client/torrent_client-library.html">torrent_client</a></li>
+                <li><a href="torrent_client/TorrentAIBasic-class.html">TorrentAIBasic</a></li>
+                <li class="self-crumb">onReceive</li>
+            </ol>
+            <div class="self-name">onReceive</div>
+        </div>
+    </nav>
+    <div class="container masthead">
+        <ol class="breadcrumbs gt-separated visible-xs">
+            <li><a href="index.html">hetimatorrent</a></li>
+            <li><a href="torrent_client/torrent_client-library.html">torrent_client</a></li>
+            <li><a href="torrent_client/TorrentAIBasic-class.html">TorrentAIBasic</a></li>
+            <li class="self-crumb">onReceive</li>
+        </ol>
+        <div class="title-description">
+            <h1 class="title">
+                <div class="kind">method</div> onReceive
+            </h1>
+            <!-- p class="subtitle">
+                
+            </p -->
+        </div>
+        <ul class="subnav">
+            <li><a href="torrent_client/TorrentAIBasic/onReceive.html#source">Source</a></li>
+        </ul>
+    </div>
+</header>
+
+<div class="container body">
+
+  <div class="col-xs-6 col-sm-3 sidebar sidebar-offcanvas-left">
+    <h5><a href="index.html">hetimatorrent</a></h5>
+    <h5><a href="torrent_client/torrent_client-library.html">torrent_client</a></h5>
+    <h5><a href="torrent_client/TorrentAIBasic-class.html">TorrentAIBasic</a></h5>
+
+    <ol>
+    
+    
+    
+      <li class="section-title"><a href="torrent_client/TorrentAIBasic-class.html#instance-properties">Properties</a></li>
+      <li><a href="torrent_client/TorrentAIBasic/dhtPort.html">dhtPort</a>
+</li>
+      <li><a href="torrent_client/TorrentAIBasic/useDht.html">useDht</a>
+</li>
+    
+      <li class="section-title"><a href="torrent_client/TorrentAIBasic-class.html#constructors">Constructors</a></li>
+      <li><a href="torrent_client/TorrentAIBasic/TorrentAIBasic.html">TorrentAIBasic</a></li>
+    
+    
+      <li class="section-title"><a href="torrent_client/TorrentAIBasic-class.html#methods">Methods</a></li>
+      <li><a href="torrent_client/TorrentAIBasic/onReceive.html">onReceive</a>
+</li>
+      <li><a href="torrent_client/TorrentAIBasic/onSignal.html">onSignal</a>
+</li>
+      <li><a href="torrent_client/TorrentAIBasic/onTick.html">onTick</a>
+</li>
+    </ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+  <div class="col-xs-12 col-sm-9 col-md-6 main-content">
+
+    <section class="multi-line-signature">
+            <span class="returntype">Future</span>
+            <span class="name ">onReceive</span>(
+            <br>
+            <div class="parameters">
+                <span class="parameter" id="onReceive-param-client"><span class="type-annotation"><a href="hetimatorrent/TorrentClient-class.html">TorrentClient</a></span> <span class="parameter-name">client</span></span>,<br><span class="parameter" id="onReceive-param-info"><span class="type-annotation"><a href="hetimatorrent/TorrentClientPeerInfo-class.html">TorrentClientPeerInfo</a></span> <span class="parameter-name">info</span></span>,<br><span class="parameter" id="onReceive-param-message"><span class="type-annotation"><a href="hetimatorrent/TorrentMessage-class.html">TorrentMessage</a></span> <span class="parameter-name">message</span></span>
+            </div>
+            )    </section>
+
+    <section class="desc markdown">
+    
+          <p class="no-docs">Not documented.</p>
+    
+    </section>
+
+    <section class="summary source-code" id="source">
+      <h2>Source</h2>
+      <pre><code class="prettyprint lang-dart">Future onReceive(TorrentClient client, TorrentClientPeerInfo info, TorrentMessage message) async {
+  TorrentClientFront front = info.front;
+  switch (message.id) {
+    case TorrentMessage.DUMMY_SIGN_SHAKEHAND:
+      if (true == front.handshakeFromMe || info.amI == true) {
+        return null;
+      } else {
+        await front.sendHandshake();
+        if (useDht == true) {
+          if ((message as MessageHandshake).reserved[7] &amp; 0x01 == 0x01) {
+            if (_dhtPort == null) {
+              front.sendPort(client.globalPort);
+            } else {
+              front.sendPort(_dhtPort);
+            }
+          }
+        }
+      }
+      break;
+    case TorrentMessage.SIGN_REQUEST:
+      if (info.front.chokedFromMe == TorrentClientFront.STATE_ON) {
+        print(&quot;wearn ; already choked ${info.id}&quot;);
+        break;
+      }
+
+      MessageRequest requestMessage = message;
+      int index = requestMessage.index;
+      int begin = requestMessage.begin;
+      int len = requestMessage.length;
+
+      if (false == client.targetBlock.have(index)) {
+        front.close();
+        return null;
+      } else {
+        ReadResult result = await client.targetBlock.readBlock(index);
+        List cont = new List.filled(len, 0);
+        if (len &gt; result.buffer.length) {
+          len = result.buffer.length;
+        }
+        cont.setRange(0, len, result.buffer, begin);
+        await front.sendPiece(index, begin, cont);
+      }
+      break;
+    case TorrentMessage.SIGN_BITFIELD:
+    //
+    // targetBlock &apos;does not reflect. check ID_SET_PIECE_A_PART;
+    // case TorrentMessage.SIGN_PIECE:
+    case TorrentMessage.SIGN_UNCHOKE:
+      if (_pieceTest == null) {
+        _pieceTest = new TorrentAIPieceTest(client);
+      }
+      _pieceTest.pieceTest(client, front);
+      break;
+    case TorrentMessage.SIGN_PORT:
+      break;
+  }
+}</code></pre>
+    </section>
+
+  </div> <!-- /.main-content -->
+
+</div> <!-- container -->
+
+<footer>
+    <div class="container-fluid">
+        <div class="container">
+            <p class="text-center">
+                <span class="no-break">
+                  hetimatorrent 0.0.1 api docs
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="https://www.dartlang.org">
+                    <img src="static-assets/favicon.png" alt="Dart" title="Dart"width="16" height="16">
+                  </a>
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="http://creativecommons.org/licenses/by-sa/4.0/">cc license</a>
+                </span>
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script src="static-assets/prettify.js"></script>
+<script src="static-assets/script.js"></script>
+<!-- Do not remove placeholder -->
+<!-- Footer Placeholder -->
+</body>
+
+</html>
