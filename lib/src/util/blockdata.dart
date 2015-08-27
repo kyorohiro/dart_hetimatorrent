@@ -1,4 +1,4 @@
-library hetimatorrent.torrent.blockdata;
+library hetimatorrent.util.blockdata;
 
 import 'dart:core';
 import 'dart:async';

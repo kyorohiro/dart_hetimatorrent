@@ -1,4 +1,4 @@
-library hetimatorrent.torrent.bencode;
+library hetimatorrent.util.bencode;
 import 'dart:typed_data' as data;
 import 'dart:convert' as convert;
 import 'dart:core';

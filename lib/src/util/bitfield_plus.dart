@@ -1,4 +1,4 @@
-library hetimatorrent.torrent.ddbitfield;
+library hetimatorrent.util.ddbitfield;
 
 import 'dart:core';
 import 'dart:math';

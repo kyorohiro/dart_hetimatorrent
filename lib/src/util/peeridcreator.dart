@@ -1,4 +1,4 @@
-library hetimatorrent.torrent.peeridcreator;
+library hetimatorrent.util.peeridcreator;
 import 'dart:math' as math;
 import 'dart:core';
 

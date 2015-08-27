@@ -1,4 +1,4 @@
-library hetimatorrent.torrent.pieceinfo;
+library hetimatorrent.util.pieceinfo;
 import 'dart:core';
 
 class PieceInfoItem {
