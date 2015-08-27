@@ -10,8 +10,9 @@ import '../message/krpcmessage.dart';
 import '../message/krpcmessage_findnode.dart';
 import '../kpeerinfo.dart';
 import '../knode.dart';
+import 'knodework.dart';
 
-class KNodeWorkFindNode {
+class KNodeWorkFindNode extends KNodeWork{
   List<List> _todoFineNodes = [];
   ShuffleLinkedList<KPeerInfo> _findNodesInfo = new ShuffleLinkedList(20);
 
@@ -21,13 +22,16 @@ class KNodeWorkFindNode {
   int _timeFromUpdateP2PNetwork = 0;
   int get timeFromUpdateP2PNetwork => _timeFromUpdateP2PNetwork;
 
+  @override
   start(KNode node) {
     _timeFromUpdateP2PNetwork = _timeFromStart = new DateTime.now().millisecondsSinceEpoch;
     updateP2PNetwork(node);
   }
 
+  @override
   stop(KNode node) {}
 
+  @override
   updateP2PNetwork(KNode node) {
     _findNodesInfo.clearAll();
     updateP2PNetworkWithoutClear(node);
@@ -73,6 +77,7 @@ class KNodeWorkFindNode {
     }
   }
 
+  @override
   onAddNodeFromIPAndPort(KNode node, String ip, int port) {
     if (node.rawUdoSocket != null) {
       node.sendFindNodeQuery(ip, port, node.nodeId.value).catchError((_) {});
@@ -81,6 +86,7 @@ class KNodeWorkFindNode {
     }
   }
 
+  @override
   onTicket(KNode node) {
     int currentTime = new DateTime.now().millisecondsSinceEpoch;
     if (node.intervalSecondForFindNode < (currentTime - _timeFromUpdateP2PNetwork) ~/ 1000) {
@@ -95,20 +101,22 @@ class KNodeWorkFindNode {
     _todoFineNodes.clear();
   }
 
-  updateyRootingTable(KNode node, HetimaReceiveUdpInfo info, KrpcMessage message) async {
+  updateRootingTable(KNode node, HetimaReceiveUdpInfo info, KrpcMessage message) async {
     node.rootingtable.update(new KPeerInfo(info.remoteAddress, info.remotePort, message.nodeIdAsKId));
     updateP2PNetworkWithoutClear(node);
   }
 
+  @override
   onReceiveQuery(KNode node, HetimaReceiveUdpInfo info, KrpcMessage message) async {
     if (message.queryAsString == KrpcMessage.MESSAGE_FIND_NODE) {
       KrpcFindNode findNode = message.toFindNode();
       List<KPeerInfo> infos = await node.rootingtable.findNode(findNode.targetAsKId);
       await node.sendFindNodeResponse(info.remoteAddress, info.remotePort, message.transactionId, KPeerInfo.toCompactNodeInfos(infos)).catchError((_) {});
     }
-    updateyRootingTable(node, info, message);
+    updateRootingTable(node, info, message);
   }
 
+  @override
   onReceiveResponse(KNode node, HetimaReceiveUdpInfo info, KrpcMessage message) {
     if (message.queryFromTransactionId == KrpcMessage.MESSAGE_FIND_NODE) {
       KrpcFindNode findNode = message.toFindNode();
@@ -116,9 +124,21 @@ class KNodeWorkFindNode {
         node.rootingtable.update(info);
       }
     }
-    updateyRootingTable(node, info, message);
+    updateRootingTable(node, info, message);
   }
 
+  @override
   onReceiveError(KNode node, HetimaReceiveUdpInfo info, KrpcMessage message) {}
+
+  @override
   onReceiveUnknown(KNode node, HetimaReceiveUdpInfo info, KrpcMessage message) {}
+
+  @override
+  researchSearchPeer(KNode node, KId infoHash) {}
+
+  @override
+  startSearchValue(KNode node, KId infoHash, int port, {getPeerOnly: false}) {}
+
+  @override
+  stopSearchValue(KNode node, KId infoHash) {}
 }
