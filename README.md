@@ -39,3 +39,10 @@ A Torrent library for Dart developers.
 
 [Bitcoin address for donate]
  16bnm3h16eSduvdYwpCWeuvPapAc5zcvK4
+ 
+ 
+ -- 
+kyorohiro work
+
+http://kyorohiro.strikingly.com
+
