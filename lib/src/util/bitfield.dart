@@ -1,14 +1,14 @@
 library hetimatorrent.util.bitfield;
 
 import 'dart:core';
-import 'dart:math';
+import 'dart:typed_data';
 
 abstract class BitfieldInter {
   static final List<int> BIT = [0xFF, 0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC, 0xFE];
   List<int> get value;
   List<int> get rawValue;
   void writeBytes(List<int> bytes);
-  void oneClear() ;
+  void oneClear();
   void zeroClear();
   int lengthPerBit();
   int lengthPerByte();
@@ -30,10 +30,10 @@ class Bitfield extends BitfieldInter {
 
   List<int> get value => new List.from(_bitfieldData);
   List<int> get rawValue => _bitfieldData;
-  
-  static int calcbitSize(int pieceSize, {pieceLength:20}) {
-    int ret = pieceSize~/pieceLength;
-    if(pieceSize % pieceLength != 0) {
+
+  static int calcbitSize(int pieceSize, {pieceLength: 20}) {
+    int ret = pieceSize ~/ pieceLength;
+    if (pieceSize % pieceLength != 0) {
       print("wearning todo: --break bitfield");
       ret + 1;
     }
@@ -41,8 +41,6 @@ class Bitfield extends BitfieldInter {
   }
 
   Bitfield(int bitSize, {bool clearIsOne: true, seed: null}) {
-
-
     this._bitSize = bitSize;
     int byteSize = bitSize ~/ 8;
     if (bitSize % 8 != 0) {
@@ -79,7 +77,7 @@ class Bitfield extends BitfieldInter {
   //
   // todo addtest
   void writeBytes(List<int> bytes) {
-   _bitfieldData.setRange(0, bytes.length, bytes); 
+    _bitfieldData.setRange(0, bytes.length, bytes);
   }
 
   void oneClear() {
@@ -105,8 +103,8 @@ class Bitfield extends BitfieldInter {
   int numOfOn(bool isOn) {
     int ret = 0;
     int len = lengthPerBit();
-    for(int i=0;i<len;i++) {
-      if(getIsOn(i) == isOn) {
+    for (int i = 0; i < len; i++) {
+      if (getIsOn(i) == isOn) {
         ret++;
       }
     }
@@ -145,35 +143,34 @@ class Bitfield extends BitfieldInter {
     return true;
   }
 
-  bool getIsOn(int number) {
-    int chunk = number ~/ 8;
-    int pos = number % 8;
+  bool operator [](int idx) => getIsOn(idx);
+  void operator []=(int index, bool value) => setIsOn(index, value);
+
+  bool getIsOn(int idx) {
     // 8 0, 7 1, 3 3 7 7
-    if (_bitfieldData == null || chunk >= _bitfieldData.length) {
+    if (_bitfieldData == null || idx ~/ 8 >= _bitfieldData.length) {
       return false;
     }
-    if (((_bitfieldData[chunk] >> (7 - pos)) & 0x01) == 0x01) {
+    if (((_bitfieldData[idx ~/ 8] >> (7 - idx % 8)) & 0x01) == 0x01) {
       return true;
     } else {
       return false;
     }
   }
 
-  void setIsOn(int number, bool on) {
-    int chunk = number ~/ 8;
-    int pos = number % 8;
+  void setIsOn(int idx, bool on) {
     // 8 0, 7 1, 3 3 7 7
-    if (_bitfieldData == null || chunk >= _bitfieldData.length || number >= lengthPerBit()) {
+    if (_bitfieldData == null || idx ~/ 8 >= _bitfieldData.length || idx >= lengthPerBit()) {
       return;
     }
 
-    int value = 0x01 << (7 - pos);
-    int v = _bitfieldData[chunk];
+    int value = 0x01 << (7 - idx % 8);
+    int v = _bitfieldData[idx ~/ 8];
     if (on) {
-      _bitfieldData[chunk] = v | value;
+      _bitfieldData[idx ~/ 8] = v | value;
     } else {
       value = value ^ 0xFFFFFFFF;
-      _bitfieldData[chunk] = v & value;
+      _bitfieldData[idx ~/ 8] = v & value;
     }
   }
 
@@ -210,7 +207,6 @@ class Bitfield extends BitfieldInter {
       return false;
     }
   }
-
 
   void update() {}
 }

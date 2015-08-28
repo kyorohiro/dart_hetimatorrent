@@ -3,6 +3,8 @@ library blockdata.test;
 import 'package:unittest/unittest.dart' as unit;
 import 'package:hetimatorrent/hetimatorrent.dart';
 import 'package:hetimacore/hetimacore.dart';
+import 'dart:typed_data';
+import 'dart:async';
 
 void main() {
   unit.group('read test', () {
@@ -264,13 +266,72 @@ void main() {
           unit.expect(blockData.getPieceInfo(1).getPieceInfo(0).end, 4);
         });
       }).then((_) {
-          return blockData.writePartBlock([100, 101, 102, 103, 104], 1, 0, 5);
-        }).then((WriteResult r) {
-          unit.expect(blockData.pieceInfoBlockNums().length, 0);
-          return blockData.readBlock(1);
-        }).then((ReadResult r) {
-          unit.expect(r.buffer, [100, 101, 102, 103, 104]);
-        });
+        return blockData.writePartBlock([100, 101, 102, 103, 104], 1, 0, 5);
+      }).then((WriteResult r) {
+        unit.expect(blockData.pieceInfoBlockNums().length, 0);
+        return blockData.readBlock(1);
+      }).then((ReadResult r) {
+        unit.expect(r.buffer, [100, 101, 102, 103, 104]);
+      });
+    });
+
+    unit.test("BitfieldA", () {
+      BitfieldSample a = new BitfieldSample(12);
+      a[5] = true;
+      a[10] = true;
+      print("${a.toBytes()}");
     });
   });
+}
+
+class BitfieldSample {
+  List<bool> _data = [];
+  BitfieldSample(int length) {
+    _data = new List.filled(length, false);
+  }
+
+  bool operator [](int idx) => _data[idx];
+  void operator []=(int idx, bool value) {
+    _data[idx] = value;
+  }
+  int get length => _data.length;
+
+  List<int> toBytes() {
+    int bytesLengths = _data.length ~/ 8 + (_data.length % 8 == 0 ? 0 : 1);
+    Uint8List ret = new Uint8List(bytesLengths);
+    for (int i = 0; i < _data.length; i++) {
+      if (this[i] == true) {
+        ret[i ~/ 8] |= 0x80 >> (7 - (i % 8));
+      }
+    }
+    return ret;
+  }
+}
+
+class BlockDataSample {
+  BitfieldSample _info = null;
+  HetimaData _data = null;
+  int _blockSize = 0;
+  int _fileSize = 0;
+  BlockDataSample(int fileSize, int blockSize, HetimaData data) {
+    _info = new BitfieldSample(fileSize ~/ blockSize + (fileSize % blockSize == 0 ? 0 : 1));
+    _data = data;
+    _blockSize = blockSize;
+    _fileSize = fileSize;
+  }
+
+  bool operator [](int idx) => _info[idx];
+  int get length => _info.length;
+
+  Future<WriteResult> writeBlock(int index, List<int> data) async {
+    WriteResult ret = await _data.write(data, index * _blockSize);
+    _info[index] = true;
+    return ret;
+  }
+
+  Future<ReadResult> readBlock(int index) async {
+    int start = index * _blockSize;
+    int end = (start + _blockSize > _fileSize ? _fileSize : start + _blockSize);
+    return _data.read(start, end - start);
+  }
 }

@@ -4,19 +4,19 @@ import 'dart:core';
 import 'dart:async';
 import 'package:hetimacore/hetimacore.dart';
 
-import 'messagehandshake.dart';
-import 'messagebitfield.dart';
-import 'messagecancel.dart';
-import 'messagechoke.dart';
-import 'messageunchoke.dart';
-import 'messagehave.dart';
-import 'messageinterested.dart';
-import 'messagekeepalive.dart';
-import 'messagenotinterested.dart';
-import 'messagenull.dart';
-import 'messageport.dart';
-import 'messagerequest.dart';
-import 'messagepiece.dart';
+import 'torrentmessage_handshake.dart';
+import 'torrentmessage_bitfield.dart';
+import 'torrentmessage_cancel.dart';
+import 'torrentmessage_choke.dart';
+import 'torrentmessage_unchoke.dart';
+import 'torrentmessage_have.dart';
+import 'torrentmessage_interested.dart';
+import 'torrentmessage_keepalive.dart';
+import 'torrentmessage_notinterested.dart';
+import 'torrentmessage_null.dart';
+import 'torrentmessage_port.dart';
+import 'torrentmessage_request.dart';
+import 'torrentmessage_piece.dart';
 
 class TorrentMessage {
   static const int DUMMY_SIGN_SHAKEHAND = 501;
