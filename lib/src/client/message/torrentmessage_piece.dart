@@ -2,13 +2,11 @@ library hetimatorrent.message.piece;
 
 import 'dart:core';
 import 'dart:async';
-import 'dart:convert';
 import 'package:hetimacore/hetimacore.dart';
-import 'package:hetimanet/hetimanet.dart';
 import 'torrentmessage.dart';
 
 
-class MessagePiece extends TorrentMessage {
+class TMessagePiece extends TorrentMessage {
 
   int _mIndex = 0;
   int _mBegin = 0;
@@ -18,18 +16,18 @@ class MessagePiece extends TorrentMessage {
   int get begin => _mBegin;
   List<int> get content => new List.from(_mContent);
 
-  MessagePiece._empty() : super(TorrentMessage.SIGN_PIECE) {
+  TMessagePiece._empty() : super(TorrentMessage.SIGN_PIECE) {
   }
 
-  MessagePiece(int index, int begin, List<int> content) : super(TorrentMessage.SIGN_PIECE) {
+  TMessagePiece(int index, int begin, List<int> content) : super(TorrentMessage.SIGN_PIECE) {
     this._mIndex = index;
     this._mBegin = begin;
     this._mContent.addAll(content);
   }
 
-  static Future<MessagePiece> decode(EasyParser parser) {
+  static Future<TMessagePiece> decode(EasyParser parser) {
     Completer c = new Completer();
-    MessagePiece message = new MessagePiece._empty();
+    TMessagePiece message = new TMessagePiece._empty();
     int messageLength = 0;
     parser.push();
     parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN).then((int size) {

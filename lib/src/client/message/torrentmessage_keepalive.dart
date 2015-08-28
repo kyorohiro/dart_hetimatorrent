@@ -7,14 +7,14 @@ import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimanet/hetimanet.dart';
 import 'torrentmessage.dart';
 
-class MessageKeepAlive extends TorrentMessage {
+class TMessageKeepAlive extends TorrentMessage {
   static const int HAVE_LENGTH = 0;
-  MessageKeepAlive() : super(TorrentMessage.DUMMY_SIGN_KEEPALIVE) {
+  TMessageKeepAlive() : super(TorrentMessage.DUMMY_SIGN_KEEPALIVE) {
   }
 
-  static Future<MessageKeepAlive> decode(EasyParser parser) {
+  static Future<TMessageKeepAlive> decode(EasyParser parser) {
     Completer c = new Completer();
-    MessageKeepAlive message = new MessageKeepAlive();
+    TMessageKeepAlive message = new TMessageKeepAlive();
     parser.push();
     parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN).then((int size) {
       if(size != 0) {

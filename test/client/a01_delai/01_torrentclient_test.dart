@@ -55,7 +55,7 @@ void main() {
             return ticket.future;
           }).then((TorrentClientMessage info) {
             unit.expect(info.message.id, TorrentMessage.SIGN_BITFIELD);
-            MessageBitfield bitfield = info.message;
+            TMessageBitfield bitfield = info.message;
             print("----0004 E----${bitfield.bitfield}");
             unit.expect(creator.clientB.targetBlock.bitfield, bitfield.bitfield);
             return frontForBInA;
@@ -66,7 +66,7 @@ void main() {
             return ticket.future;
           }).then((TorrentClientMessage message) {
             unit.expect(message.message.id, TorrentMessage.SIGN_PIECE);
-            MessagePiece pieceMessage = message.message;
+            TMessagePiece pieceMessage = message.message;
             print("----0007 ${pieceMessage.content}");
             unit.expect(pieceMessage.content, [104, 101, 108, 108, 111]);
             //
@@ -76,7 +76,7 @@ void main() {
             });
           }).then((TorrentClientMessage message) {
             unit.expect(message.message.id, TorrentMessage.SIGN_PIECE);
-            MessagePiece pieceMessage = message.message;
+            TMessagePiece pieceMessage = message.message;
             unit.expect(pieceMessage.content, [119, 111, 114, 108, 100]);
             print("----0008 ${pieceMessage.content}");
             ticket = new Completer();
@@ -85,7 +85,7 @@ void main() {
             });
           }).then((TorrentClientMessage message) {
             unit.expect(message.message.id, TorrentMessage.SIGN_PIECE);
-            MessagePiece pieceMessage = message.message;
+            TMessagePiece pieceMessage = message.message;
             print("----0008 ${pieceMessage.content}");
             unit.expect(pieceMessage.content, [33, 0, 0, 0, 0]);
           

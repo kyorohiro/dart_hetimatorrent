@@ -2,26 +2,24 @@ library hetimatorrent.message.have;
 
 import 'dart:core';
 import 'dart:async';
-import 'dart:convert';
 import 'package:hetimacore/hetimacore.dart';
-import 'package:hetimanet/hetimanet.dart';
 import 'torrentmessage.dart';
 
-class MessageHave extends TorrentMessage {
+class TMessageHave extends TorrentMessage {
   static const int HAVE_LENGTH = 1+4*1;
   int _mIndex = 0;
   int get index => _mIndex; 
 
-  MessageHave._empty() : super(TorrentMessage.SIGN_HAVE) {
+  TMessageHave._empty() : super(TorrentMessage.SIGN_HAVE) {
   }
 
-  MessageHave(int index) : super(TorrentMessage.SIGN_HAVE) {
+  TMessageHave(int index) : super(TorrentMessage.SIGN_HAVE) {
     this._mIndex = index;
   }
 
-  static Future<MessageHave> decode(EasyParser parser) {
+  static Future<TMessageHave> decode(EasyParser parser) {
     Completer c = new Completer();
-    MessageHave message = new MessageHave._empty();
+    TMessageHave message = new TMessageHave._empty();
     parser.push();
     parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN).then((int size) {
       if(size != HAVE_LENGTH) {

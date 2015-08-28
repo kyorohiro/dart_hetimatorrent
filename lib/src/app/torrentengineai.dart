@@ -36,7 +36,7 @@ class TorrentEngineAI extends TorrentAI {
     if (isGo == true) {
       if (message.id == TorrentMessage.SIGN_PORT) {
         if (useDht == true) {
-          MessagePort messagePort = message;
+          TMessagePort messagePort = message;
           this._dht.addBootNode(info.ip, messagePort.port);
         }
       }

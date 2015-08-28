@@ -2,20 +2,18 @@ library hetimatorrent.message.interested;
 
 import 'dart:core';
 import 'dart:async';
-import 'dart:convert';
 import 'package:hetimacore/hetimacore.dart';
-import 'package:hetimanet/hetimanet.dart';
 import 'torrentmessage.dart';
 
-class MessageInterested extends TorrentMessage {
+class TMessageInterested extends TorrentMessage {
   static const int INTERESTED_LENGTH = 1;
 
-  MessageInterested() : super(TorrentMessage.SIGN_INTERESTED) {
+  TMessageInterested() : super(TorrentMessage.SIGN_INTERESTED) {
   }
 
-  static Future<MessageInterested> decode(EasyParser parser) {
+  static Future<TMessageInterested> decode(EasyParser parser) {
     Completer c = new Completer();
-    MessageInterested message = new MessageInterested();
+    TMessageInterested message = new TMessageInterested();
     parser.push();
     parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN).then((int size) {
       if(size != INTERESTED_LENGTH) {

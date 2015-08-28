@@ -67,7 +67,7 @@ class TorrentAIBasic extends TorrentAI {
         } else {
           await front.sendHandshake();
           if (useDht == true) {
-            if ((message as MessageHandshake).reserved[7] & 0x01 == 0x01) {
+            if ((message as TMessageHandshake).reserved[7] & 0x01 == 0x01) {
               if (_dhtPort == null) {
                 front.sendPort(client.globalPort);
               } else {
@@ -83,7 +83,7 @@ class TorrentAIBasic extends TorrentAI {
           break;
         }
 
-        MessageRequest requestMessage = message;
+        TMessageRequest requestMessage = message;
         int index = requestMessage.index;
         int begin = requestMessage.begin;
         int len = requestMessage.length;

@@ -221,8 +221,8 @@ class TorrentClient {
   void _internalOnReceive(TorrentClientFront front, TorrentClientPeerInfo info) {
     front.onReceiveEvent.listen((TorrentMessage message) async {
       messageStream.add(new TorrentClientMessage(info, message));
-      if (message is MessagePiece) {
-        MessagePiece piece = message;
+      if (message is TMessagePiece) {
+        TMessagePiece piece = message;
         try {
           await _targetBlock.writePartBlock(piece.content, piece.index, piece.begin, piece.content.length);
           if (_targetBlock.have(piece.index)) {

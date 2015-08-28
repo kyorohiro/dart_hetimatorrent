@@ -2,20 +2,18 @@ library hetimatorrent.message.choke;
 
 import 'dart:core';
 import 'dart:async';
-import 'dart:convert';
 import 'package:hetimacore/hetimacore.dart';
-import 'package:hetimanet/hetimanet.dart';
 import 'torrentmessage.dart';
 
-class MessageChoke extends TorrentMessage {
+class TMessageChoke extends TorrentMessage {
   static const int CHOKE_LENGTH = 1;
 
-  MessageChoke() : super(TorrentMessage.SIGN_CHOKE) {
+  TMessageChoke() : super(TorrentMessage.SIGN_CHOKE) {
   }
 
-  static Future<MessageChoke> decode(EasyParser parser) {
+  static Future<TMessageChoke> decode(EasyParser parser) {
     Completer c = new Completer();
-    MessageChoke message = new MessageChoke();
+    TMessageChoke message = new TMessageChoke();
     parser.push();
     parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN).then((int size) {
       if(size != CHOKE_LENGTH) {

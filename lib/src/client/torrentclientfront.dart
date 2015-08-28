@@ -57,7 +57,7 @@ class TorrentClientFront {
   Bitfield get bitfieldFromMe => _bitfieldFromMe;
   Map<String, Object> tmpForAI = {};
 
-  List<MessageRequest> currentRequesting = [];
+  List<TMessageRequest> currentRequesting = [];
   StreamController<TorrentMessage> stream = new StreamController();
   Stream<TorrentMessage> get onReceiveEvent => stream.stream;
 
@@ -151,52 +151,52 @@ class TorrentClientFront {
     if (reseved == null) {
       reseved = new List.from(_reseved);
     }
-    MessageHandshake message = new MessageHandshake(MessageHandshake.ProtocolId, reseved, _infoHash, _myPeerId);
+    TMessageHandshake message = new TMessageHandshake(TMessageHandshake.ProtocolId, reseved, _infoHash, _myPeerId);
     return sendMessage(message);
   }
 
   Future sendBitfield(List<int> bitfield) {
-    MessageBitfield message = new MessageBitfield(bitfield);
+    TMessageBitfield message = new TMessageBitfield(bitfield);
     return sendMessage(message);
   }
 
   Future sendChoke() {
-    MessageChoke message = new MessageChoke();
+    TMessageChoke message = new TMessageChoke();
     return sendMessage(message);
   }
 
   Future sendUnchoke() {
-    MessageUnchoke message = new MessageUnchoke();
+    TMessageUnchoke message = new TMessageUnchoke();
     return sendMessage(message);
   }
 
   Future sendInterested() {
-    MessageInterested message = new MessageInterested();
+    TMessageInterested message = new TMessageInterested();
     return sendMessage(message);
   }
 
   Future sendNotInterested() {
-    MessageNotInterested message = new MessageNotInterested();
+    TMessageNotInterested message = new TMessageNotInterested();
     return sendMessage(message);
   }
 
   Future sendCancel(int index, int begin, int length) {
-    MessageCancel message = new MessageCancel(index, begin, length);
+    TMessageCancel message = new TMessageCancel(index, begin, length);
     return sendMessage(message);
   }
 
   Future sendHave(int index) {
-    MessageHave message = new MessageHave(index);
+    TMessageHave message = new TMessageHave(index);
     return sendMessage(message);
   }
 
   Future sendPort(int port) {
-    MessagePort message = new MessagePort(port);
+    TMessagePort message = new TMessagePort(port);
     return sendMessage(message);
   }
 
   Future sendPiece(int index, int begin, List<int> content) {
-    MessagePiece message = new MessagePiece(index, begin, content);
+    TMessagePiece message = new TMessagePiece(index, begin, content);
     return sendMessage(message);
   }
 
@@ -204,7 +204,7 @@ class TorrentClientFront {
     if (requestedMaxPieceSize < length) {
       requestedMaxPieceSize = length;
     }
-    MessageRequest message = new MessageRequest(index, begin, length);
+    TMessageRequest message = new TMessageRequest(index, begin, length);
     return sendMessage(message);
   }
 
@@ -246,8 +246,8 @@ class TorrentClientFrontNerve {
       case TorrentMessage.DUMMY_SIGN_SHAKEHAND:
         front._handshakedToMe = true;
         front._targetPeerId.clear();
-        front._targetPeerId.addAll((message as MessageHandshake).peerId);
-        front._targetProtocolId.addAll((message as MessageHandshake).protocolId);
+        front._targetPeerId.addAll((message as TMessageHandshake).peerId);
+        front._targetProtocolId.addAll((message as TMessageHandshake).protocolId);
         _signalHandshake(front);
         _signalHandshakeOwnConnectCheck(front, message);
         _signalHandshakeInfoHashCheck(front, message);
@@ -265,28 +265,28 @@ class TorrentClientFrontNerve {
         front._interestedToMe = TorrentClientFront.STATE_OFF;
         break;
       case TorrentMessage.SIGN_BITFIELD:
-        MessageBitfield messageBitfile = message;
+        TMessageBitfield messageBitfile = message;
         front._bitfieldToMe.writeBytes(messageBitfile.bitfield);
         break;
       case TorrentMessage.SIGN_HAVE:
-        MessageHave messageHave = message;
+        TMessageHave messageHave = message;
         front._bitfieldToMe.setIsOn(messageHave.index, true);
         break;
       case TorrentMessage.SIGN_PIECE:
         {
-          MessagePiece req = message;
-          List<MessageRequest> removeTarge = [];
-          for (MessageRequest mes in front.currentRequesting) {
+          TMessagePiece req = message;
+          List<TMessageRequest> removeTarge = [];
+          for (TMessageRequest mes in front.currentRequesting) {
             if (mes.begin == req.begin && mes.index == req.index && mes.length == req.content.length) {
               removeTarge.add(mes);
             }
           }
-          for (MessageRequest rm in removeTarge) {
+          for (TMessageRequest rm in removeTarge) {
             front.currentRequesting.remove(rm);
           }
         }
-        front.downloadedBytesFromMe += (message as MessagePiece).content.length;
-        front._streamSignal.add(new TorrentClientSignalWithFront(front, TorrentClientSignal.ID_PIECE_RECEIVE, 0, "", (message as MessagePiece).content.length));
+        front.downloadedBytesFromMe += (message as TMessagePiece).content.length;
+        front._streamSignal.add(new TorrentClientSignalWithFront(front, TorrentClientSignal.ID_PIECE_RECEIVE, 0, "", (message as TMessagePiece).content.length));
         break;
     }
   }
@@ -313,16 +313,16 @@ class TorrentClientFrontNerve {
         front._interestedFromMe = TorrentClientFront.STATE_OFF;
         break;
       case TorrentMessage.SIGN_BITFIELD:
-        MessageBitfield messageBitfile = message;
+        TMessageBitfield messageBitfile = message;
         front._bitfieldFromMe.writeBytes(messageBitfile.bitfield);
         break;
       case TorrentMessage.SIGN_PIECE:
-        front.uploadedBytesToMe += (message as MessagePiece).content.length;
-        front._uploadedBytesFromUnchokedStartTime += (message as MessagePiece).content.length;
-        front._streamSignal.add(new TorrentClientSignalWithFront(front, TorrentClientSignal.ID_PIECE_SEND, 0, "", (message as MessagePiece).content.length));
+        front.uploadedBytesToMe += (message as TMessagePiece).content.length;
+        front._uploadedBytesFromUnchokedStartTime += (message as TMessagePiece).content.length;
+        front._streamSignal.add(new TorrentClientSignalWithFront(front, TorrentClientSignal.ID_PIECE_SEND, 0, "", (message as TMessagePiece).content.length));
         break;
       case TorrentMessage.SIGN_REQUEST:
-        MessageRequest resestMessage = message;
+        TMessageRequest resestMessage = message;
         front.currentRequesting.add(message);
         front._lastRequestIndex = resestMessage.index;
         break;
@@ -333,7 +333,7 @@ class TorrentClientFrontNerve {
     if (message.id != TorrentMessage.DUMMY_SIGN_SHAKEHAND) {
       return;
     }
-    MessageHandshake handshakeMessage = message;
+    TMessageHandshake handshakeMessage = message;
     if (handshakeMessage.infoHash != front._infoHash) {
       doClose(front, TorrentClientSignal.REASON_UNMANAGED_INFOHASH);
     }
@@ -349,7 +349,7 @@ class TorrentClientFrontNerve {
     if (message.id != TorrentMessage.DUMMY_SIGN_SHAKEHAND) {
       return;
     }
-    MessageHandshake handshakeMessage = message;
+    TMessageHandshake handshakeMessage = message;
     if (handshakeMessage.peerId == front._myPeerId) {
       front._amI = true;
       doClose(front, TorrentClientSignal.REASON_OWN_CONNECTION);

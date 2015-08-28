@@ -12,7 +12,7 @@ void main() {
   unit.group('A group of tests', () {
     unit.test("decode/encode", () {
       EasyParser parser = new EasyParser(builder);
-      return MessageNull.decode(parser).then((MessageNull message) {
+      return TMessageNull.decode(parser).then((TMessageNull message) {
         return message.encode();
       }).then((List<int> data) {
         unit.expect(builder.toList(), data);
@@ -20,7 +20,7 @@ void main() {
     });
 
     unit.test("encode", () {
-      MessageNull message = new MessageNull(TorrentMessage.DUMMY_SIGN_KEEPALIVE,[]);
+      TMessageNull message = new TMessageNull(TorrentMessage.DUMMY_SIGN_KEEPALIVE,[]);
       message.encode().then((List<int> data) {
         unit.expect(builder.toList(), data);
       });
@@ -31,7 +31,7 @@ void main() {
       b.fin();
       EasyParser parser = new EasyParser(b);
 
-      MessageNull.decode(parser).then((_) {
+      TMessageNull.decode(parser).then((_) {
         unit.expect(true, false);
       }).catchError((e) {
         unit.expect(true, true);

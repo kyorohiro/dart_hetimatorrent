@@ -17,7 +17,7 @@ void main() {
   unit.group('A group of tests', () {
     unit.test("decode/encode", () {
       EasyParser parser = new EasyParser(builder);
-      return MessageRequest.decode(parser).then((MessageRequest message) {
+      return TMessageRequest.decode(parser).then((TMessageRequest message) {
         unit.expect(message.index, 10);
         unit.expect(message.begin, 100);
         unit.expect(message.length, 10300);
@@ -30,7 +30,7 @@ void main() {
 
     unit.test("encode", () {
       EasyParser parser = new EasyParser(builder);
-      MessageRequest message = new MessageRequest(10,100,10300);
+      TMessageRequest message = new TMessageRequest(10,100,10300);
       message.encode().then((List<int> data) {
         unit.expect(builder.toList(), data);
       });
@@ -41,7 +41,7 @@ void main() {
       b.fin();
       EasyParser parser = new EasyParser(b);
 
-      MessageRequest.decode(parser).then((_) {
+      TMessageRequest.decode(parser).then((_) {
         unit.expect(true,false);
       }).catchError((e){
         unit.expect(true,true);

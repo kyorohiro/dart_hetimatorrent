@@ -52,7 +52,7 @@ void main() {
             return ticket.future;
           }).then((TorrentClientMessage info) {
             unit.expect(info.message.id, TorrentMessage.SIGN_BITFIELD);
-            MessageBitfield bitfield = info.message;
+            TMessageBitfield bitfield = info.message;
             print("----0004 E----${bitfield.bitfield}");
             unit.expect(creator.clientB.targetBlock.bitfield, bitfield.bitfield);
           });

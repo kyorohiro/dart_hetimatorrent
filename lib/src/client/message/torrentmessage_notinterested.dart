@@ -2,20 +2,18 @@ library hetimatorrent.message.notinterested;
 
 import 'dart:core';
 import 'dart:async';
-import 'dart:convert';
 import 'package:hetimacore/hetimacore.dart';
-import 'package:hetimanet/hetimanet.dart';
 import 'torrentmessage.dart';
 
-class MessageNotInterested extends TorrentMessage {
+class TMessageNotInterested extends TorrentMessage {
   static const int NOTINTERESTED_LENGTH = 1;
 
-  MessageNotInterested() : super(TorrentMessage.SIGN_NOTINTERESTED) {
+  TMessageNotInterested() : super(TorrentMessage.SIGN_NOTINTERESTED) {
   }
 
-  static Future<MessageNotInterested> decode(EasyParser parser) {
+  static Future<TMessageNotInterested> decode(EasyParser parser) {
     Completer c = new Completer();
-    MessageNotInterested message = new MessageNotInterested();
+    TMessageNotInterested message = new TMessageNotInterested();
     parser.push();
     parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN).then((int size) {
       if(size != NOTINTERESTED_LENGTH) {

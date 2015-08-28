@@ -16,7 +16,7 @@ void main() {
   unit.group('A group of tests', () {
     unit.test("decode/encode", () {
       EasyParser parser = new EasyParser(builder);
-      return MessageBitfield.decode(parser).then((MessageBitfield message) {
+      return TMessageBitfield.decode(parser).then((TMessageBitfield message) {
         unit.expect(message.bitfield, bitfield);//message.
         return message.encode();
       }).then((List<int> data) {
@@ -26,7 +26,7 @@ void main() {
 
     unit.test("encode", () {
       EasyParser parser = new EasyParser(builder);
-      MessageBitfield message = new MessageBitfield([0xf0,0xff,0x0f]);
+      TMessageBitfield message = new TMessageBitfield([0xf0,0xff,0x0f]);
       message.encode().then((List<int> data) {
         unit.expect(builder.toList(), data);
       });
@@ -36,7 +36,7 @@ void main() {
       b.fin();
       EasyParser parser = new EasyParser(b);
 
-      MessageHandshake.decode(parser).then((_) {
+      TMessageHandshake.decode(parser).then((_) {
         unit.expect(true,false);
       }).catchError((e){
         unit.expect(true,true);

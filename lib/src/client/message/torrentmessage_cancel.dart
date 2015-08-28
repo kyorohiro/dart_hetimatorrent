@@ -2,12 +2,10 @@ library hetimatorrent.message.cancel;
 
 import 'dart:core';
 import 'dart:async';
-import 'dart:convert';
 import 'package:hetimacore/hetimacore.dart';
-import 'package:hetimanet/hetimanet.dart';
 import 'torrentmessage.dart';
 
-class MessageCancel extends TorrentMessage {
+class TMessageCancel extends TorrentMessage {
   static final List<int> RESERVED = new List.from([0, 0, 0, 0, 0, 0, 0, 0], growable: false);
 
 
@@ -20,18 +18,18 @@ class MessageCancel extends TorrentMessage {
   int get begin => _mBegin;
   int get length => _mLength;
 
-  MessageCancel._empty() : super(TorrentMessage.SIGN_CANCEL) {
+  TMessageCancel._empty() : super(TorrentMessage.SIGN_CANCEL) {
   }
 
-  MessageCancel(int index, int begin, int length) : super(TorrentMessage.SIGN_CANCEL) {
+  TMessageCancel(int index, int begin, int length) : super(TorrentMessage.SIGN_CANCEL) {
     this._mIndex = index;
     this._mBegin = begin;
     this._mLength= length;
   }
 
-  static Future<MessageCancel> decode(EasyParser parser) {
+  static Future<TMessageCancel> decode(EasyParser parser) {
     Completer c = new Completer();
-    MessageCancel message = new MessageCancel._empty();
+    TMessageCancel message = new TMessageCancel._empty();
     parser.push();
     parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN).then((int size) {
       if(size != CANCEL_LENGTH) {

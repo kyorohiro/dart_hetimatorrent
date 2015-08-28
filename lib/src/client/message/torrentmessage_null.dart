@@ -2,24 +2,22 @@ library hetimatorrent.messagenull;
 
 import 'dart:core';
 import 'dart:async';
-import 'dart:convert';
 import 'package:hetimacore/hetimacore.dart';
-import 'package:hetimanet/hetimanet.dart';
 import 'torrentmessage.dart';
 
-class MessageNull extends TorrentMessage {
+class TMessageNull extends TorrentMessage {
   List<int> _mMessageContent = [];
 
   List<int> get messageContent => new List.from(_mMessageContent);
 
-  MessageNull._empty(int id) : super(id) {}
-  MessageNull(int id, List<int> cont) : super(id) {
+  TMessageNull._empty(int id) : super(id) {}
+  TMessageNull(int id, List<int> cont) : super(id) {
     _mMessageContent.addAll(cont);
   }
 
-  static Future<MessageNull> decode(EasyParser parser, {int maxOfMessageSize:2*1024*1024}) {
+  static Future<TMessageNull> decode(EasyParser parser, {int maxOfMessageSize:2*1024*1024}) {
     Completer c = new Completer();
-    MessageNull message = null;
+    TMessageNull message = null;
     int messageLength = 0;
 
 
@@ -36,7 +34,7 @@ class MessageNull extends TorrentMessage {
         return parser.readByte();
       }
     }).then((int v) {
-      message = new MessageNull._empty(v);
+      message = new TMessageNull._empty(v);
       if (messageLength > 0) {
         messageLength -= 1;
       }

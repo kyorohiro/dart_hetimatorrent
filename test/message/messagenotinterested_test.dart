@@ -14,7 +14,7 @@ void main() {
   unit.group('A group of tests', () {
     unit.test("decode/encode", () {
       EasyParser parser = new EasyParser(builder);
-      return MessageNotInterested.decode(parser).then((MessageNotInterested message) {
+      return TMessageNotInterested.decode(parser).then((TMessageNotInterested message) {
         return message.encode();
       }).then((List<int> data) {
         unit.expect(builder.toList(), data);
@@ -23,7 +23,7 @@ void main() {
 
 
     unit.test("encode", () {
-      MessageNotInterested message = new MessageNotInterested();
+      TMessageNotInterested message = new TMessageNotInterested();
       message.encode().then((List<int> data) {
         unit.expect(builder.toList(), data);
       });
@@ -34,7 +34,7 @@ void main() {
       b.fin();
       EasyParser parser = new EasyParser(b);
 
-      MessageNotInterested.decode(parser).then((_) {
+      TMessageNotInterested.decode(parser).then((_) {
         unit.expect(true,false);
       }).catchError((e){
         unit.expect(true,true);

@@ -4,10 +4,9 @@ import 'dart:core';
 import 'dart:async';
 import 'dart:convert';
 import 'package:hetimacore/hetimacore.dart';
-import 'package:hetimanet/hetimanet.dart';
 import 'torrentmessage.dart';
 
-class MessageHandshake extends TorrentMessage {
+class TMessageHandshake extends TorrentMessage {
   static final List<int> RESERVED = new List.from([0, 0, 0, 0, 0, 0, 0, 0], growable: false);
   static final List<int> ProtocolId = new List.from(UTF8.encode("BitTorrent protocol"), growable: false); //19byte
 
@@ -22,10 +21,10 @@ class MessageHandshake extends TorrentMessage {
   List<int> get infoHash => new List.from(_mInfoHash, growable: false);
   List<int> get peerId => new List.from(_mPeerID, growable: false);
 
-  MessageHandshake._empty() :super(TorrentMessage.DUMMY_SIGN_SHAKEHAND){
+  TMessageHandshake._empty() :super(TorrentMessage.DUMMY_SIGN_SHAKEHAND){
   }
 
-  MessageHandshake(List<int> protocolId, List<int> reseved, List<int> infoHash, List<int> peerId) :super(TorrentMessage.DUMMY_SIGN_SHAKEHAND){
+  TMessageHandshake(List<int> protocolId, List<int> reseved, List<int> infoHash, List<int> peerId) :super(TorrentMessage.DUMMY_SIGN_SHAKEHAND){
     _mProtocolId.clear();
     _mProtocolId.addAll(protocolId);
     
@@ -39,9 +38,9 @@ class MessageHandshake extends TorrentMessage {
     _mPeerID.addAll(peerId);
   }
 
-  static Future<MessageHandshake> decode(EasyParser parser) {
+  static Future<TMessageHandshake> decode(EasyParser parser) {
     Completer c = new Completer();
-    MessageHandshake mesHandshake = new MessageHandshake._empty();
+    TMessageHandshake mesHandshake = new TMessageHandshake._empty();
     parser.push();
     parser.readByte().then((int size) {
       if (!(0 <= size && size <= 256)) {

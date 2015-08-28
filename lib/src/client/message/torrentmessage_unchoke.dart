@@ -5,15 +5,15 @@ import 'dart:async';
 import 'package:hetimacore/hetimacore.dart';
 import 'torrentmessage.dart';
 
-class MessageUnchoke extends TorrentMessage {
+class TMessageUnchoke extends TorrentMessage {
   static const int UNCHOKE_LENGTH = 1;
 
-  MessageUnchoke() : super(TorrentMessage.SIGN_UNCHOKE) {
+  TMessageUnchoke() : super(TorrentMessage.SIGN_UNCHOKE) {
   }
 
-  static Future<MessageUnchoke> decode(EasyParser parser) {
+  static Future<TMessageUnchoke> decode(EasyParser parser) {
     Completer c = new Completer();
-    MessageUnchoke message = new MessageUnchoke();
+    TMessageUnchoke message = new TMessageUnchoke();
     parser.push();
     parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN).then((int size) {
       if(size != UNCHOKE_LENGTH) {

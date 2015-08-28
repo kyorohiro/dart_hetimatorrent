@@ -2,30 +2,28 @@ library hetimatorrent.message.bitfield;
 
 import 'dart:core';
 import 'dart:async';
-import 'dart:convert';
 import 'package:hetimacore/hetimacore.dart';
-import 'package:hetimanet/hetimanet.dart';
 import 'torrentmessage.dart';
 
-class MessageBitfield extends TorrentMessage {
+class TMessageBitfield extends TorrentMessage {
   static final List<int> RESERVED = new List.from([0, 0, 0, 0, 0, 0, 0, 0], growable: false);
 
   List<int> _mBitfield = []; // *
 
   List<int> get bitfield => new List.from(_mBitfield, growable: false);
 
-  MessageBitfield._empty() : super(TorrentMessage.SIGN_BITFIELD) {
+  TMessageBitfield._empty() : super(TorrentMessage.SIGN_BITFIELD) {
     _mBitfield.clear();
   }
 
-  MessageBitfield(List<int> bitfield) : super(TorrentMessage.SIGN_BITFIELD) {
+  TMessageBitfield(List<int> bitfield) : super(TorrentMessage.SIGN_BITFIELD) {
     _mBitfield.clear();
     _mBitfield.addAll(bitfield);
   }
 
-  static Future<MessageBitfield> decode(EasyParser parser) {
+  static Future<TMessageBitfield> decode(EasyParser parser) {
     Completer c = new Completer();
-    MessageBitfield message = new MessageBitfield._empty();
+    TMessageBitfield message = new TMessageBitfield._empty();
     int messageSize = 0;
 
     parser.push();

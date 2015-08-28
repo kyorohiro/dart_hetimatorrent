@@ -2,12 +2,10 @@ library hetimatorrent.message.request;
 
 import 'dart:core';
 import 'dart:async';
-import 'dart:convert';
 import 'package:hetimacore/hetimacore.dart';
-import 'package:hetimanet/hetimanet.dart';
 import 'torrentmessage.dart';
 
-class MessageRequest extends TorrentMessage {
+class TMessageRequest extends TorrentMessage {
 
   static const int REQUEST_LENGTH = 1+4*3;
   int _mIndex = 0;
@@ -18,18 +16,18 @@ class MessageRequest extends TorrentMessage {
   int get begin => _mBegin;
   int get length => _mLength;
 
-  MessageRequest._empty() : super(TorrentMessage.SIGN_REQUEST) {
+  TMessageRequest._empty() : super(TorrentMessage.SIGN_REQUEST) {
   }
 
-  MessageRequest(int index, int begin, int length) : super(TorrentMessage.SIGN_REQUEST) {
+  TMessageRequest(int index, int begin, int length) : super(TorrentMessage.SIGN_REQUEST) {
     this._mIndex = index;
     this._mBegin = begin;
     this._mLength= length;
   }
 
-  static Future<MessageRequest> decode(EasyParser parser) {
+  static Future<TMessageRequest> decode(EasyParser parser) {
     Completer c = new Completer();
-    MessageRequest message = new MessageRequest._empty();
+    TMessageRequest message = new TMessageRequest._empty();
     parser.push();
     parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN).then((int size) {
       if(size != REQUEST_LENGTH) {

@@ -47,7 +47,7 @@ class TorrentMessage {
   static Future<TorrentMessage> parseHandshake(EasyParser parser, [int maxOfMessageSize = 256 * 1024]) async {
     parser.push();
     try {
-      MessageHandshake message = await MessageHandshake.decode(parser);
+      TMessageHandshake message = await TMessageHandshake.decode(parser);
       parser.pop();
       return message;
     } catch (e) {
@@ -60,34 +60,34 @@ class TorrentMessage {
   static Future<TorrentMessage> parseBasic(EasyParser parser, {int maxOfMessageSize: 32 * 1024}) async {
     parser.push();
     try {
-      MessageNull nullMessage = await MessageNull.decode(parser, maxOfMessageSize: maxOfMessageSize);
+      TMessageNull nullMessage = await TMessageNull.decode(parser, maxOfMessageSize: maxOfMessageSize);
       parser.back();
       switch (nullMessage._id) {
         case TorrentMessage.SIGN_BITFIELD:
-          return MessageBitfield.decode(parser);
+          return TMessageBitfield.decode(parser);
         case TorrentMessage.SIGN_CANCEL:
-          return MessageCancel.decode(parser);
+          return TMessageCancel.decode(parser);
         case TorrentMessage.SIGN_CHOKE:
-          return MessageChoke.decode(parser);
+          return TMessageChoke.decode(parser);
         case TorrentMessage.SIGN_HAVE:
-          return MessageHave.decode(parser);
+          return TMessageHave.decode(parser);
         case TorrentMessage.SIGN_INTERESTED:
-          return MessageInterested.decode(parser);
+          return TMessageInterested.decode(parser);
         case TorrentMessage.SIGN_NOTINTERESTED:
-          return MessageNotInterested.decode(parser);
+          return TMessageNotInterested.decode(parser);
         case TorrentMessage.SIGN_PIECE:
-          return MessagePiece.decode(parser);
+          return TMessagePiece.decode(parser);
         case TorrentMessage.SIGN_PORT:
-          return MessagePort.decode(parser);
+          return TMessagePort.decode(parser);
         case TorrentMessage.SIGN_REQUEST:
-          return MessageRequest.decode(parser);
+          return TMessageRequest.decode(parser);
         case TorrentMessage.SIGN_UNCHOKE:
-          return MessageUnchoke.decode(parser);
+          return TMessageUnchoke.decode(parser);
         default:
           if (nullMessage.messageContent.length == 0) {
-            return MessageKeepAlive.decode(parser);
+            return TMessageKeepAlive.decode(parser);
           } else {
-            return MessageNull.decode(parser);
+            return TMessageNull.decode(parser);
           }
       }
     } catch (e) {

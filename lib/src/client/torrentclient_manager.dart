@@ -90,7 +90,7 @@ class TorrentClientManager {
       log("accept: ${socketInfo.peerAddress}, ${socketInfo.peerPort}");
 
       //
-      MessageHandshake handshake = await TorrentMessage.parseHandshake(new EasyParser(socket.buffer));
+      TMessageHandshake handshake = await TorrentMessage.parseHandshake(new EasyParser(socket.buffer));
       TorrentClient client = getTorrentClientFromInfoHash(handshake.infoHash);
       if (client == null) {
         // unmanaged infohash
