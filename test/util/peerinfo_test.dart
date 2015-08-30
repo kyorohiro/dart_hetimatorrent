@@ -15,6 +15,8 @@ void main() {
       ..acceptablePort=8082;
       infos.addRawPeerInfo(a);
       infos.addRawPeerInfo(b);
+      TorrentAIChokeTest test = new TorrentAIChokeTest();
+      //test.extractChokePeerFromUnchokePeers(infos, numOfUnchoke, maxOfUnchoke)
     });
   });
 }
