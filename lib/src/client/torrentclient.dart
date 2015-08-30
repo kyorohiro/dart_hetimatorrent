@@ -7,6 +7,7 @@ import 'package:hetimanet/hetimanet.dart';
 
 import 'torrentclient_front.dart';
 import 'torrentclient_peerinfo.dart';
+import 'torrentclient_peerinfos.dart';
 import 'torrentai.dart';
 import 'torrentai_basic.dart';
 import 'torrentclient_message.dart';
@@ -37,7 +38,7 @@ class TorrentClient {
 
   int get downloaded => _downloaded;
   int get uploaded => _uploaded;
-  TorrentClientPeerInfoList _peerInfos;
+  TorrentClientPeerInfos _peerInfos;
   List<TorrentClientPeerInfo> get peerInfos => _peerInfos.rawpeerInfos.sequential;
 
   StreamController<TorrentClientMessage> messageStream = new StreamController.broadcast();
@@ -54,7 +55,7 @@ class TorrentClient {
   bool get isStart => _isStart;
   int tickSec = 6;
 
-  TorrentClientPeerInfoList get rawPeerInfos => _peerInfos;
+  TorrentClientPeerInfos get rawPeerInfos => _peerInfos;
   List<int> _reseved = [0, 0, 0, 0, 0, 0, 0, 0];
   List<int> get reseved => new List.from(_reseved);
 
@@ -71,7 +72,7 @@ class TorrentClient {
       {TorrentAI ai: null, haveAllData: false, List<int> bitfield: null, List<int> reserved: null, verbose: false}) {
     _verbose = verbose;
     _builder = builder;
-    _peerInfos = new TorrentClientPeerInfoList();
+    _peerInfos = new TorrentClientPeerInfos();
     _infoHash.addAll(infoHash);
     _peerId.addAll(peerId);
     _targetBlock = new BlockData(data, new Bitfield(Bitfield.calcbitSize(piece.length), clearIsOne: haveAllData), pieceLength, fileSize);
