@@ -100,7 +100,7 @@ class TorrentClient {
     return ret;
   }
 
-  Future startWithoutSocket(String localAddress, int localPort, [String globalIp = null, int globalPort = null]) async {
+  Future startWithoutStartingServer(String localAddress, int localPort, [String globalIp = null, int globalPort = null]) async {
     this._localAddress = localAddress;
     this._localPort = localPort;
     this.globalPort = globalPort;

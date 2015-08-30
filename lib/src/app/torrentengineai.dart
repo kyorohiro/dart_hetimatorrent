@@ -63,7 +63,7 @@ class TorrentEngineAI extends TorrentAI {
   Future start(TorrentClientManager manager, TorrentClient torrentClient) {
     this._torrent = torrentClient;
     _tracker.peerport = manager.globalPort;
-    torrentClient.startWithoutSocket(manager.localIp, manager.localPort, manager.globalIp, manager.globalPort);
+    torrentClient.startWithoutStartingServer(manager.localIp, manager.localPort, manager.globalIp, manager.globalPort);
     manager.addTorrentClientWithDelegationToAccept(torrentClient);
     if (useDht == true) {
       _dht.startSearchValue(new KId(_tracker.infoHash), _torrent.globalPort);
