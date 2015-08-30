@@ -32,6 +32,8 @@ class TorrentClientPeerInfos {
     });
     return targetPeers;
   }
-  
-  
+
+  void addRawPeerInfo(TorrentClientPeerInfo info) {
+    _peerInfos.addLast(info);
+  }
 }
