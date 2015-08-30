@@ -26,9 +26,9 @@ class Bitfield extends BitfieldInter {
   static final List<int> BIT = [0xFF, 0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC, 0xFE];
 
   int _bitSize = 0;
-  List<int> _bitfieldData = [];
+  List<int> _bitfieldData = null;
 
-  List<int> get value => new List.from(_bitfieldData);
+  List<int> get value => new Uint8List.fromList(_bitfieldData);
   List<int> get rawValue => _bitfieldData;
 
   static int calcbitSize(int pieceSize, {pieceLength: 20}) {
@@ -46,7 +46,7 @@ class Bitfield extends BitfieldInter {
     if (bitSize % 8 != 0) {
       byteSize += 1;
     }
-    _bitfieldData = new List.filled(byteSize, 0);
+    _bitfieldData = new Uint8List(byteSize);
     if (clearIsOne) {
       oneClear();
     } else {
