@@ -3,7 +3,6 @@ library hetimatorrent.torrent.client.peerinfos;
 import 'dart:core';
 import '../util/shufflelinkedlist.dart';
 
-import 'torrentclient_front.dart';
 import 'torrentclient_peerinfo.dart';
 
 class TorrentClientPeerInfos {
@@ -14,19 +13,15 @@ class TorrentClientPeerInfos {
   TorrentClientPeerInfos() {}
 
   TorrentClientPeerInfo putPeerInfo(String ip, {int acceptablePort: null, peerId: ""}) {
-    for (int i = 0; i < _peerInfos.length; i++) {
-      TorrentClientPeerInfo info = _peerInfos.getSequential(i);
-      if (info.ip == ip && info.acceptablePort == acceptablePort) {
-        // alredy added in peerinfo
-        print("putFormTrackerPeerInfo ${ip} ${acceptablePort} --A");
-        return info;
-      }
+    List<TorrentClientPeerInfo> targetPeers = _peerInfos.getWithFilter((TorrentClientPeerInfo info){
+      return (info.ip == ip && info.acceptablePort == acceptablePort);
+    });
+    if(targetPeers.length > 0) {
+      return targetPeers.first;
     }
+
     TorrentClientPeerInfo info = new TorrentClientPeerInfo(ip, acceptablePort);
-    _peerInfos.addLast(info);
-    // alredy added in peerinfo
-    print("putFormTrackerPeerInfo ${ip} ${acceptablePort} --B ${_peerInfos.length}");
-    return info;
+    return _peerInfos.addLast(info);
   }
 
   TorrentClientPeerInfo getPeerInfoFromId(int id) {
