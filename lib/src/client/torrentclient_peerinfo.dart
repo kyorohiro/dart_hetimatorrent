@@ -6,19 +6,15 @@ import '../util/shufflelinkedlist.dart';
 import 'torrentclient_front.dart';
 
 class TorrentClientPeerInfoList {
-  ShuffleLinkedList<TorrentClientPeerInfo> peerInfos;
+  ShuffleLinkedList<TorrentClientPeerInfo> _peerInfos = new ShuffleLinkedList();
+  ShuffleLinkedList<TorrentClientPeerInfo> get rawpeerInfos => _peerInfos;
+  int numOfPeerInfo() => _peerInfos.length;
 
-  TorrentClientPeerInfoList() {
-    peerInfos = new ShuffleLinkedList();
-  }
-
-  int numOfPeerInfo() {
-    return peerInfos.length;
-  }
+  TorrentClientPeerInfoList() {}
 
   TorrentClientPeerInfo putPeerInfo(String ip, {int acceptablePort: null, peerId: ""}) {
-    for (int i = 0; i < peerInfos.length; i++) {
-      TorrentClientPeerInfo info = peerInfos.getSequential(i);
+    for (int i = 0; i < _peerInfos.length; i++) {
+      TorrentClientPeerInfo info = _peerInfos.getSequential(i);
       if (info.ip == ip && info.acceptablePort == acceptablePort) {
         // alredy added in peerinfo
         print("putFormTrackerPeerInfo ${ip} ${acceptablePort} --A");
@@ -26,15 +22,15 @@ class TorrentClientPeerInfoList {
       }
     }
     TorrentClientPeerInfo info = new TorrentClientPeerInfo(ip, acceptablePort);
-    peerInfos.addLast(info);
+    _peerInfos.addLast(info);
     // alredy added in peerinfo
-    print("putFormTrackerPeerInfo ${ip} ${acceptablePort} --B ${peerInfos.length}");
+    print("putFormTrackerPeerInfo ${ip} ${acceptablePort} --B ${_peerInfos.length}");
     return info;
   }
 
   TorrentClientPeerInfo getPeerInfoFromId(int id) {
-    for (int i = 0; i < peerInfos.length; i++) {
-      TorrentClientPeerInfo info = peerInfos.getSequential(i);
+    for (int i = 0; i < _peerInfos.length; i++) {
+      TorrentClientPeerInfo info = _peerInfos.getSequential(i);
       if (info.id == id) {
         return info;
       }
@@ -44,8 +40,8 @@ class TorrentClientPeerInfoList {
 
   List<TorrentClientPeerInfo> getPeerInfo(Function filter) {
     List<TorrentClientPeerInfo> ret = [];
-    for (int i = 0; i < peerInfos.length; i++) {
-      TorrentClientPeerInfo info = peerInfos.getSequential(i);
+    for (int i = 0; i < _peerInfos.length; i++) {
+      TorrentClientPeerInfo info = _peerInfos.getSequential(i);
       if (filter(info) == true) {
         ret.add(info);
       }
@@ -60,7 +56,6 @@ class TorrentClientPeerInfo {
 
   String ip = "";
   int acceptablePort = 0;
-//  int portCurrent = 0;
   TorrentClientFront front = null;
   bool get isAcceptable => acceptablePort != 0;
 
