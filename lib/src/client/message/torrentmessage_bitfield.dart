@@ -21,39 +21,32 @@ class TMessageBitfield extends TorrentMessage {
     _mBitfield.addAll(bitfield);
   }
 
-  static Future<TMessageBitfield> decode(EasyParser parser) {
-    Completer c = new Completer();
-    TMessageBitfield message = new TMessageBitfield._empty();
-    int messageSize = 0;
-
+  static Future<TMessageBitfield> decode(EasyParser parser) async {
     parser.push();
-    parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN).then((int size) {
-      messageSize = size;
-      return parser.readByte();
-    }).then((int id) {
+    try {
+      int messageSize = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN);
+      int id = await parser.readByte();
       if (id != TorrentMessage.SIGN_BITFIELD) {
         throw {};
       }
-      return parser.nextBuffer(messageSize - 1);
-    }).then((List<int> field) {
+      List<int> field = await parser.nextBuffer(messageSize - 1);
+      TMessageBitfield message = new TMessageBitfield._empty();
       message._mBitfield.addAll(field);
-      c.complete(message);
-    }).catchError((e) {
+      parser.pop();
+      return message;
+    } catch (e) {
       parser.back();
       parser.pop();
-      c.completeError(e);
-    });
-    return c.future;
+      throw e;
+    }
   }
 
-  Future<List<int>> encode() {
-    return new Future(() {
-      ArrayBuilder builder = new ArrayBuilder();
-      builder.appendIntList(ByteOrder.parseIntByte(TorrentMessage.SIGN_LENGTH + _mBitfield.length, ByteOrder.BYTEORDER_BIG_ENDIAN));
-      builder.appendByte(id);
-      builder.appendIntList(_mBitfield);
-      return builder.toList();
-    });
+  Future<List<int>> encode() async {
+    ArrayBuilder builder = new ArrayBuilder();
+    builder.appendIntList(ByteOrder.parseIntByte(TorrentMessage.SIGN_LENGTH + _mBitfield.length, ByteOrder.BYTEORDER_BIG_ENDIAN));
+    builder.appendByte(id);
+    builder.appendIntList(_mBitfield);
+    return builder.toList();
   }
 
   String toString() {
