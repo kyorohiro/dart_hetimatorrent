@@ -5,11 +5,11 @@ import 'dart:async';
 import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimanet/hetimanet.dart';
 
-import 'torrentclientfront.dart';
-import 'torrentclientpeerinfo.dart';
+import 'torrentclient_front.dart';
+import 'torrentclient_peerinfo.dart';
 import 'torrentai.dart';
 import 'torrentai_basic.dart';
-import 'torrentclientmessage.dart';
+import 'torrentclient_message.dart';
 
 import '../util/blockdata.dart';
 import '../util/bitfield.dart';

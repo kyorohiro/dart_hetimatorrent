@@ -3,7 +3,7 @@ library hetimatorrent.torrent.client.peerinfo;
 import 'dart:core';
 import '../util/shufflelinkedlist.dart';
 
-import 'torrentclientfront.dart';
+import 'torrentclient_front.dart';
 
 
 class TorrentClientPeerInfoList {

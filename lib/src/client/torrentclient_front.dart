@@ -6,9 +6,9 @@ import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimanet/hetimanet.dart';
 import '../util/peeridcreator.dart';
 import 'message/message.dart';
-import 'torrentclientpeerinfo.dart';
+import 'torrentclient_peerinfo.dart';
 import '../util/bitfield.dart';
-import 'torrentclientmessage.dart';
+import 'torrentclient_message.dart';
 
 class TorrentClientFront {
   static const int STATE_NONE = 0;

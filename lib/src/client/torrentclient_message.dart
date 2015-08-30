@@ -3,8 +3,8 @@ library hetimatorrent.torrent.client.message;
 import 'dart:core';
 import 'message/message.dart';
 
-import 'torrentclientfront.dart';
-import 'torrentclientpeerinfo.dart';
+import 'torrentclient_front.dart';
+import 'torrentclient_peerinfo.dart';
 
 
 

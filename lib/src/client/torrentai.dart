@@ -4,8 +4,8 @@ import 'dart:core';
 import 'dart:async';
 import 'message/message.dart';
 import 'torrentclient.dart';
-import 'torrentclientpeerinfo.dart';
-import 'torrentclientmessage.dart';
+import 'torrentclient_peerinfo.dart';
+import 'torrentclient_message.dart';
 
 abstract class TorrentAI {
   Future onReceive(TorrentClient client, TorrentClientPeerInfo info, TorrentMessage message);

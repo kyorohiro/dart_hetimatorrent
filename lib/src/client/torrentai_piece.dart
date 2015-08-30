@@ -2,7 +2,7 @@ library hetimatorrent.torrent.ai.piece;
 
 import 'dart:core';
 import 'torrentclient.dart';
-import 'torrentclientfront.dart';
+import 'torrentclient_front.dart';
 import '../util/bitfield.dart';
 import '../util/bitfield_plus.dart';
 

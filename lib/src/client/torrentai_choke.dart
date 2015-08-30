@@ -2,8 +2,8 @@ library hetimatorrent.torrent.ai.choke;
 
 import 'dart:core';
 import 'torrentclient.dart';
-import 'torrentclientfront.dart';
-import 'torrentclientpeerinfo.dart';
+import 'torrentclient_front.dart';
+import 'torrentclient_peerinfo.dart';
 
 class TorrentAIChokeTest {
 
@@ -29,7 +29,6 @@ class TorrentAIChokeTest {
     nextUnchoke.addAll(chokedAndInterestPeers);
 
     //
-    //
     // 2 peer change
     unchokeInterestedPeers.shuffle();
     if (unchokeInterestedPeers.length > (_maxUnchoke - 2)) {
@@ -44,11 +43,11 @@ class TorrentAIChokeTest {
 
     //
     // add include peer
-    //
     int unchokeNum = _maxUnchoke - unchokeInterestedPeers.length;
     nextUnchoke.shuffle();
     int numOfSendedUnchoke = 0;
 
+    //
     // first intersted peer
     for (int i = 0; i < unchokeNum && 0 < nextUnchoke.length; i++) {
       TorrentClientPeerInfo info = nextUnchoke.removeLast();
@@ -60,6 +59,7 @@ class TorrentAIChokeTest {
       }
     }
 
+    //
     // secound notinterested peer
     for (int i = 0; i < (_maxUnchoke - numOfSendedUnchoke) && 0 < nextUnchoke.length; i++) {
       TorrentClientPeerInfo info = nextUnchoke.removeLast();

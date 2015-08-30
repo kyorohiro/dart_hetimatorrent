@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimanet/hetimanet.dart';
 
-import 'torrentclientmessage.dart';
+import 'torrentclient_message.dart';
 import 'message/message.dart';
 import 'torrentclient.dart';
 
