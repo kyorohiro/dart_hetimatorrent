@@ -53,12 +53,35 @@ class TorrentAIChokeTest {
     }
   }
 
+  List<TorrentClientPeerInfo> extractUnchokePeerFromInterest(TorrentClientPeerInfos infos, int numOfUchoke) {
+    List<TorrentClientPeerInfo> unchokeInterestedPeers = infos.getPeerInfo((TorrentClientPeerInfo info) {
+      return (info.isClose == false &&
+          info.interestedToMe == TorrentClientFront.STATE_ON &&
+          info.chokedFromMe == TorrentClientFront.STATE_ON &&
+          info.amI == false &&
+          (info.interestedToMe == TorrentClientFront.STATE_ON || info.interestedToMe == TorrentClientFront.STATE_NONE) &&
+          info.front.chokedFromMe != TorrentClientFront.STATE_OFF);
+    });
+
+    unchokeInterestedPeers.shuffle();
+    List<TorrentClientPeerInfo> ret = [];
+    for (int i = 0; i < unchokeInterestedPeers.length && i < numOfUchoke; i++) {
+      ret.add(unchokeInterestedPeers[i]);
+    }
+    return ret;
+  }
+
+  
   Future chokeTestA(TorrentClient client, int _maxUnchoke) async {
     List<TorrentClientPeerInfo> chokePeers = extractChokePeerFromUnchokePeers(client.rawPeerInfos, 3, 5);
-    for(TorrentClientPeerInfo info in chokePeers) {
+    for (TorrentClientPeerInfo info in chokePeers) {
       await info.front.sendChoke();
     }
-    ;
+    List<TorrentClientPeerInfo> unchokePeers = extractUnchokePeerFromInterest(client.rawPeerInfos, 3);
+    for (TorrentClientPeerInfo info in unchokePeers) {
+      await info.front.sendUnchoke();
+    }
+    
   }
 
   void chokeTest(TorrentClient client, int _maxUnchoke) {
