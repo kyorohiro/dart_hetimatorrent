@@ -9,33 +9,31 @@ import 'torrentmessage.dart';
 
 class TMessageKeepAlive extends TorrentMessage {
   static const int HAVE_LENGTH = 0;
-  TMessageKeepAlive() : super(TorrentMessage.DUMMY_SIGN_KEEPALIVE) {
-  }
+  TMessageKeepAlive() : super(TorrentMessage.DUMMY_SIGN_KEEPALIVE) {}
 
-  static Future<TMessageKeepAlive> decode(EasyParser parser) {
+  static Future<TMessageKeepAlive> decode(EasyParser parser) async {
     Completer c = new Completer();
     TMessageKeepAlive message = new TMessageKeepAlive();
     parser.push();
-    parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN).then((int size) {
-      if(size != 0) {
+    try {
+      int size = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN);
+      if (size != 0) {
         throw {};
       }
       parser.pop();
-      c.complete(message);
-    }).catchError((e) {
+      return message;
+    } catch (e) {
       parser.back();
       parser.pop();
-      c.completeError(e);
-    });
+      throw e;
+    }
     return c.future;
   }
 
-  Future<List<int>> encode() {
-    return new Future(() {
-      ArrayBuilder builder = new ArrayBuilder();
-      builder.appendIntList(ByteOrder.parseIntByte(0, ByteOrder.BYTEORDER_BIG_ENDIAN));
-      return builder.toList();
-    });
+  Future<List<int>> encode() async {
+    ArrayBuilder builder = new ArrayBuilder();
+    builder.appendIntList(ByteOrder.parseIntByte(0, ByteOrder.BYTEORDER_BIG_ENDIAN));
+    return builder.toList();
   }
 
   String toString() {

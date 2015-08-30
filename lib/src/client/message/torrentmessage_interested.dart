@@ -8,39 +8,34 @@ import 'torrentmessage.dart';
 class TMessageInterested extends TorrentMessage {
   static const int INTERESTED_LENGTH = 1;
 
-  TMessageInterested() : super(TorrentMessage.SIGN_INTERESTED) {
-  }
+  TMessageInterested() : super(TorrentMessage.SIGN_INTERESTED) {}
 
-  static Future<TMessageInterested> decode(EasyParser parser) {
-    Completer c = new Completer();
+  static Future<TMessageInterested> decode(EasyParser parser) async {
     TMessageInterested message = new TMessageInterested();
     parser.push();
-    parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN).then((int size) {
-      if(size != INTERESTED_LENGTH) {
+    try {
+      int size = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN);
+      if (size != INTERESTED_LENGTH) {
         throw {};
       }
-      return parser.readByte();
-    }).then((int v) {
-      if(v != TorrentMessage.SIGN_INTERESTED) {
+      int v = await parser.readByte();
+      if (v != TorrentMessage.SIGN_INTERESTED) {
         throw {};
       }
       parser.pop();
-      c.complete(message);
-    }).catchError((e) {
+      return message;
+    } catch (e) {
       parser.back();
       parser.pop();
-      c.completeError(e);
-    });
-    return c.future;
+      throw e;
+    }
   }
 
-  Future<List<int>> encode() {
-    return new Future(() {
-      ArrayBuilder builder = new ArrayBuilder();
-      builder.appendIntList(ByteOrder.parseIntByte(INTERESTED_LENGTH, ByteOrder.BYTEORDER_BIG_ENDIAN));
-      builder.appendByte(id);
-      return builder.toList();
-    });
+  Future<List<int>> encode() async {
+    ArrayBuilder builder = new ArrayBuilder();
+    builder.appendIntList(ByteOrder.parseIntByte(INTERESTED_LENGTH, ByteOrder.BYTEORDER_BIG_ENDIAN));
+    builder.appendByte(id);
+    return builder.toList();
   }
 
   String toString() {

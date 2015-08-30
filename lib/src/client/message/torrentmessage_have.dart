@@ -6,51 +6,44 @@ import 'package:hetimacore/hetimacore.dart';
 import 'torrentmessage.dart';
 
 class TMessageHave extends TorrentMessage {
-  static const int HAVE_LENGTH = 1+4*1;
+  static const int HAVE_LENGTH = 1 + 4 * 1;
   int _mIndex = 0;
-  int get index => _mIndex; 
+  int get index => _mIndex;
 
-  TMessageHave._empty() : super(TorrentMessage.SIGN_HAVE) {
-  }
+  TMessageHave._empty() : super(TorrentMessage.SIGN_HAVE) {}
 
   TMessageHave(int index) : super(TorrentMessage.SIGN_HAVE) {
     this._mIndex = index;
   }
 
-  static Future<TMessageHave> decode(EasyParser parser) {
-    Completer c = new Completer();
-    TMessageHave message = new TMessageHave._empty();
+  static Future<TMessageHave> decode(EasyParser parser) async {
     parser.push();
-    parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN).then((int size) {
-      if(size != HAVE_LENGTH) {
+    try {
+      int size = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN);
+      if (size != HAVE_LENGTH) {
         throw {};
       }
-      return parser.readByte();
-    }).then((int v) {
-      if(v != TorrentMessage.SIGN_HAVE) {
+      int v = await parser.readByte();
+      if (v != TorrentMessage.SIGN_HAVE) {
         throw {};
       }
-      return parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN);
-    }).then((int index) {
-      message._mIndex = index;
+      TMessageHave message = new TMessageHave._empty();
+      message._mIndex = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN);
       parser.pop();
-      c.complete(message);
-    }).catchError((e) {
+      return message;
+    } catch (e) {
       parser.back();
       parser.pop();
-      c.completeError(e);
-    });
-    return c.future;
+      throw e;
+    }
   }
 
-  Future<List<int>> encode() {
-    return new Future(() {
-      ArrayBuilder builder = new ArrayBuilder();
-      builder.appendIntList(ByteOrder.parseIntByte(HAVE_LENGTH, ByteOrder.BYTEORDER_BIG_ENDIAN));
-      builder.appendByte(id);
-      builder.appendIntList(ByteOrder.parseIntByte(_mIndex, ByteOrder.BYTEORDER_BIG_ENDIAN));
-      return builder.toList();
-    });
+  Future<List<int>> encode() async {
+    ArrayBuilder builder = new ArrayBuilder();
+    builder.appendIntList(ByteOrder.parseIntByte(HAVE_LENGTH, ByteOrder.BYTEORDER_BIG_ENDIAN));
+    builder.appendByte(id);
+    builder.appendIntList(ByteOrder.parseIntByte(_mIndex, ByteOrder.BYTEORDER_BIG_ENDIAN));
+    return builder.toList();
   }
 
   String toString() {

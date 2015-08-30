@@ -15,59 +15,49 @@ class TMessageNull extends TorrentMessage {
     _mMessageContent.addAll(cont);
   }
 
-  static Future<TMessageNull> decode(EasyParser parser, {int maxOfMessageSize:2*1024*1024}) {
-    Completer c = new Completer();
-    TMessageNull message = null;
-    int messageLength = 0;
-
-
-
+  static Future<TMessageNull> decode(EasyParser parser, {int maxOfMessageSize: 2 * 1024 * 1024}) async {
     parser.push();
-    parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN).then((int size) {
-      messageLength = size;
-      if(size >= maxOfMessageSize) {
+    try {
+      int messageLength = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN);
+      if (messageLength >= maxOfMessageSize) {
         throw "";
       }
-      if (size == 0) {
-        return TorrentMessage.DUMMY_SIGN_KEEPALIVE;
+      int vv = 0;
+      if (messageLength == 0) {
+        vv = TorrentMessage.DUMMY_SIGN_KEEPALIVE;
       } else {
-        return parser.readByte();
+        vv = await parser.readByte();
       }
-    }).then((int v) {
-      message = new TMessageNull._empty(v);
+
+      TMessageNull message = new TMessageNull._empty(vv);
       if (messageLength > 0) {
         messageLength -= 1;
       }
-      return parser.nextBuffer(messageLength);
-    }).then((List<int> v) {
+      List<int> v = await parser.nextBuffer(messageLength);
       print("##size, length= ${messageLength} ${v.length}");
       message._mMessageContent.addAll(v);
       parser.pop();
-      c.complete(message);
-    }).catchError((e) {
+      return message;
+    } catch (e) {
       parser.back();
       parser.pop();
-      c.completeError(e);
-    });
-    return c.future;
+      throw e;
+    }
   }
 
-  Future<List<int>> encode() {
-    return new Future(() {
-      ArrayBuilder builder = new ArrayBuilder();
-      if (id == TorrentMessage.DUMMY_SIGN_KEEPALIVE) {
-        builder.appendIntList(ByteOrder.parseIntByte(0, ByteOrder.BYTEORDER_BIG_ENDIAN));
-      } else {
-        builder.appendIntList(ByteOrder.parseIntByte(1 + _mMessageContent.length, ByteOrder.BYTEORDER_BIG_ENDIAN));
-        builder.appendByte(id);
-        builder.appendIntList(_mMessageContent);
-      }
-      return builder.toList();
-    });
+  Future<List<int>> encode() async {
+    ArrayBuilder builder = new ArrayBuilder();
+    if (id == TorrentMessage.DUMMY_SIGN_KEEPALIVE) {
+      builder.appendIntList(ByteOrder.parseIntByte(0, ByteOrder.BYTEORDER_BIG_ENDIAN));
+    } else {
+      builder.appendIntList(ByteOrder.parseIntByte(1 + _mMessageContent.length, ByteOrder.BYTEORDER_BIG_ENDIAN));
+      builder.appendByte(id);
+      builder.appendIntList(_mMessageContent);
+    }
+    return builder.toList();
   }
 
   String toString() {
     return "${TorrentMessage.toText(id)}:";
   }
-  
 }

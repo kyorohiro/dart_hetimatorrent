@@ -27,6 +27,7 @@ class TMessageChoke extends TorrentMessage {
     } catch (e) {
       parser.back();
       parser.pop();
+      throw e;
     }
   }
 
