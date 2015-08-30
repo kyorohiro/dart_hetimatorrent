@@ -49,7 +49,6 @@ class TorrentClientManager {
     }
   }
 
-
   Future start(String localAddress, int localPort, String globalIp, int globalPort) async {
     this._localIp = localAddress;
     this._localPort = localPort;
