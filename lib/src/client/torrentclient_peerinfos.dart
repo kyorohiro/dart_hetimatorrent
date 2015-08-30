@@ -16,12 +16,7 @@ class TorrentClientPeerInfos {
     List<TorrentClientPeerInfo> targetPeers = _peerInfos.getWithFilter((TorrentClientPeerInfo info) {
       return (info.ip == ip && info.acceptablePort == acceptablePort);
     });
-    if (targetPeers.length > 0) {
-      return targetPeers.first;
-    } else {
-      TorrentClientPeerInfo info = new TorrentClientPeerInfo(ip, acceptablePort);
-      return _peerInfos.addLast(info);
-    }
+    return (targetPeers.length > 0 ? targetPeers.first : _peerInfos.addLast(new TorrentClientPeerInfo(ip, acceptablePort)));
   }
 
   TorrentClientPeerInfo getPeerInfoFromId(int id) {
@@ -37,4 +32,6 @@ class TorrentClientPeerInfos {
     });
     return targetPeers;
   }
+  
+  
 }
