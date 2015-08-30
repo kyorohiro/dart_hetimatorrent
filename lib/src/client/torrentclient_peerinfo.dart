@@ -3,7 +3,7 @@ library hetimatorrent.torrent.client.peerinfo;
 import 'dart:core';
 import 'torrentclient_front.dart';
 
-class TorrentClientPeerInfo {
+abstract class TorrentClientPeerInfo {
   static int nid = 0;
   int id = 0;
 
@@ -12,7 +12,53 @@ class TorrentClientPeerInfo {
   TorrentClientFront front = null;
   bool get isAcceptable => acceptablePort != 0;
 
-  TorrentClientPeerInfo(String ip, int port) {
+  List<int> get peerId;
+  int get speed;
+  int get downloadedBytesFromMe;
+  int get uploadedBytesToMe;
+  int get chokedFromMe;
+  int get chokedToMe;
+  int get interestedToMe;
+  int get interestedFromMe;
+  bool get amI;
+  bool get isClose;
+  int get uploadSpeedFromUnchokeFromMe;
+}
+
+class TorrentClientPeerInfoEmpty extends TorrentClientPeerInfo {
+  static int nid = 0;
+  int id = 0;
+
+  String ip = "";
+  int acceptablePort = 0;
+  TorrentClientFront front = null;
+  bool get isAcceptable => acceptablePort != 0;
+
+  TorrentClientPeerInfoEmpty() {}
+
+  List<int> peerId = [];
+  int speed = 0;
+  int downloadedBytesFromMe = 0;
+  int uploadedBytesToMe = 0;
+  int chokedFromMe = 0;
+  int chokedToMe = 0;
+  int interestedToMe = 0;
+  int interestedFromMe = 0;
+  bool amI = false;
+  bool isClose = true;
+  int uploadSpeedFromUnchokeFromMe = 0;
+}
+
+class TorrentClientPeerInfoBasic extends TorrentClientPeerInfo {
+  static int nid = 0;
+  int id = 0;
+
+  String ip = "";
+  int acceptablePort = 0;
+  TorrentClientFront front = null;
+  bool get isAcceptable => acceptablePort != 0;
+
+  TorrentClientPeerInfoBasic(String ip, int port) {
     this.id = ++nid;
     this.ip = ip;
     this.acceptablePort = port;
