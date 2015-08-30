@@ -9,19 +9,22 @@ class TorrentAIChokeTest {
 
   void chokeTest(TorrentClient client, int _maxUnchoke) {
     List<TorrentClientPeerInfo> unchokeInterestedPeers = client.rawPeerInfos.getPeerInfo((TorrentClientPeerInfo info) {
-      return  (info.front != null && info.front.isClose == false && 
-          info.front.interestedToMe == TorrentClientFront.STATE_ON &&
-          info.front.chokedFromMe == TorrentClientFront.STATE_ON);
+      return  (
+          info.isClose == false && 
+          info.interestedToMe == TorrentClientFront.STATE_ON &&
+          info.chokedFromMe == TorrentClientFront.STATE_ON);
     });
 
     List<TorrentClientPeerInfo> newcomerPeers = client.rawPeerInfos.getPeerInfo((TorrentClientPeerInfo info) {
-      return (info.front != null && info.front.isClose == false && 
-          info.front.chokedFromMe == TorrentClientFront.STATE_NONE);
+      return (
+          info.isClose == false && 
+          info.chokedFromMe == TorrentClientFront.STATE_NONE);
     });
 
     List<TorrentClientPeerInfo> chokedAndInterestPeers = client.rawPeerInfos.getPeerInfo((TorrentClientPeerInfo info) {
-      return (info.front != null && info.front.isClose == false &&
-          info.front.chokedFromMe == TorrentClientFront.STATE_OFF);
+      return (
+          info.isClose == false &&
+          info.chokedFromMe == TorrentClientFront.STATE_OFF);
     });
 
     List<TorrentClientPeerInfo> nextUnchoke = [];
@@ -51,7 +54,8 @@ class TorrentAIChokeTest {
     // first intersted peer
     for (int i = 0; i < unchokeNum && 0 < nextUnchoke.length; i++) {
       TorrentClientPeerInfo info = nextUnchoke.removeLast();
-      if (info.front.amI == false &&info.front.interestedToMe == TorrentClientFront.STATE_ON || info.front.interestedToMe == TorrentClientFront.STATE_NONE) {
+      if (info.amI == false &&
+          info.interestedToMe == TorrentClientFront.STATE_ON || info.interestedToMe == TorrentClientFront.STATE_NONE) {
         if(info.front.chokedFromMe != TorrentClientFront.STATE_OFF) {
           info.front.sendUnchoke();
         }
@@ -63,8 +67,8 @@ class TorrentAIChokeTest {
     // secound notinterested peer
     for (int i = 0; i < (_maxUnchoke - numOfSendedUnchoke) && 0 < nextUnchoke.length; i++) {
       TorrentClientPeerInfo info = nextUnchoke.removeLast();
-      if (info.front.amI == false && info.front.interestedToMe == TorrentClientFront.STATE_OFF) {
-        if(info.front.chokedFromMe != TorrentClientFront.STATE_OFF) {
+      if (info.amI == false && info.interestedToMe == TorrentClientFront.STATE_OFF) {
+        if(info.chokedFromMe != TorrentClientFront.STATE_OFF) {
           info.front.sendUnchoke();
         }
       }

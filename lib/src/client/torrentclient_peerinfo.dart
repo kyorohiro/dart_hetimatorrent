@@ -27,6 +27,6 @@ class TorrentClientPeerInfo {
   int get interestedToMe => (front == null ? 0 : front.interestedToMe);
   int get interestedFromMe => (front == null ? 0 : front.interestedFromMe);
   bool get amI => (front == null ? false : front.amI);
-  bool get isClose => (front == null ? false : front.isClose);
+  bool get isClose => (front == null ? true : front.isClose);
   int get uploadSpeedFromUnchokeFromMe => (front == null ? 0 : front.uploadSpeedFromUnchokeFromMe);
 }
