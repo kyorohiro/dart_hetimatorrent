@@ -13,36 +13,28 @@ class TorrentClientPeerInfos {
   TorrentClientPeerInfos() {}
 
   TorrentClientPeerInfo putPeerInfo(String ip, {int acceptablePort: null, peerId: ""}) {
-    List<TorrentClientPeerInfo> targetPeers = _peerInfos.getWithFilter((TorrentClientPeerInfo info){
+    List<TorrentClientPeerInfo> targetPeers = _peerInfos.getWithFilter((TorrentClientPeerInfo info) {
       return (info.ip == ip && info.acceptablePort == acceptablePort);
     });
-    if(targetPeers.length > 0) {
+    if (targetPeers.length > 0) {
       return targetPeers.first;
+    } else {
+      TorrentClientPeerInfo info = new TorrentClientPeerInfo(ip, acceptablePort);
+      return _peerInfos.addLast(info);
     }
-
-    TorrentClientPeerInfo info = new TorrentClientPeerInfo(ip, acceptablePort);
-    return _peerInfos.addLast(info);
   }
 
   TorrentClientPeerInfo getPeerInfoFromId(int id) {
-    for (int i = 0; i < _peerInfos.length; i++) {
-      TorrentClientPeerInfo info = _peerInfos.getSequential(i);
-      if (info.id == id) {
-        return info;
-      }
-    }
-    return null;
+    List<TorrentClientPeerInfo> targetPeers = _peerInfos.getWithFilter((TorrentClientPeerInfo info) {
+      return (info.id == id);
+    });
+    return (targetPeers.length > 0 ? targetPeers.first : null);
   }
 
   List<TorrentClientPeerInfo> getPeerInfo(Function filter) {
-    List<TorrentClientPeerInfo> ret = [];
-    for (int i = 0; i < _peerInfos.length; i++) {
-      TorrentClientPeerInfo info = _peerInfos.getSequential(i);
-      if (filter(info) == true) {
-        ret.add(info);
-      }
-    }
-    return ret;
+    List<TorrentClientPeerInfo> targetPeers = _peerInfos.getWithFilter((TorrentClientPeerInfo info) {
+      return (filter(info) == true);
+    });
+    return targetPeers;
   }
 }
-
