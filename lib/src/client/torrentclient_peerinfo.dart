@@ -18,61 +18,14 @@ class TorrentClientPeerInfo {
     this.acceptablePort = port;
   }
 
-  List<int> get peerId {
-    if (front == null) {
-      return [];
-    } else {
-      return front.targetPeerId;
-    }
-  }
-
-  /// per sec bytes
-  int get speed {
-    if (front == null) {
-      return 0;
-    } else {
-      return front.speed;
-    }
-  }
-
-  /// Me is Hetima
-  int get downloadedBytesFromMe {
-    if (front == null) {
-      return 0;
-    } else {
-      return front.downloadedBytesFromMe;
-    }
-  }
-
-  /// Me is Hetima
-  int get uploadedBytesToMe {
-    if (front == null) {
-      return 0;
-    } else {
-      return front.uploadedBytesToMe;
-    }
-  }
-  /// Me is Hetima
-  int get chokedFromMe {
-    if (front == null) {
-      return 0;
-    } else {
-      return front.chokedFromMe;
-    }
-  }
-  /// Me is Hetima
-  int get chokedToMe {
-    if (front == null) {
-      return 0;
-    } else {
-      return front.chokedToMe;
-    }
-  }
-  bool get amI {
-    if (front == null) {
-      return false;
-    } else {
-      return front.amI;
-    }
-  }
+  List<int> get peerId => (front == null ? [] : front.targetPeerId);
+  int get speed => (front == null ? 0 : front.speed);
+  int get downloadedBytesFromMe => (front == null ? 0 : front.downloadedBytesFromMe);
+  int get uploadedBytesToMe => (front == null ? 0 : front.uploadedBytesToMe);
+  int get chokedFromMe => (front == null ? 0 : front.chokedFromMe);
+  int get chokedToMe => (front == null ? 0 : front.chokedToMe);
+  int get interestedToMe => (front == null ? 0 : front.interestedToMe);
+  int get interestedFromMe => (front == null ? 0 : front.interestedFromMe);
+  bool get amI => (front == null ? false : front.amI);
+  bool get isClose => (front == null ? false : front.isClose);
 }
