@@ -5,7 +5,6 @@ import '../util/shufflelinkedlist.dart';
 
 import 'torrentclient_front.dart';
 
-
 class TorrentClientPeerInfoList {
   ShuffleLinkedList<TorrentClientPeerInfo> peerInfos;
 
@@ -17,43 +16,22 @@ class TorrentClientPeerInfoList {
     return peerInfos.length;
   }
 
-  //
-  // tracker --> ip , port
-  // handshake --> ip, peerid,
-  //
-  TorrentClientPeerInfo putPeerInfoFormTracker(String ip, int port, {peerId: ""}) {
+  TorrentClientPeerInfo putPeerInfo(String ip, {int acceptablePort: null, peerId: ""}) {
     for (int i = 0; i < peerInfos.length; i++) {
       TorrentClientPeerInfo info = peerInfos.getSequential(i);
-      if (info.ip == ip && info.portAcceptable == port) {
+      if (info.ip == ip && info.acceptablePort == acceptablePort) {
         // alredy added in peerinfo
-        print("putFormTrackerPeerInfo ${ip} ${port} --A");
+        print("putFormTrackerPeerInfo ${ip} ${acceptablePort} --A");
         return info;
       }
     }
-    TorrentClientPeerInfo info = new TorrentClientPeerInfo.fromTracker(ip, port);
+    TorrentClientPeerInfo info = new TorrentClientPeerInfo(ip, acceptablePort);
     peerInfos.addLast(info);
     // alredy added in peerinfo
-    print("putFormTrackerPeerInfo ${ip} ${port} --B ${peerInfos.length}");
+    print("putFormTrackerPeerInfo ${ip} ${acceptablePort} --B ${peerInfos.length}");
     return info;
   }
 
-  TorrentClientPeerInfo putPeerInfoFormAccept(String ip, int port) {
-    for (int i = 0; i < peerInfos.length; i++) {
-      TorrentClientPeerInfo info = peerInfos.getSequential(i);
-      if (info.ip == ip && info.portCurrent == port) {
-        // alredy added in peerinfo
-        print("putFormAcceptPeerInfo ${ip} ${port} --A");
-        return info;
-      }
-    }
-    TorrentClientPeerInfo info = new TorrentClientPeerInfo.fromTracker(ip, port);
-    peerInfos.addLast(info);
-    // alredy added in peerinfo
-    print("putFormAcceptPeerInfo ${ip} ${port} --B ${peerInfos.length}");
-    return info;
-  }
-
-  
   TorrentClientPeerInfo getPeerInfoFromId(int id) {
     for (int i = 0; i < peerInfos.length; i++) {
       TorrentClientPeerInfo info = peerInfos.getSequential(i);
@@ -68,7 +46,7 @@ class TorrentClientPeerInfoList {
     List<TorrentClientPeerInfo> ret = [];
     for (int i = 0; i < peerInfos.length; i++) {
       TorrentClientPeerInfo info = peerInfos.getSequential(i);
-      if(filter(info) == true) {
+      if (filter(info) == true) {
         ret.add(info);
       }
     }
@@ -81,23 +59,15 @@ class TorrentClientPeerInfo {
   int id = 0;
 
   String ip = "";
-  int portAcceptable = 0;
-  int portCurrent = 0;
+  int acceptablePort = 0;
+//  int portCurrent = 0;
   TorrentClientFront front = null;
-  bool get isAcceptable => portAcceptable != 0;
+  bool get isAcceptable => acceptablePort != 0;
 
-
-  TorrentClientPeerInfo.fromTracker(String ip, int port) {
+  TorrentClientPeerInfo(String ip, int port) {
     this.id = ++nid;
     this.ip = ip;
-    this.portAcceptable = port;
-  }
-
-  TorrentClientPeerInfo.fromAccept(String ip, int portCurrent) {
-    this.id = ++nid;
-    this.ip = ip;
-    this.portCurrent = portCurrent;
-    this.peerId.addAll(peerId);
+    this.acceptablePort = port;
   }
 
   List<int> get peerId {

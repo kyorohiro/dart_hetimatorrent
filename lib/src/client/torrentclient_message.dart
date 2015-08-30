@@ -20,7 +20,7 @@ class TorrentClientMessage {
   }
 
   String toString() {
-    return "signal:info:${info.id} ${info.ip} ${info.portAcceptable} message:${message.toString()}";
+    return "signal:info:${info.id} ${info.ip} ${info.acceptablePort} message:${message.toString()}";
   }
 }
 
@@ -81,6 +81,6 @@ class TorrentClientSignalWithPeerInfo extends TorrentClientSignal {
   }
 
   String toString() {
-    return "signal:info:${_info.id} ${_info.ip} ${_info.portAcceptable} signal:${_message}";
+    return "signal:info:${_info.id} ${_info.ip} ${_info.acceptablePort} signal:${_message}";
   }
 }

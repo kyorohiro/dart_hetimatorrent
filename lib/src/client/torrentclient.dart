@@ -87,14 +87,14 @@ class TorrentClient {
   }
 
   TorrentClientPeerInfo putTorrentPeerInfoFromTracker(String ip, int port) {
-    TorrentClientPeerInfo ret = _peerInfos.putPeerInfoFormTracker(ip, port);
+    TorrentClientPeerInfo ret = _peerInfos.putPeerInfo(ip, acceptablePort:port);
     TorrentClientSignal sig = new TorrentClientSignalWithPeerInfo(ret, TorrentClientSignal.ID_ADD_PEERINFO, 0, "add peer info");
     _sendSignal(this, ret, sig);
     return ret;
   }
 
   TorrentClientPeerInfo _putTorrentPeerInfoFromAccept(String ip, int port) {
-    TorrentClientPeerInfo ret = _peerInfos.putPeerInfoFormAccept(ip, port);
+    TorrentClientPeerInfo ret = _peerInfos.putPeerInfo(ip);
     TorrentClientSignal sig = new TorrentClientSignalWithPeerInfo(ret, TorrentClientSignal.ID_ADD_PEERINFO, 0, "add peer info");
     _sendSignal(this, ret, sig);
     return ret;

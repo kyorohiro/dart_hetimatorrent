@@ -89,8 +89,8 @@ class TorrentClientFront {
   static Future<TorrentClientFront> connect(HetimaSocketBuilder _builder, TorrentClientPeerInfo info, int bitfieldSize, List<int> infoHash,
       {List<int> peerId: null, List<int> reseved: null, bool verbose: false}) async {
     HetimaSocket socket = _builder.createClient();
-    await socket.connect(info.ip, info.portAcceptable);
-    return new TorrentClientFront(socket, info.ip, info.portAcceptable, socket.buffer, bitfieldSize, infoHash, peerId, reseved, verbose: verbose);
+    await socket.connect(info.ip, info.acceptablePort);
+    return new TorrentClientFront(socket, info.ip, info.acceptablePort, socket.buffer, bitfieldSize, infoHash, peerId, reseved, verbose: verbose);
   }
 
   TorrentClientFront(HetimaSocket socket, String peerIp, int peerPort, HetimaReader reader, int bitfieldSize, List<int> infoHash, List<int> peerId, List<int> reseved, {bool verbose: false}) {

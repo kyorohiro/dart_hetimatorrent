@@ -26,7 +26,7 @@ void main() {
           //
           // connect from clientB to clientA
           List<TorrentClientPeerInfo> infos = creator.clientB.getPeerInfoFromXx((TorrentClientPeerInfo info) {
-            if (info.portAcceptable == creator.clientAPort) {
+            if (info.acceptablePort == creator.clientAPort) {
               return true;
             }
           });
