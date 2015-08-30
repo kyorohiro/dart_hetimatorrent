@@ -6,17 +6,22 @@ import 'torrentclientfront.dart';
 import 'torrentclientpeerinfo.dart';
 
 class TorrentAIChokeTest {
+
   void chokeTest(TorrentClient client, int _maxUnchoke) {
     List<TorrentClientPeerInfo> unchokeInterestedPeers = client.rawPeerInfos.getPeerInfo((TorrentClientPeerInfo info) {
-      return  (info.front != null && info.front.isClose == false && info.front.interestedToMe == TorrentClientFront.STATE_ON && info.front.chokedFromMe == TorrentClientFront.STATE_ON);
+      return  (info.front != null && info.front.isClose == false && 
+          info.front.interestedToMe == TorrentClientFront.STATE_ON &&
+          info.front.chokedFromMe == TorrentClientFront.STATE_ON);
     });
 
     List<TorrentClientPeerInfo> newcomerPeers = client.rawPeerInfos.getPeerInfo((TorrentClientPeerInfo info) {
-      return (info.front != null && info.front.isClose == false && info.front.chokedFromMe == TorrentClientFront.STATE_NONE);
+      return (info.front != null && info.front.isClose == false && 
+          info.front.chokedFromMe == TorrentClientFront.STATE_NONE);
     });
 
     List<TorrentClientPeerInfo> chokedAndInterestPeers = client.rawPeerInfos.getPeerInfo((TorrentClientPeerInfo info) {
-      return (info.front != null && info.front.isClose == false && info.front.chokedFromMe == TorrentClientFront.STATE_OFF);
+      return (info.front != null && info.front.isClose == false &&
+          info.front.chokedFromMe == TorrentClientFront.STATE_OFF);
     });
 
     List<TorrentClientPeerInfo> nextUnchoke = [];
