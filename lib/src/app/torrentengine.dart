@@ -22,11 +22,12 @@ class TorrentEngine {
   KNode _dhtClient = null;
   KNode get dhtClient => _dhtClient;
 
+  TorrentEngineAIPortMap _portMapAI = null;
+  TorrentEngineAIPortMap get portMapAI => _portMapAI;
+
   List<TorrentEngineTorrent> _torrents = [];
   List<TorrentEngineTorrent> get torrents => new List.from(_torrents);
-
-
-  TorrentEngineAIPortMap _portMapAI = null;
+  List<TorrentEngineTorrent> get rawtorrents => _torrents;
 
   int get localPort => _torrentClientManager.localPort;
   String get localIp => _torrentClientManager.localIp;
