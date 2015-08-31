@@ -67,6 +67,30 @@ void main() {
         unit.expect(r.length, 1);
         unit.expect(true, r.contains(a));
       }
+      {
+        TorrentClientPeerInfos infos = new TorrentClientPeerInfos();
+        infos.addRawPeerInfo(a);
+        infos.addRawPeerInfo(b);
+        infos.addRawPeerInfo(c);
+        infos.addRawPeerInfo(d);
+        TorrentAIChokeTest test = new TorrentAIChokeTest();
+        List<TorrentClientPeerInfo> r = test.extractChokePeerFromUnchokePeers(infos, 2, 3);
+        unit.expect(r.length, 1);
+        unit.expect(true, r.contains(a));
+      }
+      {
+        TorrentClientPeerInfos infos = new TorrentClientPeerInfos();
+        infos.addRawPeerInfo(a);
+        infos.addRawPeerInfo(b);
+        infos.addRawPeerInfo(c);
+        infos.addRawPeerInfo(d);
+        infos.addRawPeerInfo(e);
+        TorrentAIChokeTest test = new TorrentAIChokeTest();
+        List<TorrentClientPeerInfo> r = test.extractChokePeerFromUnchokePeers(infos, 2, 3);
+        unit.expect(r.length, 2);
+        unit.expect(true, r.contains(a));
+        unit.expect(true, r.contains(b));
+      }
     });
   });
 }
