@@ -6,7 +6,6 @@ import 'package:hetimatorrent/hetimatorrent.dart';
 void main() {
   unit.group('A group of tests', () {
     unit.test("peerinfo: 0-1", () {
-      TorrentClientPeerInfos infos = new TorrentClientPeerInfos();
       TorrentClientPeerInfo a = new TorrentClientPeerInfoEmpty()
         ..ip = "0.0.0.0"
         ..acceptablePort = 8081
@@ -32,6 +31,7 @@ void main() {
         ..downloadedBytesFromMe = 103
         ..isClose = false;
       {
+        TorrentClientPeerInfos infos = new TorrentClientPeerInfos();
         infos.addRawPeerInfo(a);
         infos.addRawPeerInfo(b);
         infos.addRawPeerInfo(c);
@@ -40,6 +40,10 @@ void main() {
         unit.expect(r.length, 0);
       }
       {
+        TorrentClientPeerInfos infos = new TorrentClientPeerInfos();
+        infos.addRawPeerInfo(a);
+        infos.addRawPeerInfo(b);
+        infos.addRawPeerInfo(c);
         infos.addRawPeerInfo(d);
         TorrentAIChokeTest test = new TorrentAIChokeTest();
         List<TorrentClientPeerInfo> r = test.extractChokePeerFromUnchokePeers(infos, 1, 3);
