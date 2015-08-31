@@ -10,16 +10,18 @@ import 'torrentengineai_boot.dart';
 import 'torrentengine_torrent.dart';
 
 class TorrentEngine {
-  UpnpPortMapHelper _upnpPortMapClient = null;
   HetimaSocketBuilder _builder = null;
   HetimaSocketBuilder get builder => _builder;
-  UpnpPortMapHelper get upnpPortMapClient => _upnpPortMapClient;
+  
+  UpnpPortMapHelper _upnpClient = null;
+  UpnpPortMapHelper get upnpClient => _upnpClient;
 
   TorrentClientManager _torrentClientManager = null;
   TorrentClientManager get torrentClientManager => _torrentClientManager;
 
   KNode _dhtClient = null;
   KNode get dhtClient => _dhtClient;
+
   List<TorrentEngineTorrent> _torrents = [];
   List<TorrentEngineTorrent> get torrents => new List.from(_torrents);
 
@@ -38,6 +40,10 @@ class TorrentEngine {
   bool _verbose = false;
   bool get verbose => _verbose;
 
+  bool _isStart = false;
+  bool get isStart => _isStart;
+  int get port => _torrentClientManager.localPort;
+  bool get portMapIsOk => false;
 
   TorrentEngine(HetimaSocketBuilder builder, 
       {appid: "hetima_torrent_engine", 
@@ -47,8 +53,8 @@ class TorrentEngine {
        bool verbose: false}) {
     this._builder = builder;
     this._torrentClientManager = new TorrentClientManager(builder, verbose: verbose);
-    this._upnpPortMapClient = new UpnpPortMapHelper(builder, appid, verbose: verbose);
-    this._portMapAI = new TorrentEngineAIPortMap(upnpPortMapClient);
+    this._upnpClient = new UpnpPortMapHelper(builder, appid, verbose: verbose);
+    this._portMapAI = new TorrentEngineAIPortMap(upnpClient);
     this._useUpnp = useUpnp;
     this._useDht = useDht;
     this._dhtClient = new KNode(builder, verbose: verbose);
@@ -112,9 +118,6 @@ class TorrentEngine {
     }
   }
 
-  bool _isStart = false;
-  bool get isStart => _isStart;
-
   Future start() {
     _portMapAI.usePortMap = _useUpnp;
     return _portMapAI.start(_torrentClientManager, this._dhtClient).then((_) {
@@ -122,8 +125,6 @@ class TorrentEngine {
     });
   }
 
-  int get port => _torrentClientManager.localPort;
-  bool get portMapIsOk => false;
 
   Future stop() {
     return _portMapAI.stop().whenComplete(() {
