@@ -8,15 +8,44 @@ void main() {
     unit.test("peerinfo: 0-1", () {
       TorrentClientPeerInfos infos = new TorrentClientPeerInfos();
       TorrentClientPeerInfo a = new TorrentClientPeerInfoEmpty()
-      ..ip="0.0.0.0"
-      ..acceptablePort=8081;
+        ..ip = "0.0.0.0"
+        ..acceptablePort = 8081
+        ..chokedFromMe = TorrentClientFront.STATE_OFF
+        ..downloadedBytesFromMe = 100
+        ..isClose = false;
       TorrentClientPeerInfo b = new TorrentClientPeerInfoEmpty()
-      ..ip="0.0.0.0"
-      ..acceptablePort=8082;
-      infos.addRawPeerInfo(a);
-      infos.addRawPeerInfo(b);
-      TorrentAIChokeTest test = new TorrentAIChokeTest();
-      //test.extractChokePeerFromUnchokePeers(infos, numOfUnchoke, maxOfUnchoke)
+        ..ip = "0.0.0.0"
+        ..acceptablePort = 8082
+        ..chokedFromMe = TorrentClientFront.STATE_OFF
+        ..downloadedBytesFromMe = 101
+        ..isClose = false;
+      TorrentClientPeerInfo c = new TorrentClientPeerInfoEmpty()
+        ..ip = "0.0.0.0"
+        ..acceptablePort = 8083
+        ..chokedFromMe = TorrentClientFront.STATE_OFF
+        ..downloadedBytesFromMe = 102
+        ..isClose = false;
+      TorrentClientPeerInfo d = new TorrentClientPeerInfoEmpty()
+        ..ip = "0.0.0.0"
+        ..acceptablePort = 8083
+        ..chokedFromMe = TorrentClientFront.STATE_OFF
+        ..downloadedBytesFromMe = 103
+        ..isClose = false;
+      {
+        infos.addRawPeerInfo(a);
+        infos.addRawPeerInfo(b);
+        infos.addRawPeerInfo(c);
+        TorrentAIChokeTest test = new TorrentAIChokeTest();
+        List<TorrentClientPeerInfo> r = test.extractChokePeerFromUnchokePeers(infos, 1, 3);
+        unit.expect(r.length, 0);
+      }
+      {
+        infos.addRawPeerInfo(d);
+        TorrentAIChokeTest test = new TorrentAIChokeTest();
+        List<TorrentClientPeerInfo> r = test.extractChokePeerFromUnchokePeers(infos, 1, 3);
+        unit.expect(r.length, 1);
+        unit.expect(true, r.contains(a));
+      }
     });
   });
 }

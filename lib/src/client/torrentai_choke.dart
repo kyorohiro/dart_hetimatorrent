@@ -26,31 +26,23 @@ class TorrentAIChokeTest {
     });
   }
 
-  List<TorrentClientPeerInfo> extractChokePeerFromUnchokePeers(TorrentClientPeerInfos infos, int numOfUnchoke, int maxOfUnchoke) {
-    List<TorrentClientPeerInfo> unchokeInterestedPeers = infos.getPeerInfo((TorrentClientPeerInfo info) {
-      return (info.isClose == false && info.interestedToMe == TorrentClientFront.STATE_ON && info.chokedFromMe == TorrentClientFront.STATE_ON);
+  List<TorrentClientPeerInfo> extractChokePeerFromUnchokePeers(TorrentClientPeerInfos infos, int numOfReplace, int maxOfUnchoke) {
+    List<TorrentClientPeerInfo> ret = [];
+    List<TorrentClientPeerInfo> unchokeFromMePeers = infos.getPeerInfo((TorrentClientPeerInfo info) {
+      return (info.isClose == false && info.chokedFromMe == TorrentClientFront.STATE_OFF);
     });
 
-    List<TorrentClientPeerInfo> unchokeToMePeers = infos.getPeerInfo((TorrentClientPeerInfo info) {
-      return (info.isClose == false && info.chokedToMe == TorrentClientFront.STATE_ON);
-    });
+    if (unchokeFromMePeers.length > maxOfUnchoke) {
+      unchokeFromMePeers.sort((TorrentClientPeerInfo x, TorrentClientPeerInfo y) {
+        return x.uploadSpeedFromUnchokeFromMe - y.uploadSpeedFromUnchokeFromMe;
+      });
 
-    if (unchokeToMePeers.length < maxOfUnchoke) {
-      return [];
-    } else {
-      List<TorrentClientPeerInfo> ret = [];
-      unchokeInterestedPeers.shuffle();
-      if (unchokeInterestedPeers.length > numOfUnchoke + 1) {
-        unchokeInterestedPeers.sort((TorrentClientPeerInfo x, TorrentClientPeerInfo y) {
-          return x.front.uploadSpeedFromUnchokeFromMe - y.front.uploadSpeedFromUnchokeFromMe;
-        });
-        ret.add(unchokeInterestedPeers[unchokeInterestedPeers.length - 1]);
-        if (unchokeInterestedPeers.length > numOfUnchoke + 2) {
-          ret.add(unchokeInterestedPeers[unchokeInterestedPeers.length - 2]);
-        }
+      numOfReplace = (numOfReplace < (unchokeFromMePeers.length - maxOfUnchoke) ? numOfReplace : (unchokeFromMePeers.length - maxOfUnchoke));
+      for (int i = 0; i < numOfReplace; i++) {
+        ret.add(unchokeFromMePeers[i]);
       }
-      return ret;
     }
+    return ret;
   }
 
   List<TorrentClientPeerInfo> extractUnchokePeerFromInterest(TorrentClientPeerInfos infos, int numOfUchoke) {
@@ -89,8 +81,8 @@ class TorrentAIChokeTest {
     return ret;
   }
 
-  Future chokeTestA(TorrentClient client, int _maxUnchoke) async {
-    List<TorrentClientPeerInfo> chokePeers = extractChokePeerFromUnchokePeers(client.rawPeerInfos, 3, 5);
+  Future chokeTestA(TorrentClient client, int maxUnchoke, int maxReplace) async {
+    List<TorrentClientPeerInfo> chokePeers = extractChokePeerFromUnchokePeers(client.rawPeerInfos, maxReplace, maxUnchoke);
     for (TorrentClientPeerInfo info in chokePeers) {
       await info.front.sendChoke();
     }
@@ -98,11 +90,10 @@ class TorrentAIChokeTest {
     for (TorrentClientPeerInfo info in unchokePeers) {
       await info.front.sendUnchoke();
     }
-    List<TorrentClientPeerInfo>  unchokePeersB =extractUnchokePeerFromInterest(client.rawPeerInfos, 3);
+    List<TorrentClientPeerInfo> unchokePeersB = extractUnchokePeerFromInterest(client.rawPeerInfos, 3);
     for (TorrentClientPeerInfo info in unchokePeersB) {
       await info.front.sendUnchoke();
     }
-
   }
 
   void chokeTest(TorrentClient client, int _maxUnchoke) {
