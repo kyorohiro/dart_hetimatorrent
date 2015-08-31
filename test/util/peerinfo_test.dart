@@ -207,8 +207,9 @@ void main() {
         infos.addRawPeerInfo(e);
 
         TorrentAIChokeTest test = new TorrentAIChokeTest();
-        List<TorrentClientPeerInfo> r = test.extractChoke(infos, 3, 1);
-        unit.expect(r.length, 1);
+        TorrentAIChokeTestResult r = test.extractChoke(infos, 3, 1);
+        unit.expect(r.choke.length, 2);
+        unit.expect(r.unchoke.length, 1);
       }
     });
   });
