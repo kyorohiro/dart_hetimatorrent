@@ -70,7 +70,7 @@ class TorrentAIChokeTest {
       return (info.isClose == false && info.chokedFromMe == TorrentClientFront.STATE_OFF && info.amI == false);
     });
     List<TorrentClientPeerInfo> aliveAndNotChokePeer = infos.getPeerInfo((TorrentClientPeerInfo info) {
-      return (info.isClose == false && info.amI == false && info.chokedFromMe != TorrentClientFront.STATE_ON);
+      return (info.isClose == false && info.amI == false && info.chokedFromMe != TorrentClientFront.STATE_OFF);
     });
     List<TorrentClientPeerInfo> chokePeers = extractChokePeerFromUnchokePeers(infos, maxReplace, maxUnchoke);
     for (TorrentClientPeerInfo info in chokePeers) {

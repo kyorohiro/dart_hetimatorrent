@@ -5,7 +5,7 @@ import 'package:hetimatorrent/hetimatorrent.dart';
 
 void main() {
   unit.group('A group of tests', () {
-    unit.test("peerinfo: 0-1", () {
+    unit.test("extractChokePeerFromUnchokePeers", () {
       TorrentClientPeerInfo a = new TorrentClientPeerInfoEmpty()
         ..ip = "0.0.0.0"
         ..acceptablePort = 8081
@@ -95,7 +95,7 @@ void main() {
     
     //
     //
-    unit.test("peerinfo: 0-1", () {
+    unit.test("extractUnchokePeerFromChoke", () {
       TorrentClientPeerInfo a = new TorrentClientPeerInfoEmpty()
         ..ip = "0.0.0.0"
         ..acceptablePort = 8081
@@ -156,6 +156,59 @@ void main() {
         unit.expect(r.length, 3);
         unit.expect(r.contains(a), true);
         unit.expect(r.contains(b), true);
+      }
+    });
+    
+    
+    //
+    //
+    unit.test("extractChoke", () {
+      TorrentClientPeerInfo a = new TorrentClientPeerInfoEmpty()
+        ..ip = "0.0.0.0"
+        ..acceptablePort = 8081
+        ..chokedFromMe = TorrentClientFront.STATE_OFF
+        ..downloadedBytesFromMe = 100
+        ..interestedToMe = TorrentClientFront.STATE_ON
+        ..isClose = false;
+      TorrentClientPeerInfo b = new TorrentClientPeerInfoEmpty()
+        ..ip = "0.0.0.0"
+        ..acceptablePort = 8082
+        ..chokedFromMe = TorrentClientFront.STATE_OFF
+        ..downloadedBytesFromMe = 101
+        ..interestedToMe = TorrentClientFront.STATE_ON
+        ..isClose = false;
+      TorrentClientPeerInfo c = new TorrentClientPeerInfoEmpty()
+        ..ip = "0.0.0.0"
+        ..acceptablePort = 8083
+        ..chokedFromMe = TorrentClientFront.STATE_OFF
+        ..downloadedBytesFromMe = 102
+        ..interestedToMe = TorrentClientFront.STATE_ON
+        ..isClose = false;
+      TorrentClientPeerInfo d = new TorrentClientPeerInfoEmpty()
+        ..ip = "0.0.0.0"
+        ..acceptablePort = 8084
+        ..chokedFromMe = TorrentClientFront.STATE_ON
+        ..downloadedBytesFromMe = 103
+        ..interestedToMe = TorrentClientFront.STATE_OFF
+        ..isClose = false;
+      TorrentClientPeerInfo e = new TorrentClientPeerInfoEmpty()
+        ..ip = "0.0.0.0"
+        ..acceptablePort = 8085
+        ..chokedFromMe = TorrentClientFront.STATE_NONE
+        ..downloadedBytesFromMe = 104
+        ..interestedToMe = TorrentClientFront.STATE_OFF
+        ..isClose = false;
+      {
+        TorrentClientPeerInfos infos = new TorrentClientPeerInfos();
+        infos.addRawPeerInfo(a);
+        infos.addRawPeerInfo(b);
+        infos.addRawPeerInfo(c);
+        infos.addRawPeerInfo(d);
+        infos.addRawPeerInfo(e);
+
+        TorrentAIChokeTest test = new TorrentAIChokeTest();
+        List<TorrentClientPeerInfo> r = test.extractChoke(infos, 3, 1);
+        unit.expect(r.length, 1);
       }
     });
   });
