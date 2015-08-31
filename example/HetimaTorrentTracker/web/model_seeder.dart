@@ -76,7 +76,7 @@ class SeederModel {
           });
         }
       }).whenComplete(() {
-        if (engine.numOfTorrent() <= 0) {
+        if (engine.numOfTorrent <= 0) {
           return engine.stop();
         }
       });

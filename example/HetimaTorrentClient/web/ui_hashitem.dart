@@ -65,7 +65,7 @@ class HashItem {
       }).whenComplete((){
         AppModel.getInstance().get().then((TorrentEngine e) {
           AppModel mo = AppModel.getInstance();
-          if(e.numOfTorrent() > 0) {
+          if(e.numOfTorrent > 0) {
             mo.mainItem.setStartState(true);
           } else {
             mo.mainItem.setStartState(false);            

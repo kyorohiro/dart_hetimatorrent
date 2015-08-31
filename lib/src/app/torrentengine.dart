@@ -91,9 +91,7 @@ class TorrentEngine {
     _torrents.remove(t);
   }
 
-  int numOfTorrent() {
-    return _torrents.length;
-  }
+  int get numOfTorrent => _torrents.length;
 
   TorrentEngineTorrent getTorrent(List<int> infoHash) {
     for (TorrentEngineTorrent tt in _torrents) {

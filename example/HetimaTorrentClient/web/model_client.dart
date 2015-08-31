@@ -90,7 +90,7 @@ class ClientModel {
         }
         return t.stopTorrent().then((_){
           engine.removeTorrent(engine.getTorrent(infoHash));
-          if(engine.numOfTorrent() == 0) {
+          if(engine.numOfTorrent == 0) {
             return engine.stop();
           }
         });
