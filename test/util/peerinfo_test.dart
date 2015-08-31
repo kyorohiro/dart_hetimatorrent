@@ -92,5 +92,71 @@ void main() {
         unit.expect(true, r.contains(b));
       }
     });
+    
+    //
+    //
+    unit.test("peerinfo: 0-1", () {
+      TorrentClientPeerInfo a = new TorrentClientPeerInfoEmpty()
+        ..ip = "0.0.0.0"
+        ..acceptablePort = 8081
+        ..chokedFromMe = TorrentClientFront.STATE_ON
+        ..downloadedBytesFromMe = 100
+        ..interestedToMe = TorrentClientFront.STATE_ON
+        ..isClose = false;
+      TorrentClientPeerInfo b = new TorrentClientPeerInfoEmpty()
+        ..ip = "0.0.0.0"
+        ..acceptablePort = 8082
+        ..chokedFromMe = TorrentClientFront.STATE_ON
+        ..downloadedBytesFromMe = 101
+        ..interestedToMe = TorrentClientFront.STATE_ON
+        ..isClose = false;
+      TorrentClientPeerInfo c = new TorrentClientPeerInfoEmpty()
+        ..ip = "0.0.0.0"
+        ..acceptablePort = 8083
+        ..chokedFromMe = TorrentClientFront.STATE_ON
+        ..downloadedBytesFromMe = 102
+        ..interestedToMe = TorrentClientFront.STATE_ON
+        ..isClose = false;
+      TorrentClientPeerInfo d = new TorrentClientPeerInfoEmpty()
+        ..ip = "0.0.0.0"
+        ..acceptablePort = 8083
+        ..chokedFromMe = TorrentClientFront.STATE_ON
+        ..downloadedBytesFromMe = 103
+        ..interestedToMe = TorrentClientFront.STATE_OFF
+        ..isClose = false;
+      TorrentClientPeerInfo e = new TorrentClientPeerInfoEmpty()
+        ..ip = "0.0.0.0"
+        ..acceptablePort = 8083
+        ..chokedFromMe = TorrentClientFront.STATE_NONE
+        ..downloadedBytesFromMe = 104
+        ..interestedToMe = TorrentClientFront.STATE_OFF
+        ..isClose = false;
+      {
+        TorrentClientPeerInfos infos = new TorrentClientPeerInfos();
+        infos.addRawPeerInfo(d);
+        infos.addRawPeerInfo(e);
+        infos.addRawPeerInfo(a);
+        infos.addRawPeerInfo(b);
+
+        TorrentAIChokeTest test = new TorrentAIChokeTest();
+        List<TorrentClientPeerInfo> r = test.extractUnchokePeerFromChoke(infos, 2);
+        unit.expect(r.length, 2);
+        unit.expect(r.contains(a), true);
+        unit.expect(r.contains(b), true);
+      }
+      {
+        TorrentClientPeerInfos infos = new TorrentClientPeerInfos();
+        infos.addRawPeerInfo(d);
+        infos.addRawPeerInfo(e);
+        infos.addRawPeerInfo(a);
+        infos.addRawPeerInfo(b);
+
+        TorrentAIChokeTest test = new TorrentAIChokeTest();
+        List<TorrentClientPeerInfo> r = test.extractUnchokePeerFromChoke(infos, 3);
+        unit.expect(r.length, 3);
+        unit.expect(r.contains(a), true);
+        unit.expect(r.contains(b), true);
+      }
+    });
   });
 }
