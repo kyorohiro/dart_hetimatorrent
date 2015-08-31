@@ -207,7 +207,7 @@ void main() {
         infos.addRawPeerInfo(e);
 
         TorrentAIChokeTest test = new TorrentAIChokeTest();
-        TorrentAIChokeTestResult r = test.extractChoke(infos, 3, 1);
+        TorrentAIChokeTestResult r = test.extractChokeAndUnchoke(infos, 3, 1);
         unit.expect(r.choke.length, 2);
         unit.expect(r.unchoke.length, 1);
       }

@@ -8,24 +8,6 @@ import 'torrentclient_peerinfo.dart';
 import 'torrentclient_peerinfos.dart';
 
 class TorrentAIChokeTest {
-  List<TorrentClientPeerInfo> getUnchokeInterestedPeers(TorrentClientPeerInfos infos) {
-    return infos.getPeerInfo((TorrentClientPeerInfo info) {
-      return (info.isClose == false && info.interestedToMe == TorrentClientFront.STATE_ON && info.chokedFromMe == TorrentClientFront.STATE_ON);
-    });
-  }
-
-  List<TorrentClientPeerInfo> getNewcomerPeers(TorrentClientPeerInfos infos) {
-    return infos.getPeerInfo((TorrentClientPeerInfo info) {
-      return (info.isClose == false && info.chokedFromMe == TorrentClientFront.STATE_NONE);
-    });
-  }
-
-  List<TorrentClientPeerInfo> getChokedAndInterestPeers(TorrentClientPeerInfos infos) {
-    return infos.getPeerInfo((TorrentClientPeerInfo info) {
-      return (info.isClose == false && info.chokedFromMe == TorrentClientFront.STATE_OFF);
-    });
-  }
-
   List<TorrentClientPeerInfo> extractChokePeerFromUnchokePeers(TorrentClientPeerInfos infos, int numOfReplace, int maxOfUnchoke) {
     List<TorrentClientPeerInfo> ret = [];
     List<TorrentClientPeerInfo> unchokeFromMePeers = infos.getPeerInfo((TorrentClientPeerInfo info) {
@@ -65,7 +47,7 @@ class TorrentAIChokeTest {
     return ret;
   }
 
-  TorrentAIChokeTestResult extractChoke(TorrentClientPeerInfos infos, int maxUnchoke, int maxReplace) {
+  TorrentAIChokeTestResult extractChokeAndUnchoke(TorrentClientPeerInfos infos, int maxUnchoke, int maxReplace) {
     TorrentAIChokeTestResult ret = new TorrentAIChokeTestResult();
 
     List<TorrentClientPeerInfo> unchokeFromMePeers = infos.getPeerInfo((TorrentClientPeerInfo info) {
@@ -91,7 +73,7 @@ class TorrentAIChokeTest {
   }
 
   chokeTest(TorrentClient client, int maxUnchoke) async {
-    TorrentAIChokeTestResult r = extractChoke(client.rawPeerInfos, maxUnchoke, (maxUnchoke ~/ 3 == 0 ? 1 : maxUnchoke ~/ 3));
+    TorrentAIChokeTestResult r = extractChokeAndUnchoke(client.rawPeerInfos, maxUnchoke, (maxUnchoke ~/ 3 == 0 ? 1 : maxUnchoke ~/ 3));
     for (TorrentClientPeerInfo i in r.choke) {
       try {
         if (i.chokedFromMe != TorrentClientFront.STATE_ON) {
