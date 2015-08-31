@@ -56,6 +56,10 @@ class TorrentEngineTorrent {
   Future stopTorrent() {
     return ai.stop();
   }
+  
+  Future addTorrentClient(String ip, int port) async {
+    _torrentClient.putTorrentPeerInfoFromTracker(ip, port);
+  }
 
   Future createBaseFile() async {
     int length = _torrentFile.info.files.dataSize;
@@ -63,11 +67,9 @@ class TorrentEngineTorrent {
     int start = await _downloadedData.getLength();
     int end = start;
     int retry = 0;
-    print("NNNNNnnnn ${start} <= ${length}");
     while (start < length) {
       end = (start + buffer.length > length ? length : start + buffer.length);
       try {
-        print("---> ${start}  ${end}");
         await _downloadedData.write(buffer, start);
         start = end;
         retry = 0;
