@@ -8,7 +8,7 @@ import 'torrentclient_peerinfo.dart';
 import 'torrentclient_peerinfos.dart';
 
 class TorrentAIChokeTest {
-  List<TorrentClientPeerInfo> extractChokePeerFromUnchokePeers(TorrentClientPeerInfos infos, int numOfReplace, int maxOfUnchoke) {
+  List<TorrentClientPeerInfo> extractChokePeerFromUnchoke(TorrentClientPeerInfos infos, int numOfReplace, int maxOfUnchoke) {
     List<TorrentClientPeerInfo> ret = [];
     List<TorrentClientPeerInfo> unchokeFromMePeers = infos.getPeerInfo((TorrentClientPeerInfo info) {
       return (info.isClose == false && info.chokedFromMe == TorrentClientFront.STATE_OFF && info.amI == false);
@@ -48,15 +48,13 @@ class TorrentAIChokeTest {
   }
 
   TorrentAIChokeTestResult extractChokeAndUnchoke(TorrentClientPeerInfos infos, int maxUnchoke, int maxReplace) {
-    TorrentAIChokeTestResult ret = new TorrentAIChokeTestResult();
-
     List<TorrentClientPeerInfo> unchokeFromMePeers = infos.getPeerInfo((TorrentClientPeerInfo info) {
       return (info.isClose == false && info.chokedFromMe == TorrentClientFront.STATE_OFF && info.amI == false);
     });
     List<TorrentClientPeerInfo> aliveAndNotChokePeer = infos.getPeerInfo((TorrentClientPeerInfo info) {
       return (info.isClose == false && info.amI == false && info.chokedFromMe != TorrentClientFront.STATE_OFF);
     });
-    List<TorrentClientPeerInfo> chokePeers = extractChokePeerFromUnchokePeers(infos, maxReplace, maxUnchoke);
+    List<TorrentClientPeerInfo> chokePeers = extractChokePeerFromUnchoke(infos, maxReplace, maxUnchoke);
     for (TorrentClientPeerInfo info in chokePeers) {
       aliveAndNotChokePeer.remove(info);
     }
@@ -66,13 +64,14 @@ class TorrentAIChokeTest {
       aliveAndNotChokePeer.remove(info);
     }
 
+    TorrentAIChokeTestResult ret = new TorrentAIChokeTestResult();
     ret.choke.addAll(chokePeers);
     ret.choke.addAll(aliveAndNotChokePeer);
     ret.unchoke.addAll(unchokePeers);
     return ret;
   }
 
-  chokeTest(TorrentClient client, int maxUnchoke) async {
+  Future chokeTest(TorrentClient client, int maxUnchoke) async {
     TorrentAIChokeTestResult r = extractChokeAndUnchoke(client.rawPeerInfos, maxUnchoke, (maxUnchoke ~/ 3 == 0 ? 1 : maxUnchoke ~/ 3));
     for (TorrentClientPeerInfo i in r.choke) {
       try {
