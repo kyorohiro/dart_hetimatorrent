@@ -31,14 +31,16 @@ class TorrentAIChokeTest {
     List<TorrentClientPeerInfo> unchokeFromMePeers = infos.getPeerInfo((TorrentClientPeerInfo info) {
       return (info.isClose == false && info.chokedFromMe == TorrentClientFront.STATE_OFF);
     });
-
-    if (unchokeFromMePeers.length > maxOfUnchoke) {
+    List<TorrentClientPeerInfo> alivePeer = infos.getPeerInfo((TorrentClientPeerInfo info) {
+      return (info.isClose == false);
+    });
+    if (alivePeer.length > maxOfUnchoke) {
       unchokeFromMePeers.sort((TorrentClientPeerInfo x, TorrentClientPeerInfo y) {
         return x.uploadSpeedFromUnchokeFromMe - y.uploadSpeedFromUnchokeFromMe;
       });
 
-      numOfReplace = (numOfReplace < (unchokeFromMePeers.length - maxOfUnchoke) ? numOfReplace : (unchokeFromMePeers.length - maxOfUnchoke));
-      for (int i = 0; i < numOfReplace; i++) {
+      numOfReplace = (numOfReplace < (alivePeer.length - maxOfUnchoke) ? numOfReplace : (alivePeer.length - maxOfUnchoke));
+      for (int i = 0; i < numOfReplace&& i<unchokeFromMePeers.length; i++) {
         ret.add(unchokeFromMePeers[i]);
       }
     }

@@ -30,6 +30,12 @@ void main() {
         ..chokedFromMe = TorrentClientFront.STATE_OFF
         ..downloadedBytesFromMe = 103
         ..isClose = false;
+      TorrentClientPeerInfo e = new TorrentClientPeerInfoEmpty()
+        ..ip = "0.0.0.0"
+        ..acceptablePort = 8083
+        ..chokedFromMe = TorrentClientFront.STATE_NONE
+        ..downloadedBytesFromMe = 104
+        ..isClose = false;
       {
         TorrentClientPeerInfos infos = new TorrentClientPeerInfos();
         infos.addRawPeerInfo(a);
@@ -45,6 +51,17 @@ void main() {
         infos.addRawPeerInfo(b);
         infos.addRawPeerInfo(c);
         infos.addRawPeerInfo(d);
+        TorrentAIChokeTest test = new TorrentAIChokeTest();
+        List<TorrentClientPeerInfo> r = test.extractChokePeerFromUnchokePeers(infos, 1, 3);
+        unit.expect(r.length, 1);
+        unit.expect(true, r.contains(a));
+      }
+      {
+        TorrentClientPeerInfos infos = new TorrentClientPeerInfos();
+        infos.addRawPeerInfo(a);
+        infos.addRawPeerInfo(b);
+        infos.addRawPeerInfo(c);
+        infos.addRawPeerInfo(e);
         TorrentAIChokeTest test = new TorrentAIChokeTest();
         List<TorrentClientPeerInfo> r = test.extractChokePeerFromUnchokePeers(infos, 1, 3);
         unit.expect(r.length, 1);
