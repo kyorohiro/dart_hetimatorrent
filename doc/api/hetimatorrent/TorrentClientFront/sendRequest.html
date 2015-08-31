@@ -195,7 +195,7 @@
   if (requestedMaxPieceSize &lt; length) {
     requestedMaxPieceSize = length;
   }
-  MessageRequest message = new MessageRequest(index, begin, length);
+  TMessageRequest message = new TMessageRequest(index, begin, length);
   return sendMessage(message);
 }</code></pre>
     </section>

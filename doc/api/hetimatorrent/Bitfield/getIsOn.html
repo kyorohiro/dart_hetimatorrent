@@ -83,6 +83,11 @@
       <li class="section-title"><a href="hetimatorrent/Bitfield-class.html#constructors">Constructors</a></li>
       <li><a href="hetimatorrent/Bitfield/Bitfield.html">Bitfield</a></li>
     
+      <li class="section-title"><a href="hetimatorrent/Bitfield-class.html#operators">Operators</a></li>
+      <li><a href="hetimatorrent/Bitfield/operator_get.html">operator []</a>
+</li>
+      <li><a href="hetimatorrent/Bitfield/operator_put.html">operator []=</a>
+</li>
     
       <li class="section-title"><a href="hetimatorrent/Bitfield-class.html#methods">Methods</a></li>
       <li><a href="hetimatorrent/Bitfield/getBinary.html">getBinary</a>
@@ -124,7 +129,7 @@
             <span class="name ">getIsOn</span>(
             <br>
             <div class="parameters">
-                <span class="parameter" id="getIsOn-param-number"><span class="type-annotation">int</span> <span class="parameter-name">number</span></span>
+                <span class="parameter" id="getIsOn-param-idx"><span class="type-annotation">int</span> <span class="parameter-name">idx</span></span>
             </div>
             )    </section>
 
@@ -136,14 +141,12 @@
 
     <section class="summary source-code" id="source">
       <h2>Source</h2>
-      <pre><code class="prettyprint lang-dart">bool getIsOn(int number) {
-  int chunk = number ~/ 8;
-  int pos = number % 8;
+      <pre><code class="prettyprint lang-dart">bool getIsOn(int idx) {
   // 8 0, 7 1, 3 3 7 7
-  if (_bitfieldData == null || chunk &gt;= _bitfieldData.length) {
+  if (_bitfieldData == null || idx ~/ 8 &gt;= _bitfieldData.length) {
     return false;
   }
-  if (((_bitfieldData[chunk] &gt;&gt; (7 - pos)) &amp; 0x01) == 0x01) {
+  if (((_bitfieldData[idx ~/ 8] &gt;&gt; (7 - idx % 8)) &amp; 0x01) == 0x01) {
     return true;
   } else {
     return false;

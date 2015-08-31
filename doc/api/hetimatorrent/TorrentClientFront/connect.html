@@ -194,8 +194,8 @@
       <pre><code class="prettyprint lang-dart">static Future&lt;TorrentClientFront&gt; connect(HetimaSocketBuilder _builder, TorrentClientPeerInfo info, int bitfieldSize, List&lt;int&gt; infoHash,
     {List&lt;int&gt; peerId: null, List&lt;int&gt; reseved: null, bool verbose: false}) async {
   HetimaSocket socket = _builder.createClient();
-  await socket.connect(info.ip, info.portAcceptable);
-  return new TorrentClientFront(socket, info.ip, info.portAcceptable, socket.buffer, bitfieldSize, infoHash, peerId, reseved, verbose: verbose);
+  await socket.connect(info.ip, info.acceptablePort);
+  return new TorrentClientFront(socket, info.ip, info.acceptablePort, socket.buffer, bitfieldSize, infoHash, peerId, reseved, verbose: verbose);
 }</code></pre>
     </section>
 

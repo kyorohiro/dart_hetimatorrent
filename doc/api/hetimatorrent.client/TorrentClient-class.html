@@ -72,30 +72,33 @@
     
     
       <li class="section-title"><a href="hetimatorrent.client/hetimatorrent.client-library.html#classes">Classes</a></li>
-      <li><a href="hetimatorrent.client/MessageBitfield-class.html">MessageBitfield</a></li>
-      <li><a href="hetimatorrent.client/MessageCancel-class.html">MessageCancel</a></li>
-      <li><a href="hetimatorrent.client/MessageChoke-class.html">MessageChoke</a></li>
-      <li><a href="hetimatorrent.client/MessageHandshake-class.html">MessageHandshake</a></li>
-      <li><a href="hetimatorrent.client/MessageHave-class.html">MessageHave</a></li>
-      <li><a href="hetimatorrent.client/MessageInterested-class.html">MessageInterested</a></li>
-      <li><a href="hetimatorrent.client/MessageKeepAlive-class.html">MessageKeepAlive</a></li>
-      <li><a href="hetimatorrent.client/MessageNotInterested-class.html">MessageNotInterested</a></li>
-      <li><a href="hetimatorrent.client/MessageNull-class.html">MessageNull</a></li>
-      <li><a href="hetimatorrent.client/MessagePiece-class.html">MessagePiece</a></li>
-      <li><a href="hetimatorrent.client/MessagePort-class.html">MessagePort</a></li>
-      <li><a href="hetimatorrent.client/MessageRequest-class.html">MessageRequest</a></li>
-      <li><a href="hetimatorrent.client/MessageUnchoke-class.html">MessageUnchoke</a></li>
+      <li><a href="hetimatorrent.client/TMessageBitfield-class.html">TMessageBitfield</a></li>
+      <li><a href="hetimatorrent.client/TMessageCancel-class.html">TMessageCancel</a></li>
+      <li><a href="hetimatorrent.client/TMessageChoke-class.html">TMessageChoke</a></li>
+      <li><a href="hetimatorrent.client/TMessageHandshake-class.html">TMessageHandshake</a></li>
+      <li><a href="hetimatorrent.client/TMessageHave-class.html">TMessageHave</a></li>
+      <li><a href="hetimatorrent.client/TMessageInterested-class.html">TMessageInterested</a></li>
+      <li><a href="hetimatorrent.client/TMessageKeepAlive-class.html">TMessageKeepAlive</a></li>
+      <li><a href="hetimatorrent.client/TMessageNotInterested-class.html">TMessageNotInterested</a></li>
+      <li><a href="hetimatorrent.client/TMessageNull-class.html">TMessageNull</a></li>
+      <li><a href="hetimatorrent.client/TMessagePiece-class.html">TMessagePiece</a></li>
+      <li><a href="hetimatorrent.client/TMessagePort-class.html">TMessagePort</a></li>
+      <li><a href="hetimatorrent.client/TMessageRequest-class.html">TMessageRequest</a></li>
+      <li><a href="hetimatorrent.client/TMessageUnchoke-class.html">TMessageUnchoke</a></li>
       <li><a href="hetimatorrent.client/TorrenAIEmpty-class.html">TorrenAIEmpty</a></li>
       <li><a href="hetimatorrent.client/TorrentAI-class.html">TorrentAI</a></li>
       <li><a href="hetimatorrent.client/TorrentAIBasic-class.html">TorrentAIBasic</a></li>
       <li><a href="hetimatorrent.client/TorrentAIChokeTest-class.html">TorrentAIChokeTest</a></li>
+      <li><a href="hetimatorrent.client/TorrentAIChokeTestResult-class.html">TorrentAIChokeTestResult</a></li>
       <li><a href="hetimatorrent.client/TorrentClient-class.html">TorrentClient</a></li>
       <li><a href="hetimatorrent.client/TorrentClientFront-class.html">TorrentClientFront</a></li>
       <li><a href="hetimatorrent.client/TorrentClientFrontNerve-class.html">TorrentClientFrontNerve</a></li>
       <li><a href="hetimatorrent.client/TorrentClientManager-class.html">TorrentClientManager</a></li>
       <li><a href="hetimatorrent.client/TorrentClientMessage-class.html">TorrentClientMessage</a></li>
       <li><a href="hetimatorrent.client/TorrentClientPeerInfo-class.html">TorrentClientPeerInfo</a></li>
-      <li><a href="hetimatorrent.client/TorrentClientPeerInfoList-class.html">TorrentClientPeerInfoList</a></li>
+      <li><a href="hetimatorrent.client/TorrentClientPeerInfoBasic-class.html">TorrentClientPeerInfoBasic</a></li>
+      <li><a href="hetimatorrent.client/TorrentClientPeerInfoEmpty-class.html">TorrentClientPeerInfoEmpty</a></li>
+      <li><a href="hetimatorrent.client/TorrentClientPeerInfos-class.html">TorrentClientPeerInfos</a></li>
       <li><a href="hetimatorrent.client/TorrentClientSignal-class.html">TorrentClientSignal</a></li>
       <li><a href="hetimatorrent.client/TorrentClientSignalWithFront-class.html">TorrentClientSignalWithFront</a></li>
       <li><a href="hetimatorrent.client/TorrentClientSignalWithPeerInfo-class.html">TorrentClientSignalWithPeerInfo</a></li>
@@ -265,7 +268,7 @@
     
             </dd>
             <dt id="rawPeerInfos" class="property">
-                <span class="top-level-variable-type"><a href="hetimatorrent/TorrentClientPeerInfoList-class.html">TorrentClientPeerInfoList</a></span>
+                <span class="top-level-variable-type"><a href="hetimatorrent/TorrentClientPeerInfos-class.html">TorrentClientPeerInfos</a></span>
                 <a href="hetimatorrent.client/TorrentClient/rawPeerInfos.html">rawPeerInfos</a>
             </dt>
             <dd>
@@ -407,8 +410,8 @@
               <dd>
                   
               </dd>
-              <dt id="startWithoutSocket" class="callable">
-                  <a href="hetimatorrent.client/TorrentClient/startWithoutSocket.html"><span class="name ">startWithoutSocket</span></a><span class="signature">(<wbr><span class="parameter" id="startWithoutSocket-param-localAddress"><span class="type-annotation">String</span> <span class="parameter-name">localAddress</span></span>, <span class="parameter" id="startWithoutSocket-param-localPort"><span class="type-annotation">int</span> <span class="parameter-name">localPort</span></span>, [<span class="parameter" id="startWithoutSocket-param-globalIp"><span class="type-annotation">String</span> <span class="parameter-name">globalIp</span> = <span class="default-value">null</span></span>, <span class="parameter" id="startWithoutSocket-param-globalPort"><span class="type-annotation">int</span> <span class="parameter-name">globalPort</span> = <span class="default-value">null</span></span>])
+              <dt id="startWithoutStartingServer" class="callable">
+                  <a href="hetimatorrent.client/TorrentClient/startWithoutStartingServer.html"><span class="name ">startWithoutStartingServer</span></a><span class="signature">(<wbr><span class="parameter" id="startWithoutStartingServer-param-localAddress"><span class="type-annotation">String</span> <span class="parameter-name">localAddress</span></span>, <span class="parameter" id="startWithoutStartingServer-param-localPort"><span class="type-annotation">int</span> <span class="parameter-name">localPort</span></span>, [<span class="parameter" id="startWithoutStartingServer-param-globalIp"><span class="type-annotation">String</span> <span class="parameter-name">globalIp</span> = <span class="default-value">null</span></span>, <span class="parameter" id="startWithoutStartingServer-param-globalPort"><span class="type-annotation">int</span> <span class="parameter-name">globalPort</span> = <span class="default-value">null</span></span>])
                       &#8594;
                       <span class="returntype">Future</span>
                   </span>
@@ -497,7 +500,7 @@
 </li>
       <li><a href="hetimatorrent.client/TorrentClient/start.html">start</a>
 </li>
-      <li><a href="hetimatorrent.client/TorrentClient/startWithoutSocket.html">startWithoutSocket</a>
+      <li><a href="hetimatorrent.client/TorrentClient/startWithoutStartingServer.html">startWithoutStartingServer</a>
 </li>
       <li><a href="hetimatorrent.client/TorrentClient/stop.html">stop</a>
 </li>

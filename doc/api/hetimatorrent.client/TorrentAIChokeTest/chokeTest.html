@@ -77,6 +77,12 @@
       <li class="section-title"><a href="hetimatorrent.client/TorrentAIChokeTest-class.html#methods">Methods</a></li>
       <li><a href="hetimatorrent.client/TorrentAIChokeTest/chokeTest.html">chokeTest</a>
 </li>
+      <li><a href="hetimatorrent.client/TorrentAIChokeTest/extractChokeAndUnchoke.html">extractChokeAndUnchoke</a>
+</li>
+      <li><a href="hetimatorrent.client/TorrentAIChokeTest/extractChokePeerFromUnchoke.html">extractChokePeerFromUnchoke</a>
+</li>
+      <li><a href="hetimatorrent.client/TorrentAIChokeTest/extractUnchokePeerFromChoke.html">extractUnchokePeerFromChoke</a>
+</li>
     </ol>
 
   </div><!--/.sidebar-offcanvas-->
@@ -84,11 +90,11 @@
   <div class="col-xs-12 col-sm-9 col-md-6 main-content">
 
     <section class="multi-line-signature">
-            <span class="returntype">void</span>
+            <span class="returntype">Future</span>
             <span class="name ">chokeTest</span>(
             <br>
             <div class="parameters">
-                <span class="parameter" id="chokeTest-param-client"><span class="type-annotation"><a href="hetimatorrent/TorrentClient-class.html">TorrentClient</a></span> <span class="parameter-name">client</span></span>,<br><span class="parameter" id="chokeTest-param-_maxUnchoke"><span class="type-annotation">int</span> <span class="parameter-name">_maxUnchoke</span></span>
+                <span class="parameter" id="chokeTest-param-client"><span class="type-annotation"><a href="hetimatorrent/TorrentClient-class.html">TorrentClient</a></span> <span class="parameter-name">client</span></span>,<br><span class="parameter" id="chokeTest-param-maxUnchoke"><span class="type-annotation">int</span> <span class="parameter-name">maxUnchoke</span></span>
             </div>
             )    </section>
 
@@ -100,71 +106,21 @@
 
     <section class="summary source-code" id="source">
       <h2>Source</h2>
-      <pre><code class="prettyprint lang-dart">void chokeTest(TorrentClient client, int _maxUnchoke) {
-  List&lt;TorrentClientPeerInfo&gt; unchokeInterestedPeers = client.rawPeerInfos.getPeerInfo((TorrentClientPeerInfo info) {
-    return  (info.front != null &amp;&amp; info.front.isClose == false &amp;&amp; info.front.interestedToMe == TorrentClientFront.STATE_ON &amp;&amp; info.front.chokedFromMe == TorrentClientFront.STATE_ON);
-  });
-
-  List&lt;TorrentClientPeerInfo&gt; newcomerPeers = client.rawPeerInfos.getPeerInfo((TorrentClientPeerInfo info) {
-    return (info.front != null &amp;&amp; info.front.isClose == false &amp;&amp; info.front.chokedFromMe == TorrentClientFront.STATE_NONE);
-  });
-
-  List&lt;TorrentClientPeerInfo&gt; chokedAndInterestPeers = client.rawPeerInfos.getPeerInfo((TorrentClientPeerInfo info) {
-    return (info.front != null &amp;&amp; info.front.isClose == false &amp;&amp; info.front.chokedFromMe == TorrentClientFront.STATE_OFF);
-  });
-
-  List&lt;TorrentClientPeerInfo&gt; nextUnchoke = [];
-  nextUnchoke.addAll(newcomerPeers);
-  nextUnchoke.addAll(chokedAndInterestPeers);
-
-  //
-  //
-  // 2 peer change
-  unchokeInterestedPeers.shuffle();
-  if (unchokeInterestedPeers.length &gt; (_maxUnchoke - 2)) {
-    unchokeInterestedPeers.sort((TorrentClientPeerInfo x, TorrentClientPeerInfo y) {
-      return x.front.uploadSpeedFromUnchokeFromMe - y.front.uploadSpeedFromUnchokeFromMe;
-    });
-    unchokeInterestedPeers.removeLast().front.sendChoke();
-    if (unchokeInterestedPeers.length &lt; (_maxUnchoke - 2)) {
-      unchokeInterestedPeers.removeLast().front.sendChoke();
-    }
-  }
-
-  //
-  // add include peer
-  //
-  int unchokeNum = _maxUnchoke - unchokeInterestedPeers.length;
-  nextUnchoke.shuffle();
-  int numOfSendedUnchoke = 0;
-
-  // first intersted peer
-  for (int i = 0; i &lt; unchokeNum &amp;&amp; 0 &lt; nextUnchoke.length; i++) {
-    TorrentClientPeerInfo info = nextUnchoke.removeLast();
-    if (info.front.amI == false &amp;&amp;info.front.interestedToMe == TorrentClientFront.STATE_ON || info.front.interestedToMe == TorrentClientFront.STATE_NONE) {
-      if(info.front.chokedFromMe != TorrentClientFront.STATE_OFF) {
-        info.front.sendUnchoke();
+      <pre><code class="prettyprint lang-dart">Future chokeTest(TorrentClient client, int maxUnchoke) async {
+  TorrentAIChokeTestResult r = extractChokeAndUnchoke(client.rawPeerInfos, maxUnchoke, (maxUnchoke ~/ 3 == 0 ? 1 : maxUnchoke ~/ 3));
+  for (TorrentClientPeerInfo i in r.choke) {
+    try {
+      if (i.chokedFromMe != TorrentClientFront.STATE_ON) {
+        await i.front.sendChoke();
       }
-      numOfSendedUnchoke++;
-    }
+    } catch (e) {}
   }
-
-  // secound notinterested peer
-  for (int i = 0; i &lt; (_maxUnchoke - numOfSendedUnchoke) &amp;&amp; 0 &lt; nextUnchoke.length; i++) {
-    TorrentClientPeerInfo info = nextUnchoke.removeLast();
-    if (info.front.amI == false &amp;&amp; info.front.interestedToMe == TorrentClientFront.STATE_OFF) {
-      if(info.front.chokedFromMe != TorrentClientFront.STATE_OFF) {
-        info.front.sendUnchoke();
+  for (TorrentClientPeerInfo i in r.unchoke) {
+    try {
+      if (i.chokedFromMe != TorrentClientFront.STATE_OFF) {
+        await i.front.sendUnchoke();
       }
-    }
-  }
-
-  //
-  // send unchoke
-  for (TorrentClientPeerInfo info in nextUnchoke) {
-    if (info.chokedFromMe != TorrentClientFront.STATE_ON) {
-      info.front.sendChoke();
-    }
+    } catch (e) {}
   }
 }</code></pre>
     </section>

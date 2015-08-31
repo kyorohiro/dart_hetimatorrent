@@ -133,16 +133,16 @@
       front._interestedFromMe = TorrentClientFront.STATE_OFF;
       break;
     case TorrentMessage.SIGN_BITFIELD:
-      MessageBitfield messageBitfile = message;
+      TMessageBitfield messageBitfile = message;
       front._bitfieldFromMe.writeBytes(messageBitfile.bitfield);
       break;
     case TorrentMessage.SIGN_PIECE:
-      front.uploadedBytesToMe += (message as MessagePiece).content.length;
-      front._uploadedBytesFromUnchokedStartTime += (message as MessagePiece).content.length;
-      front._streamSignal.add(new TorrentClientSignalWithFront(front, TorrentClientSignal.ID_PIECE_SEND, 0, &quot;&quot;, (message as MessagePiece).content.length));
+      front.uploadedBytesToMe += (message as TMessagePiece).content.length;
+      front._uploadedBytesFromUnchokedStartTime += (message as TMessagePiece).content.length;
+      front._streamSignal.add(new TorrentClientSignalWithFront(front, TorrentClientSignal.ID_PIECE_SEND, 0, &quot;&quot;, (message as TMessagePiece).content.length));
       break;
     case TorrentMessage.SIGN_REQUEST:
-      MessageRequest resestMessage = message;
+      TMessageRequest resestMessage = message;
       front.currentRequesting.add(message);
       front._lastRequestIndex = resestMessage.index;
       break;

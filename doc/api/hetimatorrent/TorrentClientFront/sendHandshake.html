@@ -195,7 +195,7 @@
   if (reseved == null) {
     reseved = new List.from(_reseved);
   }
-  MessageHandshake message = new MessageHandshake(MessageHandshake.ProtocolId, reseved, _infoHash, _myPeerId);
+  TMessageHandshake message = new TMessageHandshake(TMessageHandshake.ProtocolId, reseved, _infoHash, _myPeerId);
   return sendMessage(message);
 }</code></pre>
     </section>

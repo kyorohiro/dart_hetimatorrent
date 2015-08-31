@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TMessagePiece class - hetimatorrent.client library - Dart API</title>
+    <!-- required because all the links are pseudo-absolute -->
+    <base href="..">
+
+    <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro|Roboto:500,400italic,300,400' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="static-assets/prettify.css">
+    <link rel="stylesheet" href="static-assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static-assets/styles.css">
+
+    <meta name="description" content="API docs for the TMessagePiece class from the hetimatorrent.client library, for the Dart programming language.">
+    <link rel="icon" href="static-assets/favicon.png">
+
+    <!-- Do not remove placeholder -->
+    <!-- Header Placeholder -->
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header class="container-fluid" id="title">
+    <nav class="navbar navbar-fixed-top">
+        <div class="container">
+            <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+            <ol class="breadcrumbs gt-separated hidden-xs">
+                <li><a href="index.html">hetimatorrent</a></li>
+                <li><a href="hetimatorrent.client/hetimatorrent.client-library.html">hetimatorrent.client</a></li>
+                <li class="self-crumb">TMessagePiece</li>
+            </ol>
+            <div class="self-name">TMessagePiece</div>
+        </div>
+    </nav>
+    <div class="container masthead">
+        <ol class="breadcrumbs gt-separated visible-xs">
+            <li><a href="index.html">hetimatorrent</a></li>
+            <li><a href="hetimatorrent.client/hetimatorrent.client-library.html">hetimatorrent.client</a></li>
+            <li class="self-crumb">TMessagePiece</li>
+        </ol>
+        <div class="title-description">
+            <h1 class="title">
+                <div class="kind">class</div> TMessagePiece
+            </h1>
+            <!-- p class="subtitle">
+                
+            </p -->
+        </div>
+        <ul class="subnav">
+            <li><a href="hetimatorrent.client/TMessagePiece-class.html#static-methods">Static Methods</a></li>
+            <li><a href="hetimatorrent.client/TMessagePiece-class.html#instance-properties">Properties</a></li>
+            <li><a href="hetimatorrent.client/TMessagePiece-class.html#constructors">Constructors</a></li>
+            <li><a href="hetimatorrent.client/TMessagePiece-class.html#instance-methods">Methods</a></li>
+        </ul>
+    </div>
+</header>
+
+<div class="container body">
+
+  <div class="col-xs-6 col-sm-3 col-md-3 sidebar sidebar-offcanvas-left">
+    <h5><a href="index.html">hetimatorrent</a></h5>
+    <h5><a href="hetimatorrent.client/hetimatorrent.client-library.html">hetimatorrent.client</a></h5>
+
+    <ol>
+    
+    
+    
+    
+    
+      <li class="section-title"><a href="hetimatorrent.client/hetimatorrent.client-library.html#classes">Classes</a></li>
+      <li><a href="hetimatorrent.client/TMessageBitfield-class.html">TMessageBitfield</a></li>
+      <li><a href="hetimatorrent.client/TMessageCancel-class.html">TMessageCancel</a></li>
+      <li><a href="hetimatorrent.client/TMessageChoke-class.html">TMessageChoke</a></li>
+      <li><a href="hetimatorrent.client/TMessageHandshake-class.html">TMessageHandshake</a></li>
+      <li><a href="hetimatorrent.client/TMessageHave-class.html">TMessageHave</a></li>
+      <li><a href="hetimatorrent.client/TMessageInterested-class.html">TMessageInterested</a></li>
+      <li><a href="hetimatorrent.client/TMessageKeepAlive-class.html">TMessageKeepAlive</a></li>
+      <li><a href="hetimatorrent.client/TMessageNotInterested-class.html">TMessageNotInterested</a></li>
+      <li><a href="hetimatorrent.client/TMessageNull-class.html">TMessageNull</a></li>
+      <li><a href="hetimatorrent.client/TMessagePiece-class.html">TMessagePiece</a></li>
+      <li><a href="hetimatorrent.client/TMessagePort-class.html">TMessagePort</a></li>
+      <li><a href="hetimatorrent.client/TMessageRequest-class.html">TMessageRequest</a></li>
+      <li><a href="hetimatorrent.client/TMessageUnchoke-class.html">TMessageUnchoke</a></li>
+      <li><a href="hetimatorrent.client/TorrenAIEmpty-class.html">TorrenAIEmpty</a></li>
+      <li><a href="hetimatorrent.client/TorrentAI-class.html">TorrentAI</a></li>
+      <li><a href="hetimatorrent.client/TorrentAIBasic-class.html">TorrentAIBasic</a></li>
+      <li><a href="hetimatorrent.client/TorrentAIChokeTest-class.html">TorrentAIChokeTest</a></li>
+      <li><a href="hetimatorrent.client/TorrentAIChokeTestResult-class.html">TorrentAIChokeTestResult</a></li>
+      <li><a href="hetimatorrent.client/TorrentClient-class.html">TorrentClient</a></li>
+      <li><a href="hetimatorrent.client/TorrentClientFront-class.html">TorrentClientFront</a></li>
+      <li><a href="hetimatorrent.client/TorrentClientFrontNerve-class.html">TorrentClientFrontNerve</a></li>
+      <li><a href="hetimatorrent.client/TorrentClientManager-class.html">TorrentClientManager</a></li>
+      <li><a href="hetimatorrent.client/TorrentClientMessage-class.html">TorrentClientMessage</a></li>
+      <li><a href="hetimatorrent.client/TorrentClientPeerInfo-class.html">TorrentClientPeerInfo</a></li>
+      <li><a href="hetimatorrent.client/TorrentClientPeerInfoBasic-class.html">TorrentClientPeerInfoBasic</a></li>
+      <li><a href="hetimatorrent.client/TorrentClientPeerInfoEmpty-class.html">TorrentClientPeerInfoEmpty</a></li>
+      <li><a href="hetimatorrent.client/TorrentClientPeerInfos-class.html">TorrentClientPeerInfos</a></li>
+      <li><a href="hetimatorrent.client/TorrentClientSignal-class.html">TorrentClientSignal</a></li>
+      <li><a href="hetimatorrent.client/TorrentClientSignalWithFront-class.html">TorrentClientSignalWithFront</a></li>
+      <li><a href="hetimatorrent.client/TorrentClientSignalWithPeerInfo-class.html">TorrentClientSignalWithPeerInfo</a></li>
+      <li><a href="hetimatorrent.client/TorrentMessage-class.html">TorrentMessage</a></li>
+    
+    </ol>
+  </div>
+
+  <div class="col-xs-12 col-sm-9 col-md-6 main-content">
+
+    <section class="desc markdown">
+    
+          <p class="no-docs">Not documented.</p>
+    
+    </section>
+
+    <section>
+        <dl class="dl-horizontal">
+
+        <dt>Extends</dt>
+        <dd><ul class="gt-separated dark class-relationships">
+            <li>Object</li>
+            <li><a href="hetimatorrent/TorrentMessage-class.html">TorrentMessage</a></li>
+            <li>TMessagePiece</li>
+        </ul></dd>
+
+
+
+        </dl>
+    </section>
+
+
+
+    <section class="summary" id="static-methods">
+        <h2>Static Methods</h2>
+        <dl class="callables">
+            <dt id="decode" class="callable">
+                <a href="hetimatorrent.client/TMessagePiece/decode.html"><span class="name ">decode</span></a><span class="signature">(<wbr><span class="parameter" id="decode-param-parser"><span class="type-annotation">EasyParser</span> <span class="parameter-name">parser</span></span>)
+                    &#8594;
+                    <span class="returntype">Future&lt;<a href="hetimatorrent.message.piece/TMessagePiece-class.html">TMessagePiece</a>&gt;</span>
+                </span>
+            </dt>
+            <dd>
+                
+            </dd>
+        </dl>
+    </section>
+
+    <section class="summary" id="instance-properties">
+        <h2>Properties</h2>
+
+        <dl class="properties">
+            <dt id="begin" class="property">
+                <span class="top-level-variable-type">int</span>
+                <a href="hetimatorrent.client/TMessagePiece/begin.html">begin</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="content" class="property">
+                <span class="top-level-variable-type">List&lt;int&gt;</span>
+                <a href="hetimatorrent.client/TMessagePiece/content.html">content</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+            <dt id="id" class="property">
+                <span class="top-level-variable-type">int</span>
+                <span class="name ">id</span>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only, <span class="is-inherited">inherited</span>
+    </div>
+    
+            </dd>
+            <dt id="index" class="property">
+                <span class="top-level-variable-type">int</span>
+                <a href="hetimatorrent.client/TMessagePiece/index.html">index</a>
+            </dt>
+            <dd>
+                <div class="readable-writable">
+        read-only
+    </div>
+    
+            </dd>
+        </dl>
+    </section>
+
+    <section class="summary" id="constructors">
+        <h2>Constructors</h2>
+
+        <dl class="constructor-summary-list">
+            <dt id="TMessagePiece" class="callable">
+                <span class="name"><a href="hetimatorrent.client/TMessagePiece/TMessagePiece.html">TMessagePiece</a></span><span class="signature">(<span class="parameter" id="-param-index"><span class="type-annotation">int</span> <span class="parameter-name">index</span></span>, <span class="parameter" id="-param-begin"><span class="type-annotation">int</span> <span class="parameter-name">begin</span></span>, <span class="parameter" id="-param-content"><span class="type-annotation">List&lt;int&gt;</span> <span class="parameter-name">content</span></span>)</span>
+            </dt>
+            <dd>
+                
+            </dd>
+        </dl>
+      </section>
+
+
+      <section class="summary" id="instance-methods">
+          <h2>Methods</h2>
+          <dl class="callables">
+              <dt id="encode" class="callable">
+                  <a href="hetimatorrent.client/TMessagePiece/encode.html"><span class="name ">encode</span></a><span class="signature">(<wbr>)
+                      &#8594;
+                      <span class="returntype">Future&lt;List&lt;int&gt;&gt;</span>
+                  </span>
+              </dt>
+              <dd>
+                  
+              </dd>
+              <dt id="toString" class="callable">
+                  <a href="hetimatorrent.client/TMessagePiece/toString.html"><span class="name ">toString</span></a><span class="signature">(<wbr>)
+                      &#8594;
+                      <span class="returntype">String</span>
+                  </span>
+              </dt>
+              <dd>
+                  Returns a string representation of this object.
+              </dd>
+          </dl>
+      </section>
+
+    </div> <!-- /.main-content -->
+
+  <div class="col-xs-6 col-sm-6 col-md-3 sidebar sidebar-offcanvas-right">
+    <h5>TMessagePiece</h5>
+    <ol>
+    
+    
+      <li class="section-title"><a href="hetimatorrent.client/TMessagePiece-class.html#static-methods">Static methods</a></li>
+      <li><a href="hetimatorrent.client/TMessagePiece/decode.html">decode</a></li>
+    
+      <li class="section-title"><a href="hetimatorrent.client/TMessagePiece-class.html#instance-properties">Properties</a></li>
+      <li><a href="hetimatorrent.client/TMessagePiece/begin.html">begin</a>
+</li>
+      <li><a href="hetimatorrent.client/TMessagePiece/content.html">content</a>
+</li>
+      <li>id
+</li>
+      <li><a href="hetimatorrent.client/TMessagePiece/index.html">index</a>
+</li>
+    
+      <li class="section-title"><a href="hetimatorrent.client/TMessagePiece-class.html#constructors">Constructors</a></li>
+      <li><a href="hetimatorrent.client/TMessagePiece/TMessagePiece.html">TMessagePiece</a></li>
+    
+    
+      <li class="section-title"><a href="hetimatorrent.client/TMessagePiece-class.html#methods">Methods</a></li>
+      <li><a href="hetimatorrent.client/TMessagePiece/encode.html">encode</a>
+</li>
+      <li><a href="hetimatorrent.client/TMessagePiece/toString.html">toString</a>
+</li>
+    </ol>
+  </div><!--/.sidebar-offcanvas-->
+
+</div> <!-- container -->
+
+<footer>
+    <div class="container-fluid">
+        <div class="container">
+            <p class="text-center">
+                <span class="no-break">
+                  hetimatorrent 0.0.1 api docs
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="https://www.dartlang.org">
+                    <img src="static-assets/favicon.png" alt="Dart" title="Dart"width="16" height="16">
+                  </a>
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="http://creativecommons.org/licenses/by-sa/4.0/">cc license</a>
+                </span>
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script src="static-assets/prettify.js"></script>
+<script src="static-assets/script.js"></script>
+<!-- Do not remove placeholder -->
+<!-- Footer Placeholder -->
+</body>
+
+</html>

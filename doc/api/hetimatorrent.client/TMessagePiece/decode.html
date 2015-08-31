@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>decode method - TMessagePiece class - hetimatorrent.client library - Dart API</title>
+    <!-- required because all the links are pseudo-absolute -->
+    <base href="../..">
+
+    <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro|Roboto:500,400italic,300,400' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="static-assets/prettify.css">
+    <link rel="stylesheet" href="static-assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static-assets/styles.css">
+
+    <meta name="description" content="API docs for the decode method from the TMessagePiece class, for the Dart programming language.">
+    <link rel="icon" href="static-assets/favicon.png">
+
+    <!-- Do not remove placeholder -->
+    <!-- Header Placeholder -->
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header class="container-fluid" id="title">
+    <nav class="navbar navbar-fixed-top">
+        <div class="container">
+            <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+            <ol class="breadcrumbs gt-separated hidden-xs">
+                <li><a href="index.html">hetimatorrent</a></li>
+                <li><a href="hetimatorrent.client/hetimatorrent.client-library.html">hetimatorrent.client</a></li>
+                <li><a href="hetimatorrent.client/TMessagePiece-class.html">TMessagePiece</a></li>
+                <li class="self-crumb">decode</li>
+            </ol>
+            <div class="self-name">decode</div>
+        </div>
+    </nav>
+    <div class="container masthead">
+        <ol class="breadcrumbs gt-separated visible-xs">
+            <li><a href="index.html">hetimatorrent</a></li>
+            <li><a href="hetimatorrent.client/hetimatorrent.client-library.html">hetimatorrent.client</a></li>
+            <li><a href="hetimatorrent.client/TMessagePiece-class.html">TMessagePiece</a></li>
+            <li class="self-crumb">decode</li>
+        </ol>
+        <div class="title-description">
+            <h1 class="title">
+                <div class="kind">method</div> decode
+            </h1>
+            <!-- p class="subtitle">
+                
+            </p -->
+        </div>
+        <ul class="subnav">
+            <li><a href="hetimatorrent.client/TMessagePiece/decode.html#source">Source</a></li>
+        </ul>
+    </div>
+</header>
+
+<div class="container body">
+
+  <div class="col-xs-6 col-sm-3 sidebar sidebar-offcanvas-left">
+    <h5><a href="index.html">hetimatorrent</a></h5>
+    <h5><a href="hetimatorrent.client/hetimatorrent.client-library.html">hetimatorrent.client</a></h5>
+    <h5><a href="hetimatorrent.client/TMessagePiece-class.html">TMessagePiece</a></h5>
+
+    <ol>
+    
+    
+      <li class="section-title"><a href="hetimatorrent.client/TMessagePiece-class.html#static-methods">Static methods</a></li>
+      <li><a href="hetimatorrent.client/TMessagePiece/decode.html">decode</a></li>
+    
+      <li class="section-title"><a href="hetimatorrent.client/TMessagePiece-class.html#instance-properties">Properties</a></li>
+      <li><a href="hetimatorrent.client/TMessagePiece/begin.html">begin</a>
+</li>
+      <li><a href="hetimatorrent.client/TMessagePiece/content.html">content</a>
+</li>
+      <li>id
+</li>
+      <li><a href="hetimatorrent.client/TMessagePiece/index.html">index</a>
+</li>
+    
+      <li class="section-title"><a href="hetimatorrent.client/TMessagePiece-class.html#constructors">Constructors</a></li>
+      <li><a href="hetimatorrent.client/TMessagePiece/TMessagePiece.html">TMessagePiece</a></li>
+    
+    
+      <li class="section-title"><a href="hetimatorrent.client/TMessagePiece-class.html#methods">Methods</a></li>
+      <li><a href="hetimatorrent.client/TMessagePiece/encode.html">encode</a>
+</li>
+      <li><a href="hetimatorrent.client/TMessagePiece/toString.html">toString</a>
+</li>
+    </ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+  <div class="col-xs-12 col-sm-9 col-md-6 main-content">
+
+    <section class="multi-line-signature">
+            <span class="returntype">Future&lt;<a href="hetimatorrent.message.piece/TMessagePiece-class.html">TMessagePiece</a>&gt;</span>
+            <span class="name ">decode</span>(
+            <br>
+            <div class="parameters">
+                <span class="parameter" id="decode-param-parser"><span class="type-annotation">EasyParser</span> <span class="parameter-name">parser</span></span>
+            </div>
+            )    </section>
+
+    <section class="desc markdown">
+    
+          <p class="no-docs">Not documented.</p>
+    
+    </section>
+
+    <section class="summary source-code" id="source">
+      <h2>Source</h2>
+      <pre><code class="prettyprint lang-dart">static Future&lt;TMessagePiece&gt; decode(EasyParser parser) async {
+  TMessagePiece message = new TMessagePiece._empty();
+  parser.push();
+  try {
+    int messageLength = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN);
+    if (messageLength &lt; 9) {
+      throw {};
+    }
+    int vv = await parser.readByte();
+    if (vv != TorrentMessage.SIGN_PIECE) {
+      throw {};
+    }
+    message._mIndex = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN);
+    message._mBegin = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN);
+    List&lt;int&gt; buffer = await parser.nextBuffer(messageLength - 9);
+    message._mContent.addAll(buffer);
+    parser.pop();
+    return message;
+  } catch (e) {
+    parser.back();
+    parser.pop();
+    throw e;
+  }
+}</code></pre>
+    </section>
+
+  </div> <!-- /.main-content -->
+
+</div> <!-- container -->
+
+<footer>
+    <div class="container-fluid">
+        <div class="container">
+            <p class="text-center">
+                <span class="no-break">
+                  hetimatorrent 0.0.1 api docs
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="https://www.dartlang.org">
+                    <img src="static-assets/favicon.png" alt="Dart" title="Dart"width="16" height="16">
+                  </a>
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="http://creativecommons.org/licenses/by-sa/4.0/">cc license</a>
+                </span>
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script src="static-assets/prettify.js"></script>
+<script src="static-assets/script.js"></script>
+<!-- Do not remove placeholder -->
+<!-- Footer Placeholder -->
+</body>
+
+</html>

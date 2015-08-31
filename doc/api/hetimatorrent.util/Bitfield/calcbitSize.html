@@ -83,6 +83,11 @@
       <li class="section-title"><a href="hetimatorrent.util/Bitfield-class.html#constructors">Constructors</a></li>
       <li><a href="hetimatorrent.util/Bitfield/Bitfield.html">Bitfield</a></li>
     
+      <li class="section-title"><a href="hetimatorrent.util/Bitfield-class.html#operators">Operators</a></li>
+      <li><a href="hetimatorrent.util/Bitfield/operator_get.html">operator []</a>
+</li>
+      <li><a href="hetimatorrent.util/Bitfield/operator_put.html">operator []=</a>
+</li>
     
       <li class="section-title"><a href="hetimatorrent.util/Bitfield-class.html#methods">Methods</a></li>
       <li><a href="hetimatorrent.util/Bitfield/getBinary.html">getBinary</a>
@@ -136,9 +141,9 @@
 
     <section class="summary source-code" id="source">
       <h2>Source</h2>
-      <pre><code class="prettyprint lang-dart">static int calcbitSize(int pieceSize, {pieceLength:20}) {
-  int ret = pieceSize~/pieceLength;
-  if(pieceSize % pieceLength != 0) {
+      <pre><code class="prettyprint lang-dart">static int calcbitSize(int pieceSize, {pieceLength: 20}) {
+  int ret = pieceSize ~/ pieceLength;
+  if (pieceSize % pieceLength != 0) {
     print(&quot;wearning todo: --break bitfield&quot;);
     ret + 1;
   }

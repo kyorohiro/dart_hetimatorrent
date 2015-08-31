@@ -117,8 +117,8 @@
     case TorrentMessage.DUMMY_SIGN_SHAKEHAND:
       front._handshakedToMe = true;
       front._targetPeerId.clear();
-      front._targetPeerId.addAll((message as MessageHandshake).peerId);
-      front._targetProtocolId.addAll((message as MessageHandshake).protocolId);
+      front._targetPeerId.addAll((message as TMessageHandshake).peerId);
+      front._targetProtocolId.addAll((message as TMessageHandshake).protocolId);
       _signalHandshake(front);
       _signalHandshakeOwnConnectCheck(front, message);
       _signalHandshakeInfoHashCheck(front, message);
@@ -136,28 +136,28 @@
       front._interestedToMe = TorrentClientFront.STATE_OFF;
       break;
     case TorrentMessage.SIGN_BITFIELD:
-      MessageBitfield messageBitfile = message;
+      TMessageBitfield messageBitfile = message;
       front._bitfieldToMe.writeBytes(messageBitfile.bitfield);
       break;
     case TorrentMessage.SIGN_HAVE:
-      MessageHave messageHave = message;
+      TMessageHave messageHave = message;
       front._bitfieldToMe.setIsOn(messageHave.index, true);
       break;
     case TorrentMessage.SIGN_PIECE:
       {
-        MessagePiece req = message;
-        List&lt;MessageRequest&gt; removeTarge = [];
-        for (MessageRequest mes in front.currentRequesting) {
+        TMessagePiece req = message;
+        List&lt;TMessageRequest&gt; removeTarge = [];
+        for (TMessageRequest mes in front.currentRequesting) {
           if (mes.begin == req.begin &amp;&amp; mes.index == req.index &amp;&amp; mes.length == req.content.length) {
             removeTarge.add(mes);
           }
         }
-        for (MessageRequest rm in removeTarge) {
+        for (TMessageRequest rm in removeTarge) {
           front.currentRequesting.remove(rm);
         }
       }
-      front.downloadedBytesFromMe += (message as MessagePiece).content.length;
-      front._streamSignal.add(new TorrentClientSignalWithFront(front, TorrentClientSignal.ID_PIECE_RECEIVE, 0, &quot;&quot;, (message as MessagePiece).content.length));
+      front.downloadedBytesFromMe += (message as TMessagePiece).content.length;
+      front._streamSignal.add(new TorrentClientSignalWithFront(front, TorrentClientSignal.ID_PIECE_RECEIVE, 0, &quot;&quot;, (message as TMessagePiece).content.length));
       break;
   }
 }</code></pre>

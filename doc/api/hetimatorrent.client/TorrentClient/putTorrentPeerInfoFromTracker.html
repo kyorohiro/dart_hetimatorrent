@@ -130,7 +130,7 @@
 </li>
       <li><a href="hetimatorrent.client/TorrentClient/start.html">start</a>
 </li>
-      <li><a href="hetimatorrent.client/TorrentClient/startWithoutSocket.html">startWithoutSocket</a>
+      <li><a href="hetimatorrent.client/TorrentClient/startWithoutStartingServer.html">startWithoutStartingServer</a>
 </li>
       <li><a href="hetimatorrent.client/TorrentClient/stop.html">stop</a>
 </li>
@@ -158,7 +158,7 @@
     <section class="summary source-code" id="source">
       <h2>Source</h2>
       <pre><code class="prettyprint lang-dart">TorrentClientPeerInfo putTorrentPeerInfoFromTracker(String ip, int port) {
-  TorrentClientPeerInfo ret = _peerInfos.putPeerInfoFormTracker(ip, port);
+  TorrentClientPeerInfo ret = _peerInfos.putPeerInfo(ip, acceptablePort:port);
   TorrentClientSignal sig = new TorrentClientSignalWithPeerInfo(ret, TorrentClientSignal.ID_ADD_PEERINFO, 0, &quot;add peer info&quot;);
   _sendSignal(this, ret, sig);
   return ret;

@@ -118,7 +118,7 @@
       } else {
         await front.sendHandshake();
         if (useDht == true) {
-          if ((message as MessageHandshake).reserved[7] &amp; 0x01 == 0x01) {
+          if ((message as TMessageHandshake).reserved[7] &amp; 0x01 == 0x01) {
             if (_dhtPort == null) {
               front.sendPort(client.globalPort);
             } else {
@@ -134,7 +134,7 @@
         break;
       }
 
-      MessageRequest requestMessage = message;
+      TMessageRequest requestMessage = message;
       int index = requestMessage.index;
       int begin = requestMessage.begin;
       int len = requestMessage.length;

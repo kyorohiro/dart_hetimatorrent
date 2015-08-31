@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>extractChokePeerFromUnchoke method - TorrentAIChokeTest class - hetimatorrent.client library - Dart API</title>
+    <!-- required because all the links are pseudo-absolute -->
+    <base href="../..">
+
+    <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro|Roboto:500,400italic,300,400' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="static-assets/prettify.css">
+    <link rel="stylesheet" href="static-assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static-assets/styles.css">
+
+    <meta name="description" content="API docs for the extractChokePeerFromUnchoke method from the TorrentAIChokeTest class, for the Dart programming language.">
+    <link rel="icon" href="static-assets/favicon.png">
+
+    <!-- Do not remove placeholder -->
+    <!-- Header Placeholder -->
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header class="container-fluid" id="title">
+    <nav class="navbar navbar-fixed-top">
+        <div class="container">
+            <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+            <ol class="breadcrumbs gt-separated hidden-xs">
+                <li><a href="index.html">hetimatorrent</a></li>
+                <li><a href="hetimatorrent.client/hetimatorrent.client-library.html">hetimatorrent.client</a></li>
+                <li><a href="hetimatorrent.client/TorrentAIChokeTest-class.html">TorrentAIChokeTest</a></li>
+                <li class="self-crumb">extractChokePeerFromUnchoke</li>
+            </ol>
+            <div class="self-name">extractChokePeerFromUnchoke</div>
+        </div>
+    </nav>
+    <div class="container masthead">
+        <ol class="breadcrumbs gt-separated visible-xs">
+            <li><a href="index.html">hetimatorrent</a></li>
+            <li><a href="hetimatorrent.client/hetimatorrent.client-library.html">hetimatorrent.client</a></li>
+            <li><a href="hetimatorrent.client/TorrentAIChokeTest-class.html">TorrentAIChokeTest</a></li>
+            <li class="self-crumb">extractChokePeerFromUnchoke</li>
+        </ol>
+        <div class="title-description">
+            <h1 class="title">
+                <div class="kind">method</div> extractChokePeerFromUnchoke
+            </h1>
+            <!-- p class="subtitle">
+                
+            </p -->
+        </div>
+        <ul class="subnav">
+            <li><a href="hetimatorrent.client/TorrentAIChokeTest/extractChokePeerFromUnchoke.html#source">Source</a></li>
+        </ul>
+    </div>
+</header>
+
+<div class="container body">
+
+  <div class="col-xs-6 col-sm-3 sidebar sidebar-offcanvas-left">
+    <h5><a href="index.html">hetimatorrent</a></h5>
+    <h5><a href="hetimatorrent.client/hetimatorrent.client-library.html">hetimatorrent.client</a></h5>
+    <h5><a href="hetimatorrent.client/TorrentAIChokeTest-class.html">TorrentAIChokeTest</a></h5>
+
+    <ol>
+    
+    
+    
+    
+      <li class="section-title"><a href="hetimatorrent.client/TorrentAIChokeTest-class.html#constructors">Constructors</a></li>
+      <li><a href="hetimatorrent.client/TorrentAIChokeTest/TorrentAIChokeTest.html">TorrentAIChokeTest</a></li>
+    
+    
+      <li class="section-title"><a href="hetimatorrent.client/TorrentAIChokeTest-class.html#methods">Methods</a></li>
+      <li><a href="hetimatorrent.client/TorrentAIChokeTest/chokeTest.html">chokeTest</a>
+</li>
+      <li><a href="hetimatorrent.client/TorrentAIChokeTest/extractChokeAndUnchoke.html">extractChokeAndUnchoke</a>
+</li>
+      <li><a href="hetimatorrent.client/TorrentAIChokeTest/extractChokePeerFromUnchoke.html">extractChokePeerFromUnchoke</a>
+</li>
+      <li><a href="hetimatorrent.client/TorrentAIChokeTest/extractUnchokePeerFromChoke.html">extractUnchokePeerFromChoke</a>
+</li>
+    </ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+  <div class="col-xs-12 col-sm-9 col-md-6 main-content">
+
+    <section class="multi-line-signature">
+            <span class="returntype">List&lt;<a href="hetimatorrent.torrent.client.peerinfo/TorrentClientPeerInfo-class.html">TorrentClientPeerInfo</a>&gt;</span>
+            <span class="name ">extractChokePeerFromUnchoke</span>(
+            <br>
+            <div class="parameters">
+                <span class="parameter" id="extractChokePeerFromUnchoke-param-infos"><span class="type-annotation"><a href="hetimatorrent/TorrentClientPeerInfos-class.html">TorrentClientPeerInfos</a></span> <span class="parameter-name">infos</span></span>,<br><span class="parameter" id="extractChokePeerFromUnchoke-param-numOfReplace"><span class="type-annotation">int</span> <span class="parameter-name">numOfReplace</span></span>,<br><span class="parameter" id="extractChokePeerFromUnchoke-param-maxOfUnchoke"><span class="type-annotation">int</span> <span class="parameter-name">maxOfUnchoke</span></span>
+            </div>
+            )    </section>
+
+    <section class="desc markdown">
+    
+          <p class="no-docs">Not documented.</p>
+    
+    </section>
+
+    <section class="summary source-code" id="source">
+      <h2>Source</h2>
+      <pre><code class="prettyprint lang-dart">List&lt;TorrentClientPeerInfo&gt; extractChokePeerFromUnchoke(TorrentClientPeerInfos infos, int numOfReplace, int maxOfUnchoke) {
+  List&lt;TorrentClientPeerInfo&gt; ret = [];
+  List&lt;TorrentClientPeerInfo&gt; unchokeFromMePeers = infos.getPeerInfo((TorrentClientPeerInfo info) {
+    return (info.isClose == false &amp;&amp; info.chokedFromMe == TorrentClientFront.STATE_OFF &amp;&amp; info.amI == false);
+  });
+  List&lt;TorrentClientPeerInfo&gt; alivePeer = infos.getPeerInfo((TorrentClientPeerInfo info) {
+    return (info.isClose == false &amp;&amp; info.amI == false);
+  });
+  if (alivePeer.length &gt; maxOfUnchoke) {
+    unchokeFromMePeers.sort((TorrentClientPeerInfo x, TorrentClientPeerInfo y) {
+      return x.uploadSpeedFromUnchokeFromMe - y.uploadSpeedFromUnchokeFromMe;
+    });
+
+    numOfReplace = (numOfReplace &lt; (alivePeer.length - maxOfUnchoke) ? numOfReplace : (alivePeer.length - maxOfUnchoke));
+    for (int i = 0; i &lt; numOfReplace &amp;&amp; i &lt; unchokeFromMePeers.length; i++) {
+      ret.add(unchokeFromMePeers[i]);
+    }
+  }
+  return ret;
+}</code></pre>
+    </section>
+
+  </div> <!-- /.main-content -->
+
+</div> <!-- container -->
+
+<footer>
+    <div class="container-fluid">
+        <div class="container">
+            <p class="text-center">
+                <span class="no-break">
+                  hetimatorrent 0.0.1 api docs
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="https://www.dartlang.org">
+                    <img src="static-assets/favicon.png" alt="Dart" title="Dart"width="16" height="16">
+                  </a>
+                </span>
+                &bull;
+                <span class="copyright no-break">
+                  <a href="http://creativecommons.org/licenses/by-sa/4.0/">cc license</a>
+                </span>
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script src="static-assets/prettify.js"></script>
+<script src="static-assets/script.js"></script>
+<!-- Do not remove placeholder -->
+<!-- Footer Placeholder -->
+</body>
+
+</html>

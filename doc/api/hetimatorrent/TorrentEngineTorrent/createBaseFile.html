@@ -121,10 +121,11 @@
   int start = await _downloadedData.getLength();
   int end = start;
   int retry = 0;
-  //print(&quot;NNNNNnnnn ${start} &gt;= ${length}&quot;);
-  while (start &lt;= length) {
+  print(&quot;NNNNNnnnn ${start} &lt;= ${length}&quot;);
+  while (start &lt; length) {
     end = (start + buffer.length &gt; length ? length : start + buffer.length);
     try {
+      print(&quot;---&gt; ${start}  ${end}&quot;);
       await _downloadedData.write(buffer, start);
       start = end;
       retry = 0;

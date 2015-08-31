@@ -126,7 +126,7 @@
       <pre><code class="prettyprint lang-dart">static Future&lt;TorrentMessage&gt; parseHandshake(EasyParser parser, [int maxOfMessageSize = 256 * 1024]) async {
   parser.push();
   try {
-    MessageHandshake message = await MessageHandshake.decode(parser);
+    TMessageHandshake message = await TMessageHandshake.decode(parser);
     parser.pop();
     return message;
   } catch (e) {

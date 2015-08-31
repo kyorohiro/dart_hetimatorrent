@@ -83,6 +83,11 @@
       <li class="section-title"><a href="hetimatorrent/Bitfield-class.html#constructors">Constructors</a></li>
       <li><a href="hetimatorrent/Bitfield/Bitfield.html">Bitfield</a></li>
     
+      <li class="section-title"><a href="hetimatorrent/Bitfield-class.html#operators">Operators</a></li>
+      <li><a href="hetimatorrent/Bitfield/operator_get.html">operator []</a>
+</li>
+      <li><a href="hetimatorrent/Bitfield/operator_put.html">operator []=</a>
+</li>
     
       <li class="section-title"><a href="hetimatorrent/Bitfield-class.html#methods">Methods</a></li>
       <li><a href="hetimatorrent/Bitfield/getBinary.html">getBinary</a>
@@ -139,8 +144,8 @@
       <pre><code class="prettyprint lang-dart">int numOfOn(bool isOn) {
   int ret = 0;
   int len = lengthPerBit();
-  for(int i=0;i&lt;len;i++) {
-    if(getIsOn(i) == isOn) {
+  for (int i = 0; i &lt; len; i++) {
+    if (getIsOn(i) == isOn) {
       ret++;
     }
   }
