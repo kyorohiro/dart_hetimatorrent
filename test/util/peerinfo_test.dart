@@ -5,7 +5,7 @@ import 'package:hetimatorrent/hetimatorrent.dart';
 
 void main() {
   unit.group('A group of tests', () {
-    unit.test("extractChokePeerFromUnchokePeers", () {
+    unit.test("extractChokePeerFromUnchoke", () {
       TorrentClientPeerInfo a = new TorrentClientPeerInfoEmpty()
         ..ip = "0.0.0.0"
         ..acceptablePort = 8081
@@ -42,7 +42,7 @@ void main() {
         infos.addRawPeerInfo(b);
         infos.addRawPeerInfo(c);
         TorrentAIChokeTest test = new TorrentAIChokeTest();
-        List<TorrentClientPeerInfo> r = test.extractChokePeerFromUnchokePeers(infos, 1, 3);
+        List<TorrentClientPeerInfo> r = test.extractChokePeerFromUnchoke(infos, 1, 3);
         unit.expect(r.length, 0);
       }
       {
@@ -52,7 +52,7 @@ void main() {
         infos.addRawPeerInfo(c);
         infos.addRawPeerInfo(d);
         TorrentAIChokeTest test = new TorrentAIChokeTest();
-        List<TorrentClientPeerInfo> r = test.extractChokePeerFromUnchokePeers(infos, 1, 3);
+        List<TorrentClientPeerInfo> r = test.extractChokePeerFromUnchoke(infos, 1, 3);
         unit.expect(r.length, 1);
         unit.expect(true, r.contains(a));
       }
@@ -63,7 +63,7 @@ void main() {
         infos.addRawPeerInfo(c);
         infos.addRawPeerInfo(e);
         TorrentAIChokeTest test = new TorrentAIChokeTest();
-        List<TorrentClientPeerInfo> r = test.extractChokePeerFromUnchokePeers(infos, 1, 3);
+        List<TorrentClientPeerInfo> r = test.extractChokePeerFromUnchoke(infos, 1, 3);
         unit.expect(r.length, 1);
         unit.expect(true, r.contains(a));
       }
@@ -74,7 +74,7 @@ void main() {
         infos.addRawPeerInfo(c);
         infos.addRawPeerInfo(d);
         TorrentAIChokeTest test = new TorrentAIChokeTest();
-        List<TorrentClientPeerInfo> r = test.extractChokePeerFromUnchokePeers(infos, 2, 3);
+        List<TorrentClientPeerInfo> r = test.extractChokePeerFromUnchoke(infos, 2, 3);
         unit.expect(r.length, 1);
         unit.expect(true, r.contains(a));
       }
@@ -86,7 +86,7 @@ void main() {
         infos.addRawPeerInfo(d);
         infos.addRawPeerInfo(e);
         TorrentAIChokeTest test = new TorrentAIChokeTest();
-        List<TorrentClientPeerInfo> r = test.extractChokePeerFromUnchokePeers(infos, 2, 3);
+        List<TorrentClientPeerInfo> r = test.extractChokePeerFromUnchoke(infos, 2, 3);
         unit.expect(r.length, 2);
         unit.expect(true, r.contains(a));
         unit.expect(true, r.contains(b));

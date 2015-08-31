@@ -13,8 +13,6 @@ class TorrentEngine {
   UpnpPortMapHelper _upnpPortMapClient = null;
   HetimaSocketBuilder _builder = null;
   HetimaSocketBuilder get builder => _builder;
-
-  HetimaSocketBuilder get socketBuilder => _builder;
   UpnpPortMapHelper get upnpPortMapClient => _upnpPortMapClient;
 
   TorrentClientManager _torrentClientManager = null;
