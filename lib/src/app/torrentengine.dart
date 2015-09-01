@@ -12,7 +12,7 @@ import 'torrentengine_torrent.dart';
 class TorrentEngine {
   HetimaSocketBuilder _builder = null;
   HetimaSocketBuilder get builder => _builder;
-  
+
   UpnpPortMapHelper _upnpClient = null;
   UpnpPortMapHelper get upnpClient => _upnpClient;
 
@@ -33,6 +33,7 @@ class TorrentEngine {
   String get localIp => _torrentClientManager.localIp;
   int get globalPort => _torrentClientManager.globalPort;
   String get globalIp => _torrentClientManager.globalIp;
+  bool get portMapIsOk => false;
 
   bool _useUpnp = false;
   bool get useUpnp => _useUpnp;
@@ -43,15 +44,9 @@ class TorrentEngine {
 
   bool _isStart = false;
   bool get isStart => _isStart;
-  int get port => _torrentClientManager.localPort;
-  bool get portMapIsOk => false;
 
-  TorrentEngine(HetimaSocketBuilder builder, 
-      {appid: "hetima_torrent_engine", 
-       int localPort: 18085, int globalPort: 18085,
-       String globalIp: "0.0.0.0", String localIp: "0.0.0.0", 
-       int retryNum: 5, bool useUpnp: false, bool useDht: false, 
-       bool verbose: false}) {
+  TorrentEngine(HetimaSocketBuilder builder, {appid: "hetima_torrent_engine", int localPort: 18085, int globalPort: 18085, String globalIp: "0.0.0.0", String localIp: "0.0.0.0", int retryNum: 5,
+      bool useUpnp: false, bool useDht: false, bool verbose: false}) {
     this._builder = builder;
     this._torrentClientManager = new TorrentClientManager(builder, verbose: verbose);
     this._upnpClient = new UpnpPortMapHelper(builder, appid, verbose: verbose);
@@ -74,21 +69,18 @@ class TorrentEngine {
     _useDht = useDht;
   }
 
-
-  Future<TorrentEngineTorrent> addTorrent(TorrentFile torrentfile, HetimaData downloadedData, {haveAllData: false, List<int> bitfield: null}) {
-    return TorrentEngineTorrent
-        .createEngioneTorrent(this, torrentfile, downloadedData, haveAllData: haveAllData, localPort: localPort, globalPort: globalPort, bitfield: bitfield, useDht: _useDht)
-        .then((TorrentEngineTorrent engine) {
-      if (null != getTorrent(engine.rawinfoHash)) {
-        throw {"message": "already add"};
-      }
-      _torrents.add(engine);
-      return engine;
-    });
+  Future<TorrentEngineTorrent> addTorrent(TorrentFile torrentfile, HetimaData downloadedData, {haveAllData: false, List<int> bitfield: null}) async {
+    TorrentEngineTorrent engine =
+        await TorrentEngineTorrent.createEngioneTorrent(this, torrentfile, downloadedData, haveAllData: haveAllData, localPort: localPort, globalPort: globalPort, bitfield: bitfield, useDht: _useDht);
+    if (null != getTorrent(engine.rawinfoHash)) {
+      throw {"message": "already add"};
+    }
+    _torrents.add(engine);
+    return engine;
   }
 
-  void removeTorrent(TorrentEngineTorrent t) {
-    _torrents.remove(t);
+  void removeTorrent(TorrentEngineTorrent torrent) {
+    _torrents.remove(torrent);
   }
 
   int get numOfTorrent => _torrents.length;
@@ -110,25 +102,24 @@ class TorrentEngine {
     return null;
   }
 
-
   addBootNode(String ip, int port) {
     if (ip != null && port != null && useDht == true) {
       _dhtClient.addBootNode(ip, port);
     }
   }
 
-  Future start() {
+  Future start() async {
     _portMapAI.usePortMap = _useUpnp;
-    return _portMapAI.start(_torrentClientManager, this._dhtClient).then((_) {
-      _isStart = true;
-    });
+    await _portMapAI.start(_torrentClientManager, this._dhtClient);
+    _isStart = true;
   }
 
-
-  Future stop() {
-    return _portMapAI.stop().whenComplete(() {
+  Future stop() async {
+    try {
+      await _portMapAI.stop();
+    } finally {
       _isStart = false;
-    });
+    }
   }
 
   void log(String message) {
