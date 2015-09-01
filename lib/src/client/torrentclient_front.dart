@@ -11,9 +11,6 @@ import '../util/bitfield.dart';
 import 'torrentclient_message.dart';
 
 class TorrentClientFront {
-  static const int STATE_NONE = 0;
-  static const int STATE_ON = 1;
-  static const int STATE_OFF = 2;
   List<int> _myPeerId = [];
   List<int> _targetPeerId = [];
   List<int> get targetPeerId => new List.from(_targetPeerId);
@@ -27,10 +24,10 @@ class TorrentClientFront {
   String _peerIp = "";
   int _peerPort = 0;
   int speed = 0; //per sec bytes
-  int downloadedBytesFromMe = STATE_NONE; // Me is Hetima
-  int uploadedBytesToMe = STATE_NONE; // Me is Hetima
-  int chokedFromMe = STATE_NONE; // Me is Hetima
-  int chokedToMe = STATE_NONE; // Me is Hetima
+  int downloadedBytesFromMe = TorrentClientPeerInfo.STATE_NONE; // Me is Hetima
+  int uploadedBytesToMe = TorrentClientPeerInfo.STATE_NONE; // Me is Hetima
+  int chokedFromMe = TorrentClientPeerInfo.STATE_NONE; // Me is Hetima
+  int chokedToMe = TorrentClientPeerInfo.STATE_NONE; // Me is Hetima
 
   int _unchokedStartTime = 0;
   int _uploadedBytesFromUnchokedStartTime = 0;
@@ -46,8 +43,8 @@ class TorrentClientFront {
 
   bool _amI = false;
   bool get amI => _amI;
-  int _interestedToMe = STATE_NONE;
-  int _interestedFromMe = STATE_NONE;
+  int _interestedToMe = TorrentClientPeerInfo.STATE_NONE;
+  int _interestedFromMe = TorrentClientPeerInfo.STATE_NONE;
   int get interestedToMe => _interestedToMe;
   int get interestedFromMe => _interestedFromMe;
 
@@ -89,8 +86,8 @@ class TorrentClientFront {
   static Future<TorrentClientFront> connect(HetimaSocketBuilder _builder, TorrentClientPeerInfo info, int bitfieldSize, List<int> infoHash,
       {List<int> peerId: null, List<int> reseved: null, bool verbose: false}) async {
     HetimaSocket socket = _builder.createClient();
-    await socket.connect(info.ip, info.acceptablePort);
-    return new TorrentClientFront(socket, info.ip, info.acceptablePort, socket.buffer, bitfieldSize, infoHash, peerId, reseved, verbose: verbose);
+    await socket.connect(info.ip, info.port);
+    return new TorrentClientFront(socket, info.ip, info.port, socket.buffer, bitfieldSize, infoHash, peerId, reseved, verbose: verbose);
   }
 
   TorrentClientFront(HetimaSocket socket, String peerIp, int peerPort, HetimaReader reader, int bitfieldSize, List<int> infoHash, List<int> peerId, List<int> reseved, {bool verbose: false}) {
@@ -253,16 +250,16 @@ class TorrentClientFrontNerve {
         _signalHandshakeInfoHashCheck(front, message);
         break;
       case TorrentMessage.SIGN_CHOKE:
-        front.chokedToMe = TorrentClientFront.STATE_ON;
+        front.chokedToMe = TorrentClientPeerInfo.STATE_ON;
         break;
       case TorrentMessage.SIGN_UNCHOKE:
-        front.chokedToMe = TorrentClientFront.STATE_OFF;
+        front.chokedToMe = TorrentClientPeerInfo.STATE_OFF;
         break;
       case TorrentMessage.SIGN_INTERESTED:
-        front._interestedToMe = TorrentClientFront.STATE_ON;
+        front._interestedToMe = TorrentClientPeerInfo.STATE_ON;
         break;
       case TorrentMessage.SIGN_NOTINTERESTED:
-        front._interestedToMe = TorrentClientFront.STATE_OFF;
+        front._interestedToMe = TorrentClientPeerInfo.STATE_OFF;
         break;
       case TorrentMessage.SIGN_BITFIELD:
         TMessageBitfield messageBitfile = message;
@@ -299,18 +296,18 @@ class TorrentClientFrontNerve {
         _signalHandshake(front);
         break;
       case TorrentMessage.SIGN_CHOKE:
-        front.chokedFromMe = TorrentClientFront.STATE_ON;
+        front.chokedFromMe = TorrentClientPeerInfo.STATE_ON;
         front._unchokedStartTime = new DateTime.now().millisecondsSinceEpoch;
         front._uploadedBytesFromUnchokedStartTime = 0;
         break;
       case TorrentMessage.SIGN_UNCHOKE:
-        front.chokedFromMe = TorrentClientFront.STATE_OFF;
+        front.chokedFromMe = TorrentClientPeerInfo.STATE_OFF;
         break;
       case TorrentMessage.SIGN_INTERESTED:
-        front._interestedFromMe = TorrentClientFront.STATE_ON;
+        front._interestedFromMe = TorrentClientPeerInfo.STATE_ON;
         break;
       case TorrentMessage.SIGN_NOTINTERESTED:
-        front._interestedFromMe = TorrentClientFront.STATE_OFF;
+        front._interestedFromMe = TorrentClientPeerInfo.STATE_OFF;
         break;
       case TorrentMessage.SIGN_BITFIELD:
         TMessageBitfield messageBitfile = message;

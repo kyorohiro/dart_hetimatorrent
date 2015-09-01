@@ -3,6 +3,7 @@ library hetimatorrent.torrent.ai.piece;
 import 'dart:core';
 import 'torrentclient.dart';
 import 'torrentclient_front.dart';
+import 'torrentclient_peerinfo.dart';
 import '../util/bitfield.dart';
 import '../util/bitfield_plus.dart';
 
@@ -24,7 +25,7 @@ class TorrentAIPieceTest {
       return;
     }
     if(client.targetBlock.haveAll()) {
-      if(front.interestedFromMe == TorrentClientFront.STATE_ON) {
+      if(front.interestedFromMe == TorrentClientPeerInfo.STATE_ON) {
         front.sendNotInterested();
       }
       return;
@@ -37,19 +38,19 @@ class TorrentAIPieceTest {
       field.setIsOn(v, false);
     }
     if(field.isAllOff()) {
-      if(front.interestedFromMe != TorrentClientFront.STATE_OFF && front.currentRequesting.length == 0) {
+      if(front.interestedFromMe != TorrentClientPeerInfo.STATE_OFF && front.currentRequesting.length == 0) {
         front.sendNotInterested();
       }
       return;
     } else {
-      if(front.interestedFromMe != TorrentClientFront.STATE_ON) {
+      if(front.interestedFromMe != TorrentClientPeerInfo.STATE_ON) {
         front.sendInterested();
       }
     }
 
     //
     // if choke, then end 
-    if(front.chokedToMe != TorrentClientFront.STATE_OFF) {
+    if(front.chokedToMe != TorrentClientPeerInfo.STATE_OFF) {
       return;
     }
 

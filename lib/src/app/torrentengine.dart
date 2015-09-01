@@ -9,6 +9,10 @@ import '../tracker/trackerclient.dart';
 import 'torrentengineai_boot.dart';
 import 'torrentengine_torrent.dart';
 
+/**
+ * This class is torrent client's application layer. 
+ * This class bundle  multiple torrent client function which is dht and tracker and portmap and torrent clients .
+ */
 class TorrentEngine {
   HetimaSocketBuilder _builder = null;
   HetimaSocketBuilder get builder => _builder;
@@ -64,10 +68,12 @@ class TorrentEngine {
     });
   }
 
+  /// todo
   void resetFlag(bool useUpnp, bool useDht) {
     _useUpnp = useUpnp;
     _useDht = useDht;
   }
+
 
   Future<TorrentEngineTorrent> addTorrent(TorrentFile torrentfile, HetimaData downloadedData, {haveAllData: false, List<int> bitfield: null}) async {
     TorrentEngineTorrent engine =

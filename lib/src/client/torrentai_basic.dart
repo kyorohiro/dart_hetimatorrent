@@ -78,7 +78,7 @@ class TorrentAIBasic extends TorrentAI {
         }
         break;
       case TorrentMessage.SIGN_REQUEST:
-        if (info.front.chokedFromMe == TorrentClientFront.STATE_ON) {
+        if (info.front.chokedFromMe == TorrentClientPeerInfo.STATE_ON) {
           print("wearn ; already choked ${info.id}");
           break;
         }

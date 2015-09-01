@@ -11,7 +11,7 @@ class TorrentAIChokeTest {
   List<TorrentClientPeerInfo> extractChokePeerFromUnchoke(TorrentClientPeerInfos infos, int numOfReplace, int maxOfUnchoke) {
     List<TorrentClientPeerInfo> ret = [];
     List<TorrentClientPeerInfo> unchokeFromMePeers = infos.getPeerInfo((TorrentClientPeerInfo info) {
-      return (info.isClose == false && info.chokedFromMe == TorrentClientFront.STATE_OFF && info.amI == false);
+      return (info.isClose == false && info.chokedFromMe == TorrentClientPeerInfo.STATE_OFF && info.amI == false);
     });
     List<TorrentClientPeerInfo> alivePeer = infos.getPeerInfo((TorrentClientPeerInfo info) {
       return (info.isClose == false && info.amI == false);
@@ -31,10 +31,10 @@ class TorrentAIChokeTest {
 
   List<TorrentClientPeerInfo> extractUnchokePeerFromChoke(TorrentClientPeerInfos infos, int numOfUnchoke) {
     List<TorrentClientPeerInfo> unchokeInterestedPeers = infos.getPeerInfo((TorrentClientPeerInfo info) {
-      return (info.isClose == false && info.interestedToMe == TorrentClientFront.STATE_ON && info.chokedFromMe == TorrentClientFront.STATE_ON && info.amI == false);
+      return (info.isClose == false && info.interestedToMe == TorrentClientPeerInfo.STATE_ON && info.chokedFromMe == TorrentClientPeerInfo.STATE_ON && info.amI == false);
     });
     List<TorrentClientPeerInfo> unchokeNotInterestedPeers = infos.getPeerInfo((TorrentClientPeerInfo info) {
-      return (info.isClose == false && info.interestedToMe != TorrentClientFront.STATE_ON && info.chokedFromMe == TorrentClientFront.STATE_ON && info.amI == false);
+      return (info.isClose == false && info.interestedToMe != TorrentClientPeerInfo.STATE_ON && info.chokedFromMe == TorrentClientPeerInfo.STATE_ON && info.amI == false);
     });
     unchokeInterestedPeers.shuffle();
     List<TorrentClientPeerInfo> ret = [];
@@ -49,10 +49,10 @@ class TorrentAIChokeTest {
 
   TorrentAIChokeTestResult extractChokeAndUnchoke(TorrentClientPeerInfos infos, int maxUnchoke, int maxReplace) {
     List<TorrentClientPeerInfo> unchokeFromMePeers = infos.getPeerInfo((TorrentClientPeerInfo info) {
-      return (info.isClose == false && info.chokedFromMe == TorrentClientFront.STATE_OFF && info.amI == false);
+      return (info.isClose == false && info.chokedFromMe == TorrentClientPeerInfo.STATE_OFF && info.amI == false);
     });
     List<TorrentClientPeerInfo> aliveAndNotChokePeer = infos.getPeerInfo((TorrentClientPeerInfo info) {
-      return (info.isClose == false && info.amI == false && info.chokedFromMe != TorrentClientFront.STATE_OFF);
+      return (info.isClose == false && info.amI == false && info.chokedFromMe != TorrentClientPeerInfo.STATE_OFF);
     });
     List<TorrentClientPeerInfo> chokePeers = extractChokePeerFromUnchoke(infos, maxReplace, maxUnchoke);
     for (TorrentClientPeerInfo info in chokePeers) {
@@ -75,14 +75,14 @@ class TorrentAIChokeTest {
     TorrentAIChokeTestResult r = extractChokeAndUnchoke(client.rawPeerInfos, maxUnchoke, (maxUnchoke ~/ 3 == 0 ? 1 : maxUnchoke ~/ 3));
     for (TorrentClientPeerInfo i in r.choke) {
       try {
-        if (i.chokedFromMe != TorrentClientFront.STATE_ON) {
+        if (i.chokedFromMe != TorrentClientPeerInfo.STATE_ON) {
           await i.front.sendChoke();
         }
       } catch (e) {}
     }
     for (TorrentClientPeerInfo i in r.unchoke) {
       try {
-        if (i.chokedFromMe != TorrentClientFront.STATE_OFF) {
+        if (i.chokedFromMe != TorrentClientPeerInfo.STATE_OFF) {
           await i.front.sendUnchoke();
         }
       } catch (e) {}

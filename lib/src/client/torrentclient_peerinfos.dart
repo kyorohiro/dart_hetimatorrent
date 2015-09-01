@@ -14,7 +14,7 @@ class TorrentClientPeerInfos {
 
   TorrentClientPeerInfo putPeerInfo(String ip, {int acceptablePort: null, peerId: ""}) {
     List<TorrentClientPeerInfo> targetPeers = _peerInfos.getWithFilter((TorrentClientPeerInfo info) {
-      return (info.ip == ip && info.acceptablePort == acceptablePort);
+      return (info.ip == ip && info.port == acceptablePort);
     });
     return (targetPeers.length > 0 ? targetPeers.first : _peerInfos.addLast(new TorrentClientPeerInfoBasic(ip, acceptablePort)));
   }
