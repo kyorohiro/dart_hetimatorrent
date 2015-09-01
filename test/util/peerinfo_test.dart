@@ -38,19 +38,19 @@ void main() {
         ..isClose = false;
       {
         TorrentClientPeerInfos infos = new TorrentClientPeerInfos();
-        infos.addRawPeerInfo(a);
-        infos.addRawPeerInfo(b);
-        infos.addRawPeerInfo(c);
+        infos.addPeerInfo(a);
+        infos.addPeerInfo(b);
+        infos.addPeerInfo(c);
         TorrentAIChokeTest test = new TorrentAIChokeTest();
         List<TorrentClientPeerInfo> r = test.extractChokePeerFromUnchoke(infos, 1, 3);
         unit.expect(r.length, 0);
       }
       {
         TorrentClientPeerInfos infos = new TorrentClientPeerInfos();
-        infos.addRawPeerInfo(a);
-        infos.addRawPeerInfo(b);
-        infos.addRawPeerInfo(c);
-        infos.addRawPeerInfo(d);
+        infos.addPeerInfo(a);
+        infos.addPeerInfo(b);
+        infos.addPeerInfo(c);
+        infos.addPeerInfo(d);
         TorrentAIChokeTest test = new TorrentAIChokeTest();
         List<TorrentClientPeerInfo> r = test.extractChokePeerFromUnchoke(infos, 1, 3);
         unit.expect(r.length, 1);
@@ -58,10 +58,10 @@ void main() {
       }
       {
         TorrentClientPeerInfos infos = new TorrentClientPeerInfos();
-        infos.addRawPeerInfo(a);
-        infos.addRawPeerInfo(b);
-        infos.addRawPeerInfo(c);
-        infos.addRawPeerInfo(e);
+        infos.addPeerInfo(a);
+        infos.addPeerInfo(b);
+        infos.addPeerInfo(c);
+        infos.addPeerInfo(e);
         TorrentAIChokeTest test = new TorrentAIChokeTest();
         List<TorrentClientPeerInfo> r = test.extractChokePeerFromUnchoke(infos, 1, 3);
         unit.expect(r.length, 1);
@@ -69,10 +69,10 @@ void main() {
       }
       {
         TorrentClientPeerInfos infos = new TorrentClientPeerInfos();
-        infos.addRawPeerInfo(a);
-        infos.addRawPeerInfo(b);
-        infos.addRawPeerInfo(c);
-        infos.addRawPeerInfo(d);
+        infos.addPeerInfo(a);
+        infos.addPeerInfo(b);
+        infos.addPeerInfo(c);
+        infos.addPeerInfo(d);
         TorrentAIChokeTest test = new TorrentAIChokeTest();
         List<TorrentClientPeerInfo> r = test.extractChokePeerFromUnchoke(infos, 2, 3);
         unit.expect(r.length, 1);
@@ -80,11 +80,11 @@ void main() {
       }
       {
         TorrentClientPeerInfos infos = new TorrentClientPeerInfos();
-        infos.addRawPeerInfo(a);
-        infos.addRawPeerInfo(b);
-        infos.addRawPeerInfo(c);
-        infos.addRawPeerInfo(d);
-        infos.addRawPeerInfo(e);
+        infos.addPeerInfo(a);
+        infos.addPeerInfo(b);
+        infos.addPeerInfo(c);
+        infos.addPeerInfo(d);
+        infos.addPeerInfo(e);
         TorrentAIChokeTest test = new TorrentAIChokeTest();
         List<TorrentClientPeerInfo> r = test.extractChokePeerFromUnchoke(infos, 2, 3);
         unit.expect(r.length, 2);
@@ -133,10 +133,10 @@ void main() {
         ..isClose = false;
       {
         TorrentClientPeerInfos infos = new TorrentClientPeerInfos();
-        infos.addRawPeerInfo(d);
-        infos.addRawPeerInfo(e);
-        infos.addRawPeerInfo(a);
-        infos.addRawPeerInfo(b);
+        infos.addPeerInfo(d);
+        infos.addPeerInfo(e);
+        infos.addPeerInfo(a);
+        infos.addPeerInfo(b);
 
         TorrentAIChokeTest test = new TorrentAIChokeTest();
         List<TorrentClientPeerInfo> r = test.extractUnchokePeerFromChoke(infos, 2);
@@ -146,10 +146,10 @@ void main() {
       }
       {
         TorrentClientPeerInfos infos = new TorrentClientPeerInfos();
-        infos.addRawPeerInfo(d);
-        infos.addRawPeerInfo(e);
-        infos.addRawPeerInfo(a);
-        infos.addRawPeerInfo(b);
+        infos.addPeerInfo(d);
+        infos.addPeerInfo(e);
+        infos.addPeerInfo(a);
+        infos.addPeerInfo(b);
 
         TorrentAIChokeTest test = new TorrentAIChokeTest();
         List<TorrentClientPeerInfo> r = test.extractUnchokePeerFromChoke(infos, 3);
@@ -200,11 +200,11 @@ void main() {
         ..isClose = false;
       {
         TorrentClientPeerInfos infos = new TorrentClientPeerInfos();
-        infos.addRawPeerInfo(a);
-        infos.addRawPeerInfo(b);
-        infos.addRawPeerInfo(c);
-        infos.addRawPeerInfo(d);
-        infos.addRawPeerInfo(e);
+        infos.addPeerInfo(a);
+        infos.addPeerInfo(b);
+        infos.addPeerInfo(c);
+        infos.addPeerInfo(d);
+        infos.addPeerInfo(e);
 
         TorrentAIChokeTest test = new TorrentAIChokeTest();
         TorrentAIChokeTestResult r = test.extractChokeAndUnchoke(infos, 3, 1);

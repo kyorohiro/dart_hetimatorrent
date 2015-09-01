@@ -149,7 +149,7 @@ class TorrentEngineProgress {
   void update(TrackerClient tracker, TorrentClient torrent) {
     _downloadSize = torrent.targetBlock.rawHead.numOfOn(true) * torrent.targetBlock.blockSize;
     _fileSize = torrent.targetBlock.dataSize;
-    _numOfPeer = torrent.rawPeerInfos.numOfPeerInfo();
+    _numOfPeer = torrent.rawPeerInfos.numOfPeerInfo;
     _failureReason = tracker.failedReason;
   }
 

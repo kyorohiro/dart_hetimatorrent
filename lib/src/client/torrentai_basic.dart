@@ -35,7 +35,7 @@ class TorrentAIBasic extends TorrentAI {
 
   Future onTick(TorrentClient client) async {
     bool haveAll = client.targetBlock.haveAll();
-    List<TorrentClientPeerInfo> infos = client.rawPeerInfos.getPeerInfo((TorrentClientPeerInfo info) {
+    List<TorrentClientPeerInfo> infos = client.rawPeerInfos.getPeerInfos((TorrentClientPeerInfo info) {
       if (info.front == null || info.front.isClose) {
         return false;
       }

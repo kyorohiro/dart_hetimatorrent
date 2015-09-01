@@ -1,39 +1,44 @@
 library hetimatorrent.torrent.client.peerinfos;
 
 import 'dart:core';
-import '../util/shufflelinkedlist.dart';
-
 import 'torrentclient_peerinfo.dart';
 
 class TorrentClientPeerInfos {
-  ShuffleLinkedList<TorrentClientPeerInfo> _peerInfos = new ShuffleLinkedList();
-  ShuffleLinkedList<TorrentClientPeerInfo> get rawpeerInfos => _peerInfos;
-  int numOfPeerInfo() => _peerInfos.length;
+  List<TorrentClientPeerInfo> _peerInfos = [];
+  List<TorrentClientPeerInfo> get rawpeerInfos => _peerInfos;
+  int get numOfPeerInfo => _peerInfos.length;
 
   TorrentClientPeerInfos() {}
 
-  TorrentClientPeerInfo putPeerInfo(String ip, {int acceptablePort: null, peerId: ""}) {
-    List<TorrentClientPeerInfo> targetPeers = _peerInfos.getWithFilter((TorrentClientPeerInfo info) {
+  List<TorrentClientPeerInfo> getPeerInfos(Function filter) {
+    List<TorrentClientPeerInfo> t = [];
+    for (TorrentClientPeerInfo x in _peerInfos) {
+      if (filter(x)) {
+        t.add(x);
+      }
+    }
+    return t;
+  }
+
+  void addPeerInfo(TorrentClientPeerInfo info) {
+    _peerInfos.add(info);
+  }
+
+  //
+  // -----  
+  //
+  
+  TorrentClientPeerInfo putPeerInfoFromAddress(String ip, {int acceptablePort: null, peerId: ""}) {
+    List<TorrentClientPeerInfo> targetPeers = getPeerInfos((TorrentClientPeerInfo info) {
       return (info.ip == ip && info.port == acceptablePort);
     });
-    return (targetPeers.length > 0 ? targetPeers.first : _peerInfos.addLast(new TorrentClientPeerInfoBasic(ip, acceptablePort)));
+    return (targetPeers.length > 0 ? targetPeers.first : _peerInfos.add(new TorrentClientPeerInfoBasic(ip, acceptablePort)));
   }
 
   TorrentClientPeerInfo getPeerInfoFromId(int id) {
-    List<TorrentClientPeerInfo> targetPeers = _peerInfos.getWithFilter((TorrentClientPeerInfo info) {
+    List<TorrentClientPeerInfo> targetPeers = getPeerInfos((TorrentClientPeerInfo info) {
       return (info.id == id);
     });
     return (targetPeers.length > 0 ? targetPeers.first : null);
-  }
-
-  List<TorrentClientPeerInfo> getPeerInfo(Function filter) {
-    List<TorrentClientPeerInfo> targetPeers = _peerInfos.getWithFilter((TorrentClientPeerInfo info) {
-      return (filter(info) == true);
-    });
-    return targetPeers;
-  }
-
-  void addRawPeerInfo(TorrentClientPeerInfo info) {
-    _peerInfos.addLast(info);
   }
 }

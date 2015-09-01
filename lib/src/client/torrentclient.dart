@@ -39,7 +39,8 @@ class TorrentClient {
   int get downloaded => _downloaded;
   int get uploaded => _uploaded;
   TorrentClientPeerInfos _peerInfos;
-  List<TorrentClientPeerInfo> get peerInfos => _peerInfos.rawpeerInfos.sequential;
+//  List<TorrentClientPeerInfo> get peerInfos => _peerInfos.rawpeerInfos.sequential;
+  List<TorrentClientPeerInfo> get peerInfos => _peerInfos.rawpeerInfos;
 
   StreamController<TorrentClientMessage> messageStream = new StreamController.broadcast();
   Stream<TorrentClientMessage> get onReceiveEvent => messageStream.stream;
@@ -88,14 +89,14 @@ class TorrentClient {
   }
 
   TorrentClientPeerInfo putTorrentPeerInfoFromTracker(String ip, int port) {
-    TorrentClientPeerInfo ret = _peerInfos.putPeerInfo(ip, acceptablePort:port);
+    TorrentClientPeerInfo ret = _peerInfos.putPeerInfoFromAddress(ip, acceptablePort:port);
     TorrentClientSignal sig = new TorrentClientSignalWithPeerInfo(ret, TorrentClientSignal.ID_ADD_PEERINFO, 0, "add peer info");
     _sendSignal(this, ret, sig);
     return ret;
   }
 
   TorrentClientPeerInfo _putTorrentPeerInfoFromAccept(String ip, int port) {
-    TorrentClientPeerInfo ret = _peerInfos.putPeerInfo(ip);
+    TorrentClientPeerInfo ret = _peerInfos.putPeerInfoFromAddress(ip);
     TorrentClientSignal sig = new TorrentClientSignalWithPeerInfo(ret, TorrentClientSignal.ID_ADD_PEERINFO, 0, "add peer info");
     _sendSignal(this, ret, sig);
     return ret;

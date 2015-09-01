@@ -12,7 +12,7 @@ class TorrentAIConnectTest {
       return {};
     }
 
-    List<TorrentClientPeerInfo> connectedPeers = client.rawPeerInfos.getPeerInfo((TorrentClientPeerInfo info) {
+    List<TorrentClientPeerInfo> connectedPeers = client.rawPeerInfos.getPeerInfos((TorrentClientPeerInfo info) {
       return (info.front == null || info.front.isClose == true ? false : true);
     });
 
