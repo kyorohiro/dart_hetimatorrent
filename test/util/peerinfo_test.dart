@@ -41,7 +41,7 @@ void main() {
         infos.addPeerInfo(a);
         infos.addPeerInfo(b);
         infos.addPeerInfo(c);
-        TorrentAIChokeTest test = new TorrentAIChokeTest();
+        TorrentClientChokeTest test = new TorrentClientChokeTest();
         List<TorrentClientPeerInfo> r = test.extractChokePeerFromUnchoke(infos, 1, 3);
         unit.expect(r.length, 0);
       }
@@ -51,7 +51,7 @@ void main() {
         infos.addPeerInfo(b);
         infos.addPeerInfo(c);
         infos.addPeerInfo(d);
-        TorrentAIChokeTest test = new TorrentAIChokeTest();
+        TorrentClientChokeTest test = new TorrentClientChokeTest();
         List<TorrentClientPeerInfo> r = test.extractChokePeerFromUnchoke(infos, 1, 3);
         unit.expect(r.length, 1);
         unit.expect(true, r.contains(a));
@@ -62,7 +62,7 @@ void main() {
         infos.addPeerInfo(b);
         infos.addPeerInfo(c);
         infos.addPeerInfo(e);
-        TorrentAIChokeTest test = new TorrentAIChokeTest();
+        TorrentClientChokeTest test = new TorrentClientChokeTest();
         List<TorrentClientPeerInfo> r = test.extractChokePeerFromUnchoke(infos, 1, 3);
         unit.expect(r.length, 1);
         unit.expect(true, r.contains(a));
@@ -73,7 +73,7 @@ void main() {
         infos.addPeerInfo(b);
         infos.addPeerInfo(c);
         infos.addPeerInfo(d);
-        TorrentAIChokeTest test = new TorrentAIChokeTest();
+        TorrentClientChokeTest test = new TorrentClientChokeTest();
         List<TorrentClientPeerInfo> r = test.extractChokePeerFromUnchoke(infos, 2, 3);
         unit.expect(r.length, 1);
         unit.expect(true, r.contains(a));
@@ -85,7 +85,7 @@ void main() {
         infos.addPeerInfo(c);
         infos.addPeerInfo(d);
         infos.addPeerInfo(e);
-        TorrentAIChokeTest test = new TorrentAIChokeTest();
+        TorrentClientChokeTest test = new TorrentClientChokeTest();
         List<TorrentClientPeerInfo> r = test.extractChokePeerFromUnchoke(infos, 2, 3);
         unit.expect(r.length, 2);
         unit.expect(true, r.contains(a));
@@ -138,7 +138,7 @@ void main() {
         infos.addPeerInfo(a);
         infos.addPeerInfo(b);
 
-        TorrentAIChokeTest test = new TorrentAIChokeTest();
+        TorrentClientChokeTest test = new TorrentClientChokeTest();
         List<TorrentClientPeerInfo> r = test.extractUnchokePeerFromChoke(infos, 2);
         unit.expect(r.length, 2);
         unit.expect(r.contains(a), true);
@@ -151,7 +151,7 @@ void main() {
         infos.addPeerInfo(a);
         infos.addPeerInfo(b);
 
-        TorrentAIChokeTest test = new TorrentAIChokeTest();
+        TorrentClientChokeTest test = new TorrentClientChokeTest();
         List<TorrentClientPeerInfo> r = test.extractUnchokePeerFromChoke(infos, 3);
         unit.expect(r.length, 3);
         unit.expect(r.contains(a), true);
@@ -206,7 +206,7 @@ void main() {
         infos.addPeerInfo(d);
         infos.addPeerInfo(e);
 
-        TorrentAIChokeTest test = new TorrentAIChokeTest();
+        TorrentClientChokeTest test = new TorrentClientChokeTest();
         TorrentAIChokeTestResult r = test.extractChokeAndUnchoke(infos, 3, 1);
         unit.expect(r.choke.length, 2);
         unit.expect(r.unchoke.length, 1);

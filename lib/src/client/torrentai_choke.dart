@@ -7,7 +7,7 @@ import 'torrentclient_front.dart';
 import 'torrentclient_peerinfo.dart';
 import 'torrentclient_peerinfos.dart';
 
-class TorrentAIChokeTest {
+class TorrentClientChokeTest {
 
   List<TorrentClientPeerInfo> extractChokePeerFromUnchoke(TorrentClientPeerInfos infos, int numOfReplace, int maxOfUnchoke) {
     List<TorrentClientPeerInfo> ret = [];

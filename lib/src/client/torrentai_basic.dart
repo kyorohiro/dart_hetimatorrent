@@ -14,7 +14,7 @@ import 'torrentai.dart';
 import 'torrentai_connect.dart';
 
 class TorrentAIBasic extends TorrentAI {
-  TorrentAIChokeTest _chokeTest = new TorrentAIChokeTest();
+  TorrentClientChokeTest _chokeTest = new TorrentClientChokeTest();
   TorrentAIPieceTest _pieceTest = null;
   TorrentAIConnectTest _connectTest = new TorrentAIConnectTest();
   int _maxUnchoke = 8;
