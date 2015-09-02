@@ -87,6 +87,7 @@ class TorrentClientPieceTest {
     if (bl != null) {
       ret.begin = bl[0];
       ret.end = bl[1];
+      ret.request = info;
     }
     ret.targetBit = targetBit;
     return ret;
