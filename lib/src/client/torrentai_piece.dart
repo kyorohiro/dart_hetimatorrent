@@ -93,6 +93,7 @@ class TorrentClientPieceTest {
 
     //
     // select piece & request
+    Bitfield field = Bitfield.relative(info.bitfieldToMe, clientBlockDataInfoProxy);
     int targetBit = 0;
     if (front.lastRequestIndex != null && !client.targetBlock.have(front.lastRequestIndex)) {
       targetBit = front.lastRequestIndex;
