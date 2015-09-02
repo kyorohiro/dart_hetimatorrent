@@ -62,40 +62,31 @@ class TorrentClientPieceTest {
     return ret;
   }
 
-  pieceTest(TorrentClient client, TorrentClientFront front) {
-    if (front.amI == true) {
+  pieceTest(TorrentClient client, TorrentClientPeerInfo info) {
+    TorrentClientFront front = info.front;
+    if (front == null || front.amI == true) {
       return;
     }
-    if (client.targetBlock.haveAll()) {
-      if (front.interestedFromMe == TorrentClientPeerInfo.STATE_ON) {
-        front.sendNotInterested();
+    TorrentClientPieceTestResult r = interestTest(info);
+    for(TorrentClientPeerInfo i in r.interested) {
+      if(i != null) {
+       i.front.sendInterested();
       }
-      return;
     }
-
-    //
-    // interest or notinterest
-    Bitfield field = client.targetBlock.isNotThrere(front.bitfieldToMe);
-    for (int v in requestedBit) {
-      field.setIsOn(v, false);
-    }
-    if (field.isAllOff()) {
-      if (front.interestedFromMe != TorrentClientPeerInfo.STATE_OFF && front.currentRequesting.length == 0) {
-        front.sendNotInterested();
-      }
-      return;
-    } else {
-      if (front.interestedFromMe != TorrentClientPeerInfo.STATE_ON) {
-        front.sendInterested();
+    for(TorrentClientPeerInfo i in r.notinterested) {
+      if(i != null) {
+       i.front.sendNotInterested();
       }
     }
 
     //
     // if choke, then end
-    if (front.chokedToMe != TorrentClientPeerInfo.STATE_OFF) {
+    if (clientBlockDataInfoProxy.isAllOn() == true || front.chokedToMe != TorrentClientPeerInfo.STATE_OFF) {
       return;
     }
 
+    //
+    // now requesting
     if (0 < front.currentRequesting.length) {
       return;
     }
