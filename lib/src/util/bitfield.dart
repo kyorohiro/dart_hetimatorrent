@@ -57,7 +57,7 @@ class Bitfield extends BitfieldInter {
   static BitfieldInter relative(BitfieldInter ina, BitfieldInter inb, [BitfieldInter out = null]) {
     if (out == null) {
       int len = ina.lengthPerBit();
-      out = new Bitfield(len);
+      out = new Bitfield(len,clearIsOne:false);
     }
     int len = out.lengthPerByte();
     if (len > inb.lengthPerByte()) {

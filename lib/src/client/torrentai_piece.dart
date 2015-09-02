@@ -52,7 +52,7 @@ class TorrentClientPieceTest {
       return ret;
     }
 
-    Bitfield field = Bitfield.relative(info.bitfieldToMe, clientBlockDataInfoProxy);
+    Bitfield field = Bitfield.relative(info.bitfieldToMe,clientBlockDataInfoProxy);
     for (int v in requestedBit) {
       field.setIsOn(v, false);
     }
@@ -72,16 +72,22 @@ class TorrentClientPieceTest {
   TorrentClientPieceTestResultB requestTest(TorrentClient client, TorrentClientPeerInfo info) {
     TorrentClientPieceTestResultB ret = new TorrentClientPieceTestResultB();
     TorrentClientFront front = info.front;
+    if (info.amI == true) {
+      return ret;
+    }
+
     //
     // select piece & request
     //
-    Bitfield field = Bitfield.relative(info.bitfieldToMe, clientBlockDataInfoProxy);
+    BitfieldPlus out = new BitfieldPlus(new Bitfield(clientBlockDataInfoProxy.lengthPerBit()));
+    Bitfield.relative(info.bitfieldToMe, clientBlockDataInfoProxy, out);
     int targetBit = 0;
     if (front.lastRequestIndex != null && !client.targetBlock.have(front.lastRequestIndex)) {
       targetBit = front.lastRequestIndex;
     } else {
-      clientBlockDataInfoProxy.change(field);
-      targetBit = clientBlockDataInfoProxy.getOnPieceAtRandom();
+      //clientBlockDataInfoProxy.change(field);
+      //targetBit = clientBlockDataInfoProxy.getOnPieceAtRandom();
+      targetBit = out.getOnPieceAtRandom();
     }
     List<int> bl = client.targetBlock.getNextBlockPart(targetBit, downloadPieceLength);
     if (bl != null) {
