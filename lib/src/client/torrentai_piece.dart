@@ -10,6 +10,13 @@ import '../util/bitfield_plus.dart';
 class TorrentClientPieceTestResult {
   List<TorrentClientPeerInfo> notinterested = [];
   List<TorrentClientPeerInfo> interested = [];
+
+}
+class TorrentClientPieceTestResultB {
+  TorrentClientPeerInfo request = null;
+  int begin = 0;
+  int end = 0;
+  int targetBit = 0;
 }
 
 class TorrentClientPieceTest {
@@ -62,6 +69,29 @@ class TorrentClientPieceTest {
     return ret;
   }
 
+  TorrentClientPieceTestResultB requestTest(TorrentClient client, TorrentClientPeerInfo info) {
+    TorrentClientPieceTestResultB ret = new TorrentClientPieceTestResultB();
+    TorrentClientFront front = info.front;
+    //
+    // select piece & request
+    //
+    Bitfield field = Bitfield.relative(info.bitfieldToMe, clientBlockDataInfoProxy);
+    int targetBit = 0;
+    if (front.lastRequestIndex != null && !client.targetBlock.have(front.lastRequestIndex)) {
+      targetBit = front.lastRequestIndex;
+    } else {
+      clientBlockDataInfoProxy.change(field);
+      targetBit = clientBlockDataInfoProxy.getOnPieceAtRandom();
+    }
+    List<int> bl = client.targetBlock.getNextBlockPart(targetBit, downloadPieceLength);
+    if (bl != null) {
+      ret.begin = bl[0];
+      ret.end = bl[1];
+    }
+    ret.targetBit = targetBit;
+    return ret;
+  }
+
   pieceTest(TorrentClient client, TorrentClientPeerInfo info) {
     TorrentClientFront front = info.front;
     if (front == null || front.amI == true) {
@@ -93,17 +123,9 @@ class TorrentClientPieceTest {
 
     //
     // select piece & request
-    Bitfield field = Bitfield.relative(info.bitfieldToMe, clientBlockDataInfoProxy);
-    int targetBit = 0;
-    if (front.lastRequestIndex != null && !client.targetBlock.have(front.lastRequestIndex)) {
-      targetBit = front.lastRequestIndex;
-    } else {
-      clientBlockDataInfoProxy.change(field);
-      targetBit = clientBlockDataInfoProxy.getOnPieceAtRandom();
-    }
-    List<int> bl = client.targetBlock.getNextBlockPart(targetBit, downloadPieceLength);
-    if (bl != null) {
-      front.sendRequest(targetBit, bl[0], bl[1] - bl[0]);
+    TorrentClientPieceTestResultB  r1 = requestTest(client, info);
+    if(r1.request != null && r1.request.front != null) {
+      r1.request.front.sendRequest(r1.targetBit, r1.begin,r1.end-r1.begin);
     }
   }
 }
