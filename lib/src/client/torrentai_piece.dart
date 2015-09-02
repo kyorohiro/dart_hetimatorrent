@@ -39,7 +39,7 @@ class TorrentClientPieceTest {
       return ret;
     }
     if (clientBlockDataInfoProxy.isAllOn()) {
-      if (info.interestedFromMe == TorrentClientPeerInfo.STATE_ON) {
+      if (info.interestedFromMe != TorrentClientPeerInfo.STATE_OFF) {
         ret.notinterested.add(info);
       }
       return ret;

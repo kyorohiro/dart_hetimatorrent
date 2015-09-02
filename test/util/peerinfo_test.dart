@@ -93,7 +93,7 @@ void main() {
         unit.expect(true, r.contains(b));
       }
     });
-    
+
     //
     //
     unit.test("extractUnchokePeerFromChoke", () {
@@ -159,8 +159,7 @@ void main() {
         unit.expect(r.contains(b), true);
       }
     });
-    
-    
+
     //
     //
     unit.test("extractChoke", () {
@@ -213,20 +212,20 @@ void main() {
         unit.expect(r.unchoke.length, 1);
       }
     });
-    
+
     unit.test("ttt", () {
-      num i=0;
+      num i = 0;
       c(int n, int k) {
         num a = 1;
         num b = 1;
         num c = 1;
-        for(int i = n-k+1;i<=n;i++){
-          a*= i;
+        for (int i = n - k + 1; i <= n; i++) {
+          a *= i;
         }
-        for(int i = 1;i<=k;i++){
-          b*= i;
+        for (int i = 1; i <= k; i++) {
+          b *= i;
         }
-        return a/b;
+        return a / b;
       }
       print("${c(1000,0)*pow(998.0/1000,1000)}");
       print("${c(1000,1)*pow(998.0/1000,999)*pow(2.0/1000,1)}");
@@ -237,21 +236,39 @@ void main() {
       print("${c(1000,6)*pow(998.0/1000,994)*pow(2.0/1000,6)}");
     });
   });
-  
-  
+
   unit.group('Piece Test', () {
     unit.test("pieceinfo: 0-1", () {
       Bitfield rawBlockDataInfo = new Bitfield(10);
       rawBlockDataInfo.oneClear();
       TorrentClientPeerInfoEmpty info = new TorrentClientPeerInfoEmpty();
-      info.bitfieldToMe = new Bitfield(10)..zeroClear();
-      
+      info.bitfieldToMe = new Bitfield(10)..oneClear();
+
       TorrentClientPieceTest pieceTest = new TorrentClientPieceTest(rawBlockDataInfo, 2);
       TorrentClientPieceTestResult r = pieceTest.interestTest(info);
-      unit.expect(r.interested.length ,0);
-      unit.expect(r.notinterested.length ,0);
+      unit.expect(r.interested.length, 0);
+      unit.expect(r.notinterested.length, 1);
+    });
+
+    unit.test("pieceinfo: 0-1", () {
+      Bitfield rawBlockDataInfo = new Bitfield(10);
+      rawBlockDataInfo.zeroClear();
+      TorrentClientPeerInfoEmpty info = new TorrentClientPeerInfoEmpty();
+      info.bitfieldToMe = new Bitfield(10)..zeroClear();
+      TorrentClientPieceTest pieceTest = new TorrentClientPieceTest(rawBlockDataInfo, 2);
+
+      {
+        TorrentClientPieceTestResult r = pieceTest.interestTest(info);
+        unit.expect(r.interested.length, 0);
+        unit.expect(r.notinterested.length, 1);
+      }
+      {
+        info.bitfieldToMe.oneClear();
+        TorrentClientPieceTestResult r = pieceTest.interestTest(info);
+        unit.expect(r.interested.length, 1);
+        unit.expect(r.notinterested.length, 0);
+      }
+
     });
   });
-  
 }
-
