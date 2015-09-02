@@ -22,6 +22,12 @@ class BitfieldPlus extends BitfieldInter {
   void change(Bitfield base) {
     innerField = base;
   }
+  
+  BitfieldInter isNotThrere(BitfieldInter ina, [BitfieldInter out = null]) {
+    innerField.isNotThrere(ina, out);
+    return out;
+  }
+
   int getOffPieceAtRandomPerByte(int numPerByte) {
     return getPieceAtRandomPerByte(numPerByte, true);
   }

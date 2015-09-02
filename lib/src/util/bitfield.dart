@@ -63,14 +63,15 @@ class Bitfield extends BitfieldInter {
     if (len > inb.lengthPerByte()) {
       len = inb.lengthPerByte();
     }
-    out.value;
-    for (int i = 0; i < out.lengthPerByte(); i++) {
-      out.rawValue[i] = (0xFF & out.rawValue[i]);
-    }
     for (int i = 0; i < len; i++) {
       out.rawValue[i] = (0xFF & ina.rawValue[i] & (~inb.rawValue[i]));
     }
     out.update();
+    return out;
+  }
+
+  BitfieldInter isNotThrere(BitfieldInter ina, [BitfieldInter out = null]) {
+    Bitfield.relative(ina, this, out);
     return out;
   }
 

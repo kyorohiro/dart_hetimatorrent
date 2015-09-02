@@ -23,7 +23,7 @@ class TorrentClientPieceTest {
   BitfieldPlus clientBlockDataInfoProxy = null;
   List<int> requestedBit = [];
   int downloadPieceLength = 16 * 1024;
-
+  BitfieldPlus _cash = null;
   TorrentClientPieceTest.fromTorrentClient(TorrentClient client) {
     _init(client.targetBlock.rawHead, client.targetBlock.blockSize);
   }
@@ -37,6 +37,7 @@ class TorrentClientPieceTest {
     if (downloadPieceLength > blockSize) {
       downloadPieceLength = blockSize;
     }
+    _cash = new BitfieldPlus(new Bitfield(clientBlockDataInfoProxy.lengthPerBit()));
   }
 
   //, Bitfield clientBlockDataInfo
@@ -76,18 +77,12 @@ class TorrentClientPieceTest {
       return ret;
     }
 
-    //
-    // select piece & request
-    //
-    BitfieldPlus out = new BitfieldPlus(new Bitfield(clientBlockDataInfoProxy.lengthPerBit()));
-    Bitfield.relative(info.bitfieldToMe, clientBlockDataInfoProxy, out);
     int targetBit = 0;
     if (front.lastRequestIndex != null && !client.targetBlock.have(front.lastRequestIndex)) {
       targetBit = front.lastRequestIndex;
     } else {
-      //clientBlockDataInfoProxy.change(field);
-      //targetBit = clientBlockDataInfoProxy.getOnPieceAtRandom();
-      targetBit = out.getOnPieceAtRandom();
+      clientBlockDataInfoProxy.isNotThrere(info.bitfieldToMe, _cash);
+      targetBit = _cash.getOnPieceAtRandom();
     }
     List<int> bl = client.targetBlock.getNextBlockPart(targetBit, downloadPieceLength);
     if (bl != null) {
