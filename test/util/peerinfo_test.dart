@@ -237,5 +237,21 @@ void main() {
       print("${c(1000,6)*pow(998.0/1000,994)*pow(2.0/1000,6)}");
     });
   });
+  
+  
+  unit.group('Piece Test', () {
+    unit.test("pieceinfo: 0-1", () {
+      Bitfield rawBlockDataInfo = new Bitfield(10);
+      rawBlockDataInfo.oneClear();
+      TorrentClientPeerInfoEmpty info = new TorrentClientPeerInfoEmpty();
+      info.bitfieldToMe = new Bitfield(10)..zeroClear();
+      
+      TorrentClientPieceTest pieceTest = new TorrentClientPieceTest(rawBlockDataInfo, 2);
+      TorrentClientPieceTestResult r = pieceTest.interestTest(info);
+      unit.expect(r.interested.length ,0);
+      unit.expect(r.notinterested.length ,0);
+    });
+  });
+  
 }
 

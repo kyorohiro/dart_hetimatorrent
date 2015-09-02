@@ -9,5 +9,6 @@ export 'src/client/torrentai.dart';
 export 'src/client/torrentai_basic.dart';
 export 'src/client/torrentclient_message.dart';
 export 'src/client/torrentai_choke.dart';
+export 'src/client/torrentai_piece.dart';
 export 'src/client/message/message.dart';
 export 'src/client/torrentclient_manager.dart';
