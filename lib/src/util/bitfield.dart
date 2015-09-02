@@ -20,6 +20,7 @@ abstract class BitfieldInter {
   bool isAllOnPerByte(int number);
   bool isAllOffPerByte(int number);
   void update() {}
+  BitfieldInter isNotThrere(BitfieldInter ina, [BitfieldInter out = null]);
 }
 
 class Bitfield extends BitfieldInter {
