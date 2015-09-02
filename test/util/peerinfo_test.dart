@@ -2,6 +2,7 @@ library peerinfo.test;
 
 import 'package:unittest/unittest.dart' as unit;
 import 'package:hetimatorrent/hetimatorrent.dart';
+import 'dart:math';
 
 void main() {
   unit.group('A group of tests', () {
@@ -212,5 +213,29 @@ void main() {
         unit.expect(r.unchoke.length, 1);
       }
     });
+    
+    unit.test("ttt", () {
+      num i=0;
+      c(int n, int k) {
+        num a = 1;
+        num b = 1;
+        num c = 1;
+        for(int i = n-k+1;i<=n;i++){
+          a*= i;
+        }
+        for(int i = 1;i<=k;i++){
+          b*= i;
+        }
+        return a/b;
+      }
+      print("${c(1000,0)*pow(998.0/1000,1000)}");
+      print("${c(1000,1)*pow(998.0/1000,999)*pow(2.0/1000,1)}");
+      print("${c(1000,2)*pow(998.0/1000,998)*pow(2.0/1000,2)}");
+      print("${c(1000,3)*pow(998.0/1000,997)*pow(2.0/1000,3)}");
+      print("${c(1000,4)*pow(998.0/1000,996)*pow(2.0/1000,4)}");
+      print("${c(1000,5)*pow(998.0/1000,995)*pow(2.0/1000,5)}");
+      print("${c(1000,6)*pow(998.0/1000,994)*pow(2.0/1000,6)}");
+    });
   });
 }
+

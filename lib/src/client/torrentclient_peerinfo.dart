@@ -2,6 +2,7 @@ library hetimatorrent.torrent.client.peerinfo;
 
 import 'dart:core';
 import 'torrentclient_front.dart';
+import '../../torrent_util.dart';
 
 abstract class TorrentClientPeerInfo {
   static const int STATE_NONE = 0;
@@ -16,6 +17,7 @@ abstract class TorrentClientPeerInfo {
   String ip = "";
   int port = 0;
 
+  
   List<int> get peerId;
   int get speed;
   int get downloadedBytesFromMe;
@@ -27,6 +29,8 @@ abstract class TorrentClientPeerInfo {
   bool get amI;
   bool get isClose;
   int get uploadSpeedFromUnchokeFromMe;
+  Bitfield get bitfieldFromMe;
+  Bitfield get bitfieldToMe;
 }
 
 class TorrentClientPeerInfoEmpty extends TorrentClientPeerInfo {
@@ -40,6 +44,8 @@ class TorrentClientPeerInfoEmpty extends TorrentClientPeerInfo {
 
   TorrentClientPeerInfoEmpty() {}
 
+  Bitfield bitfieldFromMe = null;
+  Bitfield bitfieldToMe = null;
   List<int> peerId = [];
   int speed = 0;
   int downloadedBytesFromMe = 0;
@@ -68,6 +74,8 @@ class TorrentClientPeerInfoBasic extends TorrentClientPeerInfo {
     this.port = port;
   }
 
+  Bitfield get bitfieldFromMe => (front == null ? null : front.bitfieldFromMe);
+  Bitfield get bitfieldToMe => (front == null ? null : front.bitfieldToMe);
   List<int> get peerId => (front == null ? [] : front.targetPeerId);
   int get speed => (front == null ? 0 : front.speed);
   int get downloadedBytesFromMe => (front == null ? 0 : front.downloadedBytesFromMe);
