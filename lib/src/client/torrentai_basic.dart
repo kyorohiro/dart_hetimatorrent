@@ -109,7 +109,7 @@ class TorrentAIBasic extends TorrentAI {
         if (_pieceTest == null) {
           _pieceTest = new TorrentClientPieceTest.fromTorrentClient(client);
         }
-        _pieceTest.pieceTest(client, front);
+        _pieceTest.pieceTest(client, info);
         break;
       case TorrentMessage.SIGN_PORT:
         break;
@@ -132,7 +132,7 @@ class TorrentAIBasic extends TorrentAI {
         if (_pieceTest == null) {
           _pieceTest = new TorrentClientPieceTest.fromTorrentClient(client);
         }
-        _pieceTest.pieceTest(client, info.front);
+        _pieceTest.pieceTest(client, info);
         break;
     }
   }
