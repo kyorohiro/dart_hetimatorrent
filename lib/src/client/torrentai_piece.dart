@@ -53,12 +53,12 @@ class TorrentClientPieceTest {
       return ret;
     }
 
-    Bitfield field = Bitfield.relative(info.bitfieldToMe,clientBlockDataInfoProxy);
+    clientBlockDataInfoProxy.isNotThrere(info.bitfieldToMe, _cash);
     for (int v in requestedBit) {
-      field.setIsOn(v, false);
+      _cash.setIsOn(v, false);
     }
 
-    if (field.isAllOff()) {
+    if (_cash.isAllOff()) {
       if (info.interestedFromMe != TorrentClientPeerInfo.STATE_OFF) {
         ret.notinterested.add(info);
       }
