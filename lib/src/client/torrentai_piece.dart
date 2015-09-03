@@ -126,10 +126,11 @@ class TorrentClientPieceTest {
     // select piece & request
     TorrentClientPieceTestResultB r1 = requestTest(client.targetBlock, info);
     if (r1.request != null && r1.request.front != null) {
-      print("-->${r1.begineEnd.length} [${r1.targetBit}] 0:${r1.begineEnd[0].begin} #:${r1.begineEnd[r1.begineEnd.length-1].begin}");
+    //  print("-->${r1.begineEnd.length} [${r1.targetBit}] 0:${r1.begineEnd[0].begin} #:${r1.begineEnd[r1.begineEnd.length-1].begin}");
       for (int i = 0; i < this.maxOfRequest && i < r1.begineEnd.length; i++) {
     //  for (int i = 0; i < r1.begineEnd.length; i++) {
         BlockDataGetNextBlockPartResult r = r1.begineEnd[i];
+        client.targetBlock.reservePartBlock(r1.targetBit, r.begin, r.end - r.begin);
         r1.request.front.sendRequest(r1.targetBit, r.begin, r.end - r.begin);
       }
     }
