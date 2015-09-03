@@ -53,7 +53,7 @@ class TorrentClientPieceTest {
       return ret;
     }
 
-    clientBlockDataInfoProxy.isNotThrere(info.bitfieldToMe, _cash);
+    clientBlockDataInfoProxy.extractNotHaveBits(info.bitfieldToMe, _cash);
     for (int v in requestedBit) {
       _cash.setIsOn(v, false);
     }
@@ -81,7 +81,7 @@ class TorrentClientPieceTest {
     if (front.lastRequestIndex != null && !client.targetBlock.have(front.lastRequestIndex)) {
       targetBit = front.lastRequestIndex;
     } else {
-      clientBlockDataInfoProxy.isNotThrere(info.bitfieldToMe, _cash);
+      clientBlockDataInfoProxy.extractNotHaveBits(info.bitfieldToMe, _cash);
       targetBit = _cash.getOnPieceAtRandom();
     }
     List<int> bl = client.targetBlock.getNextBlockPart(targetBit, downloadPieceLength);

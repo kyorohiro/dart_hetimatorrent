@@ -23,8 +23,8 @@ class BitfieldPlus extends BitfieldInter {
     innerField = base;
   }
   
-  BitfieldInter isNotThrere(BitfieldInter ina, [BitfieldInter out = null]) {
-    innerField.isNotThrere(ina, out);
+  BitfieldInter extractNotHaveBits(BitfieldInter ina, [BitfieldInter out = null]) {
+    innerField.extractNotHaveBits(ina, out);
     return out;
   }
 

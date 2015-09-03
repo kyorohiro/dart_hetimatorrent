@@ -20,7 +20,7 @@ abstract class BitfieldInter {
   bool isAllOnPerByte(int number);
   bool isAllOffPerByte(int number);
   void update() {}
-  BitfieldInter isNotThrere(BitfieldInter ina, [BitfieldInter out = null]);
+  BitfieldInter extractNotHaveBits(BitfieldInter ina, [BitfieldInter out = null]);
 }
 
 class Bitfield extends BitfieldInter {
@@ -71,7 +71,7 @@ class Bitfield extends BitfieldInter {
     return out;
   }
 
-  BitfieldInter isNotThrere(BitfieldInter ina, [BitfieldInter out = null]) {
+  BitfieldInter extractNotHaveBits(BitfieldInter ina, [BitfieldInter out = null]) {
     Bitfield.relative(ina, this, out);
     return out;
   }
