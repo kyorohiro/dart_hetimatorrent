@@ -286,21 +286,30 @@ void main() {
       }
       {
         BlockDataGetNextBlockPartResult ret = blockData.getNextBlockPart(0, 2);
+        List<BlockDataGetNextBlockPartResult> rets = blockData.getNextBlockParts(0, 2);
         unit.expect(ret.begin, 0);
         unit.expect(ret.end, 2);
+        unit.expect(rets[0].begin, 0);
+        unit.expect(rets[0].end, 2);
       }
       
       {
         await blockData.writePartBlock([1,2], 0, 0, 2);
         BlockDataGetNextBlockPartResult ret = blockData.getNextBlockPart(0, 2);
+        List<BlockDataGetNextBlockPartResult> rets = blockData.getNextBlockParts(0, 2);
         unit.expect(ret.begin, 2);
         unit.expect(ret.end, 4);
+        unit.expect(rets[0].begin, 2);
+        unit.expect(rets[0].end, 4);
       }
       {
         await blockData.writePartBlock([1,2], 0, 2, 2);
         BlockDataGetNextBlockPartResult ret = blockData.getNextBlockPart(0, 2);
+        List<BlockDataGetNextBlockPartResult> rets = blockData.getNextBlockParts(0, 2);
         unit.expect(ret.begin, 4);
         unit.expect(ret.end, 5);
+        unit.expect(rets[0].begin, 4);
+        unit.expect(rets[0].end, 5);
       }
     });
 

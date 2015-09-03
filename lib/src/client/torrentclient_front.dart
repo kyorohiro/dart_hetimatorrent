@@ -276,6 +276,7 @@ class TorrentClientFrontNerve {
         break;
       case TorrentMessage.SIGN_PIECE:
         {
+        /*
           TMessagePiece req = message;
           List<TMessageRequest> removeTarge = [];
           for (TMessageRequest mes in front.currentRequesting) {
@@ -286,6 +287,7 @@ class TorrentClientFrontNerve {
           for (TMessageRequest rm in removeTarge) {
             front.currentRequesting.remove(rm);
           }
+           */
         }
         front.downloadedBytesFromMe += (message as TMessagePiece).content.length;
         front._streamSignal.add(new TorrentClientSignalWithFront(front, TorrentClientSignal.ID_PIECE_RECEIVE, 0, "", (message as TMessagePiece).content.length));

@@ -227,6 +227,20 @@ class TorrentClient {
         TMessagePiece piece = message;
         try {
           await _targetBlock.writePartBlock(piece.content, piece.index, piece.begin, piece.content.length);
+          //
+          //
+          TMessagePiece req = message;
+          List<TMessageRequest> removeTarge = [];
+          for (TMessageRequest mes in front.currentRequesting) {
+            if (mes.begin == req.begin && mes.index == req.index && mes.length == req.content.length) {
+              removeTarge.add(mes);
+            }
+          }
+          for (TMessageRequest rm in removeTarge) {
+            front.currentRequesting.remove(rm);
+          }
+          //
+          //
           if (_targetBlock.have(piece.index)) {
             _sendSignal(this, info, new TorrentClientSignal(TorrentClientSignal.ID_SET_PIECE, piece.index, "set piece : index:${piece.index}"));
           } else {
