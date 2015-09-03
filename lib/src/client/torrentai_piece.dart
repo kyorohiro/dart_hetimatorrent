@@ -123,9 +123,11 @@ class TorrentClientPieceTest {
 
     //
     // select piece & request
+   // for(int i=0;i<5;i++) {
     TorrentClientPieceTestResultB  r1 = requestTest(client.targetBlock, info);
     if(r1.request != null && r1.request.front != null) {
       r1.request.front.sendRequest(r1.targetBit, r1.begin,r1.end-r1.begin);
     }
+   // }
   }
 }
