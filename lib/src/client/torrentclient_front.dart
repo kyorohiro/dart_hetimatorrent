@@ -347,9 +347,18 @@ class TorrentClientFrontNerve {
       return;
     }
     TMessageHandshake handshakeMessage = message;
-    if (handshakeMessage.peerId == front._myPeerId) {
-      front._amI = true;
-      doClose(front, TorrentClientSignal.REASON_OWN_CONNECTION);
+    if (handshakeMessage.peerId.length == front._myPeerId.length) {
+      bool eq = true;
+      for (int i = 0; i < handshakeMessage.peerId.length; i++) {
+        if (handshakeMessage.peerId[i] != front._myPeerId[i]) {
+          eq = false;
+          break;
+        }
+      }
+      if (eq == true) {
+        front._amI = true;
+        doClose(front, TorrentClientSignal.REASON_OWN_CONNECTION);
+      }
     }
   }
 
