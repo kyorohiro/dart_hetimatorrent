@@ -168,6 +168,9 @@ class BlockData {
       begin = bl[0];
       end = bl[1];
     }
+    if (end > _blockSize) {
+      end = _blockSize;
+    }
     if (_dataSize < targetBit * _blockSize + end) {
       end = end - ((targetBit * _blockSize + end) - _dataSize);
     }

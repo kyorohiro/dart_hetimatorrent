@@ -11,27 +11,31 @@ import '../util/bitfield_plus.dart';
 class TorrentClientPieceTestResultA {
   List<TorrentClientPeerInfo> notinterested = [];
   List<TorrentClientPeerInfo> interested = [];
-
 }
 
 class TorrentClientPieceTestResultB {
   TorrentClientPeerInfo request = null;
-  BlockDataGetNextBlockPartResult begineEnd = null;
+  List<BlockDataGetNextBlockPartResult> begineEnd = null;
   int targetBit = 0;
 }
 
 class TorrentClientPieceTest {
   List<int> requestedBit = [];
   int downloadPieceLength = 16 * 1024;
-  TorrentClientPieceTest.fromTorrentClient(TorrentClient client) {
-    _init(client.targetBlock.rawHead, client.targetBlock.blockSize);
+  int maxOfRequest = 5;
+
+  TorrentClientPieceTest.fromTorrentClient(TorrentClient client, {int downloadPieceLength: 16 * 1024, int maxOfRequest: 5}) {
+    _init(client.targetBlock.rawHead, client.targetBlock.blockSize, downloadPieceLength, maxOfRequest);
   }
 
-  TorrentClientPieceTest(Bitfield rawBlockDataInfo, int blockSize) {
-    _init(rawBlockDataInfo, blockSize);
+  TorrentClientPieceTest(Bitfield rawBlockDataInfo, int blockSize, {int downloadPieceLength: 16 * 1024, int maxOfRequest: 5}) {
+    _init(rawBlockDataInfo, blockSize, downloadPieceLength, maxOfRequest);
   }
 
-  _init(Bitfield rawBlockDataInfo, int blockSize) {
+  _init(Bitfield rawBlockDataInfo, int blockSize, int downloadPieceLength, maxOfRequest) {
+    this.downloadPieceLength = downloadPieceLength;
+    this.maxOfRequest = maxOfRequest;
+
     if (downloadPieceLength > blockSize) {
       downloadPieceLength = blockSize;
     }
@@ -82,7 +86,7 @@ class TorrentClientPieceTest {
       targetBit = _cash.getOnPieceAtRandom();
     }
 
-    BlockDataGetNextBlockPartResult bl = blockData.getNextBlockPart(targetBit, downloadPieceLength);
+    List<BlockDataGetNextBlockPartResult> bl = blockData.getNextBlockParts(targetBit, downloadPieceLength);
     ret.begineEnd = bl;
     ret.request = info;
     ret.targetBit = targetBit;
@@ -95,14 +99,14 @@ class TorrentClientPieceTest {
       return;
     }
     TorrentClientPieceTestResultA r = interestTest(client.targetBlock, info);
-    for(TorrentClientPeerInfo i in r.interested) {
-      if(i != null) {
-       i.front.sendInterested();
+    for (TorrentClientPeerInfo i in r.interested) {
+      if (i != null) {
+        i.front.sendInterested();
       }
     }
-    for(TorrentClientPeerInfo i in r.notinterested) {
-      if(i != null) {
-       i.front.sendNotInterested();
+    for (TorrentClientPeerInfo i in r.notinterested) {
+      if (i != null) {
+        i.front.sendNotInterested();
       }
     }
 
@@ -120,11 +124,14 @@ class TorrentClientPieceTest {
 
     //
     // select piece & request
-   // for(int i=0;i<5;i++) {
-    TorrentClientPieceTestResultB  r1 = requestTest(client.targetBlock, info);
-    if(r1.request != null && r1.request.front != null) {
-      r1.request.front.sendRequest(r1.targetBit, r1.begineEnd.begin,r1.begineEnd.end-r1.begineEnd.begin);
+    TorrentClientPieceTestResultB r1 = requestTest(client.targetBlock, info);
+    if (r1.request != null && r1.request.front != null) {
+    //  print("-->${r1.begineEnd.length} [${r1.targetBit}] 0:${r1.begineEnd[0].begin} #:${r1.begineEnd[r1.begineEnd.length-1].begin}");
+    //  for (int i = 0; i < this.maxOfRequest && i < r1.begineEnd.length; i++) {
+      for (int i = 0; i < r1.begineEnd.length; i++) {
+        BlockDataGetNextBlockPartResult r = r1.begineEnd[i];
+        r1.request.front.sendRequest(r1.targetBit, r.begin, r.end - r.begin);
+      }
     }
-   // }
   }
 }

@@ -289,6 +289,19 @@ void main() {
         unit.expect(ret.begin, 0);
         unit.expect(ret.end, 2);
       }
+      
+      {
+        await blockData.writePartBlock([1,2], 0, 0, 2);
+        BlockDataGetNextBlockPartResult ret = blockData.getNextBlockPart(0, 2);
+        unit.expect(ret.begin, 2);
+        unit.expect(ret.end, 4);
+      }
+      {
+        await blockData.writePartBlock([1,2], 0, 2, 2);
+        BlockDataGetNextBlockPartResult ret = blockData.getNextBlockPart(0, 2);
+        unit.expect(ret.begin, 4);
+        unit.expect(ret.end, 5);
+      }
     });
 
     unit.test("basic true --etNextBlockParts-- ", () async {
