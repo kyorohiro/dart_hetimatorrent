@@ -81,12 +81,21 @@ class TorrentClientPieceTest {
     int targetBit = 0;
     if (front.lastRequestIndex != null && !blockData.have(front.lastRequestIndex)) {
       targetBit = front.lastRequestIndex;
+      if(targetBit < 0) {
+        print("### A -1");
+      }
     } else {
       BitfieldPlus _cash = blockData.isNotThrere(info.bitfieldToMe);
       targetBit = _cash.getOnPieceAtRandom();
+      if(targetBit < 0) {
+        print("### B -1");
+      }
     }
 
-    List<BlockDataGetNextBlockPartResult> bl = blockData.getNextBlockParts(targetBit, downloadPieceLength);
+    List<BlockDataGetNextBlockPartResult> bl = blockData.getNextBlockParts(targetBit, downloadPieceLength, userReserve: true);
+    if(bl.length == 0) {
+      bl = blockData.getNextBlockParts(targetBit, downloadPieceLength, userReserve: false);
+    }
     ret.begineEnd = bl;
     ret.request = info;
     ret.targetBit = targetBit;
