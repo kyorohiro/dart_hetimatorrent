@@ -18,6 +18,7 @@ class BlockData {
   int _blockSize;
   int _dataSize;
   Map<int, PieceInfo> _writePartData = {};
+  Map<int, PieceInfo> _reservePartData = {};
   BitfieldInter _cacheHead = null;
 
   /**
@@ -73,14 +74,30 @@ class BlockData {
   }
 
   List<int> pieceInfoBlockNums() => new List.from(_writePartData.keys);
-
   PieceInfo getPieceInfo(int blockNum) => _writePartData[blockNum];
+
+  List<int> reservePieceInfoBlockNums() => new List.from(_reservePartData.keys);
+  PieceInfo getReservePieceInfo(int blockNum) => _reservePartData[blockNum];
 
   /**
    * 
    */
   Future<WriteResult> writeBlock(List<int> data, int blockNum, {strict: true}) async {
     return writePartBlock(data, blockNum, 0, data.length, strict: strict);
+  }
+
+  reservePartBlock(int blockNum, int begin, int length, {strict: true}) {
+    if (strict == true && begin + length > _blockSize || _head.lengthPerBit() - 1 < blockNum) {
+      throw {};
+    }
+    PieceInfo infoList = null;
+    if (_reservePartData.containsKey(blockNum)) {
+      infoList = _reservePartData[blockNum];
+    } else {
+      infoList = new PieceInfo();
+      _reservePartData[blockNum] = infoList;
+    }
+    infoList.append(begin, begin + length);
   }
 
   /**
@@ -105,11 +122,14 @@ class BlockData {
       _writePartData[blockNum] = infoList;
     }
     infoList.append(begin, begin + length);
+    reservePartBlock(blockNum, begin, length, strict:strict);
+
     //
     //
     if (infoList.size() == 1 && infoList.getPieceInfo(0).start == 0 && infoList.getPieceInfo(0).end >= targetBlockData) {
       _head.setIsOn(blockNum, true);
       _writePartData.remove(blockNum);
+      _reservePartData.remove(blockNum);
     }
     return result;
   }
@@ -157,7 +177,7 @@ class BlockData {
     if (out == null) {
       out = new BlockDataGetNextBlockPartResult();
     }
-    PieceInfo pieceInfo = getPieceInfo(targetBit);
+    PieceInfo pieceInfo = getReservePieceInfo(targetBit);
     int begin = 0;
     int end = 0;
     if (pieceInfo == null) {

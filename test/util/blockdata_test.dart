@@ -313,20 +313,26 @@ void main() {
       }
     });
 
+
     unit.test("basic true --etNextBlockParts-- ", () async {
       HetimaDataMemory data = new HetimaDataMemory([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]);
       Bitfield head = new Bitfield(5, clearIsOne: true);
       BlockData blockData = new BlockData(data, head, 5, 21);
       {
-        List<BlockDataGetNextBlockPartResult> ret = blockData.getNextBlockParts(0, 2);
-        unit.expect(ret.length, 3);
-        unit.expect(ret[0].begin, 0);
-        unit.expect(ret[1].begin, 2);
-        unit.expect(ret[2].begin, 4);
-        unit.expect(ret[0].end, 2);
-        unit.expect(ret[1].end, 4);
-        unit.expect(ret[2].end, 5);
+        BlockDataGetNextBlockPartResult ret = blockData.getNextBlockPart(0, 2);
+        unit.expect(ret.begin, 0);
+        unit.expect(ret.end, 2);
       }
+      {
+        blockData.reservePartBlock( 0, 0, 2);
+        BlockDataGetNextBlockPartResult ret = blockData.getNextBlockPart(0, 2);
+        List<BlockDataGetNextBlockPartResult> rets = blockData.getNextBlockParts(0, 2);
+        unit.expect(ret.begin, 2);
+        unit.expect(ret.end, 4);
+        unit.expect(rets[0].begin, 2);
+        unit.expect(rets[0].end, 4);
+      }
+      
     });
 
     unit.test("BitfieldA", () {
