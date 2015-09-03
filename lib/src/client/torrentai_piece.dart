@@ -16,8 +16,7 @@ class TorrentClientPieceTestResultA {
 
 class TorrentClientPieceTestResultB {
   TorrentClientPeerInfo request = null;
-  int begin = 0;
-  int end = 0;
+  BlockDataGetNextBlockPartResult begineEnd = null;
   int targetBit = 0;
 }
 
@@ -82,12 +81,10 @@ class TorrentClientPieceTest {
       BitfieldPlus _cash = blockData.isNotThrere(info.bitfieldToMe);
       targetBit = _cash.getOnPieceAtRandom();
     }
-    List<int> bl = blockData.getNextBlockPart(targetBit, downloadPieceLength);
-    if (bl != null) {
-      ret.begin = bl[0];
-      ret.end = bl[1];
-      ret.request = info;
-    }
+
+    BlockDataGetNextBlockPartResult bl = blockData.getNextBlockPart(targetBit, downloadPieceLength);
+    ret.begineEnd = bl;
+    ret.request = info;
     ret.targetBit = targetBit;
     return ret;
   }
@@ -126,7 +123,7 @@ class TorrentClientPieceTest {
    // for(int i=0;i<5;i++) {
     TorrentClientPieceTestResultB  r1 = requestTest(client.targetBlock, info);
     if(r1.request != null && r1.request.front != null) {
-      r1.request.front.sendRequest(r1.targetBit, r1.begin,r1.end-r1.begin);
+      r1.request.front.sendRequest(r1.targetBit, r1.begineEnd.begin,r1.begineEnd.end-r1.begineEnd.begin);
     }
    // }
   }

@@ -45,7 +45,6 @@ class BlockData {
    */
   Bitfield get rawHead => _head;
 
-
   /**
    * create BlockData
    */
@@ -65,8 +64,8 @@ class BlockData {
     return _data;
   }
 
-  BitfieldInter isNotThrere(BitfieldInter ina,  [BitfieldInter out = null]) {
-    if(out == null) {
+  BitfieldInter isNotThrere(BitfieldInter ina, [BitfieldInter out = null]) {
+    if (out == null) {
       out = _cacheHead;
     }
     Bitfield.relative(ina, _head, out);
@@ -154,7 +153,10 @@ class BlockData {
   /**
    * 
    */
-  List<int> getNextBlockPart(int targetBit, int downloadPieceLength) {
+  BlockDataGetNextBlockPartResult getNextBlockPart(int targetBit, int downloadPieceLength, {BlockDataGetNextBlockPartResult out: null}) {
+    if (out == null) {
+      out = new BlockDataGetNextBlockPartResult();
+    }
     PieceInfo pieceInfo = getPieceInfo(targetBit);
     int begin = 0;
     int end = 0;
@@ -169,7 +171,31 @@ class BlockData {
     if (_dataSize < targetBit * _blockSize + end) {
       end = end - ((targetBit * _blockSize + end) - _dataSize);
     }
-    return [begin, end];
+    out.begin = begin;
+    out.end = end;
+    return out;
+  }
+
+  List<BlockDataGetNextBlockPartResult> getNextBlockParts(int targetBit, int downloadPieceLength) {
+    List<BlockDataGetNextBlockPartResult> ret = [];
+    BlockDataGetNextBlockPartResult r1 = getNextBlockPart(targetBit, downloadPieceLength);
+    ret.add(r1);
+    int b = r1.begin;
+    int e = r1.end;
+    while ((targetBit * _blockSize + e) < _dataSize && e < _blockSize) {
+      b = e;
+      e = b + downloadPieceLength;
+      if (e > _blockSize) {
+        e = _blockSize;
+      }
+      if (_dataSize < targetBit * _blockSize + e) {
+        e = e - ((targetBit * _blockSize + e) - _dataSize);
+      }
+      ret.add(new BlockDataGetNextBlockPartResult()
+        ..begin = b
+        ..end = e);
+    }
+    return ret;
   }
 
   /**
@@ -185,4 +211,9 @@ class BlockData {
   bool haveAll() {
     return _head.isAllOn();
   }
+}
+
+class BlockDataGetNextBlockPartResult {
+  int begin = 0;
+  int end = 0;
 }
