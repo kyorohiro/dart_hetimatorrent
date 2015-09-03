@@ -8,11 +8,12 @@ import '../util/bitfield.dart';
 import '../util/blockdata.dart';
 import '../util/bitfield_plus.dart';
 
-class TorrentClientPieceTestResult {
+class TorrentClientPieceTestResultA {
   List<TorrentClientPeerInfo> notinterested = [];
   List<TorrentClientPeerInfo> interested = [];
 
 }
+
 class TorrentClientPieceTestResultB {
   TorrentClientPeerInfo request = null;
   int begin = 0;
@@ -23,7 +24,6 @@ class TorrentClientPieceTestResultB {
 class TorrentClientPieceTest {
   List<int> requestedBit = [];
   int downloadPieceLength = 16 * 1024;
-//  BitfieldPlus _cash = null;
   TorrentClientPieceTest.fromTorrentClient(TorrentClient client) {
     _init(client.targetBlock.rawHead, client.targetBlock.blockSize);
   }
@@ -39,8 +39,8 @@ class TorrentClientPieceTest {
   }
 
   //, Bitfield clientBlockDataInfo
-  TorrentClientPieceTestResult interestTest(BlockData blockData, TorrentClientPeerInfo info) {
-    TorrentClientPieceTestResult ret = new TorrentClientPieceTestResult();
+  TorrentClientPieceTestResultA interestTest(BlockData blockData, TorrentClientPeerInfo info) {
+    TorrentClientPieceTestResultA ret = new TorrentClientPieceTestResultA();
     if (info.amI == true) {
       return ret;
     }
@@ -97,7 +97,7 @@ class TorrentClientPieceTest {
     if (front == null || front.amI == true) {
       return;
     }
-    TorrentClientPieceTestResult r = interestTest(client.targetBlock, info);
+    TorrentClientPieceTestResultA r = interestTest(client.targetBlock, info);
     for(TorrentClientPeerInfo i in r.interested) {
       if(i != null) {
        i.front.sendInterested();

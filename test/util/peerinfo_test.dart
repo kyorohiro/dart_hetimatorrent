@@ -245,7 +245,7 @@ void main() {
       info.bitfieldToMe = new Bitfield(10)..oneClear();
 
       TorrentClientPieceTest pieceTest = new TorrentClientPieceTest(rawBlockDataInfo, 2);
-      TorrentClientPieceTestResult r = pieceTest.interestTest(info);
+      TorrentClientPieceTestResultA r = pieceTest.interestTest(info);
       unit.expect(r.interested.length, 0);
       unit.expect(r.notinterested.length, 1);
     });
@@ -258,13 +258,13 @@ void main() {
       TorrentClientPieceTest pieceTest = new TorrentClientPieceTest(rawBlockDataInfo, 2);
 
       {
-        TorrentClientPieceTestResult r = pieceTest.interestTest(info);
+        TorrentClientPieceTestResultA r = pieceTest.interestTest(info);
         unit.expect(r.interested.length, 0);
         unit.expect(r.notinterested.length, 1);
       }
       {
         info.bitfieldToMe.oneClear();
-        TorrentClientPieceTestResult r = pieceTest.interestTest(info);
+        TorrentClientPieceTestResultA r = pieceTest.interestTest(info);
         unit.expect(r.interested.length, 1);
         unit.expect(r.notinterested.length, 0);
       }
