@@ -5,6 +5,7 @@ import 'torrentclient.dart';
 import 'torrentclient_front.dart';
 import 'torrentclient_peerinfo.dart';
 import '../util/bitfield.dart';
+import '../util/blockdata.dart';
 import '../util/bitfield_plus.dart';
 
 class TorrentClientPieceTestResult {
@@ -20,10 +21,9 @@ class TorrentClientPieceTestResultB {
 }
 
 class TorrentClientPieceTest {
-  BitfieldPlus clientBlockDataInfoProxy = null;
   List<int> requestedBit = [];
   int downloadPieceLength = 16 * 1024;
-  BitfieldPlus _cash = null;
+//  BitfieldPlus _cash = null;
   TorrentClientPieceTest.fromTorrentClient(TorrentClient client) {
     _init(client.targetBlock.rawHead, client.targetBlock.blockSize);
   }
@@ -33,27 +33,25 @@ class TorrentClientPieceTest {
   }
 
   _init(Bitfield rawBlockDataInfo, int blockSize) {
-    clientBlockDataInfoProxy = new BitfieldPlus(rawBlockDataInfo);
     if (downloadPieceLength > blockSize) {
       downloadPieceLength = blockSize;
     }
-    _cash = new BitfieldPlus(new Bitfield(clientBlockDataInfoProxy.lengthPerBit()));
   }
 
   //, Bitfield clientBlockDataInfo
-  TorrentClientPieceTestResult interestTest(TorrentClientPeerInfo info) {
+  TorrentClientPieceTestResult interestTest(BlockData blockData, TorrentClientPeerInfo info) {
     TorrentClientPieceTestResult ret = new TorrentClientPieceTestResult();
     if (info.amI == true) {
       return ret;
     }
-    if (clientBlockDataInfoProxy.isAllOn()) {
+    if (blockData.haveAll()) {
       if (info.interestedFromMe != TorrentClientPeerInfo.STATE_OFF) {
         ret.notinterested.add(info);
       }
       return ret;
     }
 
-    clientBlockDataInfoProxy.extractNotHaveBits(info.bitfieldToMe, _cash);
+    BitfieldPlus _cash = blockData.isNotThrere(info.bitfieldToMe);
     for (int v in requestedBit) {
       _cash.setIsOn(v, false);
     }
@@ -70,7 +68,7 @@ class TorrentClientPieceTest {
     return ret;
   }
 
-  TorrentClientPieceTestResultB requestTest(TorrentClient client, TorrentClientPeerInfo info) {
+  TorrentClientPieceTestResultB requestTest(BlockData blockData, TorrentClientPeerInfo info) {
     TorrentClientPieceTestResultB ret = new TorrentClientPieceTestResultB();
     TorrentClientFront front = info.front;
     if (info.amI == true) {
@@ -78,13 +76,13 @@ class TorrentClientPieceTest {
     }
 
     int targetBit = 0;
-    if (front.lastRequestIndex != null && !client.targetBlock.have(front.lastRequestIndex)) {
+    if (front.lastRequestIndex != null && !blockData.have(front.lastRequestIndex)) {
       targetBit = front.lastRequestIndex;
     } else {
-      clientBlockDataInfoProxy.extractNotHaveBits(info.bitfieldToMe, _cash);
+      BitfieldPlus _cash = blockData.isNotThrere(info.bitfieldToMe);
       targetBit = _cash.getOnPieceAtRandom();
     }
-    List<int> bl = client.targetBlock.getNextBlockPart(targetBit, downloadPieceLength);
+    List<int> bl = blockData.getNextBlockPart(targetBit, downloadPieceLength);
     if (bl != null) {
       ret.begin = bl[0];
       ret.end = bl[1];
@@ -99,7 +97,7 @@ class TorrentClientPieceTest {
     if (front == null || front.amI == true) {
       return;
     }
-    TorrentClientPieceTestResult r = interestTest(info);
+    TorrentClientPieceTestResult r = interestTest(client.targetBlock, info);
     for(TorrentClientPeerInfo i in r.interested) {
       if(i != null) {
        i.front.sendInterested();
@@ -113,7 +111,7 @@ class TorrentClientPieceTest {
 
     //
     // if choke, then end
-    if (clientBlockDataInfoProxy.isAllOn() == true || front.chokedToMe != TorrentClientPeerInfo.STATE_OFF) {
+    if (client.targetBlock.haveAll() == true || front.chokedToMe != TorrentClientPeerInfo.STATE_OFF) {
       return;
     }
 
@@ -125,7 +123,7 @@ class TorrentClientPieceTest {
 
     //
     // select piece & request
-    TorrentClientPieceTestResultB  r1 = requestTest(client, info);
+    TorrentClientPieceTestResultB  r1 = requestTest(client.targetBlock, info);
     if(r1.request != null && r1.request.front != null) {
       r1.request.front.sendRequest(r1.targetBit, r1.begin,r1.end-r1.begin);
     }

@@ -5,6 +5,7 @@ import 'dart:async';
 
 import 'package:hetimacore/hetimacore.dart';
 import 'bitfield.dart';
+import 'bitfield_plus.dart';
 import 'pieceinfo.dart';
 
 /**
@@ -17,7 +18,7 @@ class BlockData {
   int _blockSize;
   int _dataSize;
   Map<int, PieceInfo> _writePartData = {};
-  Bitfield _cacheHead = null;
+  BitfieldInter _cacheHead = null;
 
   /**
    * 
@@ -56,7 +57,7 @@ class BlockData {
     }
     _data = data;
     _head = head;
-    _cacheHead = new Bitfield(head.lengthPerBit());
+    _cacheHead = new BitfieldPlus(new Bitfield(head.lengthPerBit()));
     _blockSize = blockSize;
   }
 
@@ -64,9 +65,12 @@ class BlockData {
     return _data;
   }
 
-  BitfieldInter isNotThrere(BitfieldInter ina) {
-    Bitfield.relative(ina, _head, _cacheHead);
-    return _cacheHead;
+  BitfieldInter isNotThrere(BitfieldInter ina,  [BitfieldInter out = null]) {
+    if(out == null) {
+      out = _cacheHead;
+    }
+    Bitfield.relative(ina, _head, out);
+    return out;
   }
 
   List<int> pieceInfoBlockNums() => new List.from(_writePartData.keys);
