@@ -173,11 +173,16 @@ class BlockData {
   /**
    * 
    */
-  BlockDataGetNextBlockPartResult getNextBlockPart(int targetBit, int downloadPieceLength, {BlockDataGetNextBlockPartResult out: null}) {
+  BlockDataGetNextBlockPartResult getNextBlockPart(int targetBit, int downloadPieceLength, {BlockDataGetNextBlockPartResult out: null,bool userReserve:true}) {
     if (out == null) {
       out = new BlockDataGetNextBlockPartResult();
     }
-    PieceInfo pieceInfo = getReservePieceInfo(targetBit);
+    PieceInfo pieceInfo = null;
+    if(userReserve) {
+      pieceInfo = getReservePieceInfo(targetBit);
+    } else {
+      pieceInfo = getPieceInfo(targetBit);
+    }
     int begin = 0;
     int end = 0;
     if (pieceInfo == null) {
@@ -199,7 +204,7 @@ class BlockData {
     return out;
   }
 
-  List<BlockDataGetNextBlockPartResult> getNextBlockParts(int targetBit, int downloadPieceLength) {
+  List<BlockDataGetNextBlockPartResult> getNextBlockParts(int targetBit, int downloadPieceLength, {bool userReserve:true}) {
     List<BlockDataGetNextBlockPartResult> ret = [];
     BlockDataGetNextBlockPartResult r1 = getNextBlockPart(targetBit, downloadPieceLength);
     ret.add(r1);
