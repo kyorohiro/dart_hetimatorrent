@@ -32,11 +32,11 @@ class Bitfield extends BitfieldInter {
   List<int> get value => new Uint8List.fromList(_bitfieldData);
   List<int> get rawValue => _bitfieldData;
 
-  static int calcbitSize(int pieceSize, {pieceLength: 20}) {
-    int ret = pieceSize ~/ pieceLength;
-    if (pieceSize % pieceLength != 0) {
+  static int calcbitSize(int blockSize, int dateSize) {
+    int ret = dateSize ~/ blockSize;
+    if (dateSize % blockSize != 0) {
       print("wearning todo: --break bitfield");
-      ret + 1;
+      ret += 1;
     }
     return ret;
   }

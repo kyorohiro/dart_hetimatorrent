@@ -76,7 +76,7 @@ class TorrentClient {
     _peerInfos = new TorrentClientPeerInfos();
     _infoHash.addAll(infoHash);
     _peerId.addAll(peerId);
-    _targetBlock = new BlockData(data, new Bitfield(Bitfield.calcbitSize(piece.length), clearIsOne: haveAllData), pieceLength, fileSize);
+    _targetBlock = new BlockData(data, null, pieceLength, fileSize, clearIsOne: haveAllData);
 
     this.ai = (ai == null ? new TorrentAIBasic() : ai);
     if (bitfield != null) {

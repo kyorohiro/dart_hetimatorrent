@@ -49,11 +49,14 @@ class BlockData {
   /**
    * create BlockData
    */
-  BlockData(HetimaData data, Bitfield head, int blockSize, int dataSize) {
+  BlockData(HetimaData data, Bitfield head, int blockSize, int dataSize, {clearIsOne: false}) {
     if (dataSize == null) {
       _dataSize = head.lengthPerBit() * blockSize;
     } else {
       _dataSize = dataSize;
+    }
+    if(head == null) {
+      head = new Bitfield(Bitfield.calcbitSize(blockSize, dataSize), clearIsOne: false);
     }
     _data = data;
     _head = head;

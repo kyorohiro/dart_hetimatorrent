@@ -353,6 +353,11 @@ void main() {
         unit.expect(1455, ret);
       }
     });
+    
+    unit.test("BitfieldInter", () {
+        unit.expect(2, Bitfield.calcbitSize(5, 10));
+        unit.expect(2, Bitfield.calcbitSize(6, 10));
+    });
   });
 }
 
