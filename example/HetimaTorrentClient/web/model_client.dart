@@ -48,7 +48,7 @@ class ClientModel {
         } else {
           return _bitfieldfile.getLength().then((int len) {
             return _bitfieldfile.read(0, len).then((ReadResult result) {
-              Bitfield b = new Bitfield(Bitfield.calcbitSize(_metadata.info.pieces.length), clearIsOne: false);
+              Bitfield b = new Bitfield(Bitfield.calcbitSize(_metadata.info.pieces.length,_metadata.info.files.dataSize), clearIsOne: false);
               b.writeBytes(result.buffer);
               return b.numOfOn(true) * _metadata.info.piece_length;
             });

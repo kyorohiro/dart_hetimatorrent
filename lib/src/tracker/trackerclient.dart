@@ -136,19 +136,21 @@ class TrackerClient {
       }
       return TrackerResponse.createFromContent(response.body);
     }).then((TrackerResponse trackerResponse) {
-      if(trackerResponse.isOK) {
+      if (trackerResponse.isOK) {
         _failedReason = "";
         completer.complete(new TrackerRequestResult(trackerResponse, TrackerRequestResult.OK, httpResponse));
       } else {
         _failedReason = trackerResponse.failureReason;
-        completer.complete(new TrackerRequestResult(trackerResponse, TrackerRequestResult.FAILED, httpResponse));        
+        completer.complete(new TrackerRequestResult(trackerResponse, TrackerRequestResult.FAILED, httpResponse));
       }
     }).catchError((e) {
       _failedReason = "ERROR";
       completer.complete(new TrackerRequestResult(null, TrackerRequestResult.ERROR, httpResponse));
       print("##er end");
     }).whenComplete(() {
-      currentClient.close();
+      try {
+        currentClient.close();
+      } catch (e) {}
       print("###done end");
     });
     return completer.future;
