@@ -84,7 +84,7 @@ void main() {
       String expect = "d1:ad2:id20:abcdefghij01234567899:info_hash20:mnopqrstuvwxyz123456e1:q9:get_peers1:t${query.transactionIdAsString.length}:${query.transactionIdAsString}1:y1:qe";
       unit.expect(expect, convert.UTF8.decode(query.messageAsBencode));
 
-      EasyParser parser = new EasyParser(new HetimaFileToBuilder(new HetimaDataMemory(query.messageAsBencode)));
+      EasyParser parser = new EasyParser(new HetimaDataToReader(new HetimaDataMemory(query.messageAsBencode)));
       return KrpcMessage.decode(query.messageAsBencode).then((KrpcMessage q) {
         unit.expect(expect, convert.UTF8.decode(q.messageAsBencode));
       });

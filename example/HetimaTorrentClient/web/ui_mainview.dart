@@ -54,7 +54,7 @@ class MainItem {
   }
 
   cre(HetimaData d, Map<String, TorrentFile> managedTorrentFile, Tab tab, Dialog dialog, [html.File b=null]) {
-    TorrentFile.createFromTorrentFile(new HetimaFileToBuilder(d)).then((TorrentFile f) {
+    TorrentFile.createFromTorrentFile(new HetimaDataToReader(d)).then((TorrentFile f) {
       return f.createInfoSha1().then((List<int> infoHash) {
         String key = PercentEncode.encode(infoHash);
         if(managedTorrentFile.containsKey(key)) {

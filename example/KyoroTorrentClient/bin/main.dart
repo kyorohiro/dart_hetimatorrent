@@ -1,6 +1,7 @@
 import 'package:hetimatorrent/hetimatorrent.dart';
-import 'package:hetimanet/hetimanet.dart';
 import 'package:hetimanet/hetimanet_dartio.dart';
+import 'package:hetimacore/hetimacore_dartio.dart';
+import 'package:hetimacore/hetimacore.dart';
 import 'package:args/args.dart';
 import 'dart:io';
 import 'dart:async';
@@ -67,7 +68,18 @@ Future a(TorrentEngine engine, String action, List<String> args) async {
       return engine.start();
     case "stop":
       return engine.stop();
+    case "startTorrent":
+//      engine.addTorrent(torrentfile, downloadedData);
+      break;
+    case "stopTorrent":
+      
+      break;
     default:
       throw "commmand not found";
   }
+}
+
+
+c(String path) {
+  TorrentFile.createFromTorrentFile(new HetimaDataToReader(new HetimaDataDartIO(path)));
 }

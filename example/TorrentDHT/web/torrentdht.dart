@@ -74,7 +74,7 @@ void main() {
   searchTarget.onChange.listen((_) {
     File f = searchTarget.files.first;
     new Future(() {
-      return TorrentFile.createFromTorrentFile(new HetimaFileToBuilder(new HetimaDataBlob(f))).then((TorrentFile f) {
+      return TorrentFile.createFromTorrentFile(new HetimaDataToReader(new HetimaDataBlob(f))).then((TorrentFile f) {
         return f.createInfoSha1().then((List<int> ih) {
           infoHash.clear();
           infoHash.addAll(ih);

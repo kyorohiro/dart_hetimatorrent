@@ -150,7 +150,7 @@ class TrackerServer {
             cont.writeln("""<div><a href="/your.torrent?infohash=${PercentEncode.encode(manager.managedInfoHash)}&mode=l">  local</a></div>""");
           }
         }
-        _server.response(item.req, new HetimaBuilderToFile(new ArrayBuilder.fromList(UTF8.encode("<html><head></head><body><div>[managed hash]</div>${cont}</body></html>"))),
+        _server.response(item.req, new HetimaReaderToData(new ArrayBuilder.fromList(UTF8.encode("<html><head></head><body><div>[managed hash]</div>${cont}</body></html>"))),
             contentType: "text/html");
       } else if (item.path == "/your.torrent" && _isTorrentfile) {
         for (TrackerPeerManager manager in _peerManagerList) {
