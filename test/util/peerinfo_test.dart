@@ -1,6 +1,7 @@
 library peerinfo.test;
 
 import 'package:unittest/unittest.dart' as unit;
+import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimatorrent/hetimatorrent.dart';
 import 'dart:math';
 
@@ -236,7 +237,7 @@ void main() {
       print("${c(1000,6)*pow(998.0/1000,994)*pow(2.0/1000,6)}");
     });
   });
-
+/*
   unit.group('Piece Test', () {
     unit.test("pieceinfo: 0-1", () {
       Bitfield rawBlockDataInfo = new Bitfield(10);
@@ -244,6 +245,7 @@ void main() {
       TorrentClientPeerInfoEmpty info = new TorrentClientPeerInfoEmpty();
       info.bitfieldToMe = new Bitfield(10)..oneClear();
 
+      BlockData blockData = new BlockData(new H, null, 2, 5);
       TorrentClientPieceTest pieceTest = new TorrentClientPieceTest(rawBlockDataInfo, 2);
       TorrentClientPieceTestResultA r = pieceTest.interestTest(info);
       unit.expect(r.interested.length, 0);
@@ -270,5 +272,5 @@ void main() {
       }
 
     });
-  });
+  });*/
 }
