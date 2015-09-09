@@ -6,6 +6,7 @@ import 'package:args/args.dart';
 import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
+import 'package:crypto/crypto.dart';
 
 main(List<String> args) async {
   String exec = Platform.executable;
@@ -68,11 +69,16 @@ Future a(TorrentEngine engine, String action, List<String> args) async {
       return engine.start();
     case "stop":
       return engine.stop();
-    case "startTorrent":
-//      engine.addTorrent(torrentfile, downloadedData);
-      break;
-    case "stopTorrent":
-      
+    case "add":
+      TorrentFile torrentfile = await TorrentFile.createFromTorrentFile(new HetimaDataToReader(new HetimaDataDartIO(args[0])));
+      print("f = ${torrentfile}");
+      print("f.announce = ${torrentfile.announce}");
+      List<int> infohash = await torrentfile.createInfoSha1();
+      return await engine.addTorrent(torrentfile, new HetimaDataDartIO("./${CryptoUtils.bytesToBase64(infohash)}.dat"));      
+    case "infohashs":
+      for(List<int> infohash in engine.infoHashs) {
+        print("${CryptoUtils.bytesToBase64(infohash)}");
+      }
       break;
     default:
       throw "commmand not found";
@@ -80,6 +86,7 @@ Future a(TorrentEngine engine, String action, List<String> args) async {
 }
 
 
-c(String path) {
-  TorrentFile.createFromTorrentFile(new HetimaDataToReader(new HetimaDataDartIO(path)));
+c(TorrentEngine engine, String path) async {
+  print("SSS = ${path}");
+
 }

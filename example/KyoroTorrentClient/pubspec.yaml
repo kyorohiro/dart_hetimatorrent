@@ -2,6 +2,7 @@ name: hetimatorret
 description: A sample Chrome packaged application
 dependencies:
   args: any
+  crypto: any
   hetimacore:
     git: https://github.com/kyorohiro/dart_hetimacore.git
   hetimafile:
@@ -11,4 +12,4 @@ dependencies:
   hetimatorrent:
     path: ../../
 executables:
-    hetimatorrent:
+  hetimatorrent: null

@@ -49,6 +49,15 @@ class TorrentEngine {
   bool _isStart = false;
   bool get isStart => _isStart;
 
+  List<List<int>> get infoHashs {
+    List<List<int>> ret = [];
+    for (TorrentEngineTorrent tt in _torrents) {
+      List<int> dd = tt.infoHash;
+      ret.add(new List.from(dd));
+    }
+    return ret;
+  }
+
   TorrentEngine(HetimaSocketBuilder builder, {appid: "hetima_torrent_engine", int localPort: 18085, int globalPort: 18085, String globalIp: "0.0.0.0", String localIp: "0.0.0.0", int retryNum: 5,
       bool useUpnp: false, bool useDht: false, bool verbose: false}) {
     this._builder = builder;
@@ -73,7 +82,6 @@ class TorrentEngine {
     _useUpnp = useUpnp;
     _useDht = useDht;
   }
-
 
   Future<TorrentEngineTorrent> addTorrent(TorrentFile torrentfile, HetimaData downloadedData, {haveAllData: false, List<int> bitfield: null}) async {
     TorrentEngineTorrent engine =
