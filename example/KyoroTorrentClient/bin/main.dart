@@ -76,10 +76,16 @@ Future a(TorrentEngine engine, String action, List<String> args) async {
       List<int> infohash = await torrentfile.createInfoSha1();
       return await engine.addTorrent(torrentfile, new HetimaDataDartIO("./${CryptoUtils.bytesToBase64(infohash)}.dat"));      
     case "infohashs":
+      int id = 0;
+      print("[ index ]  :  infohash");
       for(List<int> infohash in engine.infoHashs) {
-        print("${CryptoUtils.bytesToBase64(infohash)}");
+        print("[ ${id} ]  :  ${CryptoUtils.bytesToBase64(infohash)}");
       }
       break;
+    case "startclient":
+      return await engine.getTorrentFromIndex(int.parse(args[0])).startTorrent(engine);
+    case "stopclient":
+      return await engine.getTorrentFromIndex(int.parse(args[0])).stopTorrent();
     default:
       throw "commmand not found";
   }

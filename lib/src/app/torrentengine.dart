@@ -98,6 +98,13 @@ class TorrentEngine {
   }
 
   int get numOfTorrent => _torrents.length;
+  TorrentEngineTorrent getTorrentFromIndex(int i) {
+    if(_torrents.length > i) {
+      return _torrents[i];
+    } else {
+      return null;
+    }
+  }
 
   TorrentEngineTorrent getTorrent(List<int> infoHash) {
     for (TorrentEngineTorrent tt in _torrents) {
