@@ -83,19 +83,28 @@ Future a(TorrentEngine engine, String action, List<String> args) async {
       }
       break;
     case "startclient":
-      return await engine.getTorrentFromIndex(int.parse(args[0])).startTorrent(engine);
+      TorrentEngineTorrent t =  engine.getTorrentFromIndex(int.parse(args[0]));
+      t.torrentClient.onReceiveEvent.listen(onReceiveMessage);
+      return await t.startTorrent(engine);
     case "stopclient":
       return await engine.getTorrentFromIndex(int.parse(args[0])).stopTorrent();
     case "status":
       print("${engine.getTorrentFromIndex(int.parse(args[0])).currentProgress}");
+      break;
+    case "messageon":
+      logOnReceiveMessage = true;
+      break;
+    case "messageoff":
+      logOnReceiveMessage = false;
       break;
     default:
       throw "commmand not found";
   }
 }
 
-
-c(TorrentEngine engine, String path) async {
-  print("SSS = ${path}");
-
+bool logOnReceiveMessage = false;
+onReceiveMessage(TorrentClientMessage message) {
+  if(logOnReceiveMessage == true) {
+    print("message = ${message}");
+  }
 }
