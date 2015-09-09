@@ -58,12 +58,16 @@ class TorrentEngine {
     return ret;
   }
 
-  TorrentEngine(HetimaSocketBuilder builder, {appid: "hetima_torrent_engine", int localPort: 18085, int globalPort: 18085, String globalIp: "0.0.0.0", String localIp: "0.0.0.0", int retryNum: 5,
+  TorrentEngine(HetimaSocketBuilder builder, {appid: "hetima_torrent_engine", int localPort: 18085, int globalPort: 18085, String globalIp: "0.0.0.0", String localIp: "0.0.0.0", int retryNum: 3,
       bool useUpnp: false, bool useDht: false, bool verbose: false}) {
     this._builder = builder;
     this._torrentClientManager = new TorrentClientManager(builder, verbose: verbose);
+
     this._upnpClient = new UpnpPortMapHelper(builder, appid, verbose: verbose);
     this._portMapAI = new TorrentEngineAIPortMap(upnpClient);
+    this._portMapAI.baseLocalPort = localPort;
+    this._portMapAI.baseGlobalPort = globalPort;
+
     this._useUpnp = useUpnp;
     this._useDht = useDht;
     this._dhtClient = new KNode(builder, verbose: verbose);

@@ -69,12 +69,13 @@ class TorrentEngineAIPortMap {
         await manager.start(baseLocalAddress, baseLocalPort + retry, baseGlobalIp, baseGlobalPort + retry);
         await _dhtClient.start(ip: baseLocalAddress, port: baseLocalPort + retry);
         manager.globalPort = manager.localPort;
+        
         if (usePortMap_t == true) {
-          await _startPortMap();
-          manager.globalPort = _upnpPortMapClient.externalPort;
-
           List<StartGetExternalIp> ips = await _upnpPortMapClient.startGetExternalIp(reuseRouter: true);
           manager.globalIp = ips.first.externalIp;
+
+          await _startPortMap();
+          manager.globalPort = _upnpPortMapClient.externalPort;
         }
         return;
       } catch (e) {}
@@ -96,7 +97,7 @@ class TorrentEngineAIPortMap {
 
   Future _startPortMap() async {
     _upnpPortMapClient.numOfRetry = 0;
-    _upnpPortMapClient.basePort = _manager.localPort;
+    _upnpPortMapClient.basePort = _manager.globalPort;
     _upnpPortMapClient.localIp = _manager.localIp;
     _upnpPortMapClient.localPort = _manager.localPort;
 

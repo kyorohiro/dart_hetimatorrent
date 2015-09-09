@@ -9,6 +9,17 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 
 main(List<String> args) async {
+  //aaa(args);
+  
+  TorrentEngine engine = new TorrentEngine(new HetimaSocketBuilderDartIO(),  useUpnp: false, useDht: false);
+  await a(engine, "start", []); 
+  await a(engine, "messageon", []); 
+  await a(engine, "add", ["./test/bbb2.torrent"]); 
+  await a(engine, "startclient", ["0"]); 
+  
+}
+
+Future<TorrentEngine> aaa(List<String> args) async {
   String exec = Platform.executable;
   List<String> flags = Platform.executableArguments;
   print("hello ${exec} ${flags} ${args}");
@@ -21,7 +32,7 @@ main(List<String> args) async {
   print("${result.rest} ${result['a']} ${result['b']} ${result['c']}");
 
   bool nowActing = false;
-  TorrentEngine engine = new TorrentEngine(new HetimaSocketBuilderDartIO(), localPort: 18080, globalPort: 18080, useUpnp: true, useDht: true);
+  TorrentEngine engine = new TorrentEngine(new HetimaSocketBuilderDartIO(), useUpnp: true, useDht: true);
   stdin.asBroadcastStream().listen((List<int> v) {
     if (nowActing == true) {
       return;
@@ -35,6 +46,7 @@ main(List<String> args) async {
       print("---error!!");
     });
   });
+  return engine;
 }
 
 Future b(TorrentEngine engine, List<int> v) async {
@@ -92,6 +104,7 @@ Future a(TorrentEngine engine, String action, List<String> args) async {
       print("${engine.getTorrentFromIndex(int.parse(args[0])).currentProgress}");
       break;
     case "messageon":
+      print("meesageon");
       logOnReceiveMessage = true;
       break;
     case "messageoff":

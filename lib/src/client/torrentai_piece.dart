@@ -93,7 +93,7 @@ class TorrentClientPieceTest {
     }
 
     List<BlockDataGetNextBlockPartResult> bl = blockData.getNextBlockParts(targetBit, downloadPieceLength, userReserve: true);
-    if(bl.length == 0) {
+    if(bl.length == 0|| bl[0].end == bl[0].begin) {
       bl = blockData.getNextBlockParts(targetBit, downloadPieceLength, userReserve: false);
     }
     ret.begineEnd = bl;
@@ -127,16 +127,17 @@ class TorrentClientPieceTest {
 
     //
     // now requesting
-    if (0 < front.currentRequesting.length) {
+    if (this.maxOfRequest <= front.currentRequesting.length) {
       return;
     }
 
+    int maxOfnewRequest = maxOfRequest - front.currentRequesting.length;
     //
     // select piece & request
     TorrentClientPieceTestResultB r1 = requestTest(client.targetBlock, info);
     if (r1.request != null && r1.request.front != null) {
     //  print("-->${r1.begineEnd.length} [${r1.targetBit}] 0:${r1.begineEnd[0].begin} #:${r1.begineEnd[r1.begineEnd.length-1].begin}");
-      for (int i = 0; i < this.maxOfRequest && i < r1.begineEnd.length; i++) {
+      for (int i = 0; i < maxOfnewRequest && i < r1.begineEnd.length; i++) {
     //  for (int i = 0; i < r1.begineEnd.length; i++) {
         BlockDataGetNextBlockPartResult r = r1.begineEnd[i];
         client.targetBlock.reservePartBlock(r1.targetBit, r.begin, r.end - r.begin);

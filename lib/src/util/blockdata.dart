@@ -58,7 +58,7 @@ class BlockData {
     if(head == null) {
       head = new Bitfield(Bitfield.calcbitSize(blockSize, dataSize), clearIsOne: false);
     }
-    _data = data;
+    _data = new HetimaDataSerialize(data);
     _head = head;
     _cacheHead = new BitfieldPlus(new Bitfield(head.lengthPerBit()));
     _blockSize = blockSize;
@@ -209,7 +209,7 @@ class BlockData {
 
   List<BlockDataGetNextBlockPartResult> getNextBlockParts(int targetBit, int downloadPieceLength, {bool userReserve:true}) {
     List<BlockDataGetNextBlockPartResult> ret = [];
-    BlockDataGetNextBlockPartResult r1 = getNextBlockPart(targetBit, downloadPieceLength);
+    BlockDataGetNextBlockPartResult r1 = getNextBlockPart(targetBit, downloadPieceLength, userReserve:userReserve);
     ret.add(r1);
     int b = r1.begin;
     int e = r1.end;
