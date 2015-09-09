@@ -23,6 +23,7 @@ class TorrentEngineTorrent {
   List<int> _infoHash = [];
   List<int> get infoHash => new List.from(_infoHash);
   List<int> get rawinfoHash => _infoHash;
+  TorrentEngineProgress get currentProgress => ai.currentProgress;
 
   static Future<TorrentEngineTorrent> createEngioneTorrent(TorrentEngine engine, TorrentFile torrentfile, HetimaData downloadedData,
       {haveAllData: false, int localPort: 18085, int globalPort: 18085, List<int> bitfield: null, useDht: false}) async {

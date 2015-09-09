@@ -23,6 +23,7 @@ class TorrentEngineAI extends TorrentAI {
   StreamController<TorrentEngineProgress> _progressStream = new StreamController.broadcast();
   Stream<TorrentEngineProgress> get onProgress => _progressStream.stream;
   TorrentEngineProgress _progressCash = new TorrentEngineProgress();
+  TorrentEngineProgress get currentProgress => _progressCash;
 
   TorrentEngineAI(TrackerClient tracker, KNode dhtClient, bool useDht) {
     this._tracker = tracker;

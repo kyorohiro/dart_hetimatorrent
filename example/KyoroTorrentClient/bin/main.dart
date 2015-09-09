@@ -86,6 +86,9 @@ Future a(TorrentEngine engine, String action, List<String> args) async {
       return await engine.getTorrentFromIndex(int.parse(args[0])).startTorrent(engine);
     case "stopclient":
       return await engine.getTorrentFromIndex(int.parse(args[0])).stopTorrent();
+    case "status":
+      print("${engine.getTorrentFromIndex(int.parse(args[0])).currentProgress}");
+      break;
     default:
       throw "commmand not found";
   }
