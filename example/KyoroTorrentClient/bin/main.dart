@@ -9,14 +9,13 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 
 main(List<String> args) async {
-  //aaa(args);
-  
+  /*
   TorrentEngine engine = new TorrentEngine(new HetimaSocketBuilderDartIO(),  useUpnp: false, useDht: false);
   await a(engine, "start", []); 
   await a(engine, "messageon", []); 
   await a(engine, "add", ["./test/bbb2.torrent"]); 
   await a(engine, "startclient", ["0"]); 
-  
+  */
 }
 
 Future<TorrentEngine> aaa(List<String> args) async {
