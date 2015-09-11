@@ -16,6 +16,7 @@ main(List<String> args) async {
   await a(engine, "add", ["./test/bbb2.torrent"]); 
   await a(engine, "startclient", ["0"]); 
   */
+  aaa(args);
 }
 
 Future<TorrentEngine> aaa(List<String> args) async {
@@ -31,7 +32,7 @@ Future<TorrentEngine> aaa(List<String> args) async {
   print("${result.rest} ${result['a']} ${result['b']} ${result['c']}");
 
   bool nowActing = false;
-  TorrentEngine engine = new TorrentEngine(new HetimaSocketBuilderDartIO(), useUpnp: true, useDht: true);
+  TorrentEngine engine = new TorrentEngine(new HetimaSocketBuilderDartIO(), useUpnp: true, useDht: false);
   stdin.asBroadcastStream().listen((List<int> v) {
     if (nowActing == true) {
       return;
