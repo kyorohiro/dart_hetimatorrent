@@ -19,6 +19,8 @@ main(List<String> args) async {
   aaa(args);
 }
 
+bool logOnReceiveMessage = false;
+
 Future<TorrentEngine> aaa(List<String> args) async {
   String exec = Platform.executable;
   List<String> flags = Platform.executableArguments;
@@ -68,14 +70,22 @@ Future a(TorrentEngine engine, String action, List<String> args) async {
   print(">> action:${action} args:${args}");
   switch (action) {
     case "help":
-      print("..\ngoodbye!!\n..\n");
+      print("""
+        exit : exit this application.
+        start : start server
+        stop : stop server
+        infohashs : display infohash and id 
+        add [torrent file path] : add torrent file
+        startclient [id:number] : start download & upload 
+        stopclient [id:number] : stop download & upload
+        status : display current progress
+        messageon : logon
+        messageoff : logoff
+      """);
       break;
     case "exit":
       print("..\ngoodbye!!\n..\n");
       exit(0);
-      break;
-    case "hello":
-      print("hello");
       break;
     case "start":
       return engine.start();
@@ -115,7 +125,7 @@ Future a(TorrentEngine engine, String action, List<String> args) async {
   }
 }
 
-bool logOnReceiveMessage = false;
+
 onReceiveMessage(TorrentClientMessage message) {
   if(logOnReceiveMessage == true) {
     print("message = ${message}");
