@@ -81,15 +81,9 @@ class TorrentClientPieceTest {
     int targetBit = 0;
     if (front.lastRequestIndex != null && !blockData.have(front.lastRequestIndex)) {
       targetBit = front.lastRequestIndex;
- //     if(targetBit < 0) {
- //       print("### A -1");
- //     }
     } else {
       BitfieldPlus _cash = blockData.isNotThrere(info.bitfieldToMe);
       targetBit = _cash.getOnPieceAtRandom();
-  //    if(targetBit < 0) {
-  //      print("### B -1");
-  //    }
     }
 
     List<BlockDataGetNextBlockPartResult> bl = blockData.getNextBlockParts(targetBit, downloadPieceLength, userReserve: true);
@@ -127,10 +121,12 @@ class TorrentClientPieceTest {
 
     //
     // now requesting
-    if (this.maxOfRequest <= front.currentRequesting.length) {
+    //if (this.maxOfRequest <= front.currentRequesting.length) {
+    //  return;
+    //}
+    if (0 < front.currentRequesting.length) {
       return;
     }
-
     int maxOfnewRequest = maxOfRequest - front.currentRequesting.length;
     //
     // select piece & request
