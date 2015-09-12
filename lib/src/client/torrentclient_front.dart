@@ -120,14 +120,15 @@ class TorrentClientFront {
     _verbose = verbose;
   }
 
-  Future<TorrentMessage> parse() {
+  Future<TorrentMessage> parse() async {
     if (handshaked == false) {
-      return TorrentMessage.parseHandshake(_parser).then((TorrentMessage message) {
-        handshaked = true;
-        return message;
-      });
+      TorrentMessage message = await TorrentMessage.parseHandshake(_parser);
+      handshaked = true;
+      return message;
     } else {
-      return TorrentMessage.parseBasic(_parser, maxOfMessageSize: requestedMaxPieceSize + 20);
+      TorrentMessage message = await TorrentMessage.parseBasic(_parser, maxOfMessageSize: requestedMaxPieceSize + 20);
+      _parser.buffer.clearInnerBuffer(_parser.index);
+      return message;
     }
   }
 

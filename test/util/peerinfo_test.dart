@@ -237,7 +237,7 @@ void main() {
       print("${c(1000,6)*pow(998.0/1000,994)*pow(2.0/1000,6)}");
     });
   });
-
+/*
   unit.group('Piece Test', () {
     unit.test("pieceinfo: 0-1", () {
       Bitfield rawBlockDataInfo = new Bitfield(10);
@@ -248,10 +248,10 @@ void main() {
       BlockData blockData = new BlockData(new HetimaDataMemory([0,1,2,3,4,5,6,7,8,9]), null, 2, 5);
       TorrentClientPieceTest pieceTest = new TorrentClientPieceTest(rawBlockDataInfo, 2);
       TorrentClientPieceTestResultA r = pieceTest.interestTest(blockData, info);
-      unit.expect(r.interested.length, 0);
+      unit.expect(r.interested.length, '');
       unit.expect(r.notinterested.length, 1);
     });
-/*
+
     unit.test("pieceinfo: 0-1", () {
       Bitfield rawBlockDataInfo = new Bitfield(10);
       rawBlockDataInfo.zeroClear();
@@ -272,6 +272,5 @@ void main() {
       }
 
     });
-    */
-  });
+  });*/
 }

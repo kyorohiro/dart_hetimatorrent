@@ -58,6 +58,10 @@ class TorrentMessage {
   }
 
   static Future<TorrentMessage> parseBasic(EasyParser parser, {int maxOfMessageSize: 32 * 1024}) async {
+    {
+      // kiyo todo
+      //print("############--> ${(parser.buffer as ArrayBuilder).rawbuffer8.length} ${parser.stack.length}");
+    }
     parser.push();
     try {
       TMessageNull nullMessage = await TMessageNull.decode(parser, maxOfMessageSize: maxOfMessageSize);
