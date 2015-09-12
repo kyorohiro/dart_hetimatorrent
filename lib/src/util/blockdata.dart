@@ -19,7 +19,6 @@ class BlockData {
   int _dataSize;
   Map<int, PieceInfo> _writePartData = {};
   Map<int, PieceInfo> _reservePartData = {};
-  BitfieldInter _cacheHead = null;
 
   /**
    * 
@@ -55,12 +54,11 @@ class BlockData {
     } else {
       _dataSize = dataSize;
     }
-    if(head == null) {
+    if (head == null) {
       head = new Bitfield(Bitfield.calcbitSize(blockSize, dataSize), clearIsOne: false);
     }
     _data = new HetimaDataSerialize(data);
     _head = head;
-    _cacheHead = new BitfieldPlus(new Bitfield(head.lengthPerBit()));
     _blockSize = blockSize;
   }
 
@@ -68,8 +66,12 @@ class BlockData {
     return _data;
   }
 
+  BitfieldInter _cacheHead = null;
   BitfieldInter isNotThrere(BitfieldInter ina, [BitfieldInter out = null]) {
     if (out == null) {
+      if (_cacheHead == null) {
+        _cacheHead = new BitfieldPlus(new Bitfield(_head.lengthPerBit()));
+      }
       out = _cacheHead;
     }
     Bitfield.relative(ina, _head, out);
@@ -125,7 +127,7 @@ class BlockData {
       _writePartData[blockNum] = infoList;
     }
     infoList.append(begin, begin + length);
-    reservePartBlock(blockNum, begin, length, strict:strict);
+    reservePartBlock(blockNum, begin, length, strict: strict);
 
     //
     //
@@ -176,12 +178,12 @@ class BlockData {
   /**
    * 
    */
-  BlockDataGetNextBlockPartResult getNextBlockPart(int targetBit, int downloadPieceLength, {BlockDataGetNextBlockPartResult out: null,bool userReserve:true}) {
+  BlockDataGetNextBlockPartResult getNextBlockPart(int targetBit, int downloadPieceLength, {BlockDataGetNextBlockPartResult out: null, bool userReserve: true}) {
     if (out == null) {
       out = new BlockDataGetNextBlockPartResult();
     }
     PieceInfo pieceInfo = null;
-    if(userReserve) {
+    if (userReserve) {
       pieceInfo = getReservePieceInfo(targetBit);
     } else {
       pieceInfo = getPieceInfo(targetBit);
@@ -207,9 +209,9 @@ class BlockData {
     return out;
   }
 
-  List<BlockDataGetNextBlockPartResult> getNextBlockParts(int targetBit, int downloadPieceLength, {bool userReserve:true}) {
+  List<BlockDataGetNextBlockPartResult> getNextBlockParts(int targetBit, int downloadPieceLength, {bool userReserve: true}) {
     List<BlockDataGetNextBlockPartResult> ret = [];
-    BlockDataGetNextBlockPartResult r1 = getNextBlockPart(targetBit, downloadPieceLength, userReserve:userReserve);
+    BlockDataGetNextBlockPartResult r1 = getNextBlockPart(targetBit, downloadPieceLength, userReserve: userReserve);
     ret.add(r1);
     int b = r1.begin;
     int e = r1.end;
