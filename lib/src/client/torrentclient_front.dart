@@ -127,7 +127,9 @@ class TorrentClientFront {
       return message;
     } else {
       TorrentMessage message = await TorrentMessage.parseBasic(_parser, maxOfMessageSize: requestedMaxPieceSize + 20);
-      _parser.buffer.clearInnerBuffer(_parser.index);
+     // print("## -[1]-> ## ${_parser.index} ${(_parser.buffer as ArrayBuilder).rawbuffer8.length}");
+      (_parser.buffer as ArrayBuilder).clearInnerBuffer(_parser.index, reuse:false);
+     // print("## -[2]-> ##${(_parser.buffer as ArrayBuilder).rawbuffer8.length} ${_parser.stack.length}");
       return message;
     }
   }

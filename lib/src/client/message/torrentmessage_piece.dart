@@ -37,6 +37,9 @@ class TMessagePiece extends TorrentMessage {
       message._mIndex = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN);
       message._mBegin = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN);
       List<int> buffer = await parser.nextBuffer(messageLength - 9);
+      if(messageLength-9 != buffer.length) {
+        throw {};
+      }
       message._mContent.addAll(buffer);
       parser.pop();
       return message;
