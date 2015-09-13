@@ -98,7 +98,7 @@ class TorrentMessage {
       parser.back();
       throw e;
     } finally {
-      parser.buffer.clearInnerBuffer(parser.getInedx());
+      //parser.buffer.clearInnerBuffer(parser.getInedx());
       parser.pop();
     }
   }
