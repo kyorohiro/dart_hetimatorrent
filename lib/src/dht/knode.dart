@@ -43,8 +43,8 @@ class KNode extends Object {
   static int id = 0;
 
   List<KNodeSendInfo> queryInfo = [];
-  KNodeWork _ai = null;
-  KNodeWork get ai => _ai;
+  KNodeWork _basicWorker = null;
+  KNodeWork get ai => _basicWorker;
 
   StreamController<KGetPeerValue> _controller = new StreamController.broadcast();
   Stream<KGetPeerValue> get onGetPeerValue => _controller.stream;
@@ -79,7 +79,7 @@ class KNode extends Object {
     this._nodeId = (nodeIdAsList == null ? KId.createIDAtRandom() : new KId(nodeIdAsList));
     this._socketBuilder = socketBuilder;
     this._rootingtable = new KRootingTable(kBucketSize, _nodeId);
-    this._ai = (ai == null ? new KNodeWorkBasic(verbose: verbose) : ai);
+    this._basicWorker = (ai == null ? new KNodeWorkBasic(verbose: verbose) : ai);
     this._nodeDebugId = id++;
   }
 
@@ -97,8 +97,8 @@ class KNode extends Object {
         });
       });
       _isStart = true;
-      _ai.start(this);
-      _ai.startTick(this);
+      _basicWorker.start(this);
+      _basicWorker.startTick(this);
     });
   }
 
@@ -108,18 +108,18 @@ class KNode extends Object {
     }
     if (message.isResonse) {
       KNodeSendInfo rm = removeQueryNameFromTransactionId(UTF8.decode(message.rawMessageMap["t"]));
-      this._ai.onReceiveResponse(this, info, message);
+      this._basicWorker.onReceiveResponse(this, info, message);
       if (rm != null && rm.c != null) {
         rm.c.complete(message);
       } else {
         log("----> receive null : [${nodeDebugId}] ${info.remoteAddress} ${info.remotePort}");
       }
     } else if (message.isQuery) {
-      this._ai.onReceiveQuery(this, info, message);
+      this._basicWorker.onReceiveQuery(this, info, message);
     } else if (message.isError) {
-      this._ai.onReceiveError(this, info, message);
+      this._basicWorker.onReceiveError(this, info, message);
     } else {
-      this._ai.onReceiveUnknown(this, info, message);
+      this._basicWorker.onReceiveUnknown(this, info, message);
     }
     for (KNodeSendInfo i in clearTimeout(20000)) {
       if (i.c != null && i.c.isCompleted == false) {
@@ -134,20 +134,16 @@ class KNode extends Object {
     }
     return _udpSocket.close().whenComplete(() {
       _isStart = false;
-      _ai.stop(this);
+      _basicWorker.stop(this);
     });
   }
 
-  Future startSearchValue(KId infoHash, int port, {getPeerOnly: false}) {
-    return new Future(() {
-      return this._ai.startSearchValue(this, infoHash, port, getPeerOnly: getPeerOnly);
-    });
+  Future startSearchValue(KId infoHash, int port, {getPeerOnly: false}) async {
+    return this._basicWorker.startSearchValue(this, infoHash, port, getPeerOnly: getPeerOnly);
   }
 
-  Future stopSearchPeer(KId infoHash) {
-    return new Future(() {
-      return this._ai.stopSearchValue(this, infoHash);
-    });
+  Future stopSearchPeer(KId infoHash) async {
+    return this._basicWorker.stopSearchValue(this, infoHash);
   }
 
   bool containSeardchResult(KGetPeerValue info) {
@@ -164,11 +160,11 @@ class KNode extends Object {
 
   addKPeerInfo(KPeerInfo info) => _rootingtable.update(info);
 
-  updateP2PNetwork() => this._ai.updateP2PNetwork(this);
+  updateP2PNetwork() => this._basicWorker.updateP2PNetwork(this);
 
-  researchSearchPeer([KId infoHash = null]) => this._ai.researchSearchPeer(this, infoHash);
+  researchSearchPeer([KId infoHash = null]) => this._basicWorker.researchSearchPeer(this, infoHash);
 
-  addBootNode(String ip, int port) => this._ai.onAddNodeFromIPAndPort(this, ip, port);
+  addBootNode(String ip, int port) => this._basicWorker.onAddNodeFromIPAndPort(this, ip, port);
 
   List<int> getOpaqueWriteToken(KId infoHash, KId nodeID) => KId.createToken(infoHash, nodeID, this.nodeId);
 

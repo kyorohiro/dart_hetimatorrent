@@ -37,6 +37,9 @@ class DHT {
   String log() {
     return node.rootingtable.toInfo().replaceAll("\n", "<br>");
   }
+  
+  l() {
+  }
 }
 
 main(List<String> args) async {
@@ -92,11 +95,14 @@ Future b(DHT dht, List<int> v) async {
 
 Future a(DHT dht, String action, List<String> args) async {
   print(">> action:${action} args:${args}");
-  switch (action) {
+  switch (action.toLowerCase()) {
     case "help":
       print("""
         exit : exit this application.
-        start <ip:striing> <port:number>
+        start <ip:striing> <port:number> :
+        stop :
+        addBootNode <ip:string> <port:number>
+        addTraget <xx.torrent path:string>:
       """);
       break;
     case "exit":
@@ -107,11 +113,23 @@ Future a(DHT dht, String action, List<String> args) async {
       dht.start(args[0], int.parse(args[1]));
       break;
     case "stop":
-    case "add":
+      dht.stop();
+      break;
+    case "addbootnode":
+      dht.addNode(args[0], int.parse(args[1]));
+      break;
+    case "addtarget":
+      TorrentFile torrentfile = await TorrentFile.createFromTorrentFile(new HetimaDataToReader(new HetimaDataDartIO(args[0])));
+      print("f = ${torrentfile}");
+      print("f.announce = ${torrentfile.announce}");
+      List<int> infohash = await torrentfile.createInfoSha1();
+      dht.addTarget(infohash);
+      break;
     case "infohashs":
-    case "startclient":
-    case "stopclient":
-    case "status":
+      break;
+    case "rmtarget":
+      
+      break;
     case "messageon":
       print("meesageon");
       logOnReceiveMessage = true;
