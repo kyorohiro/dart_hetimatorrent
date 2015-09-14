@@ -31,7 +31,7 @@ class DHT {
   }
 
   Future rmTarget(List<int> infoHash) {
-    return node.stopSearchPeer(new KId(infoHash));
+    return node.stopSearchValue(new KId(infoHash));
   }
 
   String log() {

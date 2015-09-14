@@ -44,10 +44,14 @@ class KNode extends Object {
 
   List<KNodeSendInfo> queryInfo = [];
   KNodeWork _basicWorker = null;
-  KNodeWork get ai => _basicWorker;
+  KNodeWork get worker => _basicWorker;
 
   StreamController<KGetPeerValue> _controller = new StreamController.broadcast();
   Stream<KGetPeerValue> get onGetPeerValue => _controller.stream;
+
+  List<KId> _targetInfoHashs = [];
+  List<KId> get rawTargetInfoHashs => _targetInfoHashs;
+  List<KId> get targetInfoHashs => new List.from(_targetInfoHashs);
 
   int _nodeDebugId = 0;
   int get nodeDebugId => _nodeDebugId;
@@ -69,7 +73,7 @@ class KNode extends Object {
   bool get verbose => _verbose;
 
   KNode(HetimaSocketBuilder socketBuilder,
-      {int kBucketSize: 8, List<int> nodeIdAsList: null, KNodeWork ai: null,
+      {int kBucketSize: 8, List<int> nodeIdAsList: null, KNodeWork worker: null,
       intervalSecondForMaintenance: 10, intervalSecondForAnnounce: 5 * 60, 
       intervalSecondForFindNode: 10 * 60, bool verbose: false}) {
     this._verbose = verbose;
@@ -79,7 +83,7 @@ class KNode extends Object {
     this._nodeId = (nodeIdAsList == null ? KId.createIDAtRandom() : new KId(nodeIdAsList));
     this._socketBuilder = socketBuilder;
     this._rootingtable = new KRootingTable(kBucketSize, _nodeId);
-    this._basicWorker = (ai == null ? new KNodeWorkBasic(verbose: verbose) : ai);
+    this._basicWorker = (worker == null ? new KNodeWorkBasic(verbose: verbose) : worker);
     this._nodeDebugId = id++;
   }
 
@@ -139,10 +143,13 @@ class KNode extends Object {
   }
 
   Future startSearchValue(KId infoHash, int port, {getPeerOnly: false}) async {
+    if(!_targetInfoHashs.contains(infoHash)) {
+      _targetInfoHashs.add(infoHash);
+    }
     return this._basicWorker.startSearchValue(this, infoHash, port, getPeerOnly: getPeerOnly);
   }
 
-  Future stopSearchPeer(KId infoHash) async {
+  Future stopSearchValue(KId infoHash) async {
     return this._basicWorker.stopSearchValue(this, infoHash);
   }
 

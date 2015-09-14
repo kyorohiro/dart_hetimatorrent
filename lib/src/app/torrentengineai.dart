@@ -78,7 +78,7 @@ class TorrentEngineAI extends TorrentAI {
     await this._torrent.stop();
     isGo = false;
     if (useDht == true) {
-      await _dht.stopSearchPeer(new KId(_tracker.infoHash)).catchError((e) {});
+      await _dht.stopSearchValue(new KId(_tracker.infoHash)).catchError((e) {});
     }
     return await _startTracker(0).catchError((e) {});
   }
