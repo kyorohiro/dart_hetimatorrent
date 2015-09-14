@@ -48,15 +48,14 @@ class DHT {
 
 main(List<String> args) async {
   DHT dht = await aaa(args);
-  a(dht, "addbootnode", 
-//      ["157.7.205.138", "51413"]);
-    ["love.hetimatan.net", "51413"]);
+  /*
   a(dht, "start", ["0.0.0.0", "38080"]);
-
-  await new Future.delayed(new Duration(seconds:60));
+  a(dht, "addbootnode", 
+    ["love.hetimatan.net", "51413"]);
+  await new Future.delayed(new Duration(seconds:30));
   a(dht, "rootingtable", []);
   a(dht, "stop", []);
-//  ["love.hetimatan.net", "51413"]);
+   */
 }
 
 bool logOnReceiveMessage = false;
