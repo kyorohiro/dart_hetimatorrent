@@ -10,6 +10,8 @@ import 'package:crypto/crypto.dart';
 
 class DHT {
   KNode node = new KNode(new HetimaSocketBuilderDartIO(verbose: false));
+  List<KId> get infoHashs => node.targetInfoHashs;
+
   Future start(String ip, int port) {
     return node.start(ip: ip, port: port).then((_) {
       node.onGetPeerValue.listen((KGetPeerValue v) {
@@ -103,6 +105,8 @@ Future a(DHT dht, String action, List<String> args) async {
         stop :
         addBootNode <ip:string> <port:number>
         addTraget <xx.torrent path:string>:
+        rmTarget <id:number>
+        infohashs : display infohash and id
       """);
       break;
     case "exit":
@@ -126,9 +130,14 @@ Future a(DHT dht, String action, List<String> args) async {
       dht.addTarget(infohash);
       break;
     case "infohashs":
+      int id = 0;
+      print("[ index ]  :  infohash");
+      for(List<int> infohash in dht.infoHashs) {
+        print("[ ${id} ]  :  ${CryptoUtils.bytesToBase64(infohash)}");
+      }
       break;
     case "rmtarget":
-      
+      dht.rmTarget(dht.infoHashs[int.parse(args[0])].value);
       break;
     case "messageon":
       print("meesageon");
