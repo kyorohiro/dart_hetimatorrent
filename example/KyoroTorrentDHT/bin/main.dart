@@ -40,7 +40,8 @@ class DHT {
     return node.rootingtable.toInfo().replaceAll("\n", "<br>");
   }
   
-  l() {
+  String rootingTable() {
+    return node.rootingtable.toInfo();
   }
 }
 
@@ -106,7 +107,8 @@ Future a(DHT dht, String action, List<String> args) async {
         addBootNode <ip:string> <port:number>
         addTraget <xx.torrent path:string>:
         rmTarget <id:number>
-        infohashs : display infohash and id
+        infoHashs : display infohash and id
+        rootingtable : display rootingtable
       """);
       break;
     case "exit":
@@ -138,6 +140,9 @@ Future a(DHT dht, String action, List<String> args) async {
       break;
     case "rmtarget":
       dht.rmTarget(dht.infoHashs[int.parse(args[0])].value);
+      break;
+    case "rootingtable":
+      print("${dht.rootingTable()}");
       break;
     case "messageon":
       print("meesageon");
