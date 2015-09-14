@@ -24,11 +24,11 @@ class TorrentClientPieceTest {
   int downloadPieceLength = 16 * 1024;
   int maxOfRequest = 5;
 
-  TorrentClientPieceTest.fromTorrentClient(TorrentClient client, {int downloadPieceLength: 16 * 1024, int maxOfRequest: 3}) {
+  TorrentClientPieceTest.fromTorrentClient(TorrentClient client, {int downloadPieceLength: 16 * 1024, int maxOfRequest: 1}) {
     _init(client.targetBlock.rawHead, client.targetBlock.blockSize, downloadPieceLength, maxOfRequest);
   }
 
-  TorrentClientPieceTest(Bitfield rawBlockDataInfo, int blockSize, {int downloadPieceLength: 16 * 1024, int maxOfRequest: 3}) {
+  TorrentClientPieceTest(Bitfield rawBlockDataInfo, int blockSize, {int downloadPieceLength: 16 * 1024, int maxOfRequest: 1}) {
     _init(rawBlockDataInfo, blockSize, downloadPieceLength, maxOfRequest);
   }
 
