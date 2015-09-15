@@ -10,15 +10,16 @@ class TMessageNotInterested extends TorrentMessage {
 
   TMessageNotInterested() : super(TorrentMessage.SIGN_NOTINTERESTED) {}
 
-  static Future<TMessageNotInterested> decode(EasyParser parser) async {
+  static Future<TMessageNotInterested> decode(EasyParser parser, {List<int> buffer: null}) async {
+    List<int> outLength = [0];
     TMessageNotInterested message = new TMessageNotInterested();
     parser.push();
     try {
-      int size = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN);
+      int size = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN, buffer: buffer, outLength: outLength);
       if (size != NOTINTERESTED_LENGTH) {
         throw {};
       }
-      int v = await parser.readByte();
+      int v = await parser.readByte(buffer: buffer, outLength: outLength);
       if (v != TorrentMessage.SIGN_NOTINTERESTED) {
         throw {};
       }

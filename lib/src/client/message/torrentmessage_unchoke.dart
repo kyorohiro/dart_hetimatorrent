@@ -10,15 +10,16 @@ class TMessageUnchoke extends TorrentMessage {
 
   TMessageUnchoke() : super(TorrentMessage.SIGN_UNCHOKE) {}
 
-  static Future<TMessageUnchoke> decode(EasyParser parser) async {
+  static Future<TMessageUnchoke> decode(EasyParser parser, {List<int> buffer: null}) async {
+    List<int> outLength = [0];
     TMessageUnchoke message = new TMessageUnchoke();
     parser.push();
     try {
-      int size = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN);
+      int size = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN, buffer: buffer, outLength: outLength);
       if (size != UNCHOKE_LENGTH) {
         throw {};
       }
-      int id = await parser.readByte();
+      int id = await parser.readByte(buffer: buffer, outLength: outLength);
       if (id != TorrentMessage.SIGN_UNCHOKE) {
         throw {};
       }

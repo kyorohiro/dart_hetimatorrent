@@ -82,17 +82,18 @@ class TorrentMessage {
         case TorrentMessage.SIGN_HAVE:
           return TMessageHave.decode(parser, buffer:buffer);
         case TorrentMessage.SIGN_INTERESTED:
-          return TMessageInterested.decode(parser);
+          return TMessageInterested.decode(parser, buffer:buffer);
         case TorrentMessage.SIGN_NOTINTERESTED:
-          return TMessageNotInterested.decode(parser);
+          return TMessageNotInterested.decode(parser, buffer:buffer);
+        case TorrentMessage.SIGN_UNCHOKE:
+          return TMessageUnchoke.decode(parser, buffer:buffer);
         case TorrentMessage.SIGN_PIECE:
           return TMessagePiece.decode(parser);
         case TorrentMessage.SIGN_PORT:
           return TMessagePort.decode(parser);
         case TorrentMessage.SIGN_REQUEST:
           return TMessageRequest.decode(parser);
-        case TorrentMessage.SIGN_UNCHOKE:
-          return TMessageUnchoke.decode(parser);
+
         case TorrentMessage.DUMMY_SIGN_KEEPALIVE:
           return TMessageKeepAlive.decode(parser);
         default:
