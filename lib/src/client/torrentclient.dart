@@ -231,7 +231,7 @@ class TorrentClient {
       if (message is TMessagePiece) {
         TMessagePiece piece = message;
         try {
-          await _targetBlock.writePartBlock(piece.content, piece.index, piece.begin, piece.content.length);
+          await _targetBlock.writePartBlock(piece.rawcontent, piece.index, piece.begin, piece.length);
           //
           //
           if (_targetBlock.have(piece.index)) {

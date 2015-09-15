@@ -57,7 +57,7 @@ class TorrentMessage {
     }
   }
 
-  static Future<TorrentMessage> parseBasic(EasyParser parser, {int maxOfMessageSize: 3 * 16 * 1024, List<int> buffer}) async {
+  static Future<TorrentMessage> parseBasic(EasyParser parser, {int maxOfMessageSize: 3 * 16 * 1024, List<int> buffer, List<int> pieceBuffer:null}) async {
     parser.push();
     List<int> outLength = [0];
     try {
@@ -86,7 +86,7 @@ class TorrentMessage {
         case TorrentMessage.SIGN_NOTINTERESTED:
           return TMessageNotInterested.decode(parser, buffer:buffer);
         case TorrentMessage.SIGN_PIECE:
-          return TMessagePiece.decode(parser, buffer:buffer);
+          return TMessagePiece.decode(parser, buffer:buffer,pieceBuffer:pieceBuffer);
         case TorrentMessage.SIGN_REQUEST:
           return TMessageRequest.decode(parser, buffer:buffer);
         case TorrentMessage.SIGN_CANCEL:

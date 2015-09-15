@@ -9,21 +9,29 @@ import 'dart:typed_data';
 class TMessagePiece extends TorrentMessage {
   int _mIndex = 0;
   int _mBegin = 0;
+  int _mLength = 0;
   Uint8List _mContent = null;
 
   int get index => _mIndex;
   int get begin => _mBegin;
-  List<int> get content => new List.from(_mContent);
+  int get length => _mLength;
+  List<int> get content => _mContent.sublist(0, _mLength);
+  List<int> get rawcontent => _mContent;
 
   TMessagePiece._empty() : super(TorrentMessage.SIGN_PIECE) {}
 
-  TMessagePiece(int index, int begin, List<int> content) : super(TorrentMessage.SIGN_PIECE) {
+  TMessagePiece(int index, int begin, List<int> content, [int length = null]) : super(TorrentMessage.SIGN_PIECE) {
     this._mIndex = index;
     this._mBegin = begin;
     this._mContent = new Uint8List.fromList(content);
+    if(length != null) {
+      this._mLength = length;
+    } else {
+      this._mLength = content.length;      
+    }
   }
 
-  static Future<TMessagePiece> decode(EasyParser parser,{List<int> buffer: null}) async {
+  static Future<TMessagePiece> decode(EasyParser parser,{List<int> buffer: null, List<int> pieceBuffer:null}) async {
     List<int> outLength = [0];
     TMessagePiece message = new TMessagePiece._empty();
     parser.push();
@@ -42,7 +50,15 @@ class TMessagePiece extends TorrentMessage {
       if(outLength[0] != messageLength - 9) {
         throw {};
       }
-      message._mContent = new Uint8List.fromList(c.sublist(0, messageLength - 9));
+      message._mLength = outLength[0];
+      if(pieceBuffer == null) {
+        message._mContent = new Uint8List.fromList(c.sublist(0, messageLength - 9));
+      } else {
+        message._mContent = pieceBuffer;
+        for(int i=0;i<message._mLength;i++) {
+          pieceBuffer[i] = c[i];
+        }
+      }
       parser.pop();
       return message;
     } catch (e) {

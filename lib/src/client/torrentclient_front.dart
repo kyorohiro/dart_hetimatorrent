@@ -121,6 +121,9 @@ class TorrentClientFront {
     _verbose = verbose;
   }
 
+  // one peer one request.
+  List<Uint8List> pieceCache = [];
+  int pieceCacheIndex = 0;
   Future<TorrentMessage> parse(List<int> cash) async {
     if (handshaked == false) {
       TorrentMessage message = await TorrentMessage.parseHandshake(_parser);
@@ -129,8 +132,14 @@ class TorrentClientFront {
       return message;
     } else {
       (_parser.buffer as ArrayBuilder).rawbuffer8.logon = true;
-      TorrentMessage message = await TorrentMessage.parseBasic(_parser, maxOfMessageSize: requestedMaxPieceSize + 20, buffer:cash);
+      TorrentMessage message = await TorrentMessage.parseBasic(_parser, maxOfMessageSize: requestedMaxPieceSize + 20, buffer:cash, pieceBuffer: pieceCache[pieceCacheIndex]);
       print("recv [${_peerPort}]: ${message}");
+      if(message.id == TorrentMessage.SIGN_PIECE) {
+        pieceCacheIndex++;
+        if(pieceCacheIndex >= pieceCache.length) {
+          pieceCacheIndex = 0;
+        }
+      }
       //print("## -[1]-> ## ${_parser.index} ${(_parser.buffer as ArrayBuilder).rawbuffer8.length}");
       (_parser.buffer as ArrayBuilder).clearInnerBuffer(_parser.index, reuse:true);
       //print("## -[2]-> ##${(_parser.buffer as ArrayBuilder).rawbuffer8.rawbuffer8.length} ${_parser.stack.length}");
@@ -140,6 +149,7 @@ class TorrentClientFront {
 
   startReceive() async {
     try {
+      pieceCache = new List.filled(5, new Uint8List(3*16*1024));
       Uint8List cash = new Uint8List(3*16*1024);
       while (true) {
         TorrentMessage message = await parse(cash);
@@ -208,7 +218,7 @@ class TorrentClientFront {
   }
 
   Future sendPiece(int index, int begin, List<int> content) {
-    TMessagePiece message = new TMessagePiece(index, begin, content);
+    TMessagePiece message = new TMessagePiece(index, begin, content, content.length);
     return sendMessage(message);
   }
 

@@ -116,7 +116,8 @@ class BlockData {
     if (strict == true && begin + length > _blockSize || _head.lengthPerBit() - 1 < blockNum) {
       throw {};
     }
-    WriteResult result = await _data.write(data.sublist(0, length), blockNum * _blockSize + begin);
+//    WriteResult result = await _data.write(data.sublist(0, length), blockNum * _blockSize + begin);
+    WriteResult result = await _data.write(data, blockNum * _blockSize + begin, length);
     //
     //
     PieceInfo infoList = null;
