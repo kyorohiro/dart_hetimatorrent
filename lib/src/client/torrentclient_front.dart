@@ -144,12 +144,14 @@ class TorrentClientFront {
       }
     } catch (e) {
       stream.addError(e);
-      close();
+      await close();
       try {
         _socket.clearBuffer();
+        _streamSignal.add(new TorrentClientSignalWithFront(this, TorrentClientSignal.ID_CLOSE,TorrentClientSignal.REASON_PAESE_ERROR, ""));
       } catch(e) {
         
       }
+
     }
   }
 
@@ -221,9 +223,9 @@ class TorrentClientFront {
     return {};
   }
 
-  void close() {
+  close() async {
     log("[${_debugId}][${_peerIp}:${_peerPort}] close");
-    _socket.close();
+    await _socket.close();
     TorrentClientFrontNerve.doClose(this, 0);
   }
 

@@ -191,8 +191,8 @@ class TorrentClient {
     return {};
   }
 
-  clearIfIsEnd() async {
-    await _peerInfos.clearIfIsEnd();
+  clearIfIsEnd({TorrentClientFront front:null}) async {
+    await _peerInfos.clearIfIsEnd(front:front);
   }
 
   List<TorrentClientPeerInfo> getPeerInfoFromXx(Function filter) {
@@ -253,6 +253,9 @@ class TorrentClient {
         this._downloaded += signal.v;
       } else if (signal.id == TorrentClientSignal.ID_PIECE_SEND) {
         this._uploaded += signal.v;
+      }
+      if (signal.id == TorrentClientSignal.ID_CLOSE && signal.reason == TorrentClientSignal.REASON_PAESE_ERROR) {
+        this.clearIfIsEnd(front:front);
       }
       TorrentClientSignal sig = new TorrentClientSignalWithPeerInfo(info, signal.id, signal.reason, signal.toString());
       _sendSignal(this, info, sig);

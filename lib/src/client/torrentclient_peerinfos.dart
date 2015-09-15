@@ -2,6 +2,7 @@ library hetimatorrent.torrent.client.peerinfos;
 
 import 'dart:core';
 import 'torrentclient_peerinfo.dart';
+import 'torrentclient_front.dart';
 
 class TorrentClientPeerInfos {
   List<TorrentClientPeerInfo> _peerInfos = [];
@@ -47,20 +48,26 @@ class TorrentClientPeerInfos {
     return (targetPeers.length > 0 ? targetPeers.first : null);
   }
 
-  
-  clearIfIsEnd() {
+  clearIfIsEnd({TorrentClientFront front: null}) {
+    List<TorrentClientPeerInfo> target = [];
+    if (front != null) {
+      target = getPeerInfos((TorrentClientPeerInfo l) {
+        return l.front == front;
+      });
+    } else {
+      target = _peerInfos;
+    }
     List<TorrentClientPeerInfo> rmPeer = [];
-    for(TorrentClientPeerInfo info in _peerInfos) {
-      if(info.isEnd) {
-        if(info.isAcceptable) {
+    for (TorrentClientPeerInfo info in target) {
+      if (info.isEnd) {
+        if (info.isAcceptable) {
           info.front = null;
         } else {
           rmPeer.add(info);
         }
       }
     }
-    
-    for(TorrentClientPeerInfo info in rmPeer) {
+    for (TorrentClientPeerInfo info in rmPeer) {
       _peerInfos.remove(info);
     }
   }

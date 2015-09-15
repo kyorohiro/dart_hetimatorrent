@@ -32,6 +32,7 @@ class TorrentClientSignal {
   static const ID_PIECE_RECEIVE = 4;
   static const REASON_OWN_CONNECTION = 2001;
   static const REASON_UNMANAGED_INFOHASH = 2002;
+  static const REASON_PAESE_ERROR = 2003;
   //
   static const int ID_CONNECTED = 1001;
   static const int ID_ACCEPT = 1002;
