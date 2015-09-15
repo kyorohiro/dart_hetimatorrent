@@ -16,19 +16,20 @@ class TMessagePort extends TorrentMessage {
     this._mPort = port;
   }
 
-  static Future<TMessagePort> decode(EasyParser parser) async {
+  static Future<TMessagePort> decode(EasyParser parser, {List<int> buffer: null}) async {
+    List<int> outLength = [0];
     TMessagePort message = new TMessagePort._empty();
     parser.push();
     try {
-      int size = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN);
+      int size = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN, buffer: buffer, outLength: outLength);
       if (size != PORT_LENGTH) {
         throw {};
       }
-      int id = await parser.readByte();
+      int id = await parser.readByte(buffer: buffer, outLength: outLength);
       if (id != TorrentMessage.SIGN_PORT) {
         throw {};
       }
-      message._mPort = await parser.readShort(ByteOrder.BYTEORDER_BIG_ENDIAN);
+      message._mPort = await parser.readShort(ByteOrder.BYTEORDER_BIG_ENDIAN, buffer: buffer, outLength: outLength);
       parser.pop();
       return message;
     } catch (e) {

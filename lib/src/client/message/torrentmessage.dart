@@ -88,15 +88,15 @@ class TorrentMessage {
         case TorrentMessage.SIGN_PIECE:
           return TMessagePiece.decode(parser, buffer:buffer);
         case TorrentMessage.SIGN_REQUEST:
-          return TMessageRequest.decode(parser);
+          return TMessageRequest.decode(parser, buffer:buffer);
         case TorrentMessage.SIGN_CANCEL:
           return TMessageCancel.decode(parser, buffer:buffer);
         case TorrentMessage.DUMMY_SIGN_KEEPALIVE:
-          return TMessageKeepAlive.decode(parser);
+          return TMessageKeepAlive.decode(parser, buffer:buffer);
         case TorrentMessage.SIGN_PORT:
-          return TMessagePort.decode(parser);
+          return TMessagePort.decode(parser, buffer:buffer);
         default:
-          return TMessageNull.decode(parser);
+          return TMessageNull.decode(parser, buffer:buffer);
       }
     } catch (e) {
       parser.back();

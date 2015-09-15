@@ -11,12 +11,13 @@ class TMessageKeepAlive extends TorrentMessage {
   static const int HAVE_LENGTH = 0;
   TMessageKeepAlive() : super(TorrentMessage.DUMMY_SIGN_KEEPALIVE) {}
 
-  static Future<TMessageKeepAlive> decode(EasyParser parser) async {
+  static Future<TMessageKeepAlive> decode(EasyParser parser, {List<int> buffer: null}) async {
+    List<int> outLength = [0];
     Completer c = new Completer();
     TMessageKeepAlive message = new TMessageKeepAlive();
     parser.push();
     try {
-      int size = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN);
+      int size = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN, buffer: buffer, outLength: outLength);
       if (size != 0) {
         throw {};
       }
