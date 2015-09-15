@@ -130,7 +130,7 @@ class TorrentClientFront {
     } else {
       (_parser.buffer as ArrayBuilder).rawbuffer8.logon = true;
       TorrentMessage message = await TorrentMessage.parseBasic(_parser, maxOfMessageSize: requestedMaxPieceSize + 20, buffer:cash);
-      print("recv : ${message}");
+      print("recv [${_peerPort}]: ${message}");
       //print("## -[1]-> ## ${_parser.index} ${(_parser.buffer as ArrayBuilder).rawbuffer8.length}");
       (_parser.buffer as ArrayBuilder).clearInnerBuffer(_parser.index, reuse:true);
       //print("## -[2]-> ##${(_parser.buffer as ArrayBuilder).rawbuffer8.rawbuffer8.length} ${_parser.stack.length}");
@@ -140,7 +140,7 @@ class TorrentClientFront {
 
   startReceive() async {
     try {
-      Uint8List cash = null;//new Uint8List(3*16*1024);
+      Uint8List cash = new Uint8List(3*16*1024);
       while (true) {
         TorrentMessage message = await parse(cash);
         TorrentClientFrontNerve.doReceiveMessage(this, message);
@@ -223,7 +223,7 @@ class TorrentClientFront {
   Future sendMessage(TorrentMessage message) async {
     List<int> data = await message.encode();
     await _socket.send(data);
-    print("send : ${message}");
+    print("send [${_peerPort}]: ${message}");
     TorrentClientFrontNerve.doSendMessage(this, message);
     return {};
   }

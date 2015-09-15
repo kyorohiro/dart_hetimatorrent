@@ -4,6 +4,7 @@ import 'package:unittest/unittest.dart' as unit;
 import 'package:hetimatorrent/hetimatorrent.dart';
 import 'package:hetimacore/hetimacore.dart';
 import 'dart:convert' as convert;
+import 'dart:typed_data';
 
 void main() {
 
@@ -23,7 +24,16 @@ void main() {
         unit.expect(builder.toList(), data);
       });
     });
-
+    unit.test("decode/encode --2--", () {
+      Uint8List buffer = new Uint8List(16*1024*3);
+      EasyParser parser = new EasyParser(builder);
+      return TMessageBitfield.decode(parser,buffer:buffer).then((TMessageBitfield message) {
+        unit.expect(message.bitfield, bitfield);//message.
+        return message.encode();
+      }).then((List<int> data) {
+        unit.expect(builder.toList(), data);
+      });
+    });
     unit.test("encode", () {
       EasyParser parser = new EasyParser(builder);
       TMessageBitfield message = new TMessageBitfield([0xf0,0xff,0x0f]);

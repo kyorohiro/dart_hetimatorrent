@@ -77,14 +77,14 @@ class TorrentMessage {
           return TMessageBitfield.decode(parser, buffer: buffer);
         case TorrentMessage.SIGN_CHOKE:
           return TMessageChoke.decode(parser, buffer:buffer);
+        case TorrentMessage.SIGN_UNCHOKE:
+          return TMessageUnchoke.decode(parser, buffer:buffer);
         case TorrentMessage.SIGN_HAVE:
           return TMessageHave.decode(parser, buffer:buffer);
         case TorrentMessage.SIGN_INTERESTED:
           return TMessageInterested.decode(parser, buffer:buffer);
         case TorrentMessage.SIGN_NOTINTERESTED:
           return TMessageNotInterested.decode(parser, buffer:buffer);
-        case TorrentMessage.SIGN_UNCHOKE:
-          return TMessageUnchoke.decode(parser, buffer:buffer);
         case TorrentMessage.SIGN_PIECE:
           return TMessagePiece.decode(parser, buffer:buffer);
         case TorrentMessage.SIGN_REQUEST:
