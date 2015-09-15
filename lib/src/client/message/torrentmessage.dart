@@ -75,8 +75,6 @@ class TorrentMessage {
       switch (id) {
         case TorrentMessage.SIGN_BITFIELD:
           return TMessageBitfield.decode(parser, buffer: buffer);
-        case TorrentMessage.SIGN_CANCEL:
-          return TMessageCancel.decode(parser, buffer:buffer);
         case TorrentMessage.SIGN_CHOKE:
           return TMessageChoke.decode(parser, buffer:buffer);
         case TorrentMessage.SIGN_HAVE:
@@ -88,14 +86,15 @@ class TorrentMessage {
         case TorrentMessage.SIGN_UNCHOKE:
           return TMessageUnchoke.decode(parser, buffer:buffer);
         case TorrentMessage.SIGN_PIECE:
-          return TMessagePiece.decode(parser);
-        case TorrentMessage.SIGN_PORT:
-          return TMessagePort.decode(parser);
+          return TMessagePiece.decode(parser, buffer:buffer);
         case TorrentMessage.SIGN_REQUEST:
           return TMessageRequest.decode(parser);
-
+        case TorrentMessage.SIGN_CANCEL:
+          return TMessageCancel.decode(parser, buffer:buffer);
         case TorrentMessage.DUMMY_SIGN_KEEPALIVE:
           return TMessageKeepAlive.decode(parser);
+        case TorrentMessage.SIGN_PORT:
+          return TMessagePort.decode(parser);
         default:
           return TMessageNull.decode(parser);
       }

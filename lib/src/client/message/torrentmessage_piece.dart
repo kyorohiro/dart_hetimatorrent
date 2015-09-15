@@ -23,25 +23,26 @@ class TMessagePiece extends TorrentMessage {
     this._mContent = new Uint8List.fromList(content);
   }
 
-  static Future<TMessagePiece> decode(EasyParser parser) async {
+  static Future<TMessagePiece> decode(EasyParser parser,{List<int> buffer: null}) async {
+    List<int> outLength = [0];
     TMessagePiece message = new TMessagePiece._empty();
     parser.push();
     try {
-      int messageLength = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN);
+      int messageLength = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN, buffer:buffer, outLength:outLength);
       if (messageLength < 9) {
         throw {};
       }
-      int vv = await parser.readByte();
+      int vv = await parser.readByte(buffer:buffer, outLength:outLength);
       if (vv != TorrentMessage.SIGN_PIECE) {
         throw {};
       }
-      message._mIndex = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN);
-      message._mBegin = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN);
-      List<int> buffer = await parser.nextBuffer(messageLength - 9);
-      if(messageLength-9 != buffer.length) {
+      message._mIndex = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN, buffer:buffer, outLength:outLength);
+      message._mBegin = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN, buffer:buffer, outLength:outLength);
+      List<int> c = await parser.nextBuffer(messageLength - 9, buffer:buffer, outLength:outLength);
+      if(outLength[0] != messageLength - 9) {
         throw {};
       }
-      message._mContent = new Uint8List.fromList(buffer);
+      message._mContent = new Uint8List.fromList(c.sublist(0, messageLength - 9));
       parser.pop();
       return message;
     } catch (e) {
