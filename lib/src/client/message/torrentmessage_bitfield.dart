@@ -21,15 +21,19 @@ class TMessageBitfield extends TorrentMessage {
     _mBitfield.addAll(bitfield);
   }
 
-  static Future<TMessageBitfield> decode(EasyParser parser) async {
+  static Future<TMessageBitfield> decode(EasyParser parser, {List<int> buffer:null}) async {
+    List<int> outLength = [0];
     parser.push();
     try {
-      int messageSize = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN);
-      int id = await parser.readByte();
+      int messageSize = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN, buffer:buffer, outLength:outLength);
+      int id = await parser.readByte(buffer:buffer, outLength:outLength);
       if (id != TorrentMessage.SIGN_BITFIELD) {
         throw {};
       }
-      List<int> field = await parser.nextBuffer(messageSize - 1);
+      List<int> field = await parser.nextBuffer(messageSize - 1, buffer:buffer, outLength:outLength);
+      if(outLength[0] != messageSize - 1) {
+        throw {};
+      }
       TMessageBitfield message = new TMessageBitfield._empty();
       message._mBitfield.addAll(field);
       parser.pop();

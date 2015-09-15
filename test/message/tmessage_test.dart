@@ -16,6 +16,8 @@ void main() {
       EasyParser parser = new EasyParser(builder);
       TorrentMessage message = await TorrentMessage.parseBasic(parser);
       unit.expect(0, parser.stack.length);
+      unit.expect(message.id, 4);
+      
     });
   });
 }

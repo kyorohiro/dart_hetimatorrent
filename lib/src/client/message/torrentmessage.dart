@@ -74,7 +74,7 @@ class TorrentMessage {
       parser.back();
       switch (id) {
         case TorrentMessage.SIGN_BITFIELD:
-          return TMessageBitfield.decode(parser);
+          return TMessageBitfield.decode(parser, buffer: buffer);
         case TorrentMessage.SIGN_CANCEL:
           return TMessageCancel.decode(parser);
         case TorrentMessage.SIGN_CHOKE:

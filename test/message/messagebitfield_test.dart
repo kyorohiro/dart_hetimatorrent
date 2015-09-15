@@ -31,16 +31,17 @@ void main() {
         unit.expect(builder.toList(), data);
       });
     });
-    unit.test("error", () {
+    unit.test("error", () async {
       ArrayBuilder b = new ArrayBuilder.fromList(builder.toList().sublist(0,builder.size()-1));
       b.fin();
       EasyParser parser = new EasyParser(b);
-
-      TMessageHandshake.decode(parser).then((_) {
-        unit.expect(true,false);
-      }).catchError((e){
-        unit.expect(true,true);
-      });
+      bool isOk = false;
+      try {
+        await TMessageBitfield.decode(parser);
+      } catch(e) {
+        isOk = true;
+      }
+      unit.expect(isOk,true);
     });
   });
 }
