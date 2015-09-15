@@ -41,7 +41,7 @@ class TorrentMessage {
   }
 
   Future<List<int>> encode() async {
-     return [0];
+    return [0];
   }
 
   static Future<TorrentMessage> parseHandshake(EasyParser parser, [int maxOfMessageSize = 256 * 1024]) async {
@@ -57,12 +57,22 @@ class TorrentMessage {
     }
   }
 
-  static Future<TorrentMessage> parseBasic(EasyParser parser, {int maxOfMessageSize: 3*16 * 1024, List<int> buffer}) async {
+  static Future<TorrentMessage> parseBasic(EasyParser parser, {int maxOfMessageSize: 3 * 16 * 1024, List<int> buffer}) async {
     parser.push();
+    List<int> outLength = [0];
     try {
-      TMessageNull nullMessage = await TMessageNull.decode(parser, maxOfMessageSize: maxOfMessageSize, buffer:buffer);
+      int id = 0;
+      int messageLength = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN, buffer: buffer, outLength: outLength);
+      if (messageLength >= maxOfMessageSize) {
+        throw "";
+      }
+      if (messageLength == 0) {
+        id = TorrentMessage.DUMMY_SIGN_KEEPALIVE;
+      } else {
+        id = await parser.readByte(buffer: buffer, outLength: outLength);
+      }
       parser.back();
-      switch (nullMessage._id) {
+      switch (id) {
         case TorrentMessage.SIGN_BITFIELD:
           return TMessageBitfield.decode(parser);
         case TorrentMessage.SIGN_CANCEL:
@@ -83,12 +93,10 @@ class TorrentMessage {
           return TMessageRequest.decode(parser);
         case TorrentMessage.SIGN_UNCHOKE:
           return TMessageUnchoke.decode(parser);
+        case TorrentMessage.DUMMY_SIGN_KEEPALIVE:
+          return TMessageKeepAlive.decode(parser);
         default:
-          if (nullMessage.messageContent.length == 0) {
-            return TMessageKeepAlive.decode(parser);
-          } else {
-            return TMessageNull.decode(parser);
-          }
+          return TMessageNull.decode(parser);
       }
     } catch (e) {
       parser.back();
