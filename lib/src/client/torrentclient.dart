@@ -138,7 +138,7 @@ class TorrentClient {
     if (this.globalPort == null) {
       this.globalPort = localPort;
     }
-    HetimaServerSocket serverSocket = await _builder.startServer(localAddress, localPort);
+    HetimaServerSocket serverSocket = await _builder.startServer(localAddress, localPort, mode:HetimaSocketBuilder.BUFFER_ONLY);
     _server = serverSocket;
     _server.onAccept().listen((HetimaSocket socket) {
       onAccept(socket);

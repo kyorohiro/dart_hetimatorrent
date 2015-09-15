@@ -58,7 +58,7 @@ class TorrentClientManager {
       this.globalPort = localPort;
     }
 
-    HetimaServerSocket serverSocket = await _builder.startServer(localAddress, localPort);
+    HetimaServerSocket serverSocket = await _builder.startServer(localAddress, localPort, mode:HetimaSocketBuilder.BUFFER_ONLY);
     if (_isStart == true) {
       throw {"message": "already started"};
     }

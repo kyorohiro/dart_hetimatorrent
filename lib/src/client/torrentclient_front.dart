@@ -85,7 +85,7 @@ class TorrentClientFront {
 
   static Future<TorrentClientFront> connect(HetimaSocketBuilder _builder, TorrentClientPeerInfo info, int bitfieldSize, List<int> infoHash,
       {List<int> peerId: null, List<int> reseved: null, bool verbose: false}) async {
-    HetimaSocket socket = _builder.createClient();
+    HetimaSocket socket = _builder.createClient(mode:HetimaSocketBuilder.BUFFER_ONLY);
     await socket.connect(info.ip, info.port);
     return new TorrentClientFront(socket, info.ip, info.port, socket.buffer, bitfieldSize, infoHash, peerId, reseved, verbose: verbose);
   }
@@ -126,7 +126,7 @@ class TorrentClientFront {
       handshaked = true;
       return message;
     } else {
-      //(_parser.buffer as ArrayBuilder).rawbuffer8.logon = true;
+      (_parser.buffer as ArrayBuilder).rawbuffer8.logon = true;
       TorrentMessage message = await TorrentMessage.parseBasic(_parser, maxOfMessageSize: requestedMaxPieceSize + 20);
       //print("## -[1]-> ## ${_parser.index} ${(_parser.buffer as ArrayBuilder).rawbuffer8.length}");
       (_parser.buffer as ArrayBuilder).clearInnerBuffer(_parser.index, reuse:true);
@@ -145,6 +145,11 @@ class TorrentClientFront {
     } catch (e) {
       stream.addError(e);
       close();
+      try {
+        _socket.clearBuffer();
+      } catch(e) {
+        
+      }
     }
   }
 
