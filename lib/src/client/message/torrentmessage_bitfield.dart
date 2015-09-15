@@ -4,6 +4,7 @@ import 'dart:core';
 import 'dart:async';
 import 'package:hetimacore/hetimacore.dart';
 import 'torrentmessage.dart';
+import 'dart:typed_data';
 
 class TMessageBitfield extends TorrentMessage {
   static final List<int> RESERVED = new List.from([0, 0, 0, 0, 0, 0, 0, 0], growable: false);
@@ -35,7 +36,7 @@ class TMessageBitfield extends TorrentMessage {
         throw {};
       }
       TMessageBitfield message = new TMessageBitfield._empty();
-      message._mBitfield.addAll(field);
+      message._mBitfield = new Uint8List.fromList(field.sublist(0, outLength[0]));
       parser.pop();
       return message;
     } catch (e) {
