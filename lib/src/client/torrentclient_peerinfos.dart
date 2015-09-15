@@ -46,4 +46,22 @@ class TorrentClientPeerInfos {
     });
     return (targetPeers.length > 0 ? targetPeers.first : null);
   }
+
+  
+  clearIfIsEnd() {
+    List<TorrentClientPeerInfo> rmPeer = [];
+    for(TorrentClientPeerInfo info in _peerInfos) {
+      if(info.isEnd) {
+        if(info.isAcceptable) {
+          info.front = null;
+        } else {
+          rmPeer.add(info);
+        }
+      }
+    }
+    
+    for(TorrentClientPeerInfo info in rmPeer) {
+      _peerInfos.remove(info);
+    }
+  }
 }

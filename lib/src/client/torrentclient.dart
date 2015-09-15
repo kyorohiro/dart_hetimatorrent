@@ -172,7 +172,7 @@ class TorrentClient {
     for (TorrentClientPeerInfo s in this.peerInfos) {
       try {
         if (s.front != null && s.front.isClose == false) {
-          return s.front.close();
+          await s.front.close();
         }
       } catch (e) {}
     }
@@ -182,12 +182,17 @@ class TorrentClient {
         await _server.close();
       }
 
+      await clearIfIsEnd();
       TorrentClientSignal sig = new TorrentClientSignal(TorrentClientSignal.ID_STOPPED_CLIENT, 0, "stopped client");
       _sendSignal(this, null, sig);
     } catch (e) {}
 
     _isStart = false;
     return {};
+  }
+
+  clearIfIsEnd() async {
+    await _peerInfos.clearIfIsEnd();
   }
 
   List<TorrentClientPeerInfo> getPeerInfoFromXx(Function filter) {
