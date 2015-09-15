@@ -25,21 +25,22 @@ class TMessageCancel extends TorrentMessage {
     this._mLength = length;
   }
 
-  static Future<TMessageCancel> decode(EasyParser parser) async {
+  static Future<TMessageCancel> decode(EasyParser parser, {List<int> buffer:null}) async {
+    List<int> outLength = [0];
     parser.push();
     try {
-      int size = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN);
+      int size = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN,buffer:buffer, outLength:outLength);
       if (size != CANCEL_LENGTH) {
         throw {};
       }
-      int v = await parser.readByte();
+      int v = await parser.readByte(buffer:buffer, outLength:outLength);
       if (v != TorrentMessage.SIGN_CANCEL) {
         throw {};
       }
       TMessageCancel message = new TMessageCancel._empty();
-      message._mIndex = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN);
-      message._mBegin = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN);
-      message._mLength = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN);
+      message._mIndex = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN,buffer:buffer, outLength:outLength);
+      message._mBegin = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN,buffer:buffer, outLength:outLength);
+      message._mLength = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN,buffer:buffer, outLength:outLength);
       parser.pop();
       return message;
     } catch (e) {
