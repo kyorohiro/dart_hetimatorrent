@@ -2,6 +2,7 @@ library hetimatorrent.torrent.clientfront;
 
 import 'dart:core';
 import 'dart:async';
+import 'dart:typed_data';
 import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimanet/hetimanet.dart';
 import '../util/peeridcreator.dart';
@@ -120,14 +121,14 @@ class TorrentClientFront {
     _verbose = verbose;
   }
 
-  Future<TorrentMessage> parse() async {
+  Future<TorrentMessage> parse(List<int> cash) async {
     if (handshaked == false) {
       TorrentMessage message = await TorrentMessage.parseHandshake(_parser);
       handshaked = true;
       return message;
     } else {
       (_parser.buffer as ArrayBuilder).rawbuffer8.logon = true;
-      TorrentMessage message = await TorrentMessage.parseBasic(_parser, maxOfMessageSize: requestedMaxPieceSize + 20);
+      TorrentMessage message = await TorrentMessage.parseBasic(_parser, maxOfMessageSize: requestedMaxPieceSize + 20, buffer:cash);
       //print("## -[1]-> ## ${_parser.index} ${(_parser.buffer as ArrayBuilder).rawbuffer8.length}");
       (_parser.buffer as ArrayBuilder).clearInnerBuffer(_parser.index, reuse:true);
       //print("## -[2]-> ##${(_parser.buffer as ArrayBuilder).rawbuffer8.rawbuffer8.length} ${_parser.stack.length}");
@@ -137,8 +138,9 @@ class TorrentClientFront {
 
   startReceive() async {
     try {
+      Uint8List cash = new Uint8List(3*16*1024);
       while (true) {
-        TorrentMessage message = await parse();
+        TorrentMessage message = await parse(cash);
         TorrentClientFrontNerve.doReceiveMessage(this, message);
         stream.add(message);
       }

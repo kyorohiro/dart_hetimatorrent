@@ -4,11 +4,12 @@ import 'dart:core';
 import 'dart:async';
 import 'package:hetimacore/hetimacore.dart';
 import 'torrentmessage.dart';
+import 'dart:typed_data';
 
 class TMessagePiece extends TorrentMessage {
   int _mIndex = 0;
   int _mBegin = 0;
-  List<int> _mContent = [];
+  Uint8List _mContent = null;
 
   int get index => _mIndex;
   int get begin => _mBegin;
@@ -19,7 +20,7 @@ class TMessagePiece extends TorrentMessage {
   TMessagePiece(int index, int begin, List<int> content) : super(TorrentMessage.SIGN_PIECE) {
     this._mIndex = index;
     this._mBegin = begin;
-    this._mContent.addAll(content);
+    this._mContent = new Uint8List.fromList(content);
   }
 
   static Future<TMessagePiece> decode(EasyParser parser) async {
@@ -40,7 +41,7 @@ class TMessagePiece extends TorrentMessage {
       if(messageLength-9 != buffer.length) {
         throw {};
       }
-      message._mContent.addAll(buffer);
+      message._mContent = new Uint8List.fromList(buffer);
       parser.pop();
       return message;
     } catch (e) {

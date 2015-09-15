@@ -4,21 +4,23 @@ import 'dart:core';
 import 'dart:async';
 import 'package:hetimacore/hetimacore.dart';
 import 'torrentmessage.dart';
+import 'dart:typed_data';
 
 class TMessageNull extends TorrentMessage {
-  List<int> _mMessageContent = [];
+  List<int> _mMessageContent = null;
 
   List<int> get messageContent => new List.from(_mMessageContent);
 
   TMessageNull._empty(int id) : super(id) {}
   TMessageNull(int id, List<int> cont) : super(id) {
-    _mMessageContent.addAll(cont);
+    _mMessageContent = new Uint8List.fromList(cont);
   }
 
-  static Future<TMessageNull> decode(EasyParser parser, {int maxOfMessageSize: 2 * 1024 * 1024}) async {
+  static Future<TMessageNull> decode(EasyParser parser, {int maxOfMessageSize: 2 * 1024 * 1024, List<int> buffer:null}) async {
+    List<int> outLength = [0];
     parser.push();
     try {
-      int messageLength = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN);
+      int messageLength = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN, buffer:buffer, outLength:outLength);
       if (messageLength >= maxOfMessageSize) {
         throw "";
       }
@@ -26,16 +28,18 @@ class TMessageNull extends TorrentMessage {
       if (messageLength == 0) {
         vv = TorrentMessage.DUMMY_SIGN_KEEPALIVE;
       } else {
-        vv = await parser.readByte();
+        vv = await parser.readByte(buffer:buffer, outLength:outLength);
       }
 
       TMessageNull message = new TMessageNull._empty(vv);
       if (messageLength > 0) {
         messageLength -= 1;
       }
-      List<int> v = await parser.nextBuffer(messageLength);
-      //print("##size, length= ${messageLength} ${v.length}");
-      message._mMessageContent.addAll(v);
+      List<int> v = await parser.nextBuffer(messageLength, buffer:buffer, outLength:outLength);
+      if(outLength[0] != messageLength) {
+        throw {}; 
+      }
+      message._mMessageContent = new Uint8List.fromList(v);
       parser.pop();
       return message;
     } catch (e) {

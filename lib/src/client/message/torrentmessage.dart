@@ -57,14 +57,10 @@ class TorrentMessage {
     }
   }
 
-  static Future<TorrentMessage> parseBasic(EasyParser parser, {int maxOfMessageSize: 32 * 1024}) async {
-    {
-      // kiyo todo
-      //print("############--> ${(parser.buffer as ArrayBuilder).rawbuffer8.length} ${parser.stack.length}");
-    }
+  static Future<TorrentMessage> parseBasic(EasyParser parser, {int maxOfMessageSize: 3*16 * 1024, List<int> buffer}) async {
     parser.push();
     try {
-      TMessageNull nullMessage = await TMessageNull.decode(parser, maxOfMessageSize: maxOfMessageSize);
+      TMessageNull nullMessage = await TMessageNull.decode(parser, maxOfMessageSize: maxOfMessageSize, buffer:buffer);
       parser.back();
       switch (nullMessage._id) {
         case TorrentMessage.SIGN_BITFIELD:
