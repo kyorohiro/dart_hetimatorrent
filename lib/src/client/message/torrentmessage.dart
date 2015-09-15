@@ -80,7 +80,7 @@ class TorrentMessage {
         case TorrentMessage.SIGN_CHOKE:
           return TMessageChoke.decode(parser, buffer:buffer);
         case TorrentMessage.SIGN_HAVE:
-          return TMessageHave.decode(parser);
+          return TMessageHave.decode(parser, buffer:buffer);
         case TorrentMessage.SIGN_INTERESTED:
           return TMessageInterested.decode(parser);
         case TorrentMessage.SIGN_NOTINTERESTED:
