@@ -6,7 +6,6 @@ import 'package:hetimacore/hetimacore.dart';
 import 'dart:convert' as convert;
 
 void main() {
-
   ArrayBuilder builder = new ArrayBuilder();
   builder.appendIntList(ByteOrder.parseIntByte(1, ByteOrder.BYTEORDER_BIG_ENDIAN));
   builder.appendByte(0);
@@ -21,7 +20,6 @@ void main() {
       });
     });
 
-
     unit.test("encode", () {
       TMessageChoke message = new TMessageChoke();
       message.encode().then((List<int> data) {
@@ -29,16 +27,18 @@ void main() {
       });
     });
 
-    unit.test("error", () {
-      ArrayBuilder b = new ArrayBuilder.fromList(builder.toList().sublist(0,builder.size()-1));
+    unit.test("error", () async {
+      ArrayBuilder b = new ArrayBuilder.fromList(builder.toList().sublist(0, builder.size() - 1));
       b.fin();
       EasyParser parser = new EasyParser(b);
 
-      TMessageChoke.decode(parser).then((_) {
-        unit.expect(true,false);
-      }).catchError((e){
-        unit.expect(true,true);
-      });
+      bool isOk = false;
+      try {
+        await TMessageChoke.decode(parser);
+      } catch (e) {
+        isOk = true;
+      }
+      unit.expect(isOk, true);
     });
   });
 }

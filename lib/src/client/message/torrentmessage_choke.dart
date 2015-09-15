@@ -10,15 +10,16 @@ class TMessageChoke extends TorrentMessage {
 
   TMessageChoke() : super(TorrentMessage.SIGN_CHOKE) {}
 
-  static Future<TMessageChoke> decode(EasyParser parser) async {
+  static Future<TMessageChoke> decode(EasyParser parser, {List<int> buffer: null}) async {
+    List<int> outLength = [0];
     TMessageChoke message = new TMessageChoke();
     parser.push();
     try {
-      int size = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN);
+      int size = await parser.readInt(ByteOrder.BYTEORDER_BIG_ENDIAN, buffer: buffer, outLength: outLength);
       if (size != CHOKE_LENGTH) {
         throw {};
       }
-      int v = await parser.readByte();
+      int v = await parser.readByte(buffer: buffer, outLength: outLength);
       if (v != TorrentMessage.SIGN_CHOKE) {
         throw {};
       }
