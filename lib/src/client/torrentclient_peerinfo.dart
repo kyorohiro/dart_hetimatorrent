@@ -28,6 +28,7 @@ abstract class TorrentClientPeerInfo {
   int get interestedFromMe;
   bool get amI;
   bool get isClose;
+  bool get isEnd;
   int get uploadSpeedFromUnchokeFromMe;
   Bitfield get bitfieldFromMe;
   Bitfield get bitfieldToMe;
@@ -56,6 +57,7 @@ class TorrentClientPeerInfoEmpty extends TorrentClientPeerInfo {
   int interestedFromMe = TorrentClientPeerInfo.STATE_NONE;
   bool amI = false;
   bool isClose = true;
+  bool isEnd = false;
   int uploadSpeedFromUnchokeFromMe = 0;
 }
 
@@ -86,5 +88,6 @@ class TorrentClientPeerInfoBasic extends TorrentClientPeerInfo {
   int get interestedFromMe => (front == null ? TorrentClientPeerInfo.STATE_NONE: front.interestedFromMe);
   bool get amI => (front == null ? false : front.amI);
   bool get isClose => (front == null ? true : front.isClose);
+  bool get isEnd => (isClose &&  (front != null));
   int get uploadSpeedFromUnchokeFromMe => (front == null ? 0 : front.uploadSpeedFromUnchokeFromMe);
 }
