@@ -1,7 +1,7 @@
 library app.mainview.hashitem;
 
 import 'dart:html' as html;
-import 'dart:async' ;
+import 'dart:async';
 import 'package:hetimacore/hetimacore.dart';
 import 'package:hetimafile/hetimafile_cl.dart';
 import 'package:hetimatorrent/hetimatorrent.dart';
@@ -27,19 +27,19 @@ class HashItem {
   html.DivElement torrentOutputs = html.querySelector("#torrent-outputs");
   html.DivElement torrentOutputsLoading = html.querySelector("#torrent-outputs-loading");
   html.DivElement torrentOutputFailreReason = html.querySelector("#torrent-tracker-failurereason");
-  
+
   Map<String, int> seedState = {};
 
 //  html.File seedRawFile = null;
   onProgress(int x, int a, TorrentEngineProgress info) {
     torrentProgressSpan.setInnerHtml("${x}/${a} : ${100*x~/a}");
-    if(info != null) {
-      if(info.trackerIsOk == true) {
-        torrentOutputFailreReason.style.color  = "#0000FF";
+    if (info != null) {
+      if (info.trackerIsOk == true) {
+        torrentOutputFailreReason.style.color = "#0000FF";
         torrentOutputFailreReason.setInnerHtml("Tracker status is good");
       } else {
-        torrentOutputFailreReason.style.color  = "#FF0000";
-        torrentOutputFailreReason.setInnerHtml("Tracker status is worng : ${info.trackerFailureReason}");        
+        torrentOutputFailreReason.style.color = "#FF0000";
+        torrentOutputFailreReason.setInnerHtml("Tracker status is worng : ${info.trackerFailureReason}");
       }
     }
   }
@@ -62,13 +62,13 @@ class HashItem {
         stopServerBtn.style.display = "block";
         loadServerBtn.style.display = "none";
         dialog.show("Failed to stop torrent");
-      }).whenComplete((){
+      }).whenComplete(() {
         AppModel.getInstance().get().then((TorrentEngine e) {
           AppModel mo = AppModel.getInstance();
-          if(e.numOfTorrent > 0) {
+          if (e.numOfTorrent > 0) {
             mo.mainItem.setStartState(true);
           } else {
-            mo.mainItem.setStartState(false);            
+            mo.mainItem.setStartState(false);
           }
         });
       });
@@ -95,12 +95,11 @@ class HashItem {
         loadServerBtn.style.display = "none";
         dialog.show("Failed to start torrent");
 
-        if(e.numOfTorrent() > 0) {
+        if (e.numOfTorrent() > 0) {
           mo.mainItem.setStartState(true);
         } else {
-          mo.mainItem.setStartState(false);            
+          mo.mainItem.setStartState(false);
         }
-
       });
     }
     torrentRemoveBtn.onClick.listen((html.MouseEvent e) {
@@ -112,11 +111,9 @@ class HashItem {
       }
     });
 
-
     startServerBtn.onClick.listen((html.MouseEvent e) {
       start();
     });
-
 
     stopServerBtn.onClick.listen((html.MouseEvent e) {
       stop();
@@ -164,81 +161,70 @@ class HashItem {
           String key = model.selectKey;
           torrentOutputs.style.display = "none";
           torrentOutputsLoading.style.display = "block";
-          saveFile(model.seedModels[key].seedfile, f.index, f.index + f.fileSize, f.path.last)
-          .then((e){
+          saveFile(model.seedModels[key].seedfile, f.index, f.index + f.fileSize, f.path.last).then((e) {
             torrentOutputs.style.display = "block";
             torrentOutputsLoading.style.display = "none";
-          })
-          .catchError((e){
+          }).catchError((e) {
             torrentOutputs.style.display = "block";
             torrentOutputsLoading.style.display = "none";
           });
         });
       }
-      
+
       model.seedModels[key].getCurrentProgress().then((int progress) {
         int a = torrentFile.info.files.dataSize;
         int x = progress;
         onProgress(x, a, null);
-      }).catchError((e){
+      }).catchError((e) {
         dialog.show("Failed to load torrent file . please restart app");
       });
     }
   }
 
-
-  Future saveFile(HetimaData copyFrom, [int begin = 0, int end = null, String name = "rawdata"]) {
-    Completer c = new Completer();
-    chrome.fileSystem.chooseEntry(new chrome.ChooseEntryOptions(type: chrome.ChooseEntryType.SAVE_FILE, suggestedName: name)).then((chrome.ChooseEntryResult chooseEntryResult) {
-      chrome.fileSystem.getWritableEntry(chooseEntryResult.entry).then((chrome.ChromeFileEntry copyTo) {
-        ///
-        copyFrom.getLength().then((int length) {
-          //
-          if (end == null) {
-            end = length;
-          }
-          num d = 32 *1024 * 1024;
-          num b = begin;
-          num e = b + d;
-          int retry = 0;
-          DomJSHetiFile hetiCopyTo = new DomJSHetiFile.create(copyTo.jsProxy);
-          hetiCopyTo.getHetimaFile().then((HetimaData data) {
-            a() {
-              copyFrom.read(b, e - b).then((ReadResult readResult) {
-                print("${b} ${e} ${readResult.buffer.length}");
-                data.write(readResult.buffer, b-begin).then((WriteResult w) {
-                  retry = 0;
-                  b = e;
-                  e = b + d;
-                  if (e > end) {
-                    e = end;
-                  }
-                  if (b < end) {
-//                    new Future.delayed(new Duration(microseconds:1)).then((_){a();});
-                    return a();
-                  } else {
-                    c.complete({});
-                  }
-                }).catchError((e) {
-                  if(retry >=5) {
-                    c.completeError(e);
-                  }
-                  return new Future.delayed(new Duration(seconds:1)).then((_){
-                    retry++;
-                    return a();
-                  });
-                });
-              }).catchError(c.completeError);
-            }
-            a();
-          }).catchError(c.completeError);
-          
-          // copyFrom.getLength().then((int length) {
-        }).catchError(c.completeError);
-        ///
-      }).catchError(c.completeError);
-    }).catchError(c.completeError);
-    
-    return c.future;
+  Future saveFile(HetimaData copyFrom, [int begin = 0, int end = null, String name = "rawdata"]) async {
+    chrome.ChooseEntryResult chooseEntryResult = await chrome.fileSystem.chooseEntry(new chrome.ChooseEntryOptions(type: chrome.ChooseEntryType.SAVE_FILE, suggestedName: name));
+    chrome.ChromeFileEntry copyTo = await chrome.fileSystem.getWritableEntry(chooseEntryResult.entry);
+    ///
+    int length = await copyFrom.getLength();
+    print("###[ A1 ]#length = ${length} ${end}");
+    //
+    if (end == null) {
+      end = length;
+    }
+    num d = 32 * 1024 * 1024;
+    num b = begin;
+    if(d>(end-begin)) {
+      d = end-begin;
+    }
+    num e = b + d;
+    int retry = 0;
+    DomJSHetiFile hetiCopyTo = new DomJSHetiFile.create(copyTo.jsProxy);
+    HetimaData data = await hetiCopyTo.getHetimaFile();
+    while (true) {
+      print("###[ A2 ]#${b} ${e} ${e-b}");
+      ReadResult readResult = await copyFrom.read(b, e - b);
+      print("${b} ${e} ${readResult.buffer.length} ## ${b-begin}");
+      try {
+        await data.write(readResult.buffer, b - begin);
+        retry = 0;
+        b = e;
+        e = b + d;
+        if (e > end) {
+          e = end;
+        }
+        if (b < end) {
+          // loop
+        } else {
+          break;
+        }
+      } catch (e) {
+        if (retry >= 5) {
+          throw e;
+        }
+        await new Future.delayed(new Duration(seconds: 1));
+        retry++;
+      }
+    }
+    await hetiCopyTo.truncate(end-begin);
   }
 }

@@ -64,7 +64,7 @@ class TorrentEngineTorrent {
 
   Future createBaseFile() async {
     int length = _torrentFile.info.files.dataSize;
-    Uint8List buffer = new Uint8List.fromList(new List.filled(16 * 1024 * 1024, 0));
+    Uint8List buffer = new Uint8List.fromList(new List.filled(512 * 1024, 0));
     int start = await _downloadedData.getLength();
     int end = start;
     int retry = 0;
@@ -73,7 +73,7 @@ class TorrentEngineTorrent {
       print("##[2]# ${start} < ${length}");
       end = (start + buffer.length > length ? length : start + buffer.length);
       try {
-        await _downloadedData.write(buffer, start);
+        await _downloadedData.write(buffer, start,end-start);
         start = end;
         retry = 0;
       } catch (e) {
