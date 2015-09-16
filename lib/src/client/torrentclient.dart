@@ -63,7 +63,8 @@ class TorrentClient {
   bool _verbose = false;
   bool get verbose => _verbose;
 
-  static Future<TorrentClient> create(HetimaSocketBuilder builder, List<int> peerId, TorrentFile file, HetimaData data,
+  static Future<TorrentClient> create(
+      HetimaSocketBuilder builder, List<int> peerId, TorrentFile file, HetimaData data,
       {TorrentAI ai: null, List<int> bitfield: null, List<int> reserved: null, verbose: false}) async {
     List<int> infoHash = await file.createInfoSha1();
     return new TorrentClient(builder, peerId, infoHash, file.info.pieces, file.info.piece_length, file.info.files.dataSize, data, ai: ai, bitfield: bitfield, reserved: reserved, verbose: verbose);
