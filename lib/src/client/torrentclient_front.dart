@@ -149,7 +149,10 @@ class TorrentClientFront {
 
   startReceive() async {
     try {
-      _pieceCache = new List.filled(5, new Uint8List(requestedMaxPieceSize + 100));
+      _pieceCache = new List();
+      for(int i=0;i<3;i++) {
+        _pieceCache.add(new Uint8List(requestedMaxPieceSize + 100));
+      }
       while (true) {
         TorrentMessage message = await parse(_parseCache);
         TorrentClientFrontNerve.doReceiveMessage(this, message);
@@ -354,6 +357,7 @@ class TorrentClientFrontNerve {
         front.currentRequesting.add(message);
         front._lastRequestIndex = resestMessage.index;
         if(front.currentRequesting.length < front._pieceCache.length) {
+          print("add cache -------------------${front._pieceCache.length}");
           front._pieceCache.add(new Uint8List(front.requestedMaxPieceSize+100));
         }
         break;
