@@ -356,7 +356,7 @@ class TorrentClientFrontNerve {
         TMessageRequest resestMessage = message;
         front.currentRequesting.add(message);
         front._lastRequestIndex = resestMessage.index;
-        if(front.currentRequesting.length < front._pieceCache.length) {
+        if(front.currentRequesting.length > front._pieceCache.length) {
           print("add cache -------------------${front._pieceCache.length}");
           front._pieceCache.add(new Uint8List(front.requestedMaxPieceSize+100));
         }
