@@ -354,7 +354,7 @@ class TorrentClientFrontNerve {
         front.currentRequesting.add(message);
         front._lastRequestIndex = resestMessage.index;
         if(front.currentRequesting.length < front._pieceCache.length) {
-          front._pieceCache.add(new Uint8List(front.requestedMaxPieceSize*100));
+          front._pieceCache.add(new Uint8List(front.requestedMaxPieceSize+100));
         }
         break;
     }
